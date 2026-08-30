@@ -1,0 +1,11 @@
+[project]
+name = "godhand"
+target = "original/SLUS-21503"
+fallback_language = "C++20"
+
+[repository]
+# Stable project identity; deliberately independent of the checkout directory.
+identity = "godhand:ps2:slus-21503:usa"
+
+[evidence]
+raw_sndata = "reference/sndata.bin"

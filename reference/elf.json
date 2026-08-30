@@ -1,0 +1,54 @@
+{
+	"class": "ELF32",
+	"endianness": "little",
+	"entry": "0x00100008",
+	"flags": "0x20924001",
+	"header": {
+		"entry": 1048584,
+		"flags": 546455553,
+		"header_size": 52,
+		"machine": 8,
+		"program_header_count": 1,
+		"program_header_offset": 52,
+		"program_header_size": 32,
+		"section_header_count": 52,
+		"section_header_offset": 3618624,
+		"section_header_size": 40,
+		"section_name_index": 51,
+		"type": 2,
+		"version": 1
+	},
+	"machine": 8,
+	"path": "original/SLUS-21503",
+	"programs": [
+		{
+			"alignment": 4096,
+			"file_size": 3555940,
+			"flags": 7,
+			"index": 0,
+			"memory_size": 6856372,
+			"offset": 4096,
+			"physical_address": "0x00100000",
+			"raw_hex": "0100000000100000000010000000100064423600b49e68000700000000100000",
+			"type": 1,
+			"virtual_address": "0x00100000"
+		}
+	],
+	"provenance": {
+		"candidate_identity": "525a8e110d28a7e2a74b402935563416151443eb1703a4e9fcac2b6f6154578f",
+		"command": "analyze",
+		"config_sha256": "f67056e4535625ed05ad919ebf7ccd066388761e77a027ab64cbf0927aba19fe",
+		"python": "3.14.7",
+		"repository_base_identity": "6fb340efdd9804bf78ddac2feba4f10d07114911",
+		"repository_commit": "6fb340efdd9804bf78ddac2feba4f10d07114911",
+		"repository_identity": "godhand:ps2:slus-21503:usa",
+		"status": "generated",
+		"tool": "godhand-tools",
+		"tool_sha256": "e7b3aae530586bd624eed81d0d7d48053460b205badd38fc3a525a577e39fc43",
+		"tool_version": "godhand-tools/1"
+	},
+	"raw_header_hex": "7f454c46010101000000000000000000020008000100000008001000340000004037370001409220340020000100280034003300",
+	"schema": "godhand.elf.v2",
+	"sha256": "1db25888ff99f6f4511bf8aab05faf9a21620108a8d53ec5688353ff71d01e01",
+	"version": 1
+}

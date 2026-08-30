@@ -1,0 +1,20 @@
+{
+	"provenance": {
+		"candidate_identity": "525a8e110d28a7e2a74b402935563416151443eb1703a4e9fcac2b6f6154578f",
+		"command": "analyze",
+		"config_sha256": "f67056e4535625ed05ad919ebf7ccd066388761e77a027ab64cbf0927aba19fe",
+		"python": "3.14.7",
+		"repository_base_identity": "6fb340efdd9804bf78ddac2feba4f10d07114911",
+		"repository_commit": "6fb340efdd9804bf78ddac2feba4f10d07114911",
+		"repository_identity": "godhand:ps2:slus-21503:usa",
+		"status": "generated",
+		"tool": "godhand-tools",
+		"tool_sha256": "e7b3aae530586bd624eed81d0d7d48053460b205badd38fc3a525a577e39fc43",
+		"tool_version": "godhand-tools/1"
+	},
+	"record_count": 52,
+	"records_file": "sections.jsonl",
+	"records_sha256": "81b96b470398f2111642c6486d820965da563b107656a035a32a2a89ba02c961",
+	"schema": "godhand.sections.v4",
+	"status": "complete-for-elf-section-table"
+}
