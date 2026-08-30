@@ -43,7 +43,7 @@ evidence:
 
 expected_outputs:
   - src/.../Player.cpp
-  - reference/functions/00123450.json
+  - reference/functions.jsonl (one canonical function record per line)
 
 acceptance:
   build: required

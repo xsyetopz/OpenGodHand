@@ -69,10 +69,13 @@ Exact byte identity is tracked separately.
 │
 ├── reference/                # generated, evidence-preserving metadata
 │   ├── elf.json
-│   ├── sections.json
-│   ├── symbols.json
+│   ├── sections.json        # schema/provenance sidecar
+│   ├── sections.jsonl       # compact one-section-per-line records
+│   ├── symbols.json          # schema/provenance sidecar
+│   ├── symbols.jsonl         # compact one-symbol-per-line records
 │   ├── files.json
-│   ├── functions.json
+│   ├── functions.json        # schema/provenance sidecar
+│   ├── functions.jsonl       # compact one-function-per-line records
 │   ├── globals.json
 │   ├── types.json
 │   ├── vtables.json
@@ -88,6 +91,14 @@ Exact byte identity is tracked separately.
 ├── .agents/                  # project-local Agent Skills (`$forge-skill-creator`), agent-only tools and whatnot
 └── build/                    # gitignored
 ```
+
+Large homogeneous reference collections use compact JSONL: each line in
+`sections.jsonl`, `symbols.jsonl`, or `functions.jsonl` is one complete
+canonical record. Each same-named JSON file is a small metadata/provenance
+sidecar containing the schema, status, record filename, record count, and
+SHA-256 digest of the exact JSONL bytes. `just check` validates JSONL syntax,
+closed collection schemas, deterministic ordering, digests, canonical-ID
+uniqueness, provenance, and linkage.
 
 ## Source-path preservation
 

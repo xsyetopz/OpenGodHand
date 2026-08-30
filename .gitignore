@@ -1,1 +1,7 @@
 *.iso
+/original/SLUS-21503
+original/extracted/
+original/hashes.json
+build/
+__pycache__/
+*.py[cod]

@@ -59,6 +59,41 @@ flowchart LR
 
 Ghidra is a consumer and analysis producer. It is not the sole source of truth.
 
+## God Hand tooling boundary decision
+
+The stable operator API remains `tools/godhand.py`; it is a compatibility
+wrapper only. Its implementation is split into the smallest evidence-backed
+package under `tools/godhand_tool/`:
+
+| Module | Owner and responsibility | Depends on |
+| --- | --- | --- |
+| `repository.py` | repository paths, hashing, provenance, private-input inventory, and complete tool identity | standard library |
+| `elf.py` | ELF section-table and SNR2 extraction | `repository` |
+| `schema.py` | closed record/provenance validation | `repository` |
+| `serialization.py` | JSON/JSONL writers and sidecar composition | `repository` |
+| `commands.py` | command orchestration and generated artifact composition | `repository`, `elf`, `schema`, `serialization` |
+| `cli.py` | argparse surface and dispatch | `commands` |
+
+Dependencies point from the CLI/orchestration adapters toward stable evidence,
+serialization, and validation services; no lower-level module imports the CLI.
+`repository.py` computes the tool provenance hash across the wrapper and every
+Python module recursively beneath the package tree, excluding cache families,
+using sorted POSIX repository-relative paths and length-delimited content;
+`check` recomputes that aggregate independently through provenance validation.
+Candidate identity excludes the entire `original/` private-input root, as well
+as generated roots and explicit local-cache families, before hashing the
+canonical file paths and contents. The separate input manifest continues to
+scan `original/` for private-input identity and validation.
+This is a real boundary because extraction, validation, and serialization have
+independent invariants and can be tested without changing command dispatch.
+
+Rejected alternatives: keeping one 1,074-line command module (the pre-change
+audit exceeded the review threshold), a speculative class hierarchy, and a
+new executable entrypoint. The rollback boundary is the wrapper plus this
+package: restoring the previous monolith preserves the CLI and behavior
+contracts, but changes implementation provenance; all reference metadata must
+therefore be regenerated before `just check` can pass.
+
 ## Entity identity
 
 Stable identities use original target coordinates where possible.
