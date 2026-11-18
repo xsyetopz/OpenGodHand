@@ -65,6 +65,7 @@ public:
     int isOmBreak(const char *name);
     int isOmBreak(unsigned short room, const char *name);
     void move();
+    int getObjIdFromStr(const char *s);
     void resetCam();
     int taskExec(void (&fn)(), int n);
     int taskExec(void *fn, void *arg, int n);

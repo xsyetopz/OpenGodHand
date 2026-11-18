@@ -368,12 +368,7 @@ void cSnd::BgmHitBeSet(bool b, unsigned short id)
     }
 }
 
-#ifdef NONMATCHING
-// 0x2D0938 near-miss: the original tests D_00747A84 & 0x20000000 and
-// D_00747A84 & 0x80000 separately (lui/and/bnel twice); compiled merges them
-// into a single mask 0x20080000 and reloads D at different points. Remaining
-// diff is that one reshuffled region plus the shifted branch offsets.
-// DRAFT: GAME 0x2D0938
+// FUNCTION: GAME 0x2D0938
 void cSnd::BgmControl()
 {
     for (sBgmNode *n = m_bgmList; n; n = n->m_next)
@@ -411,4 +406,3 @@ void cSnd::BgmControl()
         }
     }
 }
-#endif

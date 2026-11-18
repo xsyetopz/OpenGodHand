@@ -110,3 +110,15 @@ These source shapes reproduce patterns this compiler emits only one way:
   where `name` is the rodata string extern.
 - Base destructor calls need `extern "C" void _$_7cPlBase(T *);`.
 - Flags tested with `lwu; dsra` need `long f = (unsigned)s->flags; (f >> n) & 1`.
+- Quadword vector copies (`lqc2 $vf4; sqc2 $vf4`) come from inline asm, as in
+  `cObjCopyVec` (`src/game/cObj.h`):
+  `__asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,0(%0)" : : "r"(dst), "r"(src) : "memory");`.
+  `sqc2 $vf0` zero/identity-initialises a 16-byte-aligned local. Plain struct
+  or `mode(TI)` assignment emits `lq`/`sq` instead. fncmp disassembles these
+  as `ldc2`/`sdc2`.
+
+## SCE library regions
+
+Most of 0x320000-0x3BBF20 saves registers with `sd` and tail-calls with `j`.
+That code was built by SCE ee-gcc 3.2 (`ee-gcc3.2-030926` or `-040921`, -O2),
+not ProDG 2.95.3; `fncmp.py --compiler ee-gcc3.2-030926` compares against it.

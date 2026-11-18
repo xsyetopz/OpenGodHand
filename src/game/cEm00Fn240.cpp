@@ -301,3 +301,90 @@ extern "C" int func_00262A10(char *self)
     return 0;
 }
 #endif
+
+struct cDmgFwd25F {
+    void SetDamageCollActive(bool) __asm__("SetDamageCollActive__11cDamageUnitb");
+};
+struct cSndFwd25F {
+    int SeCall(int, short, void *, int, void *, int, int) __asm__("SeCall__4cSnd6eSeBlksR4cObjP4cObjP6cPartsUii");
+};
+extern cSndFwd25F Snd;
+extern "C" int GetSeqSEBase__FP8cObjBase(void *);
+
+// FUNCTION: GAME 0x25FCF8
+extern "C" void func_0025FCF8(char *self)
+{
+    cDmgFwd25F *d = ((cDmgFwd25F * (*)(char *)) * (void **)(*(char **)(self + 0x214) + 0xB4))(
+        self + *(short *)(*(char **)(self + 0x214) + 0xB0));
+    unsigned char s = B(0x2F6);
+    switch (s) {
+    case 0: {
+        unsigned short r = func_00276468(self);
+        char *o = *(char **)(self + 0x304);
+        int off = *(int *)(o + 0x108C) + (int)o;
+        func_002A8578(self, off, off, 3, 0.0f, r, 0);
+        d->SetDamageCollActive(false);
+        Snd.SeCall(1, GetSeqSEBase__FP8cObjBase(self) + 8, self, 0, 0, 0, 0);
+        B(0x2F6)++;
+    }
+    case 1:
+        if (moveMotion((cObjBase *)self)) {
+            B(0x2F6) = 0;
+            B(0x2F4) = 2;
+            B(0x2F5) = 2;
+            B(0x2F7) = 0;
+        } else {
+            ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+            ((cObjBase *)self)->addNullSpeed(1.0f);
+        }
+    }
+    *(unsigned short *)(self + 0x3AC) |= 0x400;
+}
+
+extern "C" int irand__Fv(void);
+extern "C" void func_002814E8(void *, int);
+extern "C" void func_002833C0(void *, int);
+extern "C" int func_0026F1D8(void *);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x25B5A8
+// diff: original keeps base pointer in v0 and raw offsets in v1/a0 across the branch (we add before merging)
+extern "C" void func_0025B5A8(char *self)
+{
+    switch (B(0x2F6)) {
+    case 0: {
+        unsigned short r = func_00276468(self);
+        int k = irand__Fv() & 1;
+        B(0x2F7) = k;
+        char *o;
+        int a, b;
+        if (k) {
+            o = *(char **)(self + 0x304);
+            a = *(int *)(o + 0x3DF4);
+            b = *(int *)(o + 0x3DF8);
+        } else {
+            o = *(char **)(self + 0x304);
+            a = *(int *)(o + 0x3DEC);
+            b = *(int *)(o + 0x3DF0);
+        }
+        *(unsigned *)(self + 0x16D0) &= 0xFEFFFFFF;
+        func_002A8578(self, a + (int)o, b + (int)o, 2, 0.0f, r, 0);
+        if (*(void **)(self + 0x748))
+            func_002814E8(*(void **)(self + 0x748), B(0x2F7));
+        if (*(void **)(self + 0x74C))
+            func_002833C0(*(void **)(self + 0x74C), B(0x2F7));
+        if (*(void **)(self + 0x750))
+            func_002833C0(*(void **)(self + 0x750), B(0x2F7));
+        B(0x2F6)++;
+    }
+    case 1:
+        if (moveMotion((cObjBase *)self)) {
+            func_0026F120(self);
+            if (func_0026F1D8(self))
+                func_00270C78(self);
+            else
+                func_002705D8(self);
+        }
+    }
+}
+#endif

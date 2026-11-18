@@ -809,3 +809,59 @@ DTOR_CLONE(func_003218B0, D_00451288, 0)
 DTOR_CLONE(_$_21cCollisionScrollSolid, D_0041D5A8, 0x5C)
 // FUNCTION: GAME 0x1339C0
 DTOR_CLONE(_$_15cCollisionSolid, D_0041D808, 0x30)
+
+// 0x173AD8 near-miss (cluster of 6 identical 0x1D4 units; no COP2). See diff note below.
+#ifdef NONMATCHING
+#include "game/cVec.h"
+#include "game/cObj.h"
+#include "game/cDamageUnit.h"
+#include "game/cDamageManage.h"
+
+struct cV4 : cVec { float w; };
+
+extern "C" {
+void func_001B6FB8(void *);
+void setMeshDispFromLayer__7cOmBaseUib(void *, unsigned, int);
+}
+extern cDamageManage g_DmgManage;
+
+class Obj173AD8 : public cObj {
+public:
+    char _pad2F8[0x548 - 0x2F8];
+    short m_s548;
+    short m_s54A;
+    char _pad54C[0x650 - 0x54C];
+    cDamageUnit *m_take;
+};
+
+// DRAFT: GAME 0x173AD8
+// Diff: prologue matches through 0x173BB4 (frame 0x90 vs 0x80); the rest differs. The original keeps a second
+// copy of i (a3) for the `i >= lo` test and spills partsNum to 0x10($sp); mine uses 0x40($sp) and a single i.
+extern "C" int func_00173AD8(Obj173AD8 *self)
+{
+    func_001B6FB8(self);
+    cV4 a, b;
+    cV4 c, d;
+    cV4 *pc = &c;
+    a.x = 1.02f; a.y = 1.288f; a.z = 1.02f; a.w = 1.0f;
+    b.x = 1.02f; b.y = 1.288f; b.z = 1.02f; b.w = 1.0f;
+    c.x = 0; c.y = 0; c.z = 0; pc->w = 1.0f;
+    self->m_take = (cDamageUnit *)g_DmgManage.CreateDamageTake((cGameObj *)self, (DMG_KIND)2);
+    if (self->m_take) {
+        cV4 *pd = &d;
+        d.x = 0; d.y = 0; d.z = 0; pd->w = 1.0f;
+        self->m_take->AddDamageCollCylinder(*(cMatrix *)((char *)self + 0x80), c, d, b.y, b.x * 0.5f);
+    }
+    self->m_s548 = 1;
+    self->m_s54A = 1;
+    setMeshDispFromLayer__7cOmBaseUib(self, 0, 1);
+    setMeshDispFromLayer__7cOmBaseUib(self, 0x40, 0);
+    if (self->m_partsNum != 1) {
+        for (int i = 1; i < 6 && self->m_partsNum != i; i++) {
+            *(unsigned *)((char *)self->getParts(i) + 0x154) |= 8;
+            *(unsigned *)((char *)self->getParts(i) + 0x154) |= 0x10;
+        }
+    }
+    return 1;
+}
+#endif

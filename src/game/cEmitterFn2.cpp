@@ -140,3 +140,47 @@ extern "C" void func_0030F5C8(void *p)
     if (p)
         (*(cHeap **)((char *)p - 0x20))->free(p);
 }
+
+struct Slot306 {
+    char _pad0[0xA];
+    unsigned short m_cnt;
+};
+struct Tbl306 {
+    char _pad0[0x300];
+    Slot306 *m_slot[32];
+};
+
+// FUNCTION: GAME 0x306ED8
+extern "C" short func_00306ED8(Tbl306 *t, int i)
+{
+    Slot306 *s;
+    if (i >= 32 || (s = t->m_slot[i]) == 0)
+        return -1;
+    s->m_cnt++;
+    return s->m_cnt;
+}
+
+#ifdef NONMATCHING
+extern "C" unsigned int func_0030F348();
+
+// DRAFT: GAME 0x30F518
+// 9 words differ: original loads the 2^-31 constant after the cvt.s.w, ours before the mtc1
+extern "C" float func_0030F518()
+{
+    float r = (float)(int)(func_0030F348() >> 1);
+    return r * 4.656613e-10f;
+}
+
+// DRAFT: GAME 0x309D40
+// 17 words differ: ceil-log2 loop; original shares the v0=1 exit, ours duplicates it
+extern "C" int func_00309D40(int a)
+{
+    int i = 31;
+    if (a >= 0) {
+        i--;
+        while (i > 0 && !((a >> i) & 1))
+            i--;
+    }
+    return i + ((1 << i) < a);
+}
+#endif

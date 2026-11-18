@@ -111,4 +111,42 @@ int func_002919C0(char *self, int u, int k) { int n = 0; for (EmNode *p = *(EmNo
 char *func_00295660(char *self) { char *q = self + 0x10; char *f = self + 0x23; for (unsigned i = 0; i < 2; i++, q += 0x18, f += 0x18) { if (*(unsigned char *)f == 0) return q; } return 0; }
 // FUNCTION: GAME 0x290048
 void func_00290048(char *self, int a, int b) { if (a && b >= -1 && *(int *)(self + 8) == 0 && *(int *)(self + 0xC) == -1 && *(unsigned char *)(self + 0x10) != 1) { *(int *)(self + 8) = a; *(int *)(self + 0xC) = b; *(unsigned char *)(self + 0x10) = 1; } }
+extern char g_RoomSave;
+extern char CoreSave;
+extern char RelSys;
+extern unsigned D_00747A24;
+extern char *g_Sce;
+void *GetEm__9cEmManageUc(void *, unsigned char);
+char *func_002BEF60(void *);
+int func_001F9FF0(void *);
+void unlinkNoFree__7cRelSysQ27cRelSys8eRelType(void *, int);
+void free__5cHeapPv(void *, void *);
+void *memset(void *, int, unsigned);
+// FUNCTION: GAME 0x295978
+int func_00295978(char *self) { void *e = GetEm__9cEmManageUc(&g_EmManage, *(unsigned char *)self); *(void **)(self + 4) = e; return e != 0; }
+// FUNCTION: GAME 0x2954D0
+void func_002954D0(int a, int b, int n) { char *p = func_002BEF60(&g_RoomSave); if (p) { if (n > 0) *(short *)(p + 0x16) = n; else *(short *)(p + 0x16) = 0; } }
+// FUNCTION: GAME 0x2962B0
+void func_002962B0(char *self) { *(int *)(self + 0x38) = func_001F9FF0(&CoreSave); func_00297660(self); *(unsigned char *)(self + 0x34) = 0; *(int *)self = 0; }
+// FUNCTION: GAME 0x295600
+void func_00295600(char *self)
+{
+    if (!(D_00747A24 & 0x1000000) && *(unsigned char *)(g_Sce + 0x14) != 1) {
+        memset(self + 0x10, 0, 0x30);
+        *(int *)(self + 4) = 0xFFFF;
+    }
+}
+#ifdef NONMATCHING
+// dsrl at 0x296304 compiles as srl (lbu then 64-bit shift not reproduced)
+// DRAFT: GAME 0x2962F0
+void func_002962F0(char *self)
+{
+    if ((*(unsigned char *)(self + 8)) >> 7)
+        unlinkNoFree__7cRelSysQ27cRelSys8eRelType(&RelSys, 2);
+    char *p = *(char **)(self + 0x10);
+    if (p) free__5cHeapPv(*(void **)(p - 0x20), p);
+    *(int *)(self + 0x10) = 0;
+    func_00297660(self);
+}
+#endif
 }

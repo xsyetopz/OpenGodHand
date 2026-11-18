@@ -118,7 +118,12 @@ def emit(units, sources: dict[Path, list[int]]) -> list[str]:
         us = groups[g]
         asm = [f"asm/text/{v:08X}.s" for v, _s, _n in us]
         s = ROOT / f"build/expected/{g}.s"
-        text = "".join(f'.include "{a}"\n' for a in asm)
+        # Each unit positions its code with `.org` from the start of
+        # `.text.unit`, so every unit gets its own section here.
+        text = "".join(
+            (ROOT / a).read_text().replace(".section .text.unit,", f".section .text.u{v:08X},")
+            for a, (v, _s, _n) in zip(asm, us)
+        )
         if not s.exists() or s.read_text() != text:  # keep mtime stable for ninja
             s.write_text(text)
         n.append(f"build build/expected/{g}.o: asm_obj build/expected/{g}.s | {' '.join(asm)}")

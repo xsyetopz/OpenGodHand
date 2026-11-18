@@ -16,17 +16,13 @@ void func_002CB200()
 {
 }
 
-#ifdef NONMATCHING
-// 0x2CB070 near-miss: original stores zero at 0x28, 0x24, 0x20 in that order;
-// compiled reorders the stores whichever source order is used.
-// DRAFT: GAME 0x2CB070
+// FUNCTION: GAME 0x2CB070
 void func_002CB070(int *p)
 {
-    p[10] = 0;
     p[9] = 0;
     p[8] = 0;
+    p[10] = 0;
 }
-#endif
 
 // FUNCTION: GAME 0x2CC568
 int func_002CC568(sBgmNode *n)
