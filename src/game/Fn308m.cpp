@@ -87,40 +87,8 @@ extern "C" void sceVu0Normalize(float *, float *);
 extern "C" void sceVu0TransMatrix(float *, float *, float *);
 extern "C" void func_0030A3F8(void *, float *);
 
-// FUNCTION: GAME 0x30A8C8
-extern "C" void func_0030A8C8(void *out, float *pos, float *a, float *b)
-{
-    float m[16] __attribute__((aligned(16)));
-    float t[4] __attribute__((aligned(16)));
-    sceVu0UnitMatrix(m);
-    sceVu0OuterProduct(t, b, a);
-    sceVu0Normalize(m, t);
-    sceVu0Normalize(m + 8, a);
-    sceVu0OuterProduct(m + 4, m + 8, m);
-    sceVu0TransMatrix(m, m, pos);
-    func_0030A3F8(out, m);
-}
-
 extern "C" void sceVu0ScaleVector(float *, float *, float);
 extern "C" void func_0030A3B0(float *, float *);
-
-// FUNCTION: GAME 0x30A978
-extern "C" void func_0030A978(float *m, float *x, float *y, float *z)
-{
-    float t[4] __attribute__((aligned(16)));
-    sceVu0ScaleVector(t, x, -1.0f);
-    sceVu0Normalize(m, t);
-    sceVu0ScaleVector(t, y, -1.0f);
-    sceVu0Normalize(m + 4, t);
-    sceVu0ScaleVector(t, z, -1.0f);
-    sceVu0Normalize(m + 8, t);
-    float zero = 0.0f;
-    m[15] = 1.0f;
-    m[14] = zero;
-    m[13] = zero;
-    m[12] = zero;
-    func_0030A3B0(m, m);
-}
 
 extern char D_00747A2C[];
 

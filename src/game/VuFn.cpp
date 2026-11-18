@@ -4,86 +4,6 @@ typedef int Row __attribute__((mode(TI)));
 
 extern "C" {
 
-// FUNCTION: GAME 0x30A4A0
-void sceVu0AddVector(float *d, const float *a, const float *b)
-{
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvadd.xyzw $vf6,$vf4,$vf5\n\tsqc2 $vf6,0(%0)" : : "r"(d), "r"(a), "r"(b) : "memory");
-}
-
-// FUNCTION: GAME 0x30A4B8
-void sceVu0SubVector(float *d, const float *a, const float *b)
-{
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyzw $vf6,$vf4,$vf5\n\tsqc2 $vf6,0(%0)" : : "r"(d), "r"(a), "r"(b) : "memory");
-}
-
-// FUNCTION: GAME 0x30A4E8
-void sceVu0ScaleVector(float *d, const float *a, float s)
-{
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tmfc1 $t0,%2\n\tqmtc2.ni $t0,$vf5\n\tvmulx.xyzw $vf6,$vf4,$vf5x\n\tsqc2 $vf6,0(%0)" : : "r"(d), "r"(a), "f"(s) : "$8", "memory");
-}
-
-// FUNCTION: GAME 0x30A328
-void sceVu0OuterProduct(float *d, const float *a, const float *b)
-{
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvopmula.xyz $ACC,$vf4,$vf5\n\tvopmsub.xyz $vf6,$vf5,$vf4\n\tvsub.w $vf6,$vf6,$vf6\n\tsqc2 $vf6,0(%0)" : : "r"(d), "r"(a), "r"(b) : "memory");
-}
-
-// FUNCTION: GAME 0x30A348
-float sceVu0InnerProduct(const float *a, const float *b)
-{
-    float r;
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvmul.xyz $vf5,$vf4,$vf5\n\tvaddy.x $vf5,$vf5,$vf5y\n\tvaddz.x $vf5,$vf5,$vf5z\n\tqmfc2.ni %0,$vf5" : "=r"(r) : "r"(a), "r"(b) : "memory");
-    return r;
-}
-
-// FUNCTION: GAME 0x30A468
-void sceVu0DivVector(float *d, const float *a, float s)
-{
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tmfc1 $t0,%2\n\tqmtc2.ni $t0,$vf5\n\tvdiv $Q,$vf0w,$vf5x\n\tvwaitq\n\tvmulq.xyzw $vf4,$vf4,$Q\n\tsqc2 $vf4,0(%0)" : : "r"(d), "r"(a), "f"(s) : "$8", "memory");
-}
-
-// FUNCTION: GAME 0x30A5A0
-void sceVu0UnitMatrix(float *m)
-{
-    __asm__ volatile("vsub.xyzw $vf4,$vf0,$vf0\n\tvadd.w $vf4,$vf4,$vf0\n\tvmr32.xyzw $vf5,$vf4\n\tvmr32.xyzw $vf6,$vf5\n\tvmr32.xyzw $vf7,$vf6\n\tsqc2 $vf4,0x30(%0)\n\tsqc2 $vf5,0x20(%0)\n\tsqc2 $vf6,0x10(%0)\n\tsqc2 $vf7,0(%0)" : : "r"(m) : "memory");
-}
-
-// FUNCTION: GAME 0x30A2B0
-void sceVu0ApplyMatrix(float *d, const float *m, const float *v)
-{
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0x10(%1)\n\tlqc2 $vf6,0x20(%1)\n\tlqc2 $vf7,0x30(%1)\n\tlqc2 $vf8,0(%2)\n\tvmulax.xyzw $ACC,$vf4,$vf8x\n\tvmadday.xyzw $ACC,$vf5,$vf8y\n\tvmaddaz.xyzw $ACC,$vf6,$vf8z\n\tvmaddw.xyzw $vf9,$vf7,$vf8w\n\tsqc2 $vf9,0(%0)" : : "r"(d), "r"(m), "r"(v) : "memory");
-}
-
-// FUNCTION: GAME 0x30A370
-void sceVu0Normalize(float *d, const float *a)
-{
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tvmul.xyz $vf5,$vf4,$vf4\n\tvaddy.x $vf5,$vf5,$vf5y\n\tvaddz.x $vf5,$vf5,$vf5z\n\tvsqrt $Q,$vf5x\n\tvwaitq\n\tvaddq.x $vf5,$vf0,$Q\n\tvnop\n\tvnop\n\tvdiv $Q,$vf0w,$vf5x\n\tvsub.xyzw $vf6,$vf0,$vf0\n\tvwaitq\n\tvmulq.xyz $vf6,$vf4,$Q\n\tsqc2 $vf6,0(%0)" : : "r"(d), "r"(a) : "memory");
-}
-
-
-// The three row loads precede the vadd, so the rows sit in registers across the asm; the clobbers and
-// the declaration order reproduce the original register choice (a3/t0/t1).
-// FUNCTION: GAME 0x30A508
-void sceVu0TransMatrix(Row *d, const Row *m, const float *t)
-{
-    __asm__ volatile("lqc2 $vf4,0(%0)\n\tlqc2 $vf5,0x30(%1)" : : "r"(t), "r"(m) : "memory");
-    Row b = m[1], c = m[2], a = m[0];
-    __asm__ volatile("vadd.xyz $vf5,$vf5,$vf4" : : : "$2", "$3", "$6", "memory");
-    d[0] = a;
-    d[1] = b;
-    d[2] = c;
-    __asm__ volatile("sqc2 $vf5,0x30(%0)" : : "r"(d) : "memory");
-}
-
-// FUNCTION: GAME 0x30AB48
-void func_0030AB48(float *d, const float *m, const float *v, int zw)
-{
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0x10(%1)\n\tlqc2 $vf6,0x20(%1)\n\tlqc2 $vf7,0x30(%1)\n\tlqc2 $vf8,0(%2)\n\tvmulax.xyzw $ACC,$vf4,$vf8x\n\tvmadday.xyzw $ACC,$vf5,$vf8y\n\tvmaddaz.xyzw $ACC,$vf6,$vf8z\n\tvmaddw.xyzw $vf9,$vf7,$vf8w\n\tvdiv $Q,$vf0w,$vf9w\n\tvwaitq\n\tvmulq.xyz $vf9,$vf9,$Q\n\tvftoi4.xyzw $vf10,$vf9" : : "r"(d), "r"(m), "r"(v) : "memory");
-    if (zw)
-        __asm__ volatile("vftoi0.zw $vf10,$vf9");
-    __asm__ volatile("sqc2 $vf10,0(%0)" : : "r"(d) : "memory");
-}
-
 // FUNCTION: GAME 0x2A38E8
 int func_002A38E8(float *d, const float *m, const float *v)
 {
@@ -116,33 +36,6 @@ void Adjust_theta_vec(float *v)
         : : "r"(v) : "$8", "$9", "$10", "$11", "$13", "memory");
 }
 
-// 4x4 matrix inverse for a rotation + translation matrix: transposes the 3x3 part with MMI, negates the translation.
-// FUNCTION: GAME 0x30A3F8
-extern "C" void func_0030A3F8(float *d, const float *m)
-{
-    __asm__ volatile(
-        "lq $t0,0(%1)\n\tlq $t1,0x10(%1)\n\tlq $t2,0x20(%1)\n\tlqc2 $vf4,0x30(%1)\n\t"
-        "vmove.xyzw $vf5,$vf4\n\tvsub.xyz $vf4,$vf4,$vf4\n\tvmove.xyzw $vf9,$vf4\n\tqmfc2.ni $t3,$vf4\n\t"
-        "pextlw $t4,$t1,$t0\n\tpextuw $t5,$t1,$t0\n\tpextlw $t6,$t3,$t2\n\tpextuw $t7,$t3,$t2\n\t"
-        "pcpyld $t0,$t6,$t4\n\tpcpyud $t1,$t4,$t6\n\tpcpyld $t2,$t7,$t5\n\t"
-        "qmtc2.ni $t0,$vf6\n\tqmtc2.ni $t1,$vf7\n\tqmtc2.ni $t2,$vf8\n\t"
-        "vmulax.xyz $ACC,$vf6,$vf5x\n\tvmadday.xyz $ACC,$vf7,$vf5y\n\tvmaddz.xyz $vf4,$vf8,$vf5z\n\tvsub.xyz $vf4,$vf9,$vf4\n\t"
-        "sq $t0,0(%0)\n\tsq $t1,0x10(%0)\n\tsq $t2,0x20(%0)\n\tsqc2 $vf4,0x30(%0)"
-        : : "r"(d), "r"(m) : "$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "memory");
-}
-
-// Continues from $vf6 (set by the caller); the result stays in $vf4.
-// FUNCTION: GAME 0x30A5D0
-extern "C" void func_0030A5D0(int, int, int, int neg)
-{
-    __asm__ volatile("lui $t0,%%hi(D_003C3C90)\n\taddiu $t0,$t0,%%lo(D_003C3C90)\n\tlqc2 $vf5,0($t0)\n\tvmr32.w $vf6,$vf6\n\tvaddx.x $vf4,$vf0,$vf6x\n\tvmul.x $vf6,$vf6,$vf6\n\tvmulx.yzw $vf4,$vf4,$vf0x\n\tvmulw.xyzw $vf8,$vf5,$vf6w\n\tvsub.xyzw $vf5,$vf0,$vf0\n\tvmulx.xyzw $vf8,$vf8,$vf6x\n\tvmulx.xyz $vf8,$vf8,$vf6x\n\tvaddw.x $vf4,$vf4,$vf8w\n\tvmulx.xy $vf8,$vf8,$vf6x\n\tvaddz.x $vf4,$vf4,$vf8z\n\tvmulx.x $vf8,$vf8,$vf6x\n\tvaddy.x $vf4,$vf4,$vf8y\n\tvaddx.x $vf4,$vf4,$vf8x\n\tvaddx.xy $vf4,$vf5,$vf4x\n\tvmul.x $vf7,$vf4,$vf4\n\tvsubx.w $vf7,$vf0,$vf7x\n\tvsqrt $Q,$vf7w\n\tvwaitq\n\tvaddq.x $vf7,$vf0,$Q" : : : "$8", "memory");
-    if (!neg)
-        __asm__ volatile("vaddx.x $vf4,$vf5,$vf7x");
-    else
-        __asm__ volatile("vsubx.x $vf4,$vf5,$vf7x");
-    __asm__ volatile("");
-}
-
 struct Ent { float *dst; char pad[0xC]; float off[4]; };
 struct Set {
     char p0[0xC];
@@ -159,7 +52,6 @@ extern "C" void func_002AE1C8(Set *s)
     }
     s->n = 0;
 }
-
 
 // Stack vectors with a zeroed-w constructor and the guarded 3-float assignment of the cVec family.
 struct Qv { float f[4]; };

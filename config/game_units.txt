@@ -1,0 +1,76 @@
+# Game units outside the main game span (0x100280-0x31C000) and the ProDG
+# islands 0x372CB0-0x387430 and 0x393FD8-0x394F20. They sit among library code,
+# so progress counts them as game code one by one. Evidence: ProDG `sq`
+# prologues, game vtables, game callers or callees (docs/decomp.md).
+# addr      evidence
+0x31C1D0  sq prologue (ProDG game code)
+0x31C238  sq prologue (ProDG)
+0x31C348  game helper in 0x31C000-0x31F000
+0x31C350  sq prologue (ProDG game code)
+0x31C438  sq prologue (ProDG)
+0x31C4E0  sq prologue (ProDG game code)
+0x31C5C0  sq prologue (ProDG)
+0x31C7E0  sq prologue (ProDG)
+0x31C890  game helper in 0x31C000-0x31F000
+0x31C8B8  game helper in 0x31C000-0x31F000
+0x31C8E0  game helper in 0x31C000-0x31F000
+0x31C900  game helper in 0x31C000-0x31F000
+0x31C928  game helper in 0x31C000-0x31F000
+0x31C950  game helper in 0x31C000-0x31F000
+0x31CA58  game helper in 0x31C000-0x31F000
+0x31CA88  sq prologue (ProDG)
+0x31CB80  game helper in 0x31C000-0x31F000
+0x31CC48  sq prologue (ProDG game code)
+0x31CCF0  sq prologue (ProDG game code)
+0x31CE38  sq prologue (ProDG game code)
+0x31CE90  game helper in 0x31C000-0x31F000
+0x31CE98  game helper in 0x31C000-0x31F000
+0x31CEF8  sndata game name Rnd__Fv (mangled game symbol)
+0x31CF30  game helper in 0x31C000-0x31F000
+0x31CF78  game helper in 0x31C000-0x31F000
+0x31CFE0  sndata game name irand__Fv (mangled game symbol)
+0x31D000  sndata game name fRand0_1__Fv (mangled game symbol)
+0x31D050  sndata game name frand__Fff (mangled game symbol)
+0x31D168  game helper in 0x31C000-0x31F000
+0x31D1B0  sq prologue (ProDG)
+0x31D2F8  sq prologue (ProDG)
+0x31D3D0  sq prologue (ProDG)
+0x31D658  sq prologue (ProDG game code)
+0x31D6E8  sq prologue (ProDG)
+0x31D778  sq prologue (ProDG)
+0x31D928  sq prologue (ProDG)
+0x31DA28  game helper in 0x31C000-0x31F000
+0x31EE10  ctor/dtor/accessor of game class
+0x31EEA8  ctor/dtor/accessor of game class
+0x31EEC8  ctor/dtor/accessor of game class
+0x31F188  ctor/dtor/accessor of game class
+0x31F1F8  ctor/dtor/accessor of game class
+0x31F218  ctor/dtor/accessor of game class
+0x31F288  ctor/dtor/accessor of game class
+0x31F2A8  ctor/dtor/accessor of game class
+0x31F310  ctor/dtor/accessor of game class
+0x31F330  ctor/dtor/accessor of game class
+0x31F360  ctor/dtor/accessor of game class
+0x31F3C8  ctor/dtor/accessor of game class
+0x31F3F8  ctor/dtor/accessor of game class
+0x31F460  ctor/dtor/accessor of game class
+0x31F480  ctor/dtor/accessor of game class
+0x31F488  ctor/dtor/accessor of game class
+0x31F4E0  ctor/dtor/accessor of game class
+0x31FA20  ctor/dtor/accessor of game class
+0x31FA68  ctor/dtor/accessor of game class
+0x31FA88  ctor/dtor/accessor of game class
+0x31FAA8  ctor/dtor/accessor of game class
+0x31FAC8  ctor/dtor/accessor of game class
+0x31FFA0  ctor/dtor/accessor of game class
+0x321818  AMBIGUOUS
+0x3218B0  AMBIGUOUS
+0x372C68  vtable D_003BAFE0 game class ctor/dtor
+0x372C80  vtable D_003BAFE0 game class ctor/dtor
+0x3BAFF8  sq prologue (ProDG game code)
+0x3BB058  sq prologue (ProDG), docs/decomp.md
+0x3BB178  sq prologue (ProDG), docs/decomp.md
+0x3BB468  sq prologue (ProDG game code)
+0x3BB4F0  sq prologue (ProDG), docs/decomp.md
+0x3BB980  sq prologue (ProDG game code)
+0x3BBA10  sq prologue (ProDG), docs/decomp.md

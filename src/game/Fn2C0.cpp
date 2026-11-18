@@ -163,12 +163,12 @@ extern "C" void AtInit__10cSceAtUnit9eSceAt_id12eAreaHitType12eAreaTrgType8eActT
 {
     memset(self, 0, 0x9C);
     self[0x35] = id;
-    self[0x3A] = act;
     self[0x38] = hit;
     self[0x3B] = trg;
-    self[0x54] = 0x31;
-    self[0x39] = 8;
+    self[0x3A] = act;
     self[0x34] = 3;
+    self[0x39] = 8;
+    self[0x54] = 0x31;
     *(unsigned short *)(self + 0x36) = 0xFFFF;
 }
 #endif

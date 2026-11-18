@@ -20,19 +20,6 @@ struct Rt {
     char m_1e4[3][0x58];
 };
 
-// FUNCTION: GAME 0x3A61F0
-extern "C" void func_003A61F0(Rt *self)
-{
-    self->m_3c = func_003A6290;
-    self->m_38 = 1;
-    func_003A6188(self->m_1e4[0], 4, 0, self);
-    func_003A6188(self->m_1e4[1], 9, 1, self);
-    func_003A6188(self->m_1e4[2], 10, 2, self);
-    self->m_1e0 = self->m_1e4[0];
-    self->m_1dc = 3;
-    self->m_1d8 = 0;
-}
-
 struct Ent2 {
     int m_0;
     unsigned m_4;
@@ -54,26 +41,6 @@ extern "C" int func_00394290(Ent2 *e, int n, unsigned key, int base)
             }
             e++;
         } while (--i != (unsigned)-1);
-    }
-    return 1;
-}
-
-// FUNCTION: GAME 0x3A9538
-extern "C" int func_003A9538(char *s, int n)
-{
-    if (n > 0) {
-        n--;
-        char *p = s + n;
-        if (*p >= '5') {
-            do {
-                *p = '0';
-                n--;
-                p--;
-            } while (n > 0 && *p == '9');
-            if (s[n] == '9')
-                return 0;
-            s[n]++;
-        }
     }
     return 1;
 }
