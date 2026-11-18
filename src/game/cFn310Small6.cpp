@@ -127,7 +127,7 @@ extern "C" void func_0031A538(int *src)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x31A650 (2 words differ: a1/a3 arg moves swapped)
+// DRAFT: GAME 0x31A650 (2 words differ: a1/a3 arg moves swapped; tried ?:, hoisted slot load, non-variadic callee decl)
 extern "C" int func_0031A650(char *self, int idx, int a, int b, int c)
 {
     if (idx < 10) {

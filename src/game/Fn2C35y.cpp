@@ -9,12 +9,11 @@ extern "C" void endMess__9cScenario(char *);
 extern "C" void func_001F7360(char *);
 extern "C" void func_002C1540(char *);
 
-// DRAFT: GAME 0x2C3500 (4 words differ: addiu $s1 is scheduled after sd $ra instead of before)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2C3500
+// No register barrier on sys: the original schedules the s1 setup ahead of the ra save.
 extern "C" void func_002C3500(char *self)
 {
     char *sys = Sys;
-    __asm__("" : "+r"(sys));
     if (*(unsigned short *)(sys + 0x5B0) != 0x20 && Getplayer__Fv() != 0) {
         long f = *(unsigned *)(self + 0x48);
         if (((f >> 1) & 1) == 0) {
@@ -52,4 +51,3 @@ tail:
         func_001F7360(g_ActBtn);
     }
 }
-#endif

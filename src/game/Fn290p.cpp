@@ -68,7 +68,7 @@ extern "C" char *func_00292DC8(char *self, const float *pos, float r)
 extern char *g_Sce;
 extern "C" char *func_002951B0(char *, char *);
 
-// DRAFT: GAME 0x295860 - 2 words differ: original sets s2 (n = 0) before s0 (e = self + 0x10)
+// DRAFT: GAME 0x295860 - 2 words differ: original sets s2 (n = 0) before s0 (e = self + 0x10); tried reorder, init at decl, for-init comma, int i: 2-15 words
 #ifdef NONMATCHING
 extern "C" int func_00295860(char *self)
 {
