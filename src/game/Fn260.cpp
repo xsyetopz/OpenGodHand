@@ -117,22 +117,6 @@ extern "C" void SetDamageCollActive__11cDamageUnitb(void *, int);
 extern "C" void SetDmgGiveHitVec__11cDamageGiveRC4cVec(void *, void *);
 extern char ZeroVec[];
 
-// DRAFT: GAME 0x262980 - 31 words differ from the original (fncmp); the FUNCTION claim was false
-#ifdef NONMATCHING
-extern "C" void func_00262980(Eh *self)
-{
-    DmgU *u;
-    float r = self->m_564 == 0x260 ? 3.0f : 2.0f;
-    u = self->m_680;
-    u->m_46 = 0x49;
-    SetDamageCollRadius__11cDamageUnitif(self->m_680, self->m_684, r);
-    self->m_680->m_4C = 0;
-    SetDamageCollActive__11cDamageUnitb(self->m_680, 1);
-    SetDmgGiveHitVec__11cDamageGiveRC4cVec(self->m_680, ZeroVec);
-    self->m_680->m_40 = -1;
-    self->m_680->m_44 = 0;
-}
-#endif
 
 // FUNCTION: GAME 0x262A10
 extern "C" int func_00262A10(Eh *self)
@@ -176,18 +160,3 @@ struct Ev {
     else                            \
         self->m_16FC = -0.2617994f;
 
-// DRAFT: GAME 0x26A338 - 30 words differ from the original (fncmp); the FUNCTION claim was false
-#ifdef NONMATCHING
-extern "C" void func_0026A338(Ev *self)
-{
-    int s = self->m_564;
-    if (s == 0x223) {
-        A_ARM
-    } else if (s < 0x223 || (s < 0x277 && s < 0x275) || s >= 0x277) {
-        B_ARM
-    } else {
-        A_ARM
-    }
-    self->m_1700++;
-}
-#endif

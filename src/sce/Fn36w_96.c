@@ -61,35 +61,3 @@ int func_00368BC8(char *o, struct B32 *out)
 }
 
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x003691D8
-// diff: 19 words, register allocation (x in t0 instead of a3, 0x100 constant loaded late)
-int func_003691D8(unsigned char *p)
-{
-    unsigned x;
-    int r;
-    x = p[0];
-    x = (x << 8) | p[1];
-    x = (x << 8) | p[2];
-    x = (x << 8) | p[3];
-    if (x == 0x100)
-        r = 4;
-    else if (x == 0x101)
-        r = 3;
-    else if (x - 0x102 < 0xAE)
-        r = 1;
-    else if (x == 0x1B2)
-        r = 0x20;
-    else if (x == 0x1B3)
-        r = 0x40;
-    else if (x == 0x1B5)
-        r = 0x10;
-    else if (x == 0x1B7)
-        r = 0x80;
-    else if (x == 0x1B8)
-        r = 8;
-    else
-        r = 0;
-    return r;
-}
-#endif

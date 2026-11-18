@@ -92,3 +92,94 @@ extern "C" int func_00295860(char *self)
     return n != 0;
 }
 #endif
+
+extern "C" int func_0026ECC0(char *);
+
+// DRAFT: GAME 0x291AC8 - range test codegen differs (original adds xori and branch layout, 35 words)
+#ifdef NONMATCHING
+extern "C" int func_00291AC8(char *self, const float *pos, char *skip, float r)
+{
+    for (Link *n = *(Link **)(self + 0x500); n; n = n->next) {
+        char *o = n->obj;
+        if (!o)
+            continue;
+        if (o == skip)
+            continue;
+        int t = *(unsigned short *)(o + 0x2FE);
+        if (t < 0x200)
+            continue;
+        if (!(t < 0x250))
+            continue;
+        if (!func_0026ECC0(o))
+            continue;
+        if (capVu0MagnitudeSqXZ__FPCfT0(*(float **)(o + 0xF0), pos) < r * r)
+            return 1;
+    }
+    return 0;
+}
+#endif
+
+extern char D_00754C80[];
+extern "C" void func_0031A600(void *, int, int);
+
+// DRAFT: GAME 0x299948 - registers differ: original copies the buffer pointer to a3 and derives q=a3+8 in a2 (28 words differ)
+#ifdef NONMATCHING
+extern "C" void func_00299948(char *buf)
+{
+    unsigned n = ((*(unsigned *)(buf + 0x10000) & 0xFFFFFFF) - (unsigned)buf) >> 4;
+    n--;
+    *(unsigned long *)buf = n | 0x70000000;
+    *(unsigned *)(buf + 8) = 0x11000000;
+    *(unsigned *)(buf + 0xC) = 0;
+    if (n)
+        *(unsigned *)(buf + 0xC) = n | 0x50000000;
+    func_0031A600(D_00754C80, 4, 4);
+}
+#endif
+
+extern "C" void func_00290028(void *);
+extern "C" unsigned irand__Fv();
+extern volatile char scrArray[];
+
+// DRAFT: GAME 0x290110 - scrArray address is hoisted into s3 across the calls (frame 0x50 vs 0x40), about 30 words shift
+#ifdef NONMATCHING
+extern "C" void func_00290110(char *self)
+{
+    char *p = self;
+    do {
+        func_00290028(p);
+        p += 0x14;
+    } while (p < self + 0x500);
+    *(int *)(self + 0x500) = 0;
+    *(int *)(self + 0x504) = 0;
+    *(int *)(self + 0x508) = 0;
+    *(int *)(self + 0x50C) = 0;
+    *(int *)(self + 0x55C) = 0;
+    *(float *)(self + 0x548) = 1.0f;
+    unsigned r = irand__Fv();
+    self[0x53E] = 0;
+    self[0x540] = 0;
+    self[0x541] = 0;
+    *(int *)(self + 0x560) = 0;
+    *(int *)(self + 0x564) = 0;
+    *(int *)(self + 0x568) = 0;
+    *(int *)(self + 0x56C) = 0;
+    *(int *)(self + 0x570) = 0;
+    *(int *)(self + 0x588) = 0;
+    *(int *)(self + 0x58C) = 0;
+    *(int *)(self + 0x590) = 0;
+    *(int *)(self + 0x594) = 0;
+    self[0x53F] = r % 5;
+    int *a = (int *)(self + 0x5AC);
+    for (unsigned i = 0; i < 2; i++)
+        *a++ = 0;
+    int *b = (int *)(self + 0x574);
+    for (unsigned i = 0; i < 5; i++)
+        *b++ = 0;
+    self[0x518] = 0;
+    *(volatile int *)(scrArray + 0xC) = 0;
+    scrArray[4] = 0;
+    *(volatile int *)(scrArray + 8) = 0;
+    self[0x5B5] = 0;
+}
+#endif

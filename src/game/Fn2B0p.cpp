@@ -1,7 +1,6 @@
 // Unnamed units in 0x2B0000-0x2C0000 (block copy, state reset).
 struct BlkQ { int b[0x2F]; };
 extern BlkQ D_005E7910;
-extern "C" void func_002B21F0(char *, int);
 
 // FUNCTION: GAME 0x2B2080
 extern "C" void func_002B2080(BlkQ *d)
@@ -96,3 +95,197 @@ extern "C" void func_002BA998(char *self)
     }
     *(float *)(self + 0xE4) = m;
 }
+
+extern char *Message;
+extern char Snd;
+extern "C" void func_002CB7E8(char *, int);
+extern "C" int func_002AEF90(char *);
+extern "C" void func_002AEF98(char *);
+extern "C" void func_002B4428(char *, int, int);
+extern "C" void func_002B45E8(char *);
+
+// FUNCTION: GAME 0x2B2348
+extern "C" void func_002B2348(char *self)
+{
+    if (*(unsigned *)(self + 0x14) & 0x1000) {
+        if (*(int *)(self + 0x1C)) func_002CB7E8(&Snd, *(int *)(self + 0x20));
+        *(int *)(self + 0x1C) = 0;
+        *(int *)(self + 0x20) = -1;
+        if (!func_002AEF90(Message)) func_002B4428(self, 0, 0);
+        else func_002AEF98(Message);
+        func_002B45E8(self);
+        *(char *)(self + 0xC) = 7;
+        *(int *)(self + 0x14) &= -0x1001;
+        *(char *)(self + 0xD) = 0;
+        *(char *)(self + 0xE) = 0;
+        *(char *)(self + 0xF) = 0;
+    }
+}
+
+extern "C" char *GetMsgAddr(char *, unsigned short) __asm__("getMessageAddr__C8cMessageUs");
+extern "C" char *GetRubyAddr(char *, unsigned short) __asm__("getRubyAddr__C8cMessageUs");
+
+// FUNCTION: GAME 0x2B21F0
+extern "C" void func_002B21F0(char *self, int no)
+{
+    unsigned short n = no;
+    char *m = GetMsgAddr(Message, n);
+    char *r = GetRubyAddr(Message, n);
+    *(unsigned *)(self + 0x14) |= 2;
+    *(unsigned short *)(self + 0x94) = 0;
+    *(unsigned short *)(self + 0x88) = 0xFFFF;
+    *(char *)(self + 0x70) = 0;
+    *(char *)(self + 0xA4) = 0;
+    *(int *)(self + 0x34) = 0;
+    unsigned i = 0;
+    unsigned short *p = (unsigned short *)(self + 0x24);
+    do { *p++ = 0xFFFF; i++; } while (i < 3);
+    *(float *)(self + 0x6C) = 1.0f;
+    *(unsigned short *)(self + 0x64) = n;
+    *(char **)(self + 0x8C) = m;
+    *(char **)(self + 0x7C) = m;
+    *(char **)(self + 0x74) = m;
+    *(char *)(self + 0x30) = -1;
+    *(int *)(self + 0x68) = 0;
+    *(int *)(self + 0x90) = 0;
+    *(int *)(self + 0x84) = 0;
+    *(char **)(self + 0x78) = r;
+    *(unsigned short *)(self + 0x38) = 0;
+    *(char **)(self + 0x80) = r;
+    *(char *)(self + 0x3C) = 0;
+}
+
+extern "C" unsigned getCodeSize__11cMessCommonUs(unsigned short);
+extern "C" int isPageEndCode__11cMessCommonUs(unsigned short);
+extern "C" unsigned short *func_002B0700(char *, unsigned short *, float *, float *, float *);
+extern "C" void func_002B0480(char *, float *);
+
+// FUNCTION: GAME 0x2B0610
+extern "C" void func_002B0610(char *self, unsigned short *s, float *w, float *h)
+{
+    float t[8];
+    *w = 0.0f;
+    *h = 0.0f;
+    func_002B0480(self, t);
+    for (;;) {
+        s = func_002B0700(self, s, t, &t[4], &t[5]);
+        if (*w < t[4]) *w = t[4];
+        *h += t[5];
+        if (isPageEndCode__11cMessCommonUs(*s)) break;
+        *h += *(float *)(self + 0x30) * *(float *)(self + 0x48);
+        s += getCodeSize__11cMessCommonUs(*s);
+    }
+}
+
+extern "C" void func_002B43B0(char *);
+
+// DRAFT: GAME 0x2B3A38
+// diff: 20 words, register assignment of flags/counter/ptr and mask constants differs
+#ifdef NONMATCHING
+extern "C" int func_002B3A38(char *self)
+{
+    func_002AF218(*(unsigned short **)(self + 0x8C));
+    unsigned short *p = *(unsigned short **)(self + 0x8C);
+    int a = *(int *)(self + 0x90);
+    unsigned n = getCodeSize__11cMessCommonUs(*p);
+    a += n;
+    int c = *(unsigned char *)(self + 0x30);
+    int f = *(int *)(self + 0x14);
+    f &= -3;
+    *(int *)(self + 0x84) = a;
+    *(int *)(self + 0x68) = a;
+    *(unsigned short **)(self + 0x7C) = *(unsigned short **)(self + 0x8C) + n;
+    f &= -5;
+    *(char *)(self + 0x30) = c + 1;
+    *(int *)(self + 0x14) = f;
+    func_002B43B0(self);
+    func_002B45E8(self);
+    return 0;
+}
+#endif
+
+extern "C" int func_002AF218(unsigned short *);
+
+// DRAFT: GAME 0x2B45F8
+// diff: 26 words, original keeps the code word in v1 and copies to a0 in a delay slot; ours loads into a0
+#ifdef NONMATCHING
+extern "C" int func_002B45F8(char *self, unsigned short *s, unsigned short code)
+{
+    while (!func_002AF218(s)) {
+        unsigned c = *s;
+        if (c >> 15) {
+            unsigned m = c & 0xFF00;
+            if (m == code) return 1;
+            if (m == 0x8000) return 0;
+        }
+        s += getCodeSize__11cMessCommonUs(c);
+    }
+    return 0;
+}
+#endif
+
+extern "C" float func_002B0BE0(char *, unsigned short *, float *);
+extern "C" void func_002B04C0(char *, unsigned short *, float *);
+extern "C" int func_002AF068(unsigned short);
+
+// FUNCTION: GAME 0x2B0830
+extern "C" unsigned short *func_002B0830(char *self, unsigned short *s, float *p, float *out)
+{
+    float m = 0.0f;
+    *out = 0.0f;
+    while (!(*s >> 15) || (func_002B04C0(self, s, p), !func_002AF068(*s))) {
+        float w = func_002B0BE0(self, s, p);
+        if (m < w) {
+            m = w;
+            *out = *p * *(float *)(self + 0x40) * *(float *)(self + 0x48);
+        }
+        s += getCodeSize__11cMessCommonUs(*s);
+    }
+    return s;
+}
+
+extern "C" int func_002B6510(char *);
+extern "C" int func_002B5E58(char *);
+extern "C" char *func_002B5E90(char *, int);
+
+// FUNCTION: GAME 0x2B6370
+extern "C" void func_002B6370(char *self)
+{
+    if (func_002B6510(self)) {
+        int n = func_002B5E58(self);
+        for (int i = 0; i < n;) {
+            char *c = func_002B5E90(self, i);
+            i++;
+            func_002B6370(c);
+        }
+        *(unsigned *)(self + 0x90) &= ~1u;
+    }
+}
+
+extern char D_0044BAF8[];
+extern "C" void func_002BAC88(char *);
+extern "C" void func_002BB040(char *);
+
+// DRAFT: GAME 0x2B8990
+// diff: 14 words, original keeps 3 for the store (v1) apart from the counter (s2) and allocates -1 before the pointer
+#ifdef NONMATCHING
+extern "C" char *func_002B8990(char *self)
+{
+    int n = 3;
+    int e = -1;
+    char *a = self + 0x14;
+    *(int *)self = 3;
+    char *p = a;
+    *(char **)(self + 8) = D_0044BAF8;
+    *(char *)(self + 0xD) = 0;
+    do {
+        func_002BAC88(p);
+        n--;
+        p += 8;
+    } while (n != e);
+    func_002BB040(a);
+    func_002BB040(self + 0x14);
+    *(unsigned *)self |= 3;
+    return self;
+}
+#endif

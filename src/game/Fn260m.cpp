@@ -40,26 +40,6 @@ extern "C" void func_00279E78(Obj26 *self)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x270C78 - 3 words: li order of 0x9F/1 in the first branch (v0/v1 swapped)
-extern "C" void func_00270C78(unsigned char *self)
-{
-    if (*(int *)((char *)self + 0x564) == 0x265 && (*(int *)((char *)self + 0x16D4) & 0x20000000)) {
-        self[0x2F7] = 1;
-        self[0x2F5] = 0x9F;
-        self[0x2F4] = 0;
-    } else {
-        if (*(int *)((char *)self + 0x564) == 0x279)
-            func_0026B1E8(self);
-        self[0x2F4] = 1;
-        self[0x2F5] = 0xF;
-        self[0x2F6] = 0;
-        self[0x2F7] = 0;
-    }
-}
-
-#endif
-
 // FUNCTION: GAME 0x269AC0
 extern "C" void func_00269AC0(char *self)
 {

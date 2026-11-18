@@ -123,7 +123,7 @@ def derived_addresses(obj: Path, sym: str, vram: int, raw: bytes, skip: set[str]
     return {n: next(iter(a)) for n, a in found.items() if len(a) == 1}
 
 
-def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: list[tuple[int, int]]) -> tuple[int, str, bytes | None, list[int], set[str]] | None:
+def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: list[tuple[int, int]], addr_of: dict[str, int]) -> tuple[int, str, bytes | None, list[int], dict[str, int]] | None:
     """Return (first unit address, input section, trimmed bytes or None, covered
     unit addresses, other function sections the table points at) when `sym`'s only data reference is one `.rodata` section
     made of jump tables, possibly beside strings, over consecutive original
@@ -154,14 +154,18 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: lis
         sec = elf.get_section_by_name(names.pop())
         data, align = sec.data(), max(sec["sh_addralign"], 1)
         rel = elf.get_section_by_name(f".rel{sec.name}")
-        entries, foreign, deps = set(), set(), set()
+        entries, foreign, slots, named, by_off = set(), set(), {}, {}, {}
         for r in rel.iter_relocations() if rel else ():
             t = symtab.get_symbol(r["r_info_sym"])
             other = elf.get_section(t["st_shndx"]).name if t["st_info"]["type"] == "STT_SECTION" else ""
             if other and not other.startswith(".text."):
                 return None  # a pointer into compiled data has no original address
             if other and other != f".text.{sym}":
-                deps.add(other)  # a vtable slot: valid only while that function is linked
+                slots[r["r_offset"]] = other  # a vtable slot: the original word gives that function's address
+            if not other and t.name:
+                named[r["r_offset"]] = t.name  # a slot naming a function directly
+            if other.startswith(".text.") or t.name:
+                by_off[r["r_offset"]] = other[len(".text."):] if other else t.name
             (entries if other == f".text.{sym}" else foreign).add(r["r_offset"])
     # The assembler pads the section to its alignment; zero bytes after the
     # last real byte are not content.
@@ -182,10 +186,16 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: lis
             continue
         if all(
             (word(data, i) + vram == word(want, i) and 0 <= word(data, i) < span)
-            if i in entries else i in foreign or data[i : i + 4] == want[i : i + 4]
+            if i in entries else (
+                # A named slot must point where the link puts that name, else the
+                # compiled vtable order differs from the original's.
+                by_off.get(i) not in addr_of or addr_of[by_off[i]] == word(want, i) - word(data, i)
+            ) if i in foreign else data[i : i + 4] == want[i : i + 4]
             for i in range(0, cut - cut % 4, 4)
         ) and data[cut - cut % 4 : cut] == want[cut - cut % 4 : cut]:
             covered = [v for v, _s in units[n:] if v < end]
+            deps = {s: word(want, o) - word(data, o) for o, s in slots.items()}
+            deps.update({n: word(want, o) - word(data, o) for o, n in named.items()})
             return uv, sec.name, data[:cut] if cut < len(data) else None, covered, deps
     return None
 
@@ -214,8 +224,8 @@ def section_calls(obj: Path, sym: str, known: set[str]) -> dict[str, str]:
     return out
 
 
-def redirect_calls(path: Path, sym: str, calls: dict[str, str]) -> None:
-    """Point the section-symbol relocations of `sym` in the ELF at `path` that
+def redirect_calls(path: Path, target: str, calls: dict[str, str]) -> None:
+    """Point the section-symbol relocations of section `target` in the ELF at `path` that
     name a key of `calls` at the symbol of that name (in place; the
     instruction addends stay, a function starts its own section). The symbol
     must be global already, see linkgen's objcopy step."""
@@ -224,7 +234,7 @@ def redirect_calls(path: Path, sym: str, calls: dict[str, str]) -> None:
         symtab = elf.get_section_by_name(".symtab")
         index = {s.name: i for i, s in enumerate(symtab.iter_symbols()) if s["st_info"]["bind"] != "STB_LOCAL"}
         for rs in elf.iter_sections():
-            if not isinstance(rs, RelocationSection) or elf.get_section(rs["sh_info"]).name != f".text.{sym}":
+            if not isinstance(rs, RelocationSection) or elf.get_section(rs["sh_info"]).name != target:
                 continue
             for n, r in enumerate(rs.iter_relocations()):
                 t = symtab.get_symbol(r["r_info_sym"])
@@ -233,3 +243,17 @@ def redirect_calls(path: Path, sym: str, calls: dict[str, str]) -> None:
                     if new is not None:
                         f.seek(rs["sh_offset"] + n * rs["sh_entsize"] + 4)  # Elf32_Rel.r_info
                         f.write(struct.pack("<I", (index[new] << 8) | r["r_info_type"]))
+
+
+def symbol_addresses(compiled: list, unit_at: dict[int, str], aliases: str) -> dict[str, int]:
+    """Address of each name the link places: asm unit names, compiled
+    functions, and `name = func_<addr>;` / `name = 0x<addr>;` aliases."""
+    out = {n: v for v, n in unit_at.items()}
+    out.update({sym: vram for vram, _obj, sym in compiled})
+    for name, val in re.findall(r"^(\S+)\s*=\s*(\w+)\s*;", aliases, re.M):
+        m = re.fullmatch(r"func_([0-9A-F]{8})|0[xX]([0-9A-Fa-f]+)", val)
+        if m:
+            out[name] = int(m[1] or m[2], 16)
+        elif val in out:
+            out[name] = out[val]
+    return out

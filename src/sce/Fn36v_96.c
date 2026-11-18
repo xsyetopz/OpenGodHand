@@ -42,27 +42,6 @@ void func_00360520(int a, unsigned *src, short *dst)
 
 #ifdef NONMATCHING
 
-// DRAFT: GAME 0x369E98
-// diff: orig s1=a2/s2=a1 and stores [1] before [0]; ours stores [0] first (4 words, 4 probes)
-extern int func_0036C5F8();
-extern int func_00369F20();
-struct P { int a; int b; };
-extern struct P D_003F1AA0;
-int func_00369E98(char *o, int a, int b)
-{
-    struct P *p;
-    if (o == 0)
-        p = &D_003F1AA0;
-    else {
-        if (func_0036C5F8(o))
-            return func_00369F20(0, 0xFF030203);
-        p = (struct P *)(o + 0x250);
-    }
-    p->b = b;
-    p->a = a;
-    return 0;
-}
-
 // DRAFT: GAME 0x360200
 // diff: orig does a0+=0x28 in place and uses likely-branch delay slots; ours uses t1/bne (many words, 4 probes)
 extern void func_0033ADF8();

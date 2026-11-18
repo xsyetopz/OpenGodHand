@@ -55,7 +55,7 @@ extern void func_003BA6C0(int *, int);
 extern int func_003BA708(struct Dec *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x3BA148 (original emits the state=4 block before the success stores; mine after)
+// DRAFT: GAME 0x3BA148 (31 words off: original emits state=4 block before success stores; goto and if/else tails both give success first)
 void func_003BA148(struct Dec *d)
 {
     int a[4];
@@ -79,24 +79,23 @@ void func_003BA148(struct Dec *d)
         d->in->vt->f1C(d->in, 1, a);
         return;
     }
-        if (func_003BA3D8(d, a[0]) < 0)
-        goto fail;
-    if (func_003BA4F8(d, a[0] + 4) < 0)
-        goto fail;
-    d->in->vt->f1C(d->in, 1, a);
-    if (d->in->vt->f24(d->in, 1) < d->f34)
-        return;
-    func_003BA550(d);
-    if (func_003BA5A0(d) < 0)
-        goto fail;
-    if (d->f28 == 1)
-        func_003BA6C0(d->p8, 0x1800);
-    if (func_003BA708(d) >= 0) {
-        d->f20 += 0x1800;
-        d->f1C += d->f34;
-        return;
+        if (func_003BA3D8(d, a[0]) >= 0 && func_003BA4F8(d, a[0] + 4) >= 0) {
+        d->in->vt->f1C(d->in, 1, a);
+        if (d->in->vt->f24(d->in, 1) < d->f34)
+            return;
+        func_003BA550(d);
+        if (func_003BA5A0(d) >= 0) {
+            if (d->f28 == 1)
+                func_003BA6C0(d->p8, 0x1800);
+            if (func_003BA708(d) < 0) {
+                d->state = 4;
+            } else {
+                d->f20 += 0x1800;
+                d->f1C += d->f34;
+            }
+            return;
+        }
     }
-fail:
     d->state = 4;
 }
 #endif

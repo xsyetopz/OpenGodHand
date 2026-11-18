@@ -139,30 +139,3 @@ extern "C" void func_001CF340(char *self)
     *(char *)(self + 0x2F7) = 0;
     func_001331B8(g_CollScr, *(long *)(self + 0x540), 0);
 }
-
-// FUNCTION: GAME 0x1DBF18
-extern "C" void func_001DBF18(char *self, unsigned short *c0, unsigned short *c1, unsigned short *c2, unsigned short *c3)
-{
-    int i;
-    int **p;
-    *c0 = 0;
-    *c1 = 0;
-    *c2 = 0;
-    *c3 = 0;
-    p = (int **)(self + 0x3004);
-    i = 4;
-    do {
-        int st = *(int *)(**(char ***)p + 0x600);
-        p++;
-        if (st == 1)
-            (*c1)++;
-        else if (st < 2)
-            (*c0)++;
-        else if (st == 2)
-            (*c2)++;
-        else if (st == 3)
-            (*c3)++;
-        else
-            (*c0)++;
-    } while (--i >= 0);
-}

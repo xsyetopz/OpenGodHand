@@ -184,3 +184,53 @@ extern "C" int func_001ABB58(void *self, int idx)
         return 1;
     return Rnd__Fv() % t.v[idx] == 0;
 }
+
+struct V4 {
+    float x, y, z, w;
+};
+extern "C" void func_001B6FB8(void *);
+extern "C" void *CreateDamageTake__13cDamageManageP8cGameObj8DMG_KIND(void *, void *, int);
+extern "C" void *func_001FD9D8(void *, void *, void *, void *, void *);
+extern "C" void func_001BFB28(void *);
+#define FN170_BOX(NAME, X, Y, Z) \
+extern "C" int NAME(char *self) \
+{ \
+    func_001B6FB8(self); \
+    V4 a, b, c, d; \
+    V4 *pa = &a; \
+    V4 *pb = &b; \
+    V4 *pc = &c; \
+    a.x = (X); \
+    a.y = (Y); \
+    a.z = (Z); \
+    pa->w = 1.0f; \
+    b.x = (X); \
+    b.y = (Y); \
+    b.z = (Z); \
+    pb->w = 1.0f; \
+    c.x = 0; \
+    c.y = b.y * -0.5f; \
+    c.z = 0; \
+    pc->w = 1.0f; \
+    void *t = CreateDamageTake__13cDamageManageP8cGameObj8DMG_KIND(g_DmgManage, self, 2); \
+    *(void **)(self + 0x600) = t; \
+    if (t) { \
+        V4 *pd = &d; \
+        d.x = 0; \
+        d.y = 0; \
+        d.z = 0; \
+        pd->w = 1.0f; \
+        func_001FD9D8(t, self + 0x80, &c, &d, &b); \
+    } \
+    *(short *)(self + 0x548) = 1; \
+    *(short *)(self + 0x54A) = 1; \
+    func_001BFB28(self); \
+    return 1; \
+}
+
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x19C1B0
+// diff: 4 words, store order of b.y/a.y (0x4/0x14) differs
+FN170_BOX(func_0019C1B0, 0.839999974f, 1.35599995f, 0.839999974f)
+#endif

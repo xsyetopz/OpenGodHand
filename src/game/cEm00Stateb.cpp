@@ -52,8 +52,7 @@ void func_002256C8(char *self)
         *(unsigned int *)(self + 0x16D4) &= ~0x400;
 }
 
-// 0x22C1A8: 8 words differ (register allocation of the 0x304 blob pointer: original v1/v0/a1, compiled a2/v1/v0)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x22C1A8
 void func_0022C1A8(char *self)
 {
     B(0x186A) = 2;
@@ -64,14 +63,11 @@ void func_0022C1A8(char *self)
         B(0x1864) = 0;
         unsigned m = func_00276468(self) & 0xFFFF;
         unsigned rr = irand() & 1;
-        char *t = *(char **)(self + 0x304);
         B(0x2F7) = rr;
-        int a = *(int *)(t + 0x22E0) + (int)t;
-        int b = *(int *)(t + 0x22E4) + (int)t;
-        if (CoreSave.getGameLevel() == 5) {
-            t = *(char **)(self + 0x304);
-            b = *(int *)(t + 0x22E8) + (int)t;
-        }
+        int a = *(int *)(*(int *)(self + 0x304) + 0x22E0) + *(int *)(self + 0x304);
+        int b = *(int *)(*(int *)(self + 0x304) + 0x22E4) + *(int *)(self + 0x304);
+        if (CoreSave.getGameLevel() == 5)
+            b = *(int *)(*(int *)(self + 0x304) + 0x22E8) + *(int *)(self + 0x304);
         func_002A8578(self, a, b, 3, 0.0f, m, 0);
         *(int *)(self + 0x5F0) = 1;
         *(float *)(self + 0x604) = 35.0f;
@@ -112,7 +108,6 @@ void func_0022C1A8(char *self)
     if (*(int *)(self + 0x5FC))
         *(unsigned int *)(self + 0x16D4) &= ~0x400;
 }
-#endif
 
 // FUNCTION: GAME 0x239570
 void func_00239570(char *self)

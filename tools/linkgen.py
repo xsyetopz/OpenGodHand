@@ -40,7 +40,7 @@ import configure  # noqa: E402
 from elftools.elf.elffile import ELFFile  # noqa: E402
 from elftools.elf.relocation import RelocationSection  # noqa: E402
 import fncmp  # noqa: E402
-from linkdata import derived_addresses, find_symbol, jump_table, matches, positional_address, redirect_calls, rodata_span, section_calls  # noqa: E402
+from linkdata import derived_addresses, find_symbol, jump_table, matches, positional_address, redirect_calls, rodata_span, section_calls, symbol_addresses  # noqa: E402
 
 ROOT = configure.ROOT
 
@@ -125,7 +125,7 @@ def main() -> int:
     known = known_symbols(cfg)
     status: dict[int, str] = {}
     refs: dict[int, set[str]] = {}
-    jtbl: dict[int, tuple[int, str, bytes | None, list[int], set[str]]] = {}
+    jtbl: dict[int, tuple[int, str, bytes | None, list[int], dict[str, int]]] = {}
     ro_span: dict[int, tuple[str, list[int]]] = {}
     ro_units = [(v, sz) for row, units in sections if row[0] == ".rodata" for v, sz, _n in units]
     ro_names = {v: n for row, units in sections if row[0] == ".rodata" for v, _sz, n in units}
@@ -139,6 +139,7 @@ def main() -> int:
         if found != entry[2]:  # the compiler mangled a name the original lacks
             absolute[entry[2]] = entry[0]
             entry[2] = found
+    addr_of = symbol_addresses(cfg["compiled"], unit_at, (ROOT / "config/aliases.ld").read_text())
     compiled_defs: set[str] = set()
     for obj in {e[1] for e in cfg["compiled"] if (ROOT / e[1]).exists()}:
         compiled_defs |= text_symbols(ROOT / obj)
@@ -161,11 +162,10 @@ def main() -> int:
                 absolute[name] = addr
                 refs[vram].discard(name)
         if status[vram] == "match" and refs[vram]:
-            jt = jump_table(ROOT / obj, sym, vram, spans[vram], raw, ro_units)
+            jt = jump_table(ROOT / obj, sym, vram, spans[vram], raw, ro_units, addr_of)
             if jt:
                 jtbl[vram] = jt
                 refs[vram].discard(jt[1])
-                refs[vram] |= jt[4]
             elif len(refs[vram]) == 1 and next(iter(refs[vram])).startswith(".rodata"):
                 name = next(iter(refs[vram]))
                 span_units = rodata_span(ROOT / obj, name, raw, ro_units)
@@ -207,16 +207,25 @@ def main() -> int:
     linked_syms = {sec[len(".text."):] for _o, sec in placed.values() if sec.startswith(".text.")}
     weak = {o: sorted(text_symbols(ROOT / o) - linked_syms) for o in {o for _v, o, _s in cfg["compiled"]}}
 
+    # Callee sections no linked function supplies resolve by pinned name instead.
+    pending: dict[int, dict[str, str]] = {}
+    for vram, _obj, _sym in cfg["compiled"]:
+        slots = jtbl[vram][4] if vram in jtbl else {}
+        names = {s: s[len(".text."):] for s in {*calls[vram], *(k for k in slots if k.startswith(".text."))}}
+        absolute.update({n: a for n, a in slots.items() if not n.startswith(".text.") and n not in known | linked_syms})
+        pending[vram] = {s: x for s, x in names.items() if x not in linked_syms}
+        absolute.update({x: slots[s] for s, x in pending[vram].items() if s in slots and x not in known})
     objcopy = os.environ.get("CROSS", "mipsel-linux-gnu-") + "objcopy"
     for obj, syms in weak.items():
         # A static callee is made global so the script's pin can stand in for it.
-        glob = {x for v, o, _s in cfg["compiled"] if o == obj for x in calls[v].values() if x not in linked_syms}
+        glob = {x for v, o, _s in cfg["compiled"] if o == obj for x in pending[v].values()}
         subprocess.check_call([objcopy, *(f"--globalize-symbol={x}" for x in sorted(glob)),
                                *(f"--weaken-symbol={s}" for s in sorted(set(syms) | glob)), obj, gated(obj)], cwd=ROOT)
     for vram, obj, sym in cfg["compiled"]:
-        todo = {s: x for s, x in calls[vram].items() if x not in linked_syms}
-        if status[vram] == "match" and todo:
-            redirect_calls(ROOT / gated(obj), sym, todo)
+        if status[vram] == "match" and pending[vram]:
+            redirect_calls(ROOT / gated(obj), f".text.{sym}", {s: x for s, x in pending[vram].items() if s in calls[vram]})
+        if status[vram] == "match" and vram in jtbl:  # vtable slots name unlinked methods by address
+            redirect_calls(ROOT / gated(obj), jtbl[vram][1], {s: x for s, x in pending[vram].items() if s in jtbl[vram][4]})
     # A table section padded past its unit is cut to the unit's size.
     for vram, (_uv, name, cut, _units, _deps) in jtbl.items():
         if cut is not None and status[vram] == "match":

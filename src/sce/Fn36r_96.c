@@ -88,3 +88,96 @@ void func_0035F838(void)
     }
 }
 #endif
+
+int func_00365EB0();
+int func_00365D90();
+
+// DRAFT: GAME 0x365D18
+// 25 words: original loads/copies the two sub-structs in a different order and keeps *c in t1/t3
+#ifdef NONMATCHING
+int func_00365D18(int *a, int *b, int *c)
+{
+    int l[12];
+    int t;
+    l[0] = a[1];
+    l[1] = a[4];
+    l[2] = a[3];
+    l[4] = b[1];
+    l[5] = b[2];
+    l[6] = b[3];
+    l[7] = b[4];
+    t = *c;
+    if (t == 0) t = func_00365EB0();
+    return func_00365D90(l, l + 4, t);
+}
+#endif
+
+int func_00369370();
+int func_003691D8(unsigned char *);
+
+// DRAFT: GAME 0x3691D8
+// 19 words differ: register allocation (v in a3 vs v1, const in a2 vs a3), structure matches
+#ifdef NONMATCHING
+int func_003691D8(unsigned char *p)
+{
+    unsigned v;
+    int r = 0;
+    v = (((p[0] << 8 | p[1]) << 8 | p[2]) << 8 | p[3]);
+    if (v == 0x100) r = 4;
+    else if (v == 0x101) r = 3;
+    else if (v - 0x102 < 0xAE) r = 1;
+    else if (v == 0x1B2) r = 0x20;
+    else if (v == 0x1B3) r = 0x40;
+    else if (v == 0x1B5) r = 0x10;
+    else if (v == 0x1B7) r = 0x80;
+    else if (v == 0x1B8) r = 8;
+    return r;
+}
+
+#endif
+
+// DRAFT: GAME 0x36A708
+// 38 words differ: prologue/s0 order and tail (original 164 B vs 152 B)
+#ifdef NONMATCHING
+int func_0036A708(int *a, int *b)
+{
+    int v = a[0xD7];
+    if (v == 0) {
+        int p = func_00369370(b[0], b[1], 0x40);
+        if (p) {
+            int q;
+            p += 4;
+            q = func_00369370(p, b[1] - (p - b[0]), -1);
+            if (q) {
+                int r = func_003691D8((unsigned char *)q);
+                if (r & 0x10) a[0xD7] = 2;
+                else if (r) a[0xD7] = 1;
+            }
+        }
+        v = a[0xD7];
+    }
+    return v;
+}
+#endif
+
+int func_0036C5F8();
+void func_00369F20();
+extern char D_003F1AA0[];
+
+// FUNCTION: GAME 0x369E98
+int func_00369E98(char *a, int b, int c)
+{
+    int *p;
+    if (a == 0) {
+        p = (int *)D_003F1AA0;
+    } else {
+        if (func_0036C5F8()) {
+            func_00369F20(0, 0xFF030203);
+            return;
+        }
+        p = (int *)(a + 0x250);
+    }
+    p[0] = b;
+    p[1] = c;
+    return 0;
+}

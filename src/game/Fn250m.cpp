@@ -48,25 +48,6 @@ extern "C" void func_00268508(char *self)
 
 extern "C" void func_001CFE88(void *, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x26BAD8 - 14 words differ: original tests (st ^ 0x211) with lw/xori and keeps the loop counter in s2, index in s1 differently scheduled
-extern "C" void func_0026BAD8(char *self, unsigned n, int p)
-{
-    if (!(*(int *)(self + 0x564) ^ 0x211) && n != 0) {
-        unsigned i = 0;
-        unsigned cnt = 0;
-        void **q = (void **)(self + 0x710);
-        do {
-            if (*q) {
-                cnt++;
-                func_001CFE88(*q, p);
-                *q = 0;
-            }
-            q++;
-        } while (++i < 8 && cnt < n);
-    }
-}
-#endif
 
 // FUNCTION: GAME 0x26EA50
 extern "C" int func_0026EA50(char *self)

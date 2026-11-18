@@ -222,3 +222,37 @@ int *func_0035FF48(void)
     return 0;
 }
 #endif
+
+int func_0035E0F0();
+int func_0035E9E8(int);
+int func_0035C380();
+int func_0035A1C8();
+
+// DRAFT: GAME 0x35E1B8
+// 6 words: original uses beq to the 0x19 test with a0=1 in the delay slot and a shared return-0 branch; 4 probes
+#ifdef NONMATCHING
+int func_0035E1B8(int a, unsigned char b, int *c)
+{
+    unsigned char *p;
+    *c = 0;
+    p = (unsigned char *)func_0035E0F0(a, b);
+    if (p == 0) return 0;
+    if (func_0035E9E8(b) != 0xC0 || p[0x19] != 1) return 0;
+    *c = p[0x1A];
+    return 1;
+}
+#endif
+
+// FUNCTION: GAME 0x3599B0
+int func_003599B0(int a, int *b, int *c)
+{
+    if (func_0035C380(a, 3)) {
+        int r = func_0035A1C8(a, 6);
+        if (r == 1) {
+            *c = r;
+            return *b == 0;
+        }
+    }
+    *c = 0;
+    return 0;
+}

@@ -34,9 +34,6 @@ extern int func_003A6420(int);
 extern void func_003A5F68(int);
 extern int func_00393878();
 
-// FUNCTION: GAME 0x38EF80
-int func_0038EF80(void *fp) { return func_0038F3D8(fp); }
-
 // FUNCTION: GAME 0x393720
 int func_00393720(int *o) { return func_003A6420(o[22]); }
 
@@ -111,7 +108,7 @@ unsigned long func_00393820(struct Sb *o, const void *d, long n)
 
 extern int func_00392A80(void *, int, int);
 extern int func_003A6020(int);
-extern int doallocate__7filebuf(void *);
+extern int overflow__7filebufi(void *); // filebuf::overflow, called as stdiobuf::overflow does
 
 // FUNCTION: GAME 0x393770
 int func_00393770(int *o)
@@ -129,7 +126,7 @@ int func_00393770(int *o)
 // FUNCTION: GAME 0x3937D0
 int func_003937D0(int *o, int c)
 {
-    if (doallocate__7filebuf(o) == -1)
+    if (overflow__7filebufi(o) == -1)
         return -1;
     if (c != -1)
         return c;
