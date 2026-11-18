@@ -40,19 +40,6 @@ char *func_002A9648(void *, char *p, unsigned n)
     }
     return 0;
 }
-#ifdef NONMATCHING
-// 3 words differ: original hoists `addiu a1,1` above the slti
-// DRAFT: GAME 0x2AF348
-int func_002AF348(int a)
-{
-    int n = 1;
-    if (a >= 10) {
-        int v = 10;
-        do { v *= 10; n++; } while (a >= v);
-    }
-    return n;
-}
-#endif
 extern char Game, g_CollScr, D_005CB020, D_005CB300, Snd, D_00460D50, D_0044AF10, D_0044ADD8, Sys, GlobalTask;
 extern char *g_SaveManager;
 extern unsigned D_00747A84[];

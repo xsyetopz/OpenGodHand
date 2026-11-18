@@ -10,6 +10,10 @@ D_Ev297AA8 = 0x0;
 D_Ev297B98 = 0x10; /* a field at offset 0x10 of the same null base */
 D_Ev297BF8 = 0x0;
 
+/* Jump-table words whose target lies inside a function now compiled from C.
+   The compiled body keeps the original address, so the label is absolute. */
+.L00334D54 = 0x334D54; /* jtbl_0044B190[6], inside func_00334D10 */
+
 
 /* Compiled C callers of libio members (src/sce/libio/iostream.cc) that
    still use the automatic names. */

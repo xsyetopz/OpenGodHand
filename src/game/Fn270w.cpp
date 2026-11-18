@@ -7,6 +7,7 @@ extern "C" void *func_002DDAB0(void *, float, int);
 extern "C" void dieCommon__7cOmBase(void *);
 extern char g_CollSolidManage[];
 
+// FUNCTION: GAME 0x00277A48
 extern "C" void func_00277A48(char *self)
 {
     switch (*(unsigned char *)(self + 0x2F6)) {
@@ -23,13 +24,14 @@ extern "C" void func_00277A48(char *self)
     }
     }
     if (func_002DDAB0(*(void **)(self + 0xF0), 10.0f, 0)) {
-        *(unsigned char *)(self + 0x2F7) = 0;
-        *(unsigned char *)(self + 0x2F5) = 2;
         *(unsigned char *)(self + 0x2F4) = 0;
+        *(unsigned char *)(self + 0x2F5) = 2;
         *(unsigned char *)(self + 0x2F6) = 0;
+        *(unsigned char *)(self + 0x2F7) = 0;
     }
 }
 
+// FUNCTION: GAME 0x00277C48
 extern "C" void func_00277C48(char *self)
 {
     void *e = func_002DDAB0(*(void **)(self + 0xF0), 15.0f, 0);
@@ -54,6 +56,7 @@ extern "C" void func_00277C48(char *self)
     }
 }
 
+// FUNCTION: GAME 0x00279750
 extern "C" void func_00279750(char *self)
 {
     SetActive__21cCollisionSolidManageP8cGameObjb(g_CollSolidManage, self, 0);
@@ -68,8 +71,8 @@ extern "C" void func_00279750(char *self)
         if (moveMotion__FP8cObjBase(self)) {
             *(unsigned char *)(self + 0x2F4) = 2;
             *(unsigned char *)(self + 0x2F5) = 1;
-            *(unsigned char *)(self + 0x2F7) = 0;
             *(unsigned char *)(self + 0x2F6) = 0;
+            *(unsigned char *)(self + 0x2F7) = 0;
         } else {
             float one = 1.0f;
             addNullSpeed_Rotation__8cObjBasef(self, one);

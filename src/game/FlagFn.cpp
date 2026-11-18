@@ -60,16 +60,15 @@ extern "C" int func_00160F38(char *self)
 
 extern int D_00747A84[];
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2BF420 - 2 words differ: constants 4/1 load order (v1/v0) in the branch
+// FUNCTION: GAME 0x2BF420
 extern "C" void func_002BF420(char *p)
 {
     if (D_00747A84[1] >= 0) {
         unsigned long f = D_00747A84[-24];
         unsigned long b = (f >> 6) & 1;
         if (b) {
-            p[0xC] = 1;
             p[0] = 4;
+            p[0xC] = 1;
             p[3] = 0;
         } else {
             p[3] = 0;
@@ -79,7 +78,6 @@ extern "C" void func_002BF420(char *p)
         p[1] = 0;
     }
 }
-#endif
 
 extern int D_00586B34;
 extern unsigned char D_0074748C;

@@ -8,3 +8,17 @@ extern "C" int func_002A7280(char *self)
     *(int *)self = 0;
     return 1;
 }
+
+// FUNCTION: GAME 0x2AF348
+extern "C" int func_002AF348(int n)
+{
+    int c = 1;
+    int m = 10;
+    if (n >= 10) {
+        do {
+            m *= 10;
+            c++;
+        } while (n >= m);
+    }
+    return c;
+}

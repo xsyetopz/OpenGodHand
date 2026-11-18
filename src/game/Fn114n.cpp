@@ -1,7 +1,7 @@
 #include "game/Fn110n.h"
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x114120 - 1 word: lb vs lbu on g_HeatSys[0x10] (unsigned char cast folds base differently)
+struct HeatF { char pad[0x10]; unsigned char f; };
+// FUNCTION: GAME 0x114120
 extern "C" void func_00114120(char *self)
 {
     *(float *)(self + 0x54C) = 15.0f;
@@ -28,7 +28,7 @@ extern "C" void func_00114120(char *self)
         ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
         ((cObjBase *)self)->addNullSpeed(1.0f);
     }
-    if ((*(unsigned short *)(self + 0x3AC) & 1) && !(unsigned char)g_HeatSys[0x10]) {
+    if ((*(unsigned short *)(self + 0x3AC) & 1) && !((HeatF *)g_HeatSys)->f) {
         SetHeatMode__8cHeatSysUc(g_HeatSys, 1);
         *(int *)(self + 0x15F4) = (*(int *)(self + 0x15F4) | 0x10) & ~0x20;
         func_0012AC28(self);
@@ -41,7 +41,6 @@ extern "C" void func_00114120(char *self)
     }
 }
 
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x114460 - 8 words differ: case 0 table-offset loads use v1/a0 temps then addu into a1/a2 in the original
