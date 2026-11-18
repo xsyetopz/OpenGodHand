@@ -17,6 +17,9 @@ import shlex
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import objdiff_config  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 TARGET = "SLUS_215.03"
 TEXT_BASE = 0x100000
@@ -126,6 +129,7 @@ def main() -> int:
     )
     n.append(f"rule pack\n  command = {py} tools/elfpack.py pack $in $out\n  description = PACK $out")
     n.append(f"rule check\n  command = {py} tools/check.py $in && touch $out\n  description = CHECK $in")
+    n.append(f"as = {tool('as')}\nld = {tool('ld')}\npy = {py}")
     n.append(f"rule configure\n  command = {py} tools/configure.py\n  generator = 1\n  description = CONFIGURE")
 
     objs = []
@@ -152,7 +156,8 @@ def main() -> int:
     n.append(f"  script = {script}\n  map = build/{TARGET}.map")
     n.append(f"build build/{TARGET}: pack config/elf_layout.json build/{TARGET}.elf assets/elf | tools/elfpack.py")
     n.append(f"build build/{TARGET}.ok: check build/{TARGET} | tools/check.py config/{TARGET}.sha1")
-    deps = " ".join(["tools/configure.py", "asm/text/units.tsv", *map(str, sources)])
+    n.extend(objdiff_config.emit(units, sources))
+    deps = " ".join(["tools/configure.py", "tools/objdiff_config.py", "asm/text/units.tsv", *map(str, sources)])
     n.append(f"build build.ninja: configure | {deps}")
     n.append(f"default build/{TARGET}.ok")
     (ROOT / "build.ninja").write_text("\n".join(n) + "\n")
