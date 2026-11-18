@@ -124,11 +124,22 @@ save callee-saved registers with `sd` instead of ProDG's `sq`. They occupy
 0x31C000-0x36FFFF, 0x384000-0x3A3FFF and 0x3B0000 to the end of `.text`; the
 ProDG islands 0x370000-0x383FFF and 0x3A4000-0x3AFFFF are game code.
 
-Most of that library code matches SCE ee-gcc 2.9 (`ee-gcc2.9-991111`; the
-990721 and 991111 variants agree on every function tested) as C at -O2.
-ee-gcc 2.96 and 2.95.x miss it, and ee-gcc 3.2 uses `t6`/`t7` temporaries and
-sibling calls. A few objects near 0x340000 match only ee-gcc 3.2 or 2.96, so
-the compiler is chosen per object file. Leaf functions of 8-20 bytes compile
+The libraries come from more than one SCE compiler, all built as C at -O2:
+
+| Range (approximate)  | Compiler            | Evidence                         |
+|----------------------|---------------------|----------------------------------|
+| 0x31C000-0x33FFFF    | `ee-gcc2.9-991111`  | framed functions match           |
+| 0x340130-0x36F048    | `ee-gcc2.96`        | 0x3402E0, 0x342A08 match         |
+| 0x3875A8-0x393F30    | `ee-gcc2.9-991111`  | 0x389170, 0x389400 match         |
+| 0x3951F8-0x3A4AF0    | `ee-gcc2.9-991111`? | `sd` prologues, untested         |
+| 0x3B0268-end         | `ee-gcc2.9-991111`  | 0x3BAFD0 matches only under 2.9  |
+
+The boundaries follow runs of `sd` versus `sq` prologues; `sq` runs inside the
+library span (0x372CB0-0x387430, 0x393FD8-0x394F20, 0x3A53A8-0x3AF7B8) are
+ProDG game code. ee-gcc 3.2 matched only small wrappers, which 2.96 also
+matches, and loses every larger function by 15-23 words. 2.96 must compile C,
+not C++, to match. The 990721 and 991111 variants of 2.9 agree on every
+function tested. Leaf functions of 8-20 bytes compile
 identically under every package and do not identify the compiler; framed
 functions do. `syscall` stubs are hand-written and stay in asm.
 
