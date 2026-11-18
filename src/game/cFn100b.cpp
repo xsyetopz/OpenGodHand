@@ -87,17 +87,38 @@ extern "C" void func_0013EBA0(char *self)
     }
 }
 
-// FUNCTION: GAME 0x13F510
+#ifdef NONMATCHING
+// DRAFT: GAME 0x13F510
+// diff: first two prologue insns (lui a1 / addiu v1) swapped
 extern "C" void func_0013F510(char *self)
 {
     short i;
-    for (i = 3; i >= 0; i--) {
-        int *p = (int *)(self + 0xB8) + (i - 3);
+    int *p;
+    for (p = (int *)(self + 0xB8), i = 4; i >= 0; i--) {
         p[0x6A] = 0;
         ((float *)p)[0x86] = 1.0f;
         p[0] = 0;
+        p--;
     }
-    self[0x384] = 0;
     *(int *)(self + 0xA0) = 0;
     self[0x358] = 0;
+    self[0x384] = 0;
+}
+#endif
+
+static inline int inRange4(int c)
+{
+    if (c < 4 && c >= 0)
+        return 1;
+    return 0;
+}
+
+// FUNCTION: GAME 0x12BAF0
+extern "C" int func_0012BAF0(unsigned char *self)
+{
+    if (*(unsigned *)(self + 0x15F4) & 0x400)
+        return 1;
+    if (self[0x2F4] == 0)
+        return inRange4(self[0x2F5]);
+    return 0;
 }

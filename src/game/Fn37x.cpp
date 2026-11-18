@@ -184,11 +184,18 @@ extern "C" void func_00374148(void **o)
         func_00336D08(*o);
 }
 
-// FUNCTION: GAME 0x3737C8
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3737C8
+// diff: 11 words; ours is 72 bytes, original fills the beql delay slot with return 0
 extern "C" int func_003737C8(Fn37Obj *o, int m)
 {
-    int r = 0; if (func_00373A50(o)) { unsigned t = o->m_4C & m; r = t != 0; } return r;
+    if (func_00373A50(o)) {
+        unsigned t = o->m_4C & m;
+        return t != 0;
+    }
+    return 0;
 }
+#endif
 
 // FUNCTION: GAME 0x373810
 extern "C" void func_00373810(Fn37Obj *o, int m)

@@ -348,6 +348,68 @@ extern "C" void func_0014E818(ObjD *self, float lim, const float *p)
     self->dir = Adjust_theta(self->dir);
 }
 
+// FUNCTION: GAME 0x2DB008
+extern "C" int func_002DB008(const float *a, const float *b, float r1, float r2, float r3, float *dist, float *out)
+{
+    float t[4] __attribute__((aligned(16)));
+    Sv d;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)d.v) : "r"(a), "r"(b));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)t) : "r"(d.v));
+    float h = r2 + r3;
+    if (t[1] < -h) return 0;
+    if (h < t[1]) return 0;
+    register float l __asm__("$f0") = t[0] * t[0];
+    l += t[2] * t[2];
+    __asm__ volatile("nop\n\tnop\n\tsqrt.s %0,%0" : "+f"(l));
+    if (l < r1 + r3) {
+        if (dist) *dist = l;
+        if (out) { if (out != a) { out[0] = a[0]; out[1] = a[1]; out[2] = a[2]; } }
+        return 1;
+    }
+    return 0;
+}
+
+struct NodeK { char p0[0x2B8]; float rad; };
+extern char *pCamWork;
+float capVu0Length(const float *);
+// FUNCTION: GAME 0x2F3E68
+extern "C" int func_002F3E68(NodeK *self)
+{
+    Sv16 a;
+    Sv16 b;
+    func_002B6160(&a, self);
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)b.v) : "r"(pCamWork + 0x210));
+    if (self->rad == 0.0f) return 1;
+    a.v[0] -= b.v[0];
+    a.v[1] -= b.v[1];
+    a.v[2] -= b.v[2];
+    float s = 1000.0f;
+    __asm__ volatile("lqc2 $vf4,%0\n\tmfc1 $t0,%1\n\tqmtc2.ni $t0,$vf5\n\tvmulx.xyz $vf4,$vf4,$vf5x\n\tsqc2 $vf4,%0" : "+m"(*(Qv *)a.v) : "f"(s) : "$8");
+    if (self->rad < capVu0Length(a.v)) return 0;
+    return 1;
+}
+
+struct MatE { float m[16]; };
+struct ObjE { char p0[0xF0]; float *pos; char p1[0x10]; float dir; };
+extern const float D_005850B0[];
+void MtxInitRotY(MatE &, float);
+// FUNCTION: GAME 0x2498A8
+extern "C" void func_002498A8(ObjE *self, float ang)
+{
+    MatE m;
+    Sv res;
+    self->dir = ang + 3.1415927f;
+    self->dir = Adjust_theta(self->dir);
+    MtxInitRotY(m, ang);
+    res.v[0] = 0.0f;
+    res.v[2] = 26.0f;
+    res.v[1] = 0.0f;
+    sceVu0ApplyMatrix(res.v, m.m, res.v);
+    __asm__ volatile("lqc2 $vf4,%0\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "+m"(*(Qv *)res.v) : "r"(D_005850B0));
+    self->pos[0] = res.v[0];
+    self->pos[2] = res.v[2];
+}
+
 #ifdef NONMATCHING
 struct v4f { float f[4]; };
 struct V4 {

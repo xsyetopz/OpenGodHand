@@ -128,15 +128,22 @@ The libraries come from more than one SCE compiler, all built as C at -O2:
 
 | Range (approximate)  | Compiler            | Evidence                         |
 |----------------------|---------------------|----------------------------------|
-| 0x31C000-0x33FFFF    | `ee-gcc2.9-991111`  | framed functions match           |
-| 0x340130-0x36F048    | `ee-gcc2.96`        | 0x3402E0, 0x342A08 match         |
+| 0x31C000-0x327FFF    | mixed 2.9 / 2.96    | per object, see below            |
+| 0x328098-0x36F048    | `ee-gcc2.96`        | 10 of 10 sampled framed units    |
 | 0x3875A8-0x393F30    | `ee-gcc2.9-991111`  | 0x389170, 0x389400 match         |
 | 0x3951F8-0x3A4AF0    | `ee-gcc2.9-991111`? | `sd` prologues, untested         |
 | 0x3B0268-end         | `ee-gcc2.9-991111`  | 0x3BAFD0 matches only under 2.9  |
 
 The boundaries follow runs of `sd` versus `sq` prologues; `sq` runs inside the
 library span (0x372CB0-0x387430, 0x393FD8-0x394F20, 0x3A53A8-0x3AF7B8) are
-ProDG game code. ee-gcc 3.2 matched only small wrappers, which 2.96 also
+ProDG game code.
+
+A one-call wrapper `void f(){ g(); }` tells 2.9 and 2.96 apart: 2.9 emits a
+bare `j` (8 bytes), while 2.96 keeps a dead frame around the tail jump
+(`addiu sp; sd ra; ld ra; j; addiu sp`, 20 bytes). Below 0x328000 both shapes
+occur, so each object takes whichever compiler its framed functions match.
+The sign-extending wrappers at 0x38A1D8-0x38BA68 match only ee-gcc 3.2 with
+`-fno-optimize-sibling-calls`. ee-gcc 3.2 otherwise matched only small wrappers, which 2.96 also
 matches, and loses every larger function by 15-23 words. 2.96 must compile C,
 not C++, to match. The 990721 and 991111 variants of 2.9 agree on every
 function tested. Leaf functions of 8-20 bytes compile
