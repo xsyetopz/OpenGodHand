@@ -108,3 +108,31 @@ void func_003B9AF8(void)
     if (D_003D141C)
         D_003D141C();
 }
+
+extern int func_003B2B90();
+extern int func_003B26C8();
+extern int func_003B0100();
+extern int func_003B0110();
+extern int func_003B7C58();
+
+// FUNCTION: GAME 0x3B2BC0
+int func_003B2BC0(int *a, int b)
+{
+    if (b < 0 || b >= a[8])
+        return func_003B2B90();
+    return a[7] + (b << 6);
+}
+
+// FUNCTION: GAME 0x3B2CD0
+int func_003B2CD0(int a, int b, int c, int *d)
+{
+    return func_003B26C8(0x80000008, d, 0x40, d[9], d[10], d[11]) ? 0 : 0x800;
+}
+
+// FUNCTION: GAME 0x3B7C18
+int func_003B7C18(void)
+{
+    if (func_003B0100() == 0x2000000)
+        return func_003B7C58();
+    return func_003B0110();
+}

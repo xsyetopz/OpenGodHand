@@ -22,8 +22,9 @@ full build still reproduces `SLUS_215.03` byte for byte.
   branch. That is SN's R5900 short-loop workaround; ps2eeas 1.8.19 lacks it,
   so `tools/shortloop.py` pads the compiler output and eecc.py reassembles.
   Never write the nops in source.
-- Dead fragments: unreferenced `addiu sp,sp,N; nop` pairs sit between some
-  functions. `tools/splitfuncs.py` gives them their own `frag_<VRAM>` units so
+- Dead fragments: unreferenced `addiu sp,sp,N; nop` pairs, and other
+  straight-line `insn; nop` leftovers followed by alignment nops (such as
+  `sw $v0,0xA0($a0); nop` at 0x13D030), sit between some functions. `tools/splitfuncs.py` gives them their own `frag_<VRAM>` units so
   the following function starts at its real entry. The old automatic name
   stays defined at the fragment, because other code takes the entry address
   as `%lo(func_<fragment> + 8)`.

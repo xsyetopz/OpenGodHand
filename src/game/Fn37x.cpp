@@ -239,3 +239,132 @@ extern "C" void func_003733C8(Fn37Obj *o)
         memset(o, 0, 0x84);
     }
 }
+
+extern "C" void func_00374570(Fn37Obj *o);
+extern "C" void func_00374598(Fn37Obj *o);
+extern "C" void func_00373FA0(void **o);
+extern "C" void func_00373FC8(void **o);
+
+// FUNCTION: GAME 0x373488
+extern "C" void func_00373488(Fn37Obj *o)
+{
+    if (func_00373A50(o)) {
+        if (func_00373B20(o) == 1)
+            func_00374570(o);
+        else
+            func_00373FA0((void **)o);
+        o->m_4C |= 2;
+    }
+}
+
+// FUNCTION: GAME 0x3734F0
+extern "C" void func_003734F0(Fn37Obj *o)
+{
+    if (func_00373A50(o)) {
+        if (func_00373B20(o) == 1)
+            func_00374598(o);
+        else
+            func_00373FC8((void **)o);
+        o->m_4C &= 0xFFFFFFFDu;
+    }
+}
+
+struct Fn37Obj3 {
+    char _pad0[0x48];
+    int m_48;
+    int m_4C;
+    char _pad50[0x1C];
+    int m_6C;
+    char _pad70[4];
+    int m_74;
+    char _pad78[4];
+    int m_7C;
+};
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x373118
+// diff: 14 words; original copies o to t0 and keeps the old 0x4C in t1 (inlined init), ours reuses a0
+extern "C" int func_00373118(Fn37Obj3 *o, int a, int *p, int f)
+{
+    o->m_48 = 1;
+    o->m_74 = a;
+    o->m_7C = p[2];
+    o->m_6C = p[1];
+    if (f)
+        o->m_4C |= 0x11;
+    else
+        o->m_4C |= 1;
+    return 1;
+}
+#endif
+
+struct Fn37Obj4 {
+    char _pad0[0x54];
+    int m_54;
+};
+extern "C" void func_003745C0(float, Fn37Obj4 *, int, int);
+extern "C" void func_00373FF0(float, Fn37Obj4 *, int);
+
+// FUNCTION: GAME 0x373560
+extern "C" void func_00373560(Fn37Obj4 *o, float f, int a)
+{
+    if (func_00373A50((Fn37Obj *)o)) {
+        if (func_00373B20((Fn37Obj *)o) == 1)
+            func_003745C0(f, o, o->m_54, a);
+        else
+            func_00373FF0(f, o, o->m_54);
+    }
+}
+
+extern "C" void func_00374820(Fn37Obj *, int, int);
+extern "C" void call_00374120(Fn37Obj *, int, int) __asm__("func_00374120");
+extern "C" void call_00374148(Fn37Obj *, int, int) __asm__("func_00374148");
+extern "C" int func_003748A8(Fn37Obj *);
+extern "C" int func_00374170(Fn37Obj *);
+
+// FUNCTION: GAME 0x373690
+extern "C" void func_00373690(Fn37Obj *o, int a, int b)
+{
+    if (func_00373A50(o)) {
+        if (o->m_58 >= 2)
+            func_00374820(o, b, a);
+        else
+            call_00374120(o, b, a);
+    }
+}
+
+// FUNCTION: GAME 0x373708
+extern "C" void func_00373708(Fn37Obj *o, int a, int b)
+{
+    if (func_00373A50(o)) {
+        if (func_00373B20(o) != 1)
+            call_00374148(o, a, b);
+    }
+}
+
+// FUNCTION: GAME 0x373770
+extern "C" int func_00373770(Fn37Obj *o)
+{
+    if (func_00373A50(o) == 0)
+        return 0;
+    if (func_00373B20(o) != 1)
+        return func_00374170(o);
+    return func_003748A8(o);
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x373938
+// diff: 12 words; branch layout differs (original bnel with 0x20 load in the likely delay slot)
+extern "C" float func_00373938(Fn37Obj *o, int i)
+{
+    float r;
+    if (func_00373A50(o)) {
+        if (func_00373B20(o) == 1)
+            r = ((float *)o)[0x2C / 4 + i];
+        else
+            r = ((float *)o)[8];
+    } else
+        r = 0.0f;
+    return r;
+}
+#endif

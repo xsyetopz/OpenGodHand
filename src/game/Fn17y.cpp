@@ -1,0 +1,138 @@
+// Small units in .text 0x170000-0x17FFFF, part 2 (collision bit sets, unit constructors).
+#include "game/cVec.h"
+
+class cDamageUnitQ { public: void SetDamageCollActive(bool) __asm__("SetDamageCollActive__11cDamageUnitb"); };
+
+struct sS1 {
+    char _p0[0x600];
+    cDamageUnitQ *m_600[4];
+    char _p610[0xD30 - 0x610];
+    unsigned m_d30[1];
+};
+
+static inline void SetBitY(unsigned *a, unsigned i) { a[i >> 5] |= 0x80000000u >> (i & 31); }
+
+extern "C" {
+// FUNCTION: GAME 0x1769E0
+void func_001769E0(sS1 *s, unsigned i)
+{
+    if (s->m_600[i])
+        s->m_600[i]->SetDamageCollActive(false);
+    SetBitY(s->m_d30, i);
+}
+// FUNCTION: GAME 0x178068
+void func_00178068(sS1 *s, unsigned i)
+{
+    if (s->m_600[i])
+        s->m_600[i]->SetDamageCollActive(false);
+    SetBitY(s->m_d30, i);
+}
+}
+
+extern const char D_00420CA0[];
+extern const char D_00421BB8[];
+extern "C" void *func_001B6E90(void *);
+extern "C" void func_002AD238(void *, int, int, void *, void *, int);
+
+struct sC1 {
+    char _p0[0x214];
+    const void *m_vt;
+};
+
+#define FN17_CTOR(NAME, VT, N, OFF1, A1, A2, OFF2, A6)                          \
+    extern "C" sC1 *NAME(sC1 *s)                                                \
+    {                                                                           \
+        func_001B6E90(s);                                                       \
+        s->m_vt = VT;                                                           \
+        char *p = (char *)s + 0x600;                                            \
+        for (int i = N; i != -1; i--) {                                     \
+            __asm__ volatile("sqc2 $vf0,0(%0)\n\tsqc2 $vf0,0x10(%0)\n\tsqc2 $vf0,0x20(%0)\n\tsqc2 $vf0,0x30(%0)" : : "r"(p) : "memory"); \
+            p += 0x50;                                                          \
+        }                                                                       \
+        func_002AD238((char *)s + OFF1, A1, A2, (char *)s + 0x600, (char *)s + OFF2, A6); \
+        return s;                                                               \
+    }
+
+// FUNCTION: GAME 0x171070
+FN17_CTOR(func_00171070, D_00420CA0, 0x22, 0x1AE0, 4, 6, 0x10F0, 0x6A)
+// FUNCTION: GAME 0x17B870
+FN17_CTOR(func_0017B870, D_00421BB8, 0xE, 0xD80, 2, 4, 0xAB0, 0x1E)
+
+extern const char D_004211D8[];
+extern const char D_004212E8[];
+extern const char D_00420EF0[];
+extern "C" void func_0016F640(void *, int);
+
+#define FN17_CTOR2(NAME, VT, N, TAIL)                                           \
+    extern "C" char *NAME(char *s)                                              \
+    {                                                                           \
+        char *p = s + 0x610;                                                    \
+        func_001B6E90(s);                                                       \
+        *(const void **)(s + 0x214) = VT;                                       \
+        for (int i = N; i != -1; i--) {                                         \
+            __asm__ volatile("sqc2 $vf0,0(%0)\n\tsqc2 $vf0,0x10(%0)\n\tsqc2 $vf0,0x20(%0)\n\tsqc2 $vf0,0x30(%0)\n\tsqc2 $vf0,0x40(%0)" : : "r"(p) : "memory"); \
+            func_0016F640(p, 0);                                                \
+            p += 0x60;                                                          \
+        }                                                                       \
+        TAIL                                                                    \
+        return s;                                                               \
+    }
+
+// FUNCTION: GAME 0x1755A8
+FN17_CTOR2(func_001755A8, D_004211D8, 0x12, *(int *)(s + 0xD30) = 0;)
+// FUNCTION: GAME 0x176C30
+FN17_CTOR2(func_00176C30, D_004212E8, 0x12, *(int *)(s + 0xD30) = 0;)
+// FUNCTION: GAME 0x171C90
+FN17_CTOR2(func_00171C90, D_00420EF0, 0x13, *(int *)(s + 0xD90) = 0; *(int *)(s + 0xDA8) = 0;)
+
+extern const char D_00421F20[];
+
+struct sC2 {
+    char _p0[0x214];
+    const void *m_vt;
+    char _p218[0x610 - 0x218];
+    float m_610[16];
+    int m_650[1];
+};
+
+// FUNCTION: GAME 0x17D5D0
+extern "C" char *func_0017D5D0(char *s)
+{
+    func_001B6E90(s);
+    *(const void **)(s + 0x214) = D_00421F20;
+    __asm__ volatile("sqc2 $vf0,0x610(%0)\n\tsqc2 $vf0,0x620(%0)\n\tsqc2 $vf0,0x630(%0)\n\tsqc2 $vf0,0x640(%0)" : : "r"(s) : "memory");
+    int i = 7;
+    int *p = (int *)(s + 0x670);
+    for (; i >= 0; i--)
+        *p-- = 0;
+    *(int *)(s + 0x674) = 0;
+    return s;
+}
+
+struct sC3 {
+    char _p0[0x5A0];
+    unsigned m_5a0;
+    char _p5a4[0x600 - 0x5A4];
+    cVec m_600;
+};
+extern "C" void func_001B6FB8(void *);
+extern "C" void func_001BDA00(void *);
+extern "C" void func_001BD698(void *);
+extern "C" void func_001BDD88(void *, float);
+
+// FUNCTION: GAME 0x17C508
+extern "C" int func_0017C508(sC3 *s)
+{
+    func_001B6FB8(s);
+    struct { cVec v; float w; } t;
+    t.v.x = 4.22f;
+    t.v.y = 3.812f;
+    t.v.z = 0.2f;
+    t.w = 1.0f;
+    s->m_600 = t.v;
+    func_001BDA00(s);
+    func_001BD698(s);
+    func_001BDD88(s, 4.0f);
+    s->m_5a0 |= 0x10;
+    return 1;
+}

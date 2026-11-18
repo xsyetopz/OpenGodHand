@@ -32,6 +32,35 @@ INSN = re.compile(r"^\s+/\* [0-9A-F]+ ([0-9A-F]{8}) ([0-9A-F]{8}) \*/")
 AUTO = re.compile(r"^func_[0-9A-F]{8}$")
 
 
+def is_control(w: int) -> bool:
+    """Jumps, branches, syscall/break: anything that ends or redirects a block."""
+    op, rs, funct = w >> 26, (w >> 21) & 31, w & 63
+    if op in (1, 2, 3, 4, 5, 6, 7, 0x14, 0x15, 0x16, 0x17):
+        return True
+    if op == 0 and funct in (8, 9, 0xC, 0xD):
+        return True
+    return op in (0x10, 0x11, 0x12) and rs == 8  # bc0/bc1/bc2
+
+
+def dead_prefix(words: list[int]) -> int:
+    """Length of dead `insn; nop` pairs plus alignment nops before a prologue.
+
+    Besides stack pops, the text holds other unreferenced leftovers such as
+    `sw $v0,0xA0($a0); nop` (0x13D030) ahead of a function. GCC always emits
+    the prologue first, so straight-line code ending in nops before the first
+    `addiu $sp,$sp,-N` cannot belong to the function that follows.
+    """
+    k = next((i for i, w in enumerate(words) if w >> 16 == 0x27BD and w & 0x8000), None)
+    if not k or words[k - 1] != 0 or any(is_control(w) for w in words[:k]):
+        return 0
+    i = 0
+    while i < k and words[i]:
+        if i + 1 >= k or words[i + 1]:
+            return 0
+        i += 2
+    return k if not any(words[i:k]) else 0
+
+
 def split_fragment(body: list[str]) -> list[list[str]]:
     """Split dead stack-pop pairs off the start of a function unit.
 
@@ -50,6 +79,8 @@ def split_fragment(body: list[str]) -> list[list[str]]:
     while (n + 2 < len(words) and words[n] >> 16 == 0x27BD and not words[n] & 0x8000
            and words[n + 1] == 0):
         n += 2
+    if not n:
+        n = dead_prefix(words)
     if not n:
         return [body]
     cut = {i for i, _m in insns[:n]}

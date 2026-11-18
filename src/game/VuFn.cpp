@@ -377,7 +377,7 @@ extern "C" int func_002F3E68(NodeK *self)
 {
     Sv16 a;
     Sv16 b;
-    func_002B6160(&a, self);
+    func_002B6160(&a, (cNode *)self);
     __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)b.v) : "r"(pCamWork + 0x210));
     if (self->rad == 0.0f) return 1;
     a.v[0] -= b.v[0];
@@ -389,14 +389,14 @@ extern "C" int func_002F3E68(NodeK *self)
     return 1;
 }
 
-struct MatE { float m[16]; };
+struct cMatrix { float m[16]; };
 struct ObjE { char p0[0xF0]; float *pos; char p1[0x10]; float dir; };
 extern const float D_005850B0[];
-void MtxInitRotY(MatE &, float);
+void MtxInitRotY(cMatrix &, float);
 // FUNCTION: GAME 0x2498A8
 extern "C" void func_002498A8(ObjE *self, float ang)
 {
-    MatE m;
+    cMatrix m;
     Sv res;
     self->dir = ang + 3.1415927f;
     self->dir = Adjust_theta(self->dir);
@@ -417,7 +417,6 @@ struct V4 {
     V4() { __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(v4f *)v)); }
     operator float *() { return v; }
 };
-struct cMatrix { float m[16]; };
 struct VObj {
     char p0[0xF0];
     float *pos;
@@ -442,7 +441,6 @@ static inline void M_Copy(float *d, const float *a)
 float capVu0Atan2(float, float);
 float Adjust_theta(float);
 float Turn_dest_dir(float, float, float);
-void MtxInitRotY(cMatrix &, float);
 extern "C" void sceVu0ApplyMatrix(float *, float *, float *);
 
 // DRAFT: GAME 0x249770

@@ -365,6 +365,80 @@ void func_002F4B30(char *p, int f)
         ReleaseObj(*(void **)(p + 0x2B0));
     func_002FBE28(p, f);
 }
+
+void func_002D5790(char *);
+void KillTask(char *) __asm__("kill__9cTaskWork");
+void ExitTask(char *) __asm__("exit__9cTaskWork");
+void SleepTask(void *, unsigned short) __asm__("sleep__9cTaskWork");
+void func_0030F5A0(char *);
+int func_00345B88(int);
+void func_00345F48(int, int);
+extern char *g_Sce;
+extern void *D_00752C04;
+extern const char D_0044D1E8[];
+
+// FUNCTION: GAME 0x2D51F0
+void func_002D51F0(char *p)
+{
+    unsigned i;
+    for (i = 0; i < *(unsigned short *)(p + 0xC); i++)
+        func_002D5790(*(char **)p + i * 0x58);
+}
+
+// FUNCTION: GAME 0x2D56A8
+void func_002D56A8(char *p)
+{
+    int i;
+    for (i = 0; i < *(unsigned short *)(p + 0xC); i++)
+        KillTask(*(char **)p + i * 0x58);
+}
+
+// FUNCTION: GAME 0x2D5708
+void func_002D5708(char *p, int f)
+{
+    *(const char **)(p + 0x54) = D_0044D1E8;
+    char *q = *(char **)(p + 0x10);
+    if (q)
+        HeapFree(*(void **)(q - 0x20), q);
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x2D42F8
+void func_002D42F8(char *p)
+{
+    if (*(int *)p) {
+        if (func_00345B88(*(int *)p))
+            func_00345F48(*(int *)p, 0);
+    }
+}
+
+// FUNCTION: GAME 0x2D5AD8
+void func_002D5AD8(char *p)
+{
+    switch (*(unsigned short *)(p + 0x1E)) {
+    case 0:
+    default:
+        (*(void (**)())(p + 0x14))();
+        break;
+    case 1:
+        (*(void (**)(int))(p + 0x14))(*(int *)(p + 0x18));
+        break;
+    }
+    ExitTask(p);
+}
+
+// FUNCTION: GAME 0x2D5250
+void func_002D5250(unsigned short a)
+{
+    char *t = g_Sce + 0x1C;
+    void *w = *(void **)(t + 4);
+    if (w) {
+        *(unsigned short *)(t + 0x34) = a;
+        SleepTask(w, 1);
+    } else
+        SleepTask(D_00752C04, a);
+}
 }
 
 #include "CustomIDWork.h"

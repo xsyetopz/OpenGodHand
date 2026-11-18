@@ -4,6 +4,9 @@ extern "C" void func_001268F0(void *);
 extern "C" void func_001268B0(void *, int);
 extern "C" int func_001FC708(void *);
 extern "C" void trans__7cIDBase(void *);
+extern "C" void func_001468B0(void *);
+extern "C" void *initialize__7cIDBase7eIdData5eIdNo(void *, int, int);
+extern "C" void *getIDWork__7cIDBasei(void *, int);
 extern char Snd[];
 extern char CoreSave[];
 extern char D_00747A24[];
@@ -106,19 +109,78 @@ extern "C" void func_0013F510(char *self)
 }
 #endif
 
-static inline int inRange4(int c)
+extern "C" void sceVu0ApplyMatrix(void *, void *, void *);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x133AA8
+// diff: flags sw vs swc1 0x20 order, and final swc1 0x24/0x28 swapped (4 words)
+extern "C" void func_00133AA8(char *self)
 {
-    if (c < 4 && c >= 0)
-        return 1;
-    return 0;
+    sceVu0ApplyMatrix(self + 0x60, *(void **)(self + 0x40), self + 0x50);
+    float r = *(float *)(self + 0x70);
+    float x = *(float *)(self + 0x60);
+    float y = *(float *)(self + 0x64);
+    float z = *(float *)(self + 0x68);
+    *(float *)(self + 0x10) = x - r;
+    *(float *)(self + 0x14) = y - r;
+    *(float *)(self + 0x18) = z - r;
+    *(int *)(self + 8) &= -3;
+    *(float *)(self + 0x28) = z + r;
+    *(float *)(self + 0x24) = y + r;
+    *(float *)(self + 0x20) = x + r;
+}
+#endif
+
+// FUNCTION: GAME 0x13C220
+extern "C" void func_0013C220(char *self)
+{
+    unsigned short i;
+    char *p = self + 0x98;
+    *(int *)(self + 0x90) = 0;
+    initialize__7cIDBase7eIdData5eIdNo(self, 1, 10);
+    i = 0;
+    do {
+        *(void **)((int)p + (i << 2)) = getIDWork__7cIDBasei(self, i);
+        i++;
+    } while (i < 4);
 }
 
-// FUNCTION: GAME 0x12BAF0
-extern "C" int func_0012BAF0(unsigned char *self)
+// FUNCTION: GAME 0x13D048
+extern "C" void func_0013D048(char *self)
 {
-    if (*(unsigned *)(self + 0x15F4) & 0x400)
-        return 1;
-    if (self[0x2F4] == 0)
-        return inRange4(self[0x2F5]);
-    return 0;
+    initialize__7cIDBase7eIdData5eIdNo(self, 1, 6);
+    initialize__7cIDBase7eIdData5eIdNo(self + 0x140, 1, 7);
+    initialize__7cIDBase7eIdData5eIdNo(self + 0x190, 1, 8);
+    initialize__7cIDBase7eIdData5eIdNo(self + 0xA0, 1, 0x1B);
+    initialize__7cIDBase7eIdData5eIdNo(self + 0xF0, 1, 0x1C);
+}
+
+// FUNCTION: GAME 0x13F118
+extern "C" void func_0013F118(char *self)
+{
+    initialize__7cIDBase7eIdData5eIdNo(self, 1, 0x11);
+    *(int *)(self + 0x9C) = 0xFFFF;
+}
+
+// FUNCTION: GAME 0x143558
+extern "C" void func_00143558(char *self)
+{
+    initialize__7cIDBase7eIdData5eIdNo(self, 1, 0x13);
+    initialize__7cIDBase7eIdData5eIdNo(self + 0xB0, 1, 0x18);
+}
+
+// FUNCTION: GAME 0x1467E8
+extern "C" void func_001467E8(char *self)
+{
+    unsigned short i;
+    char *p = self + 0x90;
+    initialize__7cIDBase7eIdData5eIdNo(self, 1, 0x1D);
+    i = 0;
+    initialize__7cIDBase7eIdData5eIdNo(self + 0xA0, 1, 0x1E);
+    do {
+        *(void **)((int)p + (i << 2)) = getIDWork__7cIDBasei(self, i);
+        i++;
+    } while (i < 4);
+    *(short *)(self + 0x100) = 0;
+    func_001468B0(self);
 }
