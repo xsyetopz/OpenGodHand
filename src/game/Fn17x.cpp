@@ -156,3 +156,81 @@ int func_0017FC58(sQ4 *s)
     return 1;
 }
 #endif
+
+// 15-frame countdown state machine: state 0 arms the timer, state 1 counts it down, then clears the state bytes.
+struct sTm654 {
+    char _p0[0x2F4];
+    unsigned char m_2f4, m_2f5, m_2f6, m_2f7;
+    char _p2f8[0x654 - 0x2F8];
+    unsigned short m_t;
+};
+struct sTmD34 {
+    char _p0[0x2F4];
+    unsigned char m_2f4, m_2f5, m_2f6, m_2f7;
+    char _p2f8[0xD34 - 0x2F8];
+    unsigned short m_t;
+};
+
+#define FN17_TIMER(NAME, STRUCT)                      \
+    extern "C" void NAME(STRUCT *s)                   \
+    {                                                 \
+        switch (s->m_2f5) {                           \
+        case 0:                                       \
+            s->m_t = 15;                              \
+            s->m_2f5 = 1;                             \
+            s->m_2f6 = 0;                             \
+            s->m_2f7 = 0;                             \
+        case 1:                                       \
+            s->m_t--;                                 \
+            if ((short)s->m_t <= 0) {                 \
+                s->m_2f4 = 0;                         \
+                s->m_2f5 = 0;                         \
+                s->m_2f6 = 0;                         \
+                s->m_2f7 = 0;                         \
+            }                                         \
+            break;                                    \
+        }                                             \
+    }
+
+// FUNCTION: GAME 0x174C28
+FN17_TIMER(func_00174C28, sTm654)
+// FUNCTION: GAME 0x17A180
+FN17_TIMER(func_0017A180, sTm654)
+// FUNCTION: GAME 0x17CA90
+FN17_TIMER(func_0017CA90, sTm654)
+// FUNCTION: GAME 0x175ED8
+FN17_TIMER(func_00175ED8, sTmD34)
+// FUNCTION: GAME 0x177560
+FN17_TIMER(func_00177560, sTmD34)
+
+extern const char D_00421BB8[];
+extern "C" float capVu0MagnitudeSqXZ__FPCfT0(const float *, const float *);
+extern "C" void func_002AD288(void *p, int n);
+extern "C" void func_001B6F38(void *self, void *a);
+
+struct sTv {
+    char _p0[0xF0];
+    const float *m_f0;
+    char _pf4[0x214 - 0xF4];
+    const void *m_vt;
+    char _p218[0xD80 - 0x218];
+    char m_d80[1];
+};
+
+// FUNCTION: GAME 0x17B8F0
+extern "C" void func_0017B8F0(sTv *s, void *a)
+{
+    s->m_vt = D_00421BB8;
+    func_002AD288(s->m_d80, 2);
+    func_001B6F38(s, a);
+}
+
+// FUNCTION: GAME 0x17E058
+extern "C" int func_0017E058(sTv *s, const float *p, float r)
+{
+    const float *q = s->m_f0;
+    int res = 0;
+    if (capVu0MagnitudeSqXZ__FPCfT0(p, q) <= r)
+        res = 1;
+    return res;
+}

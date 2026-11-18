@@ -80,17 +80,6 @@ extern "C" void func_0031DA28()
     func_0031D9F0(1, 0xFFFF);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x31DB50
-// diff: original tail-jumps (j func_31DAA0); gcc emits jal with a frame
-extern "C" void func_0031DB50()
-{
-    if (D_00755BC8)
-        return;
-    D_00755BC8 = 1;
-    func_0031DAA0();
-}
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x31D098

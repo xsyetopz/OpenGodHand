@@ -161,6 +161,66 @@ extern "C" void func_002AE1C8(Set *s)
 }
 
 
+// Stack vectors with a zeroed-w constructor and the guarded 3-float assignment of the cVec family.
+struct Qv { float f[4]; };
+struct Sv {
+    float v[4] __attribute__((aligned(16)));
+    Sv() { __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv *)v)); }
+    Sv &operator=(const float *o)
+    {
+        if (v != o) { v[0] = o[0]; v[1] = o[1]; v[2] = o[2]; }
+        return *this;
+    }
+};
+float capVu0LengthSq(const float *);
+
+// FUNCTION: GAME 0x2BB3F0
+extern "C" int func_002BB3F0(const float *a, const float *b, float r1, float r2)
+{
+    Sv s;
+    float t[4] __attribute__((aligned(16)));
+    float *tp = t;
+    Sv d;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)d.v) : "r"(b), "r"(a));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)tp) : "r"(d.v));
+    s = t;
+    return capVu0LengthSq(s.v) < (r1 + r2) * (r1 + r2);
+}
+
+struct ObjA { char p0[0xF0]; float *pos; char p1[0x53C]; float org[4]; };
+// FUNCTION: GAME 0x12A578
+extern "C" Sv *func_0012A578(Sv *out, ObjA *self, float k)
+{
+    Sv s;
+    float t[4] __attribute__((aligned(16)));
+    const float *pp = self->pos;
+    const float *oo = self->org;
+    float *tp = t;
+    Sv d;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)d.v) : "r"(pp), "r"(oo));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)tp) : "r"(d.v));
+    s = t;
+    __asm__ volatile("lqc2 $vf4,%0\n\tmfc1 $t0,%1\n\tqmtc2.ni $t0,$vf5\n\tvmulx.xyz $vf4,$vf4,$vf5x\n\tsqc2 $vf4,%0" : "+m"(*(Qv *)s.v) : "f"(k) : "$8");
+    __asm__ volatile("lqc2 $vf4,%0\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "+m"(*(Qv *)s.v) : "r"(self->pos));
+    __asm__ volatile("lqc2 $vf4,%1\n\tsqc2 $vf4,0(%0)" : : "r"(out), "m"(*(Qv *)s.v) : "memory");
+    return out;
+}
+
+struct ObjB {
+    char p0[0x110]; int *fl; char p1[9]; unsigned char b11D; char p2[6];
+    float pos[3]; float k; char p3[0xFA]; short h22E; short h230;
+};
+// FUNCTION: GAME 0x2FDD10
+extern "C" void func_002FDD10(ObjB *self)
+{
+    float v[4] __attribute__((aligned(16)));
+    v[0] = self->pos[0]; v[1] = self->pos[1]; v[2] = self->pos[2]; v[3] = 1.0f;
+    if ((self->fl[1] & 0x2000) || (self->b11D & 1) == 0 || self->h230 != self->h22E) {
+        __asm__ volatile("lqc2 $vf4,%0\n\tmfc1 $t0,%1\n\tqmtc2.ni $t0,$vf5\n\tvmulx.xyz $vf4,$vf4,$vf5x\n\tsqc2 $vf4,%0" : "+m"(*(Qv *)v) : "f"(self->k) : "$8");
+    }
+    self->pos[0] = v[0]; self->pos[1] = v[1]; self->pos[2] = v[2];
+}
+
 #ifdef NONMATCHING
 struct v4f { float f[4]; };
 struct V4 {

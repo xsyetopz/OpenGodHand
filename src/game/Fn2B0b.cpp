@@ -65,3 +65,215 @@ extern "C" void func_002BF130(void *self)
 {
     func_002BF170(self);
 }
+
+extern "C" void MtxCopy__FR7cMatrixRC7cMatrix(void *, void *);
+extern "C" void _$_8cObjBase(void *);
+extern "C" void func_002BE858(void *, int);
+extern "C" void func_002B6370(void *);
+extern "C" void func_002B8990(void *);
+extern "C" void *memset(void *, int, unsigned);
+extern "C" void func_002BA428(int, int);
+extern "C" void func_002BE510(int, int);
+extern "C" void func_002BE560(char *);
+extern "C" void func_002BE8E8(int, int);
+
+// FUNCTION: GAME 0x2B6350
+extern "C" void func_002B6350(char *self, void *m)
+{
+    MtxCopy__FR7cMatrixRC7cMatrix(self + 0xB0, m);
+}
+
+// FUNCTION: GAME 0x2B8320
+extern "C" void func_002B8320(void *self)
+{
+    _$_8cObjBase(self);
+}
+
+// FUNCTION: GAME 0x2B8908
+extern "C" void func_002B8908(void *self)
+{
+    _$_8cObjBase(self);
+}
+
+// FUNCTION: GAME 0x2BE818
+extern "C" void func_002BE818(void *self)
+{
+    func_002BE858(self, 0);
+}
+
+// FUNCTION: GAME 0x2BF150
+extern "C" void func_002BF150(void *self)
+{
+    func_002BF170(self);
+}
+
+// FUNCTION: GAME 0x2B6400
+extern "C" void func_002B6400(char *self)
+{
+    self[0x16] = 0;
+    func_002B6370(self);
+}
+
+// FUNCTION: GAME 0x2BA158
+extern "C" int func_002BA158(void *self, void *p)
+{
+    func_002B8990(p);
+    return 1;
+}
+
+// FUNCTION: GAME 0x2BAE40
+extern "C" void func_002BAE40(void *self, void *p, unsigned n)
+{
+    memset(p, 0, n);
+}
+
+// FUNCTION: GAME 0x2BB020
+extern "C" void func_002BB020()
+{
+    func_002BA428(1, 0xFFFF);
+}
+
+// FUNCTION: GAME 0x2BE530
+extern "C" void func_002BE530()
+{
+    func_002BE510(1, 0xFFFF);
+}
+
+// FUNCTION: GAME 0x2BE838
+extern "C" void func_002BE838(char *self, int b, int idx)
+{
+    func_002BE560(self + idx * 8);
+}
+
+// FUNCTION: GAME 0x2BE948
+extern "C" void func_002BE948()
+{
+    func_002BE8E8(1, 0xFFFF);
+}
+
+extern "C" void free__5cHeapPv(void *, void *);
+extern int D_005E8600;
+extern "C" void func_002BE630(char *, void *, const char *);
+
+// FUNCTION: GAME 0x2BAE20
+extern "C" void func_002BAE20(void *self, char *p)
+{
+    if (p) {
+        free__5cHeapPv(*(void **)(p - 0x20), p);
+    }
+}
+
+// FUNCTION: GAME 0x2BE510
+extern "C" void func_002BE510(int a, int b)
+{
+    if (b == 0xFFFF && a) {
+        D_005E8600 = 0;
+    }
+}
+
+class cRelSys {
+public:
+    enum eRelType { REL_0 };
+    void linkNoAlloc(void *, const char *, eRelType);
+};
+
+// FUNCTION: GAME 0x2BE890
+void cRelSys::linkNoAlloc(void *p, const char *name, eRelType t)
+{
+    func_002BE630((char *)this + t * 8, p, name);
+}
+
+extern "C" void func_0031EEC8(void *, char *);
+extern int D_00460D58[], D_00460D60[], D_00460D68[];
+extern char D_0044B330[], D_0044BE98[], D_0044BF60[];
+
+// FUNCTION: GAME 0x2B6528
+extern "C" int *func_002B6528()
+{
+    if (!D_00460D58[0]) {
+        func_0031EEC8(D_00460D58, D_0044B330);
+    }
+    return D_00460D58;
+}
+
+// FUNCTION: GAME 0x2BAD40
+extern "C" int *func_002BAD40()
+{
+    if (!D_00460D60[0]) {
+        func_0031EEC8(D_00460D60, D_0044BE98);
+    }
+    return D_00460D60;
+}
+
+// FUNCTION: GAME 0x2BAFA0
+extern "C" int *func_002BAFA0()
+{
+    if (!D_00460D68[0]) {
+        func_0031EEC8(D_00460D68, D_0044BF60);
+    }
+    return D_00460D68;
+}
+
+extern char GlobalTask;
+extern unsigned char D_003C2554;
+extern "C" void func_002B6600();
+extern "C" void execute__12cTaskManagerRFv_vi(void *, void (*)(), int);
+
+// FUNCTION: GAME 0x2B65B0
+extern "C" void func_002B65B0()
+{
+    if (!D_003C2554) {
+        D_003C2554 = 1;
+        execute__12cTaskManagerRFv_vi(&GlobalTask, func_002B6600, -1);
+    }
+}
+
+struct SceRoom {
+    unsigned short id;
+    char _p[0x12];
+};
+extern SceRoom SceRoomTable[];
+
+// FUNCTION: GAME 0x2C5028
+extern "C" SceRoom *func_002C5028(int a, unsigned short id)
+{
+    SceRoom *r = SceRoomTable;
+    while (r->id != 0xFFFF) {
+        if (r->id == id) {
+            return r;
+        }
+        r++;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x2C9060
+extern "C" char *func_002C9060(int *self, unsigned idx)
+{
+    if (!self[0] || !self[3] || !(idx < (unsigned)self[3])) {
+        return 0;
+    }
+    return (char *)self[0] + idx * 0x24;
+}
+
+// FUNCTION: GAME 0x2CD740
+extern "C" void func_002CD740(char *self)
+{
+    int *p = *(int **)(self + 0x380);
+    p[2] = 0;
+    (*(int **)(self + 0x380))[1] = 0;
+    (*(int **)(self + 0x380))[6] = 0;
+    (*(int **)(self + 0x380))[3] = *(int *)(self + 0x384);
+    (*(int **)(self + 0x380))[0] = (int)self;
+    (*(int **)(self + 0x380))[4] = 0;
+    (*(int **)(self + 0x380))[5] = 0;
+}
+
+extern int D_003C23B0[];
+// FUNCTION: GAME 0x2B0480
+extern "C" void func_002B0480(int *self, float *out)
+{
+    out[0] = 1.0f;
+    out[1] = *(float *)&D_003C23B0[self[0x13] * 5 + self[0x14]];
+    out[2] = 0;
+}

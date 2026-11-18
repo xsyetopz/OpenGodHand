@@ -9,21 +9,6 @@ struct StrP { const char *s; };
 
 // FUNCTION: GAME 0x31F480
 extern "C" int func_0031F480(int *p) { return *p; }
-#ifdef NONMATCHING
-// DRAFT: GAME 0x31D098
-// 8 words differ: register allocation (original keeps *p in v0, constants in a1/v1)
-extern "C" void func_0031D098(unsigned *p) { *p = *p * 0x19660D + 0x3C6EF35F; }
-#endif
-#ifdef NONMATCHING
-// DRAFT: GAME 0x31EE80
-// 4 words differ: original stores d first, then a, b, c; gcc emits c first
-extern "C" void func_0031EE80(Quad *p, void *a, void *c, void *d) { if (p) { p->d = d; p->a = a; p->b = D_00450FC0; p->c = c; } }
-#endif
-#ifdef NONMATCHING
-// DRAFT: GAME 0x31FA40
-// 4 words differ: store order (same as 0x31EE80)
-extern "C" void func_0031FA40(Quad *p, void *a, void *c, void *d) { if (p) { p->d = c; p->a = a; p->b = D_004511A8; p->c = d; } }
-#endif
 // FUNCTION: GAME 0x31F4E0
 extern "C" unsigned func_0031F4E0(StrP *a, StrP *b) { return (unsigned)strcmp(a->s, b->s) >> 31; }
 // FUNCTION: GAME 0x31CA58

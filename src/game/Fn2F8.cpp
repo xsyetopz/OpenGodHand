@@ -283,4 +283,115 @@ void *func_002F3DC0()
     }
     return &D_007864C8;
 }
+
+extern int D_007863E8; extern const char D_0044E398[];
+extern int D_00786508; extern const char D_0044F398[];
+extern int D_00786558; extern const char D_0044F6C0[];
+extern int D_007864C8;
+
+// FUNCTION: GAME 0x2E6318
+void *func_002E6318()
+{
+    if (D_007863E8 == 0) {
+        func_002EFA60();
+        func_0031EEA8(&D_007863E8, D_0044E398, &D_007863F8);
+    }
+    return &D_007863E8;
+}
+
+// FUNCTION: GAME 0x2F5358
+void *func_002F5358()
+{
+    if (D_00786508 == 0) {
+        func_00300148();
+        func_0031EEA8(&D_00786508, D_0044F398, D_007863C8);
+    }
+    return &D_00786508;
+}
+
+// FUNCTION: GAME 0x2F7090
+void *func_002F7090()
+{
+    if (D_00786558 == 0) {
+        func_00300148();
+        func_0031EEA8(&D_00786558, D_0044F6C0, D_007863C8);
+    }
+    return &D_00786558;
+}
+
+void Base2FBE28(char *, int) __asm__("func_002FBE28");
+void func_002EBC50(char *, int);
+void DelLight(void *, unsigned short, unsigned) __asm__("Del_LightData__11cWorldLightUsUi");
+void HeapFree(void *, void *) __asm__("free__5cHeapPv");
+void ReleaseObj(void *) __asm__("ReleaseObj__FP4cObj");
+extern char World_light_work[];
+extern int D_00786578; extern const char D_0044F868[];
+extern const char D_0044E640[], D_0044F448[], D_0044F1C8[];
+
+// FUNCTION: GAME 0x2F9CE0
+void *func_002F9CE0()
+{
+    if (D_00786578 == 0) {
+        func_002EFA60();
+        func_0031EEA8(&D_00786578, D_0044F868, &D_007863F8);
+    }
+    return &D_00786578;
+}
+
+// FUNCTION: GAME 0x2E76F8
+void func_002E76F8(char *p, int f)
+{
+    *(const char **)(p + 0xF0) = D_0044E640;
+    DelLight(World_light_work, *(unsigned short *)(p + 0x2B2), *(unsigned *)(p + 0x2B4));
+    Base2FBE28(p, f);
+}
+
+// FUNCTION: GAME 0x2F5730
+void func_002F5730(char *p, int f)
+{
+    *(const char **)(p + 0xF0) = D_0044F448;
+    char *q = *(char **)(p + 0x2F0);
+    if (q)
+        HeapFree(*(void **)(q - 0x20), q);
+    func_002EBC50(p, f);
+}
+
+// FUNCTION: GAME 0x2F4B30
+void func_002F4B30(char *p, int f)
+{
+    *(const char **)(p + 0xF0) = D_0044F1C8;
+    if (*(void **)(p + 0x2B0))
+        ReleaseObj(*(void **)(p + 0x2B0));
+    Base2FBE28(p, f);
+}
+}
+
+#include "CustomIDWork.h"
+
+// FUNCTION: GAME 0x2D64D0
+void CustomIDWork::SetNoDisp(bool b)
+{
+    char *t = (char *)m_work;
+    if (t) {
+        if (b)
+            *(unsigned *)(t + 0x2C) |= 0x8000000;
+        else
+            *(unsigned *)(t + 0x2C) &= 0xF7FFFFFF;
+    }
+}
+class cBgmData {
+public:
+    char *GetTblPtr(int i);
+};
+extern "C" int func_002CFF68(cBgmData *);
+
+// FUNCTION: GAME 0x2D0528
+char *cBgmData::GetTblPtr(int i)
+{
+    char *r;
+    if (func_002CFF68(this))
+        r = *(char **)((char *)this + 0x10) + i * 32;
+    else
+        r = 0;
+    return r;
 }

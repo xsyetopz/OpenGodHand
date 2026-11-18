@@ -30,6 +30,7 @@ public:
     void Initialize(cIDWork *work);
     void SetDisp(bool);
     void SetChildNoDisp(bool);
+    void SetNoDisp(bool);
     void SetNumber(int);
     void SetMessNo(int);
     void SetLocalPosX(int);
