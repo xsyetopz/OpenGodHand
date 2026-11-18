@@ -164,8 +164,17 @@ of straight-line code. None of the ProDG compilers (2.95.3-114, 2.95.2-273a,
 divide-errata option; ee-gcc 2.96 pads every `div.s` itself and is the only
 package that knows `-mhandle-ee-div-pipeline-bug`. The padding therefore comes
 from SN's assembler: the 136 `ps2eeas` (`-Wdivbug-on`) pads one nop next to a
-branch or label but crashes under Wine, and the 1.8.19 build pads nothing.
-Until that is resolved, functions containing `div.s` stay in asm.
+branch or label and never two, and the 1.8.19 build pads nothing.
+
+Below 0x3229D0 the game has 911 `div.s`: 585 after two nops, 261 after none,
+62 after one and 3 after three, with both forms inside 48 functions. Address
+alignment does not predict the count. The best measured rule (87.6%) is no
+padding when `add.s`, `sub.s`, `mul.s`, `cvt.s.w` or `div.s` directly precedes
+the divide and two nops otherwise; a label or a branch just before gives two
+nops in nearly every case. ee-gcc 2.96 pads two nops even after an FPU
+arithmetic op, so the game's tool used a different hazard model, most likely
+a later ProDG build than any decomp.me package. Functions whose `div.s` is
+padded stay in asm until that tool or an exact rule is found.
 
 ## SCE library regions
 
