@@ -123,10 +123,8 @@ extern "C" void func_00164140(char *self)
 }
 
 extern char Sys[];
-extern "C" void func_002CB8A0(void *snd, int a, int b, int c, int d, int e, int f);
-// DRAFT: GAME 0x1641B8
-// diff: 2 words; the -1 stored to self+0x60 is in v1 in the original, v0 in the compiled output.
-#ifdef NONMATCHING
+extern "C" int func_002CB8A0(void *snd, int a, int b, int c, int d, int e, int f);
+// FUNCTION: GAME 0x1641B8
 extern "C" void func_001641B8(char *self)
 {
     char *g = Sys;
@@ -137,7 +135,6 @@ extern "C" void func_001641B8(char *self)
         *(int *)(self + 0x60) = -1;
     }
 }
-#endif
 
 struct MeshHdr {
     char _pad[0x14];

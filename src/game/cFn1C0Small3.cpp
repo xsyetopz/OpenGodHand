@@ -3,7 +3,7 @@ extern "C" void func_001B6F38(void *self, int flag);
 extern "C" void func_001C6A90(void *, int, void *, int, int);
 extern "C" void func_001DD1A0(void *);
 extern "C" void func_001DEDC8(void *);
-extern "C" void release__7cIDBase(void *);
+extern "C" int release__7cIDBase(void *);
 extern const char D_00429DD8[];
 extern const char D_00429EC8[];
 
@@ -70,9 +70,7 @@ struct IdSysP {
 };
 extern IdSysP *IDSys;
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1D4F48
-// diff: register allocation only (IDSys lui/lw use v1/v0 in the original, v0/v1 here)
+// FUNCTION: GAME 0x1D4F48
 extern "C" void func_001D4F48(char *self)
 {
     release__7cIDBase(self + 0x10);
@@ -80,7 +78,6 @@ extern "C" void func_001D4F48(char *self)
     i->m_9C = 0;
     i->m_98 = 0;
 }
-#endif
 
 // Vtable-setting destructor wrappers in 0x190000-0x19FFFF.
 extern "C" void func_001BBF00(void *self, int flag);

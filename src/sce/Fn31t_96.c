@@ -41,7 +41,7 @@ long *func_00321288(void)
 #endif
 
 // FUNCTION: GAME 0x324500
-int func_00324500(char *a) { if (a == 0) { func_0033F130(D_004519F0); return -3; } return a[1]; }
+int adxf_GetStat(char *a) { if (a == 0) { func_0033F130(D_004519F0); return -3; } return a[1]; }
 
 // FUNCTION: GAME 0x325F20
 void func_00325F20(void) { func_0033BFB8(); func_00325DF0(); func_00325FA8(); func_00325EF8(); func_0033BFE8(); }

@@ -15,6 +15,8 @@ extern "C" void calcParts__6cModel(void *);
 extern "C" void InverseKinematics__2IKP8cObjBase(void *, void *);
 extern "C" void calcWorldParts__6cModel(void *);
 extern "C" void func_001CF3A8(void *);
+extern "C" void SetDamageCollActive__11cDamageUnitb(void *, int);
+extern "C" void SetDamageCollRadius__11cDamageUnitif(void *, int, float);
 extern "C" void func_00123938(void *, int);
 extern "C" int SetEffect__F12eEffDataType6eEffIdP4cObjP12tagEFF_PARAMiT2(int, int, void *, void *, int, unsigned);
 
@@ -65,34 +67,6 @@ extern "C" void func_00102FE8(char *self)
         float one = 1.0f;
         ((cObjBase *)self)->addNullSpeed_Rotation(one);
         ((cObjBase *)self)->addNullSpeed(one);
-    }
-}
-
-// FUNCTION: GAME 0x10CC58
-extern "C" void func_0010CC58(char *self)
-{
-    switch (B(0x2F6)) {
-    case 0: {
-        *(short *)(self + 0x5E0) = 0;
-        *(short *)(self + 0x5E2) = 0;
-        char *t = *(char **)(self + 0x304);
-        func_002A8578(self, *(int *)(t + 0x220) + (int)t, *(int *)(t + 0x278) + (int)t, 3, 0.0f, 0, 0);
-        *(int *)(self + 0x15B0) = 0x10;
-        B(0x2F6) = B(0x2F6) + 1;
-    }
-    case 1:
-        *(float *)(self + 0x15F0) = D_003BD48C;
-        if (*(int *)(self + 0x15B0)) {
-            *(int *)(self + 0x15B0) = *(int *)(self + 0x15B0) - 1;
-            func_00124E68(self, 0.19634954f);
-        }
-        if (moveMotion((cObjBase *)self)) {
-            *(unsigned char *)(self + 0x2F4) = 0;
-            *(unsigned char *)(self + 0x2F5) = 0;
-            *(unsigned char *)(self + 0x2F6) = 0;
-            *(unsigned char *)(self + 0x2F7) = 0;
-            func_00123938(self, 1);
-        }
     }
 }
 
@@ -151,30 +125,53 @@ extern "C" void SubscreenMode__4pl00Ui(char *self, int on)
         }
     }
 }
-// FUNCTION: GAME 0x102DE8
+
+#define DU(o) (*(char **)(self + (o)))
+#define DUI(o) (*(int *)(self + (o)))
+#define DAMAGE_OFF(o, r) \
+    *(short *)(DU(o) + 0x46) = 0; \
+    SetDamageCollActive__11cDamageUnitb(DU(o), 0); \
+    SetDamageCollRadius__11cDamageUnitif(DU(o), DUI(r), 0.0f); \
+    *(int *)(DU(o) + 0x4C) = 0;
+
+// FUNCTION: GAME 0x10A2C8
+extern "C" void func_0010A2C8(char *self)
+{
+    if (DU(0x5B0) && DU(0x5B8) && DU(0x5C0) && DU(0x5C8) && DU(0x5D0)) {
+        DAMAGE_OFF(0x5B0, 0x5B4)
+        DAMAGE_OFF(0x5B8, 0x5BC)
+        DAMAGE_OFF(0x5C0, 0x5C4)
+        DAMAGE_OFF(0x5C8, 0x5CC)
+        DAMAGE_OFF(0x5D0, 0x5D4)
+    }
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x102DE8
+// diff: 47 words (252 vs 244 bytes); the original shares one copy of the 0x34/0x38 arm for case 0 and default.
 extern "C" void func_00102DE8(char *self)
 {
     switch (B(0x2F6)) {
     case 0: {
         int a, b;
         char *t;
-        unsigned char c = B(0x2F7);
-        if (c == 1) {
+        switch (B(0x2F7)) {
+        case 1:
             t = *(char **)(self + 0x304);
             a = *(int *)(t + 0x3C);
             b = *(int *)(t + 0x40);
-        } else if (c < 2) {
-            t = *(char **)(self + 0x304);
-            a = *(int *)(t + 0x34);
-            b = *(int *)(t + 0x38);
-        } else if (c == 2) {
+            break;
+        case 2:
             t = *(char **)(self + 0x304);
             a = *(int *)(t + 0x44);
             b = *(int *)(t + 0x48);
-        } else {
+            break;
+        case 0:
+        default:
             t = *(char **)(self + 0x304);
             a = *(int *)(t + 0x34);
             b = *(int *)(t + 0x38);
+            break;
         }
         func_002A8578(self, a + (int)t, b + (int)t, 5, 0.0f, 0, 0);
         B(0x2F6) = B(0x2F6) + 1;
@@ -191,3 +188,33 @@ extern "C" void func_00102DE8(char *self)
         ((cObjBase *)self)->addNullSpeed(one);
     }
 }
+
+// DRAFT: GAME 0x10CC58
+// diff: 8 words; original fills the beq delay slot with daddu a0,s0 and calls func_00123938 with addiu a1 after the four stores.
+extern "C" void func_0010CC58(char *self)
+{
+    switch (B(0x2F6)) {
+    case 0: {
+        *(short *)(self + 0x5E0) = 0;
+        *(short *)(self + 0x5E2) = 0;
+        char *t = *(char **)(self + 0x304);
+        func_002A8578(self, *(int *)(t + 0x220) + (int)t, *(int *)(t + 0x278) + (int)t, 3, 0.0f, 0, 0);
+        *(int *)(self + 0x15B0) = 0x10;
+        B(0x2F6) = B(0x2F6) + 1;
+    }
+    case 1:
+        *(float *)(self + 0x15F0) = D_003BD48C;
+        if (*(int *)(self + 0x15B0)) {
+            *(int *)(self + 0x15B0) = *(int *)(self + 0x15B0) - 1;
+            func_00124E68(self, 0.19634954f);
+        }
+        if (moveMotion((cObjBase *)self)) {
+            B(0x2F4) = 0;
+            B(0x2F5) = 0;
+            B(0x2F6) = 0;
+            B(0x2F7) = 0;
+            func_00123938(self, 1);
+        }
+    }
+}
+#endif

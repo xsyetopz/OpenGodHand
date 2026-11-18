@@ -1,5 +1,7 @@
 // Small helpers in 0x1F0000-0x200000, over raw offsets.
 extern "C" void func_001FCD00(void *);
+extern "C" void func_001FAE28(void *, int);
+extern "C" void setGameLevel__9cCoreSavei(void *, int);
 
 struct WT {
     int a, b;
@@ -21,23 +23,30 @@ extern "C" void func_001F6CF8(char *p)
 extern "C" void func_001F9C30(int **p)
 {
     int *q = *p;
-    *q = WorldTime.a;
+    int x = WorldTime.a;
+    WT *w = &WorldTime;
+    *q = x;
+    int y = w->b;
     int *r = *p;
-    r[1] = WorldTime.b;
+    r[1] = y;
 }
 
 // FUNCTION: GAME 0x1FC170
-extern "C" void func_001FC170(char *p, unsigned a, int v)
+struct F1FC170 {
+    char *q;
+};
+extern "C" void func_001FC170(F1FC170 *s, unsigned a, int v)
 {
-    p = *(char **)p;
-    if (p) {
+    char *q = s->q;
+    if (q) {
         unsigned i = a & 0xFF;
         if (i < 10)
-            p[i + 0x98] = v;
+            (q + i)[0x98] = v;
     }
 }
 
-// FUNCTION: GAME 0x1FC198
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1FC198 - extra nop and merged 0x1F return
 extern "C" int func_001FC198(char *p, unsigned a)
 {
     p = *(char **)p;
@@ -48,8 +57,10 @@ extern "C" int func_001FC198(char *p, unsigned a)
         return (unsigned char)p[i + 0x98];
     return 0x1F;
 }
+#endif
 
-// FUNCTION: GAME 0x1FC360
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1FC360 - compiler emits srav/movn instead of sllv/movz
 extern "C" int func_001FC360(char *p, int bit)
 {
     p = *(char **)p;
@@ -60,6 +71,7 @@ extern "C" int func_001FC360(char *p, int bit)
         r = 0;
     return r;
 }
+#endif
 
 // FUNCTION: GAME 0x1FCDB8
 extern "C" void func_001FCDB8(char *p)
@@ -92,4 +104,46 @@ extern "C" void func_001F77D0(char *p)
     char *r = p + 4;
     *(int *)(r + 4) = 0;
     *(int *)(r + 0xC) = 0;
+}
+
+// FUNCTION: GAME 0x1FCDE8
+extern "C" void func_001FCDE8(char *p)
+{
+    func_001FCD00(p);
+    *(int *)(p + 0x34) = 0;
+    p[0x49] = 2;
+    *(int *)(p + 0x60) = 0;
+}
+
+// FUNCTION: GAME 0x1FF6E0
+extern "C" int func_001FF6E0(char *p, int k)
+{
+    int *q = (int *)(p + 0x4C);
+    for (unsigned i = 0; i < 4; i++, q++) {
+        if (*q == k)
+            return 1;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x1F9A98
+extern "C" void func_001F9A98(void *p)
+{
+    func_001FAE28(p, 3);
+    setGameLevel__9cCoreSavei(p, 1);
+}
+
+// FUNCTION: GAME 0x1FACF8
+extern "C" int func_001FACF8(char **p, int i, unsigned a)
+{
+    char *b = *p + 0x134;
+    unsigned char *q = (unsigned char *)(b + i);
+    unsigned v = *q;
+    v += a;
+    if (v < 0x100) {
+        *q = v;
+        return 1;
+    }
+    *q = 0xFF;
+    return 0;
 }

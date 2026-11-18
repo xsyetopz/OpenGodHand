@@ -2,7 +2,7 @@
 // SCE framed wrappers (continued from Fn32x_96.c), -O2 -G0.
 
 int func_003228C0();
-int func_003234D0(void);
+int adxf_CreateAdxFs(void);
 int func_00323700();
 void func_00323AA0();
 void func_003381B0();
@@ -19,7 +19,7 @@ int func_00323780(int a, int b, int c, int d)
 {
     int r;
     func_003228C0(1, 0, a, b, -1);
-    r = func_003234D0();
+    r = adxf_CreateAdxFs();
     if (r) {
         if (func_00323700(r, a, b, c, d) < 0) {
             func_00323AA0(r);
@@ -70,10 +70,10 @@ void func_003262D8(int a)
 
 void *memset(void *, int, unsigned);
 int func_003228C0();
-int func_003234D0(void);
-int func_00323568(int, int, int);
+int adxf_CreateAdxFs(void);
+int adxf_SetFileInfoEx(int, int, int);
 int func_00323840(int, int, int);
-int func_00323F18();
+int adxf_Stop();
 void func_00328018();
 void func_00327D90();
 int func_0033D190();
@@ -94,7 +94,7 @@ void func_00323AA0(char *s)
     func_003228C0(3, 0, s, -1, -1);
     if (s) {
         if (s[1] == 2)
-            func_00323F18(s);
+            adxf_Stop(s);
         h = *(int *)(s + 4);
         if (h) {
             s[0] = 0;
@@ -112,9 +112,9 @@ int func_00323660(int a, int b)
 {
     int r;
     func_003228C0(1, 0, a, b, -1);
-    r = func_003234D0();
+    r = adxf_CreateAdxFs();
     if (r) {
-        if (func_00323568(r, a, b) < 0) {
+        if (adxf_SetFileInfoEx(r, a, b) < 0) {
             func_00323AA0((char *)r);
             r = 0;
         }
@@ -128,7 +128,7 @@ int func_00323960(int a, int b)
 {
     int r;
     func_003228C0(2, 0, a, b, -1);
-    r = func_003234D0();
+    r = adxf_CreateAdxFs();
     if (r) {
         if (func_00323840(r, a, b) < 0) {
             func_00323AA0((char *)r);
@@ -181,7 +181,7 @@ int func_00327F00();
 int func_00328098();
 int func_00328D40();
 int func_00328D80();
-int func_00323568(int *s, int b, int c)
+int adxf_SetFileInfoEx(int *s, int b, int c)
 {
     if (!b) {
         func_0033F130(D_00451658);

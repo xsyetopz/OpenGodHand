@@ -2,7 +2,7 @@
 #include "game/Fn17x.h"
 
 extern "C" {
-void func_001B6FB8(void *);
+int func_001B6FB8(void *);
 void func_001331B8(cCollScrQ *, long, bool);
 void func_001C7E08(void *);
 
@@ -88,11 +88,8 @@ void func_0017D280(sQ5 *s)
 }
 }
 
-#ifdef NONMATCHING
-
-// DRAFT: GAME 0x17FC58
-// diff: original loads 0x5B8 into $v1 and 0x250 into $v0, compiled swaps the registers
-int func_0017FC58(sQ4 *s)
+// FUNCTION: GAME 0x17FC58
+extern "C" int func_0017FC58(sQ4 *s)
 {
     func_001B6FB8(s);
     s->m_5b8 |= 8;
@@ -103,7 +100,6 @@ int func_0017FC58(sQ4 *s)
     ((cOl2b *)s)->setOpenFix();
     return 1;
 }
-#endif
 
 // FUNCTION: GAME 0x174C28
 FN17_TIMER(func_00174C28, sTm654)

@@ -140,7 +140,7 @@ int func_003406D0(int a) { func_003403C8(); func_00340700(a); return func_003403
 void func_00324C50(void);
 void func_0032AF88(void);
 void func_0033F590(void);
-void func_003388F8(void);
+void PS2RNA_SetStmHdInfo(void);
 void func_00368DF0(void);
 void func_0036C220(void);
 void func_0035AE18(void);
@@ -155,7 +155,7 @@ int func_00324910(void) { func_0032AF88(); return 0; }
 int func_00324930(void) { func_0033F590(); return 0; }
 
 // FUNCTION: GAME 0x326498
-int func_00326498(void) { func_003388F8(); return 0; }
+int func_00326498(void) { PS2RNA_SetStmHdInfo(); return 0; }
 
 // FUNCTION: GAME 0x34E1B8
 int func_0034E1B8(void) { func_00368DF0(); return 0; }

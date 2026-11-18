@@ -144,6 +144,46 @@ int func_0036CE38(void)
     return 0;
 }
 
+extern int *func_00360D18(void);
+extern void func_00360D28(int);
+extern void func_0036C658(void);
+extern void func_0036C440(int, int);
+extern void func_0036CF30(void);
+extern void func_0036CCC8(int, void *, int);
+extern int func_0036CD98(int);
+extern int D_00766D38;
+extern int D_00766D48;
+
+// FUNCTION: GAME 0x360CF0
+void func_00360CF0(void)
+{
+    *func_00360D18() = 0;
+    func_00360D28(0x80);
+}
+
+// FUNCTION: GAME 0x36C220
+void func_0036C220(void)
+{
+    func_0036C658();
+    func_0036C440(D_00766D38, 0x1BE0);
+}
+
+// FUNCTION: GAME 0x36C628
+void func_0036C628(void)
+{
+    func_0036CF30();
+    func_0036CCC8(8, &D_00766D48, 0x3840);
+}
+
+// FUNCTION: GAME 0x36C6A0
+int func_0036C6A0(char *p)
+{
+    int v = 0;
+    if (p)
+        v = *(int *)(p + 0x3B4);
+    return func_0036CD98(v);
+}
+
 #ifdef NONMATCHING
 // DRAFT: GAME 0x36CB98
 // diff: orig leaves nop in beqz delay slot and emits lui/addiu(D_003F1EC8) after the sw;
@@ -168,5 +208,26 @@ void func_00368EE0(struct Cb *c, int v)
     c->v = v;
     if (v && c->fn)
         c->fn(c->arg);
+}
+
+// DRAFT: GAME 0x360CA0
+// diff: orig loads D_00766CD0 address (lui v1) before D_0045A290 (lui v0); ours reverses (8 words)
+extern char D_0045A290[];
+extern char *D_00766CD0;
+void func_00360CA0(void)
+{
+    D_00766CD0 = D_0045A290;
+    func_00360CF0();
+}
+
+// DRAFT: GAME 0x368FE8 (same shape at 0x36D3D8)
+// diff: orig copies result v0 to v1 before beqz/a0 move; ours tests v0 directly (6 words)
+extern int func_00369020();
+extern void func_00369078();
+void func_00368FE8(void)
+{
+    int p = func_00369020();
+    if (p)
+        func_00369078(p);
 }
 #endif

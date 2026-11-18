@@ -8,7 +8,7 @@ struct PK8 { long v; } __attribute__((packed));
 extern PK8 D_00747A78;
 extern int Movie;
 int func_00394DD8(int, int);
-void func_002B5AF8(void *, void *, void *);
+int func_002B5AF8(void *, void *, void *);
 void func_002B6420(void *);
 void func_002B64C0(void *);
 int *func_002BB068(int *, int);
@@ -36,14 +36,11 @@ void func_002BF540(char *p)
     }
 }
 
-#ifdef NONMATCHING
-// 2 words differ: original schedules the arg moves (a2=a1, a1=a0) before the lui of Movie
-// DRAFT: GAME 0x2B48A0
+// FUNCTION: GAME 0x2B48A0
 void func_002B48A0(void *a, void *b)
 {
     func_002B5AF8(&Movie, a, b);
 }
-#endif
 
 // FUNCTION: GAME 0x2B61B0
 char *func_002B61B0(char *self)

@@ -127,6 +127,10 @@ These source shapes reproduce patterns this compiler emits only one way:
   `sqc2 $vf0` zero/identity-initialises a 16-byte-aligned local. Plain struct
   or `mode(TI)` assignment emits `lq`/`sq` instead. fncmp disassembles these
   as `ldc2`/`sdc2`.
+- A v0/v1 (or lui/lw) swap on a global load after a call is fixed by declaring
+  the preceding callee with an `int` return (`extern "C" int SetDisable__13cSceAtManagerUs(...)`
+  instead of `void`). The unused return value shifts register allocation
+  (matched 0x1DFD90, 0x1D4F48, 0x1641B8, 0x17FC58). Check the callee's other call sites in the file.
 
 ## Open problem: `div.s` padding
 
@@ -197,6 +201,26 @@ configure.py and fncmp.py both read:
 `FLAGS` is appended to `CXXFLAGS`. ee-gcc 3.2 sources use that package's own
 assembler and skip the short-loop pass, because the SCE code was not built
 with SN's workaround.
+
+### CRI middleware
+
+CRI ADX/Sofdec middleware occupies 0x322978-0x36D1A8 and builds with `ee-gcc2.96`.
+Every library carries a version string stamped Nov 4 2005 (the CRI SF*/SUD/CFT/MP*/M2V
+group: Aug 9 2005); the executable's version table, by library:
+
+- ADXT/PS2EE 9.67 (0x324950), ADXPS2 2.63 (0x325638), ADXRT 3020 (0x3290B8)
+- AIXP/PS2EE 2.53 (0x32D1A0), CVFS/PS2EE 2.51 (0x330318), SRD/PS2EE 2.24 (0x330FB8)
+- DVCI/PS2EE 2.72 (0x3327D8), HTCI/PS2EE 2.70 (0x333FA0), LSC/PS2EE 2.26 (0x335DE0)
+- MFCI/PS2EE 1.15 (0x336318), PS2RNA 1.35 (0x337728), SJRMT 1.03 (0x33AFC0)
+- ADXF/PS2EE (0x33F3F0), PL2ENC 1.02 (0x3404B0-0x340580), MWSFD/PS2EE (0x3452D8)
+- CRI SFD (0x34DB60), SFH 1.19 (0x35D520), SFX 2.31 (0x35F8A8), SUD 0.05 (0x360790)
+- CRI CFT 1.78 (0x360CA0), MPS (0x368CE8), MPV (0x36BE00), M2V (0x36D0E8-0x36D1A8)
+
+Each address is the unit that loads that library's version string. Error strings embed
+function names, `E9040801:...(adxf_ChkPrmPt)`; `tools/crinames.py --spans` scans
+the asm for units referencing exactly one such name and prints the version-string
+spans. Its proposals are applied in `config/symbols.sndata.txt` (`adxf_*` at
+0x322978-0x324500, `adxt_StartMemIdx`, `DTX_Create`, `PS2RNA_*`, `DTR_ExecHndl`).
 
 ## VU0 macro code
 

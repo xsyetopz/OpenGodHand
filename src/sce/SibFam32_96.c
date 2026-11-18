@@ -2,9 +2,9 @@
 // Lock/call/unlock wrappers sharing the 0x328098 skeleton (ee-gcc 2.96, -O2 -G0).
 
 int func_00323038(int);
-int func_00324040(int);
+int adxf_StopNw(int);
 int func_00324400(int);
-int func_00324500(int);
+int adxf_GetStat(int);
 int func_00324808(int);
 int func_00328178(int);
 int func_00328D78(int);
@@ -44,13 +44,13 @@ void func_0033FCA8(void);
 int func_00323000(int a) { int r; func_00324880(); r = func_00323038(a); func_00324898(); return r; }
 
 // FUNCTION: GAME 0x324008
-int func_00324008(int a) { int r; func_00324880(); r = func_00324040(a); func_00324898(); return r; }
+int func_00324008(int a) { int r; func_00324880(); r = adxf_StopNw(a); func_00324898(); return r; }
 
 // FUNCTION: GAME 0x3243C8
 int func_003243C8(int a) { int r; func_00324880(); r = func_00324400(a); func_00324898(); return r; }
 
 // FUNCTION: GAME 0x3244C8
-int func_003244C8(int a) { int r; func_00324880(); r = func_00324500(a); func_00324898(); return r; }
+int func_003244C8(int a) { int r; func_00324880(); r = adxf_GetStat(a); func_00324898(); return r; }
 
 // FUNCTION: GAME 0x3247D0
 int func_003247D0(int a) { int r; func_00324880(); r = func_00324808(a); func_00324898(); return r; }

@@ -2,7 +2,7 @@
 // SCE framed units (continued from Fn32y_96.c), -O2 -G0.
 
 int func_003228C0();
-int func_00323F18();
+int adxf_Stop();
 extern char D_004518B0[], D_004518D8[], D_00451800[], D_00451828[], D_00451858[], D_00451880[];
 void func_0033F130();
 void func_00328368();
@@ -11,7 +11,7 @@ void func_00323A00();
 void func_003282D0();
 
 // FUNCTION: GAME 0x3242B0
-int func_003242B0(int *s, int off, int w)
+int adxf_Seek(int *s, int off, int w)
 {
     func_003228C0(6, 0, s, off, w);
     if (!s) {
@@ -19,7 +19,7 @@ int func_003242B0(int *s, int off, int w)
         return -3;
     }
     if (((char *)s)[1] == 2)
-        func_00323F18(s);
+        adxf_Stop(s);
     if (w == 0)
         s[5] = off;
     else if (w == 1)
@@ -39,7 +39,7 @@ int func_003242B0(int *s, int off, int w)
 }
 
 // FUNCTION: GAME 0x323F18
-int func_00323F18(char *s)
+int adxf_Stop(char *s)
 {
     func_003228C0(5, 0, s, -1, -1);
     if (!s) {
@@ -67,7 +67,7 @@ int func_00323F18(char *s)
 }
 
 // FUNCTION: GAME 0x324040
-int func_00324040(char *s)
+int adxf_StopNw(char *s)
 {
     func_003228C0(7, 0, s, -1, -1);
     if (!s) {

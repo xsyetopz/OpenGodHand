@@ -1,124 +1,88 @@
-// Small accessors in 0x2D0000-0x2D7FFF.
+// Small unnamed units in 0x2D0000-0x2E0000.
+extern char D_0044D1C8[];
+extern "C" void func_002D0748(int *, int);
+extern "C" void func_002D0758(int *, int);
+extern "C" void func_002D2F78(void *, int, int, int, int);
 
-extern "C" {
-
-// FUNCTION: GAME 0x002D0350
-void func_002D0350(int *a, int b) { a[1] |= b; }
-
-// FUNCTION: GAME 0x002D03D0
-int func_002D03D0(int *a, int b) { return (~a[1] & b) == 0; }
-
-// FUNCTION: GAME 0x002D2DB0
-char *func_002D2DB0(char *a, int b) { return *(char **)(a + 0x38) + b * 0xDC; }
-
+// FUNCTION: GAME 0x2D50C0
+extern "C" char *func_002D50C0(char *self)
+{
+    *(int *)self = 0;
+    *(char **)(self + 0x30) = D_0044D1C8;
+    *(int *)(self + 4) = 0;
+    *(short *)(self + 0xC) = 0;
+    *(short *)(self + 0xE) = 0;
+    *(int *)(self + 0x2C) = 0;
+    return self;
 }
 
-extern int D_00747A94;
-extern int D_00747A98;
-extern char D_0044D388[];
-
-// FUNCTION: GAME 0x2DB6B0
-int Getplayer()
+// FUNCTION: GAME 0x2D07A8
+extern "C" void func_002D07A8(int *self, int m)
 {
-    return D_00747A94;
+    self[0x16] |= m;
+    func_002D0748(self, m);
 }
 
-// FUNCTION: GAME 0x2DB6C0
-int GetJacket()
+// FUNCTION: GAME 0x2D07D8
+extern "C" void func_002D07D8(int *self, int m)
 {
-    return D_00747A98;
+    self[0x16] &= ~m;
+    func_002D0758(self, m);
 }
 
-// FUNCTION: GAME 0x2D9E18
-extern "C" char *func_002D9E18(char *p)
+// FUNCTION: GAME 0x2D0820
+extern "C" void func_002D0820(char *self, float f)
 {
-    *(char **)p = D_0044D388;
-    return p;
+    char *p = *(char **)(self + 0x18);
+    while (p) {
+        *(float *)(p + 0xC4) = f;
+        *(unsigned *)(p + 0x98) |= 4;
+        p = *(char **)(p + 0x88);
+    }
 }
 
-// FUNCTION: GAME 0x2D42E0
-extern "C" void func_002D42E0(int *p)
+// FUNCTION: GAME 0x2D3020
+extern "C" void func_002D3020(void *a, int b, int c, int d)
 {
-    if (*p)
-        p[0x18] = 1;
+    func_002D2F78(a, 0, b, c, d);
 }
 
-// FUNCTION: GAME 0x2D0578
-extern "C" char *func_002D0578(char *p, int i)
+struct cHeap;
+extern cHeap D_00754200;
+void *_MemoryAlloc(unsigned, unsigned, cHeap &);
+extern "C" int func_00346848(int);
+
+// FUNCTION: GAME 0x2D5790
+extern "C" void func_002D5790(char *self)
 {
-    char *t = *(char **)(p + 0x30);
-    if (!t)
-        return 0;
-    return *(char **)(t + 0x10) + i * 8;
+    *(void **)(self + 0x10) = _MemoryAlloc(*(unsigned *)(self + 8), 0x10, D_00754200);
 }
 
-// FUNCTION: GAME 0x2D0598
-extern "C" char *func_002D0598(char *p, int i)
+// FUNCTION: GAME 0x2D4210
+extern "C" int func_002D4210(char *self)
 {
-    char *t = *(char **)(p + 0x30);
-    if (!t)
-        return 0;
-    return *(char **)(t + 0x14) + i * 16;
+    int r = 0;
+    if (*(int *)self) {
+        r = func_00346848(*(int *)self);
+        *(int *)(self + 0xA4) = r;
+    }
+    return r;
 }
 
-// FUNCTION: GAME 0x2D05B8
-extern "C" char *func_002D05B8(char *p, int i)
+// FUNCTION: GAME 0x2D3240
+extern "C" void func_002D3240(int *self, int b, int c, int d, int e, int f)
 {
-    char *t = *(char **)(p + 0x30);
-    if (!t)
-        return 0;
-    return *(char **)(t + 0x1C) + i * 2;
-}
-
-// FUNCTION: GAME 0x2D3190
-extern "C" int func_002D3190(char *p)
-{
-    int *c = (int *)(p + 0xC40);
-    if (++*c == 0)
-        *c = 1;
-    return *c;
-}
-
-extern "C" void func_002D31B0(int, unsigned);
-extern "C" void *memset(void *, int, unsigned);
-
-// FUNCTION: GAME 0x2D31E0
-extern "C" void func_002D31E0()
-{
-    func_002D31B0(1, 0xFFFF);
-}
-
-// FUNCTION: GAME 0x2D3220
-extern "C" void func_002D3220(void *p)
-{
-    memset(p, 0, 0xC0);
-}
-
-extern "C" void func_002D0820(char *);
-
-// FUNCTION: GAME 0x2D0728
-extern "C" void func_002D0728(char *p, int v)
-{
-    *(int *)(p + 0x50) = v;
-    func_002D0820(p);
-}
-
-// FUNCTION: GAME 0x2D42B0
-extern "C" int func_002D42B0(char *p)
-{
-    if (!*(int *)p)
-        return 0;
-    return *(int *)(*(char **)(p + 8) + 0x24);
-}
-
-// FUNCTION: GAME 0x2D36E8
-extern "C" int *func_002D36E8(int *p)
-{
-    p[0] = 0;
-    p[1] = 0;
-    p[2] = 0;
-    p[5] = 0;
-    p[6] = 0;
-    p[0xA8 / 4] = 0;
-    return p;
+    self[2] = c;
+    self[0] = 1;
+    self[1] = b;
+    if (!b) {
+        self[3] = d;
+        self[0x1B] = 0;
+    } else {
+        self[0x1B] = d;
+        self[3] = 0;
+    }
+    self[0x20] = f;
+    self[0x1D] = e;
+    self[0x1C] = 0;
 }

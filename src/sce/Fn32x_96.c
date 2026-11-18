@@ -1,10 +1,10 @@
 // COMPILER: ee-gcc2.96
 // SCE tail-call wrappers (framed sibcall), -O2 -G0.
 
-void func_00323050();
+void adxf_GetPtStat();
 void func_00325C98();
 void func_00335A18();
-void func_00336E88();
+void PS2RNA_SetupVoice();
 void func_00337728();
 void func_00337B30();
 void func_00337B80();
@@ -23,7 +23,7 @@ void func_00338710();
 void func_00338788();
 void func_003387C8();
 void func_00338818();
-void func_00338848();
+void PS2RNA_SetBitPerSmpl();
 void func_003388B0();
 void func_0033B658();
 void func_0033B670();
@@ -49,7 +49,7 @@ void func_003AFBC0();
 // FUNCTION: GAME 0x323038
 void func_00323038() 
 {
-    func_00323050();
+    adxf_GetPtStat();
 }
 
 // FUNCTION: GAME 0x324880
@@ -103,7 +103,7 @@ void func_00325DD8()
 // FUNCTION: GAME 0x326148
 void func_00326148() 
 {
-    func_00336E88();
+    PS2RNA_SetupVoice();
 }
 
 // FUNCTION: GAME 0x3261F0
@@ -199,7 +199,7 @@ void func_00326410()
 // FUNCTION: GAME 0x326428
 void func_00326428() 
 {
-    func_00338848();
+    PS2RNA_SetBitPerSmpl();
 }
 
 // FUNCTION: GAME 0x326468

@@ -59,21 +59,18 @@ extern "C" int func_001BF4E0(char *self)
     return 1;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1BFFE0
-// byte stores differ in order: original 2F5,2F4,2F6,2F7; compiled 2F7,2F4,2F5,2F6
+// FUNCTION: GAME 0x1BFFE0
 extern "C" void func_001BFFE0(cOmBase *self)
 {
     long v = self->m_flags;
     if (((v >> 1) & 1) == 0) {
         self->m_flags |= 1;
         self->m_mode2F4 = 2;
-        self->m_mode2F5 = 0;
         self->m_mode2F6 = 0;
         self->m_mode2F7 = 0;
+        self->m_mode2F5 = 0;
     }
 }
-#endif
 
 // FUNCTION: GAME 0x1BB508
 extern "C" void func_001BB508(cOmBase *self)
