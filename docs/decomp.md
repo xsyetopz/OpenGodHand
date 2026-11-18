@@ -52,9 +52,14 @@ full build still reproduces `SLUS_215.03` byte for byte.
   `char _padXXX[n]` placeholders. Unknown fields are named `m_unkXXX` by offset.
 - Data the function reads keeps its splat name (`D_003BF160`) as an `extern`
   until the data itself is decompiled.
-- Functions whose compiled output needs its own `.rodata` (string literals,
-  float constants, switch jump tables) or `.data` cannot be linked yet: the
-  linker script takes only `.text.*` from compiled objects. Skip them for now.
+- Compiled `.rodata`/`.data` is not linked yet (only `.text.*` is), and the
+  gate keeps any function that references them in asm. With `-G0` a literal
+  load (`lui at,%hi(.LC0); lwc1 $f0,%lo(.LC0)(at)`) has the same encoding as a
+  load of an extern, so reference the original constant instead:
+  `extern const float D_0041C2A0;` or, inside a larger unit,
+  `extern const float D_0041C280[]; ... D_0041C280[8]`. String literals work
+  the same way (`extern const char D_0044A870[];`). Switch jump tables still
+  need their own `.rodata`; skip those.
 - Keep a function in asm (no annotation) until it matches. A non-matching
   attempt worth keeping goes inside `#ifdef NONMATCHING` with a comment naming
   its address and remaining difference, so it neither links nor collides with
