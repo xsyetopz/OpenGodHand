@@ -26,23 +26,9 @@ extern "C" void func_00377378(Fn37E1 *a, Fn37E2 *b)
     a->h0 |= 0x10;
 }
 
-// FUNCTION: GAME 0x37B518
 extern "C" void func_002E0DE8(int, int, int, const char *);
 extern "C" unsigned func_00375EF8(int);
 struct Fn37G { char _0[0xC]; int w0c; };
-extern "C" void func_0037B518(Fn37G *s)
-{
-    unsigned f;
-    func_002E0DE8(3, 4, 8, "STATUS :");
-    f = func_00375EF8(s->w0c);
-    if (f == 0) {
-        func_002E0DE8(0xC, 4, 0xF, "STOP");
-        return;
-    }
-    if (f & 1) func_002E0DE8(0xC, 4, 0xD, "STAND-BY");
-    if (f & 2) func_002E0DE8(0xC, 4, 0xC, "PLAY");
-    if (f & 4) func_002E0DE8(0x10, 4, 0xD, "FADE");
-}
 
 struct Fn37J3 { int w0; };
 struct Fn37J1 { int w0; int w4; int w8; int wc; char _10[0x20]; int w30; };
@@ -161,7 +147,6 @@ extern "C" void func_0037C4C0(Fn37Ko *o)
     }
 }
 
-// FUNCTION: GAME 0x37FD28
 struct Fn37Q4 { int w0, w4, w8, wc; };
 struct Fn37Qa { char _0[6]; unsigned char b6; };
 struct Fn37Qb { char _0[1]; unsigned char b1; char _2; unsigned char b3; };
@@ -174,34 +159,7 @@ int func_00380AE8(Fn37Qa *, char *, Fn37Qb *);
 void func_0032DA28(int, int, int);
 void func_0032BB48(int, int, int);
 }
-extern "C" int func_0037FD28(Fn37Qa *a, Fn37Qb *b)
-{
-    Fn37Q4 *p = *(Fn37Q4 **)((char *)b + 0xF8);
-    char *s;
-    int r;
-    if (!p->w0 && !p->w4 && !p->w8 && !p->wc) return 1;
-    func_00323A70(*(int *)((char *)b + 0xF4));
-    if (!func_003A92E0(*(Fn37Q4 **)((char *)b + 0xF8), "AIXF", 4)) b->b3 |= 2;
-    else b->b3 &= 0xFD;
-    func_0031C900(*(Fn37Q4 **)((char *)b + 0xF8));
-    if (b->b3 & 2) {
-        s = (char *)b + 0xCC;
-        r = func_00381B38(a, s, b);
-        if (r) { b->b1 = r; return 1; }
-        func_0032DA28(*(int *)(s + 0x20), 0xFF, a->b6);
-        return 0;
-    }
-    s = (char *)b + 0x6C;
-    r = func_00380AE8(a, s, b);
-    if (r == 0) {
-        func_0032BB48(*(int *)(s + 0x30), 0xFF, a->b6);
-        return 0;
-    }
-    b->b1 = r;
-    return 1;
-}
 
-// FUNCTION: GAME 0x378760
 struct Fn37Ym { char _0[4]; signed char b4; signed char b5; char _6[0x2E]; int w34; };
 extern int D_003F21B8;
 extern "C" {
@@ -212,29 +170,4 @@ void func_0037B620(Fn37Ym *);
 void func_0037AC68(Fn37Ym *);
 void func_0037E128(int, Fn37Ym *);
 void func_0037DC88(int, int);
-}
-extern "C" void func_00378760(Fn37Ym *s)
-{
-    if (s->w34 & 0x800) {
-        s->b4 = 1;
-        if (D_003F21B8) {
-            func_0037DC88(D_003F21B8, 3);
-            D_003F21B8 = 0;
-        }
-    } else {
-        switch (s->b5) {
-        case 0: func_00378AA8(s); break;
-        case 1: func_00378BF8(s); break;
-        case 2: func_00378CE0(s); break;
-        case 3: func_0037B620(s); break;
-        case 4: func_0037AC68(s); break;
-        case 5: func_0037E128(D_003F21B8, s); break;
-        }
-        if (s->b4) {
-            if (D_003F21B8) {
-                func_0037DC88(D_003F21B8, 3);
-                D_003F21B8 = 0;
-            }
-        }
-    }
 }

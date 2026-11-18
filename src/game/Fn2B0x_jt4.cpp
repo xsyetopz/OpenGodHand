@@ -23,3 +23,7 @@ extern "C" void func_002B16F0(char *self)
     case 5: func_002B1C30(self); break;
     }
 }
+
+// The original table is followed by two words: a label inside func_00334D10 and zero.
+extern char L00334D54[] asm(".L00334D54");
+extern "C" const void *const jtbl_tail_0044B190[2] = {L00334D54, 0};

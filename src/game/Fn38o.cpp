@@ -102,17 +102,6 @@ struct Fn38T { char _p0[4]; unsigned char m_4; };
 extern "C" void func_00381150(Fn38T *, int);
 extern "C" void func_003812B0(Fn38T *, int, unsigned char);
 extern "C" void func_003813C8(Fn38T *, int);
-// FUNCTION: GAME 0x381070
-extern "C" void func_00381070(Fn38T *o, Fn38Pad *p)
-{
-    switch (o->m_4) {
-    case 0: func_003810F8((Fn38Pad *)o, p); break;
-    case 1: func_00381150(o, (int)p); break;
-    case 2:
-    case 3: func_003812B0(o, (int)p, o->m_4 - 2); break;
-    case 4: func_003813C8(o, (int)p); break;
-    }
-}
 
 extern "C" void func_00381F18(Fn38T *);
 extern "C" void func_003822D0(Fn38T *, int, unsigned char);
@@ -185,33 +174,11 @@ extern "C" void func_00383E40(Fn38U *o)
 extern "C" void func_00383690(Fn38T *);
 extern "C" void func_00383878(Fn38T *);
 extern "C" void func_00383B60(Fn38T *, int, unsigned char);
-// FUNCTION: GAME 0x383518
-extern "C" void func_00383518(Fn38T *o, int p)
-{
-    switch (o->m_4) {
-    case 0: func_00383690(o); break;
-    case 1: func_00383878(o); break;
-    case 2:
-    case 3: func_00383B60(o, p, o->m_4 - 2); break;
-    case 4: func_00383E40((Fn38U *)o); break;
-    }
-}
 
 extern "C" void func_00385030(Fn38T *);
 extern "C" void func_003851C0(Fn38T *);
 extern "C" void func_00385308(Fn38T *, int, unsigned char);
 extern "C" void func_00385410(Fn38T *);
-// FUNCTION: GAME 0x384FA8
-extern "C" void func_00384FA8(Fn38T *o, int p)
-{
-    switch (o->m_4) {
-    case 0: func_00385030(o); break;
-    case 1: func_003851C0(o); break;
-    case 2:
-    case 3: func_00385308(o, p, o->m_4 - 2); break;
-    case 4: func_00385410(o); break;
-    }
-}
 
 extern int D_003F2870[];
 extern char D_0045CD50[];

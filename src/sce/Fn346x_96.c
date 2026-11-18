@@ -9,6 +9,12 @@ int func_003492E8(void);
 int func_00349468(char *);
 char *func_00348938(char *);
 int func_00348968(char *);
+void func_00346798(int, int, int);
+int func_0035A1C8(char *, int);
+int func_00349A40(int);
+int func_00347DF8(int);
+int func_00349B88(int);
+void func_00358F68(int);
 
 // FUNCTION: GAME 0x00346E70
 int func_00346E70(unsigned a)
@@ -124,4 +130,38 @@ void func_00348610(char *p, int a)
                 fn(arg, a);
         }
     }
+}
+
+// FUNCTION: GAME 0x003455D8
+void func_003455D8(float *p)
+{
+    func_00346798(0, 0x1B, (int)*p);
+    func_00346798(0, 7, 1);
+}
+
+// FUNCTION: GAME 0x0034B6D0
+void func_0034B6D0(char *p, int a)
+{
+    if (func_0035A1C8(p, 6)) {
+        void (*fn)(char *, int) = *(void (**)(char *, int))(*(char **)(p + 0x2114) + 0x14);
+        if (fn)
+            fn(p, a);
+    }
+}
+
+// FUNCTION: GAME 0x003491D0
+void func_003491D0(char *p)
+{
+    if (*(int *)(p + 0x40) && func_00349A40(*(int *)(p + 0x40)))
+        *(int *)(p + 4) = 4;
+    if (*(int *)(p + 0x48) && func_00347DF8(*(int *)(p + 0x48)) == 1)
+        *(int *)(p + 4) = 4;
+}
+
+// FUNCTION: GAME 0x00346158
+void func_00346158(char *p)
+{
+    int s = *(int *)(p + 0x3C);
+    if (*(int *)(p + 0x40) && func_00349B88(*(int *)(p + 0x40)) == 3)
+        func_00358F68(s);
 }

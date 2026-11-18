@@ -100,3 +100,43 @@ int func_0035BBA0(S3C *d, S3C *s)
     *d = *s;
     return func_0035BC50(s, 0);
 }
+
+// FUNCTION: GAME 0x3509E8
+extern int func_00355508();
+int func_003509E8(int *a)
+{
+    int s = a[0xA68 / 4];
+    int m = a[0x2C / 4];
+    int r;
+    if (s == -1)
+        s = m;
+    if (m < s)
+        s = m;
+    r = func_00355508(a);
+    if (a[0x58 / 4] == 2)
+        r += a[0x968 / 4];
+    if (r < s) return 0;
+    return 1;
+}
+
+// FUNCTION: GAME 0x355818
+extern int func_003B63A0();
+extern int func_003B63F0();
+int func_00355818(int a)
+{
+    func_003B63A0();
+    *(volatile int *)0x1000F590 = *(volatile int *)0x1000F520 | 0x10000;
+    *(volatile int *)0x1000B000 = a;
+    *(volatile int *)0x1000F590 = *(volatile int *)0x1000F520 & 0xFFFEFFFF;
+    return func_003B63F0();
+}
+
+// FUNCTION: GAME 0x355880
+int func_00355880(int a)
+{
+    func_003B63A0();
+    *(volatile int *)0x1000F590 = *(volatile int *)0x1000F520 | 0x10000;
+    *(volatile int *)0x1000B400 = a;
+    *(volatile int *)0x1000F590 = *(volatile int *)0x1000F520 & 0xFFFEFFFF;
+    return func_003B63F0();
+}

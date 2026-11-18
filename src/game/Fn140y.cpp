@@ -103,3 +103,102 @@ extern "C" void func_0014A170(char *s)
         } while (i < *(unsigned char *)(s + 0x2B4));
     }
 }
+
+extern char **IDSys;
+extern char D_0041F1F0[];
+extern "C" void func_001615D0(char *);
+extern "C" int func_00161500(char *, char *);
+extern "C" void setIDData__10cIDManager7eIdDataPUi(char *, int, unsigned *);
+extern "C" void initialize__7cIDBase7eIdData5eIdNo(char *, int, int);
+extern "C" void resetAnim__7cIDBase(char *);
+extern "C" char *getIDWork__7cIDBasei(char *, int);
+
+// FUNCTION: GAME 0x1616A8
+extern "C" void func_001616A8(char *s)
+{
+    unsigned short i;
+    char **p;
+    func_001615D0(s);
+    if (func_00161500(s, D_0041F1F0)) {
+        setIDData__10cIDManager7eIdDataPUi(*IDSys, 9, *(unsigned **)(s + 0x50));
+        initialize__7cIDBase7eIdData5eIdNo(s, 9, 0);
+        resetAnim__7cIDBase(s);
+        s[0x1C] = 1;
+        *(int *)(s + 0x60) = 6;
+        s[0x5A] = 0;
+        s[0x5B] = 0;
+        s[0x5C] = 0;
+        s[0x5D] = 0;
+    }
+    i = 0;
+    p = (char **)(s + 0x80);
+    do {
+        *(char **)((char *)p + (i << 2)) = getIDWork__7cIDBasei(s, i);
+        i = i + 1;
+    } while (i < 0xF);
+    s[0xBC] = 0;
+}
+
+extern char D_0041F378[];
+extern "C" int setPackedMessData__7cIDBase7eIdData5eIdNo(char *, int, int);
+
+// FUNCTION: GAME 0x161BD0
+extern "C" void func_00161BD0(char *s)
+{
+    unsigned short i;
+    char **p;
+    func_001615D0(s);
+    if (func_00161500(s, D_0041F378)) {
+        setIDData__10cIDManager7eIdDataPUi(*IDSys, 6, *(unsigned **)(s + 0x50));
+        initialize__7cIDBase7eIdData5eIdNo(s, 6, 0);
+        resetAnim__7cIDBase(s);
+        s[0x1C] = 1;
+        setPackedMessData__7cIDBase7eIdData5eIdNo(s, 6, 1);
+        s[0x5A] = 0;
+        s[0x5B] = 0;
+        *(int *)(s + 0x60) = 2;
+        s[0x5C] = 0;
+        s[0x5D] = 0;
+    }
+    i = 0;
+    p = (char **)(s + 0x80);
+    do {
+        *(char **)((char *)p + (i << 2)) = getIDWork__7cIDBasei(s, i);
+        i = i + 1;
+    } while (i < 0x1B);
+    s[0xEC] = 0;
+    s[0xED] = 0;
+    s[0xEE] = 0;
+    s[0xEF] = 0;
+}
+
+extern char D_0041FC50[];
+extern "C" void restartAnim__7cIDBase(char *);
+
+// FUNCTION: GAME 0x167FA8
+extern "C" void func_00167FA8(char *s)
+{
+    int i;
+    char **p;
+    func_001615D0(s);
+    if (func_00161500(s, D_0041FC50)) {
+        setIDData__10cIDManager7eIdDataPUi(*IDSys, 0x16, *(unsigned **)(s + 0x50));
+        initialize__7cIDBase7eIdData5eIdNo(s, 0x16, 0);
+        restartAnim__7cIDBase(s);
+        *(int *)(s + 0x60) = 8;
+    }
+    i = 0;
+    p = (char **)(s + 0x80);
+    do {
+        *p = getIDWork__7cIDBasei(s, i);
+        i = i + 1;
+        p = p + 1;
+    } while (i < 4);
+    if ((unsigned char)s[0x64] == 1) {
+        s[0x5A] = 1;
+        *(unsigned *)(*(char **)(s + 0x8C) + 0x2C) &= 0xF7FFFFFF;
+        s[0x91] = 0;
+    } else {
+        s[0x91] = 0;
+    }
+}

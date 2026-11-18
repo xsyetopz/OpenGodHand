@@ -170,6 +170,8 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: lis
     # The assembler pads the section to its alignment; zero bytes after the
     # last real byte are not content.
     used = min(len(data), len(data.rstrip(b"\0")) + 3 & ~3)
+    if entries | foreign:  # a relocated word with a zero addend is content too
+        used = max(used, max(entries | foreign) + 4)
     if not (entries | foreign) or used == 0 or max(entries | foreign) >= used:
         return None
     word = lambda b, i: struct.unpack_from("<I", b, i)[0]

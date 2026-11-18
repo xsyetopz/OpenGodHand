@@ -120,3 +120,50 @@ void AddHeatGage__8cHeatSysfUi(G2A *self, float amt, int a1)
     func_002A9B50(self);
 }
 }
+
+extern int *D_007479F4;
+extern "C" {
+// FUNCTION: GAME 0x2ACDC8
+char *getTexAddr__10cIDManager7eIdDataUi(char *a0, int a1, unsigned a2)
+{
+    if (a1 == 0x21) {
+    def:
+        return (char *)(D_007479F4[2] + (int)D_007479F4);
+    }
+    if (a2 == 0)
+        goto def;
+    int *p = ((int **)(a0 + (a1 << 3)))[1];
+    if (p == 0 || (unsigned)p[0] < a2)
+        goto def;
+    int off = p[a2];
+    return off ? (char *)(off + (int)p) : 0;
+}
+}
+
+struct P8 { int a, b; };
+extern "C" {
+void func_002A9098(P8 *, long, int);
+// FUNCTION: GAME 0x2A9210
+void func_002A9210(P8 *b, P8 *e, int, int c)
+{
+    if (b != e) {
+        do {
+            P8 t = *b;
+            func_002A9098(b, (long)((unsigned long)t.b << 32 | (unsigned)t.a), c);
+            b++;
+        } while (b != e);
+    }
+}
+}
+
+extern "C" {
+// FUNCTION: GAME 0x2B2C98
+int func_002B2C98(E2B *self)
+{
+    if (!(D_00747A84 & 0x20000000))
+        return 0;
+    if (getCutFrame__C6cEvent(Event) >= (float)self->m_8c->m_2.h)
+        return 0;
+    return 1;
+}
+}

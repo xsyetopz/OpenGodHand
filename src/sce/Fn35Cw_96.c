@@ -165,3 +165,27 @@ long func_0036C990(long a, long b, long c)
         return (s < 0) ? -r : r;
     }
 }
+
+extern int func_0036BB78(), func_0036BDA0();
+
+// FUNCTION: GAME 0x36BCD0
+int func_0036BCD0(char *o, int m, int x)
+{
+    int *a = (int *)(o + 0x250);
+    int k = *(int *)(o + 0x194);
+    int s, r;
+    if (*(int *)(o + 0x384)) {
+        *(int *)(o + 0x384) = 0;
+        *(int *)(o + 0x388) += 1;
+        a[3] += 1;
+        if (k == 0) return -2;
+        a[4] += 1;
+    }
+    s = (k == 0) ? -2 : -3;
+    do {
+        r = func_0036BB78(x);
+        if (r == 0) break;
+        if (r & m) { s = 0; break; }
+    } while (func_0036BDA0(x, 1, 4) == 4);
+    return s;
+}

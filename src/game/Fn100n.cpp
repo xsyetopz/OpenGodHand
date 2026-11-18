@@ -14,8 +14,7 @@ struct sPos100 {
     cVec m_490;
 };
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x103760 - 4 words, a1/v0 swap of constants 7 and 0x12C
+// FUNCTION: GAME 0x103760
 extern "C" void func_00103760(sPos100 *self, int mode)
 {
     char *pl = (char *)Getplayer();
@@ -31,18 +30,19 @@ extern "C" void func_00103760(sPos100 *self, int mode)
         *(int *)(s + 0x14B4) = 0;
         B(0x2F5) = 6;
         break;
-    case 1:
+    case 1: {
+        int k = 7;
         *(int *)(s + 0x14B4) = 0x12C;
         *(unsigned *)(s + 0x250) &= 0xFFFFFFFD;
         *(unsigned *)(s + 0x14B0) |= 1;
-        B(0x2F5) = 7;
+        B(0x2F5) = k;
         break;
+    }
     }
     B(0x2F6) = 0;
     B(0x2F7) = 0;
     B(0x2F4) = 0;
 }
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x102CB0 - case 2/3 layout; target keeps li t0,2 after case 2's b, ours emits it before (24 words)
