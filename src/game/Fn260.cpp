@@ -120,10 +120,10 @@ extern char ZeroVec[];
 // FUNCTION: GAME 0x262980
 extern "C" void func_00262980(Eh *self)
 {
-    float r = 2.0f;
-    if (self->m_564 == 0x260)
-        r = 3.0f;
-    self->m_680->m_46 = 0x49;
+    DmgU *u;
+    float r = self->m_564 == 0x260 ? 3.0f : 2.0f;
+    u = self->m_680;
+    u->m_46 = 0x49;
     SetDamageCollRadius__11cDamageUnitif(self->m_680, self->m_684, r);
     self->m_680->m_4C = 0;
     SetDamageCollActive__11cDamageUnitb(self->m_680, 1);
@@ -153,4 +153,37 @@ extern "C" int func_00262A10(Eh *self)
         return 1;
     }
     return 0;
+}
+
+struct Ev {
+    char _pad0[0x564];
+    int m_564;
+    char _pad1[0x16FC - 0x568];
+    float m_16FC;
+    unsigned char m_1700;
+};
+
+#define A_ARM                       \
+    if (self->m_1700 & 1)           \
+        self->m_16FC = 0.12217305f; \
+    else                            \
+        self->m_16FC = -0.12217305f;
+#define B_ARM                       \
+    if (self->m_1700 & 1)           \
+        self->m_16FC = 0.2617994f;  \
+    else                            \
+        self->m_16FC = -0.2617994f;
+
+// FUNCTION: GAME 0x26A338
+extern "C" void func_0026A338(Ev *self)
+{
+    int s = self->m_564;
+    if (s == 0x223) {
+        A_ARM
+    } else if (s < 0x223 || (s < 0x277 && s < 0x275) || s >= 0x277) {
+        B_ARM
+    } else {
+        A_ARM
+    }
+    self->m_1700++;
 }
