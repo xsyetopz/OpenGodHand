@@ -226,3 +226,42 @@ extern "C" void func_00140C88(char *s)
     }
     s[0x23BC] = 0;
 }
+
+extern char **IDSys;
+extern char Dvd[];
+extern char RoomHeap[];
+extern char D_0041E970[];
+extern "C" int getLocalFileName__10cIDManagerPcT1Sc(char *, char *, char *, signed char);
+extern "C" char *ReadAlloc__4cDvdPCcPPvR5cHeap6eDvdIdUiUiUi(char *, char *, char **, char *, int, int, int, int);
+extern "C" void CheckWait__4cDvd6eDvdId(char *, char *);
+extern "C" void setIDData__10cIDManager7eIdDataPUi(char *, int, unsigned *);
+extern "C" void setPackedMessData__7cIDBase7eIdData5eIdNo(char *, int, int);
+
+// FUNCTION: GAME 0x147028
+extern "C" void roomInit__13cCockTutorial(char *s)
+{
+    unsigned i;
+    char **p;
+    if (*(int *)(s + 0xB0) == 0) {
+        char name[0x40];
+        getLocalFileName__10cIDManagerPcT1Sc(IDManager, name, D_0041E970, -1);
+        *(char **)(s + 0xB4) = ReadAlloc__4cDvdPCcPPvR5cHeap6eDvdIdUiUiUi(Dvd, name, (char **)(s + 0xB0), RoomHeap, 0, 0, 0, 0);
+        CheckWait__4cDvd6eDvdId(Dvd, *(char **)(s + 0xB4));
+        setIDData__10cIDManager7eIdDataPUi(*IDSys, 0x1D, *(unsigned **)(s + 0xB0));
+        initialize__7cIDBase7eIdData5eIdNo(s, 0x1D, 0);
+        setPackedMessData__7cIDBase7eIdData5eIdNo(s, 0x1D, 1);
+    }
+    i = 0;
+    restartAnim__7cIDBase(s);
+    s[0x1C] = 1;
+    p = (char **)(s + 0x90);
+    for (; i < 7; i++) *p++ = getIDWork__7cIDBasei(s, i);
+    *(int *)(*(char **)(s + 0x90) + 0x40) = 0;
+    *(int *)(*(char **)(s + 0x90) + 0x44) = 0;
+    *(unsigned *)(*(char **)(s + 0x94) + 0x2C) |= 0x8000000;
+    *(unsigned *)(*(char **)(s + 0x98) + 0x2C) |= 0x8000000;
+    *(short *)(*(char **)(s + 0x9C) + 0x90) = 0x200C;
+    *(short *)(*(char **)(s + 0xA0) + 0x90) = 0x200C;
+    *(unsigned short *)(s + 0xAC) = 0xFFFF;
+    s[0xB8] = 0;
+}

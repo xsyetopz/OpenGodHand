@@ -205,3 +205,76 @@ extern "C" void func_001B5A58(cFnW *self)
         func_001B76D8((cFnY *)self);
     }
 }
+
+class cFnV;
+typedef void (cFnV::*cFnVPmf)();
+class cFnV {
+public:
+    virtual void v();
+    char pad[0x2F4];
+    unsigned char type;
+    unsigned char type2;
+};
+extern cFnVPmf D_003BDA08[];
+extern cFnVPmf D_003BDC60[];
+// FUNCTION: GAME 0x1788A0
+extern "C" void func_001788A0(cFnV *self)
+{
+    if (func_001B76B0((cFnY *)self)) {
+        (self->*D_003BDA08[self->type])();
+        func_002A87E8((cFnY *)self, 0);
+        func_001B76D8((cFnY *)self);
+        calcParts__6cModel(self);
+        calcWorldParts__6cModel(self);
+    }
+}
+// FUNCTION: GAME 0x1ADD20
+extern "C" void func_001ADD20(cFnV *self)
+{
+    (self->*D_003BDC60[self->type2])();
+    calcParts__6cModel(self);
+    calcWorldParts__6cModel(self);
+}
+
+class cFnT;
+typedef void (cFnT::*cFnTPmf)();
+class cFnT {
+public:
+    virtual void v();
+    char pad[0x2F4];
+    unsigned char type;
+    char p2[0x5A8 - 0x2F5];
+    float spd;
+    char p3[0x600 - 0x5AC];
+    void *u600;
+    char p4[4];
+    void *u608;
+};
+extern char g_EmManage[];
+extern float D_00747A14;
+extern cFnTPmf D_003BDDA8[];
+extern cFnTPmf D_003BDC50[];
+extern "C" float GetSpeedRate__9cEmManage(void *);
+extern "C" void SetDamageCollActive__11cDamageUnitb(void *, int);
+// FUNCTION: GAME 0x1B92F0
+extern "C" void func_001B92F0(cFnT *self)
+{
+    if (func_001B76B0((cFnY *)self)) {
+        if (self->u600) SetDamageCollActive__11cDamageUnitb(self->u600, 0);
+        if (self->u608) SetDamageCollActive__11cDamageUnitb(self->u608, 0);
+        self->spd = GetSpeedRate__9cEmManage(g_EmManage);
+        (self->*D_003BDDA8[self->type])();
+        func_001B76D8((cFnY *)self);
+    }
+}
+
+// FUNCTION: GAME 0x1ADC38
+extern "C" void func_001ADC38(cFnT *self)
+{
+    if (func_001B76B0((cFnY *)self)) {
+        self->spd = GetSpeedRate__9cEmManage(g_EmManage) * D_00747A14;
+        (self->*D_003BDC50[self->type])();
+        func_002A87E8((cFnY *)self, 0);
+        func_001B76D8((cFnY *)self);
+    }
+}
