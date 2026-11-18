@@ -74,8 +74,12 @@ mechanically with decomp-permuter, cloned into `tools/ext/decomp-permuter`:
     .venv/bin/python tools/eecc.py --serve eecc-perm
     EECC_CONTAINER=eecc-perm .venv/bin/python tools/ext/decomp-permuter/permuter.py -j4 build/permuter/00145238
 
-The permuter parses C only, so drafts that use references, classes or
-`cvecop.h` asm cannot be permuted. Off x86 Linux each compile otherwise starts
+The permuter parses C only. `tools/permute_cxx.py` rewrites the common C++
+spellings in base.c (bare struct/class tags, `bool`, `*_cast<T>`), and the
+generated compile.sh undoes them so candidates still build as C++. Drafts with
+references, member functions, operators or inheritance stay unpermutable.
+`tools/permute_triage.py` scores every draft into `build/permuter/scores.tsv`
+to pick the cheapest candidates. Off x86 Linux each compile otherwise starts
 Wine in a fresh container; the served container keeps one wineserver running
 and cuts a compile from about 2.5 s to 1 s.
 

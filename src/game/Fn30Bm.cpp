@@ -167,7 +167,7 @@ extern "C" void func_002A5998();
 extern "C" void func_0030D5C8();
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x30DA08 (6 words off: s2/s3 roles of the Movie and GlobalTask addresses swapped; declaration-order swap no change)
+// DRAFT: GAME 0x30DA08 (6 words off: s2/s3 roles of the Movie and GlobalTask addresses swapped; declaration-order swap, local copies, for(;;) loop, hoisted pointer no change)
 extern "C" void func_0030DA08()
 {
     int id = Start__6cMovieib(Movie, 0, 1);

@@ -186,15 +186,13 @@ extern "C" int func_001FF540(char *self)
     return 1;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1F7AE8 (14 words: store scheduling of 0x3C)
+// FUNCTION: GAME 0x1F7AE8
 extern "C" void func_001F7AE8(char *d)
 {
     *(unsigned *)d &= 0xFFFFFFFEu;
     *(int *)(d + 0xC) = 1;
     *(int *)(d + 0x1C) = 0x31;
     *(int *)(d + 0x2C) = 0x1F;
-    *(int *)(d + 0x40) = 0;
     *(int *)(d + 0x10) = 0;
     *(int *)(d + 0x14) = 0;
     *(int *)(d + 0x18) = 0;
@@ -208,5 +206,5 @@ extern "C" void func_001F7AE8(char *d)
     d[0x36] = 0;
     *(int *)(d + 0x38) = 0;
     *(int *)(d + 0x3C) = 0;
+    *(int *)(d + 0x40) = 0;
 }
-#endif

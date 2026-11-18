@@ -13,15 +13,16 @@ settings.toml; this script derives all four from the repository:
   base.c       the draft function plus the declarations around it, as plain C:
                `extern "C"` and NONMATCHING guards are stripped, other function
                bodies and tag comments are dropped (pycparser parses C only,
-               and base.c may hold one function).
+               and base.c may hold one function). tools/permute_cxx.py lowers
+               struct/class tags, bool and *_cast<T>; compile.sh undoes that.
   target.o     asm/text/<addr>.s assembled with the project's ASFLAGS, so the
                original carries the same symbolic relocations as a compiled
                candidate.
   compile.sh   rebuilds a .cpp from the candidate: the FUNCTION/DIVNOP tag
                lines (divnop padding needs them), the candidate wrapped in
                extern "C" (it was plain C), then tools/eecc.py with the game
-               flags. Only drafts made of C-compatible code can be permuted;
-               references, bool, classes and cvecop.h inline asm are out.
+               flags. Drafts with references, member functions or operators
+               cannot be permuted (see permute_cxx.py).
   settings.toml  function name and the mipsel objdump for the R5900.
 """
 
@@ -37,6 +38,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 import configure  # noqa: E402
+import permute_cxx  # noqa: E402
 
 OUT = ROOT / "build/permuter"
 
@@ -55,6 +57,17 @@ def top_level_chunks(text: str) -> list[str]:
     if cur.strip():
         chunks.append(cur)
     return chunks
+
+
+def unwrap_extern_c(text: str) -> str:
+    """Drop `extern "C"` and the braces of `extern "C" { ... }` blocks, keeping their declarations."""
+    while m := re.search(r'extern\s+"C"\s*\{', text):
+        depth, i = 1, m.end()
+        while i < len(text) and depth:
+            depth += {"{": 1, "}": -1}.get(text[i], 0)
+            i += 1
+        text = text[: m.start()] + text[m.end() : i - 1] + text[i:]
+    return re.sub(r'extern\s+"C"\s*', "", text)
 
 
 def c_name(unit: str, text: str, addr: int) -> str:
@@ -77,7 +90,7 @@ def make_base(src: Path, name: str, addr: int) -> tuple[str, str]:
     """
     cmd = ["cc", "-E", "-P", "-x", "c++", "-nostdinc", "-DNONMATCHING", f"-I{ROOT / 'src'}", f"-I{ROOT / 'include'}", str(src)]
     text = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
-    text = re.sub(r'extern\s+"C"\s*', "", text)
+    text = unwrap_extern_c(text)
     cname = c_name(name, text, addr)
     pattern = name if cname == name else name.split("__")[0]
     keep = []
@@ -89,7 +102,7 @@ def make_base(src: Path, name: str, addr: int) -> tuple[str, str]:
             keep.append(re.sub(rf"\b{re.escape(pattern)}\s*\(", cname + "(", chunk, count=1))
             break  # declarations after the function are not needed
         keep.append(chunk)
-    return "".join(keep), cname
+    return permute_cxx.lower("".join(keep)), cname
 
 
 def divnop_tag(src: Path, addr: int) -> str:
@@ -145,7 +158,7 @@ set -e
 cd {ROOT}
 work=$(mktemp -d build/permuter.XXXXXX)
 trap 'rm -rf "$work"' EXIT
-{{ printf '{tags}extern "C" {{\\n'; cat "$1"; printf '\\n}}\\n'; }} > "$work/f.cpp"
+{{ printf '{tags}#define CXX_bool bool\\nextern "C" {{\\n'; sed '/^{permute_cxx.BOOL_TYPEDEF}$/d' "$1"; printf '\\n}}\\n'; }} > "$work/f.cpp"
 {shlex.quote(sys.executable)} tools/eecc.py {pick}{flags} -c -o "$work/f.o" "$work/f.cpp"
 {fix}cp "$work/f.o" "$3"
 """

@@ -3,7 +3,7 @@ extern char g_RoomSave[];
 extern "C" short *func_002BEF60(void *, unsigned);
 extern "C" int irand__Fv(void);
 extern "C" int sprintf(char *, const char *, ...);
-extern "C" void linkNoAlloc__7cRelSysPvPCcQ27cRelSys8eRelType(void *, void *, const char *, int);
+extern "C" int linkNoAlloc__7cRelSysPvPCcQ27cRelSys8eRelType(void *, void *, const char *, int);
 extern char RelSys;
 extern unsigned D_00747A30;
 extern const char D_0044A920[], D_0044A940[], D_0044A958[];
@@ -54,12 +54,15 @@ extern "C" void updateSetDataPos__11cEmSetParamUiRC4cVec(void *, unsigned idx, f
     }
 }
 
-// DRAFT: GAME 0x297450
-// diff: original loads the flag byte with dsrl 7 and uses v1 for the |= 0x80 (4 words)
+#endif
+
+// FUNCTION: GAME 0x297450
 extern "C" void func_00297450(char *self)
 {
     char buf[0x40];
-    if (!((unsigned long)*(unsigned char *)(self + 8) >> 7)) {
+    unsigned long f = *(unsigned char *)(self + 8);
+    unsigned long fb = f >> 7;
+    if (!fb) {
         if (D_00747A30 & 0x400)
             sprintf(buf, D_0044A920, D_0044A940);
         else
@@ -70,4 +73,4 @@ extern "C" void func_00297450(char *self)
         }
     }
 }
-#endif
+

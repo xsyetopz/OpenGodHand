@@ -232,23 +232,18 @@ extern "C" int setEmDeadFlag__9cRoomSaveUi(char *self, unsigned id)
 
 #endif
 
-// diff: 3 words, bnez vs bnel and a0/a1 setup order in the loop
-// DRAFT: GAME 0x2BEF60
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2BEF60
 extern "C" unsigned char *func_002BEF60(char *self, unsigned id)
 {
     if (id == 0xFF)
         return 0;
-    unsigned i = 0;
-    while (i < func_002BEDD8(self)) {
+    for (unsigned i = 0; i < func_002BEDD8(self); i++) {
         unsigned char *e = func_002BEF08(self, i);
-        i++;
         if (e && e[0x13] == id)
             return e;
     }
     return 0;
 }
-#endif
 
 extern unsigned D_00747A30;
 extern char Snd[];
