@@ -13,7 +13,8 @@ same source file still resolve. Every compiled object is linked through its
 `.gated.o` copy.
 
 `build/linkgen.tsv` records `vram  status  symbol` for each annotated function
-(status `match` or `differ`), so a work-in-progress annotation never breaks
+(status `match`, `differ`, or `refs SECTIONS` for a match that relocates
+against a non-function section of its object, which is not linked yet), so a work-in-progress annotation never breaks
 the build and the progress tools can tell which functions are linked.
 """
 
@@ -28,6 +29,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import configure  # noqa: E402
+from elftools.elf.elffile import ELFFile  # noqa: E402
+from elftools.elf.relocation import RelocationSection  # noqa: E402
 import fncmp  # noqa: E402
 
 ROOT = configure.ROOT
@@ -51,6 +54,29 @@ def matches(obj: Path, vram: int, sym: str, span: int, raw: bytes) -> bool:
     return True
 
 
+def local_refs(obj: Path, sym: str) -> set[str]:
+    """Sections of `obj` that `sym` relocates against through a section symbol
+    or a symbol defined outside a function section. Only matching function
+    sections are linked, so a reference to a compiled `.rodata` constant or
+    file-static variable cannot resolve yet."""
+    out = set()
+    with obj.open("rb") as f:
+        elf = ELFFile(f)
+        symtab = elf.get_section_by_name(".symtab")
+        for rs in elf.iter_sections():
+            if not isinstance(rs, RelocationSection) or elf.get_section(rs["sh_info"]).name != f".text.{sym}":
+                continue
+            for r in rs.iter_relocations():
+                target = symtab.get_symbol(r["r_info_sym"])
+                shndx = target["st_shndx"]
+                if not isinstance(shndx, int) or shndx == 0:
+                    continue  # undefined or absolute: resolved by the asm units
+                name = elf.get_section(shndx).name
+                if target["st_info"]["type"] == "STT_SECTION" or not name.startswith(".text."):
+                    out.add(name)
+    return out
+
+
 def gated(obj: str) -> str:
     return obj[: -len(".o")] + ".gated.o"
 
@@ -66,16 +92,33 @@ def main() -> int:
         end = text_units[n + 1][0] if n + 1 < len(text_units) else sections[0][0][2]
         spans[vram] = end - vram
 
+    status: dict[int, str] = {}
+    refs: dict[int, set[str]] = {}
+    for vram, obj, sym in cfg["compiled"]:
+        status[vram] = "match" if matches(ROOT / obj, vram, sym, spans[vram], raw) else "differ"
+        refs[vram] = local_refs(ROOT / obj, sym)
+    # A reference to another function section resolves only if that function
+    # is linked as well; drop unresolvable matches until none remain.
+    while True:
+        linked = {(o, f".text.{s}") for v, o, s in cfg["compiled"] if status[v] == "match"}
+        bad = [
+            v for v, o, _s in cfg["compiled"]
+            if status[v] == "match" and any((o, r) not in linked for r in refs[v])
+        ]
+        if not bad:
+            break
+        for v in bad:
+            status[v] = "refs " + ",".join(sorted(r for r in refs[v]))
+
     placed: dict[int, tuple[str, str]] = {}
     weak: dict[str, list[str]] = {o: [] for _v, o, _s in cfg["compiled"]}
     rows = []
     for vram, obj, sym in cfg["compiled"]:
-        ok = matches(ROOT / obj, vram, sym, spans[vram], raw)
-        if ok:
+        if status[vram] == "match":
             placed[vram] = (gated(obj), f".text.{sym}")
         else:
             weak[obj].append(sym)
-        rows.append(f"{vram:08X}\t{'match' if ok else 'differ'}\t{sym}\n")
+        rows.append(f"{vram:08X}\t{status[vram]}\t{sym}\n")
 
     objcopy = os.environ.get("CROSS", "mipsel-linux-gnu-") + "objcopy"
     for obj, syms in weak.items():
@@ -83,7 +126,7 @@ def main() -> int:
 
     script.write_text(configure.linker_script(sections, placed))
     (ROOT / "build/linkgen.tsv").write_text("".join(rows))
-    differ = [r.split("\t")[2].strip() for r in rows if "\tdiffer\t" in r]
+    differ = [r.split("\t")[2].strip() for r in rows if "\tmatch\t" not in r]
     print(f"linkgen: {len(placed)} compiled functions linked, {len(differ)} kept in asm"
           + (f" ({', '.join(differ[:5])}{', ...' if len(differ) > 5 else ''})" if differ else ""))
     return 0
