@@ -101,7 +101,7 @@ extern char D_0044FAD0[];
 extern "C" void *func_002FBD98(void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2FBCC8 (6 words off: scheduler orders the 0x240/0x246/0x210/0x23E/0x23F/0x245 stores differently)
+// DRAFT: GAME 0x2FBCC8 (6 words off: store order of 0x240/0x246/0x210/0x23E/0x23F/0x245; rotation tried, no change)
 extern "C" void *func_002FBCC8(void *p)
 {
     char *self = (char *)p;
@@ -118,12 +118,12 @@ extern "C" void *func_002FBCC8(void *p)
     u[2] = 1.0f;
     u[3] = 1.0f;
     *(short *)(self + 0x238) = -1;
-    F(self, 0x240) = 1.0f;
     *(char *)(self + 0x246) = 1;
+    F(self, 0x210) = 1.0f;
     *(char *)(self + 0x23E) = 1;
     *(char *)(self + 0x23F) = 1;
     *(char *)(self + 0x245) = 1;
-    F(self, 0x210) = 1.0f;
+    F(self, 0x240) = 1.0f;
     __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv2 *)(self + 0x280)));
     __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv2 *)(self + 0x290)));
     *(unsigned *)(self + 0x11C) |= 0x4000000;
@@ -146,7 +146,8 @@ extern "C" void sceVu0ApplyMatrix(float *, float *, float *);
 extern "C" void sceVu0DivVector(float *, float *, float);
 extern "C" void func_0030A570(int *, float *);
 
-// FUNCTION: GAME 0x2FDDA8
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2FDDA8 (4 words off: the -1 constant load is hoisted above the lw instead of after it)
 extern "C" int func_002FDDA8(float *m, int *out)
 {
     float v[4] __attribute__((aligned(16)));
@@ -165,3 +166,4 @@ extern "C" int func_002FDDA8(float *m, int *out)
     }
     return -1;
 }
+#endif

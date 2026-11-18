@@ -124,3 +124,26 @@ extern "C" void func_00273F08(char *self)
             *(unsigned *)(m + 0x380) &= ~1u;
     }
 }
+
+extern "C" void func_002A8578(void *, void *, void *, float, int, int, int);
+extern "C" int moveMotion__FP8cObjBase(void *);
+
+// FUNCTION: GAME 0x27F8D8
+extern "C" void func_0027F8D8(unsigned char *self)
+{
+    switch (self[0x2F6]) {
+    case 0: {
+        char *t = *(char **)(self + 0x304);
+        func_002A8578(self, *(char **)(t + 0x64) + (long)t, *(char **)(t + 0x68) + (long)t, 0.0f, 5, 0, 0);
+        self[0x2F6]++;
+    }
+    case 1:
+        if (moveMotion__FP8cObjBase(self) != 0) {
+            self[0x2F4] = 0;
+            self[0x2F5] = 0;
+            self[0x2F6] = 0;
+            self[0x2F7] = 0;
+        }
+        break;
+    }
+}

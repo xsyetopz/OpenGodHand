@@ -1,6 +1,9 @@
 // COMPILER: ee-gcc2.96
 extern char D_00452D10[];
 extern char D_00454CD8[];
+extern int D_003E0710, D_003E0708, D_003E0738;
+extern int D_003E0748[2];
+void func_00332670(int, int, int, int *, int);
 extern char D_00452038[];
 void func_0033F130(char *);
 void func_00329ED8(void);
@@ -111,3 +114,19 @@ void func_00329D78(char *a, char *b)
     func_0032B6A0(a, 1);
     func_0033E690();
 }
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x337C88
+// diff: 5 words (address register for D_003E0748 stores: $v0/$v1 swapped, original loads $a0/$v0 then address in $v1)
+void func_00337C88(void)
+{
+    int t[2];
+    if (D_003E0710 == 1 && D_003E0708 <= 0) return;
+    if (D_003E0738 != 0) {
+        func_00332670(15, 0, 0, t, 2);
+        D_003E0748[0] = t[0];
+        D_003E0748[1] = t[1];
+        D_003E0738 = 0;
+    }
+}
+#endif

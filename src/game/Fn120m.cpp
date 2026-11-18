@@ -122,21 +122,23 @@ extern "C" void _$_12CustomIDWork(void *, int);
 extern "C" void func_0030F5A0(void *);
 extern const char D_0041DCC8[];
 
-// FUNCTION: GAME 0x13DE90
+// DRAFT: GAME 0x13DE90 - 22 words: target keeps self+0x120 in a temp (v0/s2) and copies self into s1; ours puts self in s2 and compares post-decrement
+#ifdef NONMATCHING
 extern "C" void func_0013DE90(char *self, unsigned f)
 {
-    char *first = self + 0x120;
+    struct W { char x[0x7C]; };
+    W *first = (W *)(self + 0x120);
     if (first) {
-        char *p = self + 0x38C;
+        W *p = (W *)(self + 0x38C);
         if (first != p) {
-            p -= 0x7C;
+            p--;
             do {
                 _$_12CustomIDWork(p, 0);
-                p -= 0x7C;
-            } while (first != p + 0x7C);
+            } while (first != p--);
         }
     }
     *(const void **)(self + 0x80) = D_0041DCC8;
     if (f & 1)
         func_0030F5A0(self);
 }
+#endif

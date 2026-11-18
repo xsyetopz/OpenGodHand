@@ -53,8 +53,6 @@ extern "C" void func_00247218(Em *self)
             a = p->m_1F78;
             b = p->m_1F7C;
         }
-        a += (int)p;
-        b += (int)p;
         func_002A8578(self, a, b, 10, t, 0, 0.0f);
         self->m_568 = 10;
         self->m_623 = 1;
@@ -131,25 +129,26 @@ struct Eg {
     unsigned m_16D0;
 };
 
-// FUNCTION: GAME 0x25B5A8
+// DRAFT: GAME 0x25B5A8
+// diff: 8 words; original loads the two offsets into v1/a0 off v0 and adds before the flag update
+#ifdef NONMATCHING
 extern "C" void func_0025B5A8(Eg *self)
 {
     switch (self->m_2F6) {
     case 0: {
         unsigned t = func_00276468(self) & 0xFFFF;
-        char *p;
-        int a, b;
+        char *p, *a, *b;
         if (self->m_2F7 = irand__Fv() & 1) {
             p = self->m_304;
-            a = *(int *)(p + 0x3DF4);
-            b = *(int *)(p + 0x3DF8);
+            a = p + *(int *)(p + 0x3DF4);
+            b = p + *(int *)(p + 0x3DF8);
         } else {
             p = self->m_304;
-            a = *(int *)(p + 0x3DEC);
-            b = *(int *)(p + 0x3DF0);
+            a = p + *(int *)(p + 0x3DEC);
+            b = p + *(int *)(p + 0x3DF0);
         }
         self->m_16D0 &= 0xFEFFFFFF;
-        func_002A8578(self, a + (int)p, b + (int)p, 2, t, 0, 0.0f);
+        func_002A8578(self, (int)a, (int)b, 2, t, 0, 0.0f);
         if (self->m_748)
             func_002814E8(self->m_748, self->m_2F7);
         if (self->m_74C)
@@ -168,3 +167,65 @@ extern "C" void func_0025B5A8(Eg *self)
         }
     }
 }
+#endif
+
+extern "C" void *Getplayer__Fv(void);
+extern "C" float capVu0MagnitudeSqXZ__FPCfT0(const float *, const float *);
+extern "C" void func_00281260(int);
+extern "C" void func_00283170(int);
+extern "C" void func_002495E0(void *, float);
+extern "C" void func_00262AA8(void *);
+extern char D_005850B0[];
+extern unsigned char g_HeatSys[];
+
+static inline int HeatFlag(unsigned char *h) { return h[0x10]; }
+
+struct Eh {
+    char _pad0[0xF0];
+    float *m_F0;
+    char _pad1[0x2F6 - 0xF4];
+    unsigned char m_2F6;
+    char _pad2[0x304 - 0x2F7];
+    char *m_304;
+    char _pad3[0x748 - 0x308];
+    int m_748;
+    int m_74C;
+    int m_750;
+    char _pad4[0x16D0 - 0x754];
+    unsigned m_16D0;
+    char _pad5[0x1864 - 0x16D4];
+    unsigned char m_1864;
+};
+
+// DRAFT: GAME 0x249960
+// diff: 12 words; the original materializes &g_HeatSys with lui+addiu and then lbu 0x10, mine folds the offset into lbu
+#ifdef NONMATCHING
+extern "C" void func_00249960(Eh *self)
+{
+    capVu0MagnitudeSqXZ__FPCfT0(((Eh *)Getplayer__Fv())->m_F0, (const float *)D_005850B0);
+    self->m_16D0 |= 0x30400;
+    switch (self->m_2F6) {
+    case 0: {
+        self->m_1864 = 0;
+        unsigned t = func_00276468(self) & 0xFFFF;
+        char *p = self->m_304;
+        func_002A8578(self, *(int *)(p + 0x3D34) + (int)p, *(int *)(p + 0x3D38) + (int)p, 10, t, 0, 0.0f);
+        if (self->m_748)
+            func_00281260(self->m_748);
+        if (self->m_74C)
+            func_00283170(self->m_74C);
+        if (self->m_750)
+            func_00283170(self->m_750);
+        self->m_16D0 &= 0xFCFFFFFF;
+        self->m_2F6++;
+    }
+    case 1:
+        func_002495E0(self, 0.0f);
+        moveMotion__FP8cObjBase(self);
+        addNullSpeed_Rotation__8cObjBasef(self, 1.0f);
+        addNullSpeed__8cObjBasef(self, 1.0f);
+    }
+    if (!HeatFlag(g_HeatSys))
+        func_00262AA8(self);
+}
+#endif
