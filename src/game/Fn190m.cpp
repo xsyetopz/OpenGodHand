@@ -231,6 +231,6 @@ extern "C" int NAME(char *self) \
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x19C1B0
-// diff: 4 words, store order of b.y/a.y (0x4/0x14) differs
+// diff: 4 words, store order of b.y/a.y (0x4/0x14) differs; a/b store source-order permutations (yxz/yzx/xyz) give 3-7 words
 FN170_BOX(func_0019C1B0, 0.839999974f, 1.35599995f, 0.839999974f)
 #endif

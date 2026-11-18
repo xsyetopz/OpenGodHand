@@ -38,8 +38,10 @@ extern "C" void func_0025A920(Eb *self)
         char *p = self->m_304;
         func_002A8578(self, *(int *)(p + 0x1084) + (int)p, *(int *)(p + 0x1088) + (int)p, 3, 0, 0, 0.0f);
         SeCall__4cSnd6eSeBlksR4cObjP4cObjP6cPartsUii(Snd, 1, (short)GetSeqSEBase__FP8cObjBase(self), self, 0, 0, 0, 0);
-        self->m_1866++;
-        self->m_2F6++;
+        int x = self->m_1866 + 1;
+        int y = self->m_2F6 + 1;
+        self->m_1866 = x;
+        self->m_2F6 = y;
     }
     case 1:
         if (moveMotion__FP8cObjBase(self))

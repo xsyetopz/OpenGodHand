@@ -220,6 +220,16 @@ around those helpers decide the layout:
 
 ## SCE library regions
 
+The decompilation covers the game's own code only. SDK, CRI middleware and
+runtime library code is either built from its upstream source or kept as the
+original assembly, because hand-reconstructing third-party libraries reproduces
+code that already exists elsewhere. `src/sce/` therefore holds upstream-derived
+sources only: GNU libio (`src/sce/libio/`), the gcc-2.95.2 fp-bit and libgcc2
+routines (`src/sce/Fn31f*_29.c`) and the ProDG game objects that sit inside the
+library span (`src/sce/Fn31y.c`). The compiler evidence below identifies which
+toolchain built each library, which is what an upstream or original object must
+reproduce.
+
 The SDK and runtime libraries (libsce, libstdc++ such as `endl__FR7ostream`)
 save callee-saved registers with `sd` instead of ProDG's `sq`. They occupy
 0x31C000-0x36FFFF, 0x384000-0x3A3FFF and 0x3B0000 to the end of `.text`; the
@@ -277,7 +287,7 @@ against the vtable words: the `_vt$7filebuf` slots put `doallocate` at
 steps, one slot earlier than the raw .sndata list, and each thunk's `jal`
 target names the matching `_IO_file_*` routine.
 
-Sources for that region are C files in `src/sce/`. A source selects its
+Upstream sources for that region are C files in `src/sce/`. A source selects its
 compiler with leading comment lines (within its first four lines), which
 configure.py and fncmp.py both read:
 
@@ -310,6 +320,13 @@ function names, `E9040801:...(adxf_ChkPrmPt)`; `tools/crinames.py --spans` scans
 the asm for units referencing exactly one such name and prints the version-string
 spans. Its proposals are applied in `config/symbols.sndata.txt` (`adxf_*` at
 0x322978-0x324500, `adxt_StartMemIdx`, `DTX_Create`, `PS2RNA_*`, `DTR_ExecHndl`).
+
+No public CRI library or source matches these 2005 builds. The closest are
+the CRI PS2 SDK 1.10 patch 5 on the Internet Archive (`cri-sdk` item: ADXT
+8.37, MWSFD 2.31, built 2002), whose `libadxe.a` and `libmwsfde.a` differ at
+the instruction level, and the CRI decomps in rez-decomp (2001 ADX,
+ee-gcc 2.9) and pes6decomp (2006, non-matching). They serve as references for
+names and structure layouts; the CRI span stays as original assembly.
 
 ## VU0 macro code
 

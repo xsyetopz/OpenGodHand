@@ -165,9 +165,7 @@ struct Fn379P {
 };
 extern "C" void func_00377A28(Fn379P *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x377530
-// diff: 4 words; the original hoists the ori into the beqz delay slot and stores +0x14 before +0x0
+// FUNCTION: GAME 0x377530
 extern "C" void func_00377530(Fn379P *p)
 {
     unsigned short f = p->m_0;
@@ -176,12 +174,11 @@ extern "C" void func_00377530(Fn379P *p)
         func_00377A28(p);
     } else if (f & 2) {
         if (p->m_16) {
-            p->m_14 = 2;
             p->m_0 = f | 4;
+            p->m_14 = 2;
         }
     }
 }
-#endif
 
 struct Fn379Q {
     unsigned short m_0;

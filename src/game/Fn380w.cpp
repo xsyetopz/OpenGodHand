@@ -13,7 +13,7 @@ int func_0032D340(int, int, int, int);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x387430
-// diff: 1 word, or operand order (a1,v0 vs v0,a1)
+// diff: 1 word, or operand order (a1,v0 vs v0,a1); ~12 forms tried (|, +, ^, v|=, temp, int/unsigned); compiles under default game compiler
 struct Fn38S { unsigned short h0; char _2[0x9E]; };
 extern Fn38S D_0076E910[];
 extern "C" int func_003779D0(short);
