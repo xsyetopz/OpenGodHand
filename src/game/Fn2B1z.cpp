@@ -150,7 +150,7 @@ extern "C" void func_00147C40(char *, float *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2B4DA8
-// loop with two 0xAC-stride induction regs and the bool via andi 0xFF is not reproduced (3 variants)
+// loop with two 0xAC-stride induction regs and the bool via andi 0xFF is not reproduced (7 variants incl. bool/unsigned char temps and != 0; gcc folds them all to the same 28-word output)
 extern "C" void func_002B4DA8(char **self)
 {
     int a = 0, c = 0;

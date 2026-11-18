@@ -3,7 +3,7 @@ extern "C" void func_002011B0(void *);
 struct DvdSlot;
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2017A8 - 28 words off: self/b in swapped saved regs (s0/s1); original loop 2 has no precheck and a bnel/b layout like loop 1; do-while (int and pointer end), end from p, e-first variants did not help
+// DRAFT: GAME 0x2017A8 - 28 words off: self/b in swapped saved regs (s0/s1); original loop 2 has no precheck and a bnel/b layout like loop 1; do-while (int and pointer end), end from p, e-first variants did not help; also re-derived e=self+4 for loop 2, for-scoped end pointer (28 words, 160 vs 152 B)
 extern "C" DvdSlot *func_002017A8(void *self_)
 {
     char *self = (char *)self_;
@@ -88,26 +88,23 @@ extern "C" int ReadAlloc__4cDvdPCcPPvR5cHeap6eDvdIdUiUiUi(DvdQ *self, const char
     return s->id;
 }
 
-extern unsigned D_00747A84;
+extern unsigned D_00747A84[];
 extern "C" void KeyStop__Fv();
 extern "C" char *Getplayer__Fv();
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x201E80 - gcc folds the -0xC/-0x60 accesses into hi/lo-0x8000 base instead of keeping s0=&D_00747A84
+// FUNCTION: GAME 0x201E80
 extern "C" void setEnding__3cE3b(char *self, int v)
 {
-    unsigned *g = &D_00747A84;
-    D_00747A84 |= 0x40000040;
-    g[-3] |= 0x2000;
+    D_00747A84[0] |= 0x40000040;
+    D_00747A84[-3] |= 0x2000;
     KeyStop__Fv();
-    g[-3] |= 0x400000;
-    g[-3] |= 0x100000;
-    g[-24] |= 8;
+    D_00747A84[-3] |= 0x400000;
+    D_00747A84[-3] |= 0x100000;
+    D_00747A84[-24] |= 8;
     *(float *)(Getplayer__Fv() + 0x54C) = 100.0f;
     self[3] = v;
     self[0] = 1;
 }
-#endif
 
 extern unsigned D_00747A2C[];
 extern char D_0042C7A0[];
@@ -133,6 +130,14 @@ extern "C" void menu__3cE3(char *self)
     if (*(unsigned *)(Sys + 0x98) & 0x8000)
         self[2]--;
     int v = self[2];
-    self[2] = v < 0 ? 0 : (v < 0x79 ? self[2] : 0x78);
+    unsigned char r;
+    if (v < 0)
+        r = 0;
+    else {
+        r = self[2];
+        if (v >= 0x79)
+            r = 0x78;
+    }
+    self[2] = r;
 }
 #endif

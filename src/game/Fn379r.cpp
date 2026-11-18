@@ -105,28 +105,28 @@ struct Fn379H2 {
 extern "C" Fn379H2 *func_0037D170(void);
 #ifdef NONMATCHING
 // DRAFT: GAME 0x375050
-// diff: original keeps e in a1 (beqz out of line to the -1 return); ours puts e in a2.
+// 2 words differ: sw m_4 and sb m_D swapped (D scheduled before 4); early return + `int one = 1;` after it fixed a1; tried one as short/char/unsigned and other D positions (12+ words).
 extern "C" int func_00375050(int a, short b)
 {
     Fn379H2 *e = func_0037D170();
-    if (e) {
-        e->m_C = 0x10;
-        e->m_4 = a;
-        e->m_D = 1;
-        e->m_10 = b;
-        e->m_12 = -1;
-        e->m_1E = 0;
-        e->m_0 = 1;
-        e->m_8 = 0;
-        e->m_E = 0;
-        e->m_14 = 0;
-        e->m_16 = 0;
-        e->m_18 = 0;
-        e->m_1A = 0;
-        e->m_1C = 0;
-        return 0;
-    }
-    return -1;
+    if (!e)
+        return -1;
+    int one = 1;
+    e->m_C = 0x10;
+    e->m_4 = a;
+    e->m_10 = b;
+    e->m_12 = -1;
+    e->m_1E = 0;
+    e->m_0 = one;
+    e->m_8 = 0;
+    e->m_E = 0;
+    e->m_14 = 0;
+    e->m_16 = 0;
+    e->m_18 = 0;
+    e->m_1A = 0;
+    e->m_1C = 0;
+    e->m_D = one;
+    return 0;
 }
 #endif
 

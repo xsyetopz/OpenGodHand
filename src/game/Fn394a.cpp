@@ -32,9 +32,7 @@ extern "C" int func_003945C0(Fn394E *k)
     return func_003943D0(k);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3944E8
-// diff: 12 words; original returns 1 for A==2 or A==4 and, for any other A, clears m_B and jumps to the func_003943D0 tail with likely branches (3 variants tried).
+// FUNCTION: GAME 0x3944E8
 extern "C" int func_003944E8(Fn394E *k)
 {
     for (Fn394N *n = D_003F852C; n; n = n->m_30) {
@@ -42,19 +40,15 @@ extern "C" int func_003944E8(Fn394E *k)
         Fn394E *e = n->m_C;
         for (; cnt; cnt--, e++) {
             if (e->m_B && e->m_8 == k->m_8 && strcmp(e->m_0, k->m_0) == 0) {
-                if (e->m_A == 2)
+                if (e->m_A == 2 || e->m_A == 4)
                     return 1;
-                if (e->m_A != 4) {
-                    e->m_B = 0;
-                    return func_003943D0(k);
-                }
-                return 1;
+                e->m_B = 0;
+                return func_003943D0(k);
             }
         }
     }
     return func_003943D0(k);
 }
-#endif
 
 struct Fn394S {
     int m_0;

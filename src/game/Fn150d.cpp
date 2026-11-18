@@ -82,7 +82,7 @@ extern "C" void func_0015FC10(void)
 }
 
 // DRAFT: GAME 0x157178
-// diff: fp schedule/reg alloc (30 words); logic is projection of c onto line a-b, out.w=1
+// diff: 23 words, fp reg alloc/load order (orig loads b.z before c.z but subs dz after ez-less order); tried decl orders, inline ez, split dot/len, ex*dx operand order; best is ez before dz
 #ifdef NONMATCHING
 void GetPointCalcPointLine(const cVec &a, const cVec &b, const cVec &c, cVec *out)
 {
@@ -90,8 +90,8 @@ void GetPointCalcPointLine(const cVec &a, const cVec &b, const cVec &c, cVec *ou
     float dy = b.y - a.y;
     float ex = c.x - a.x;
     float ey = c.y - a.y;
-    float dz = b.z - a.z;
     float ez = c.z - a.z;
+    float dz = b.z - a.z;
     float t = (dx * ex + dy * ey + dz * ez) / (dx * dx + dy * dy + dz * dz);
     out->x = a.x + dx * t;
     out->y = a.y + dy * t;

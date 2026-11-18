@@ -148,27 +148,33 @@ extern "C" int func_00274F50(char *self)
     return 1;
 }
 
-// DRAFT: GAME 0x26A338 - state test layout differs (original: ==0x223, <0x223, <0x277, <0x275 chain; about 15 words)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x26A338
 extern "C" void func_0026A338(char *self)
 {
     int st = *(int *)(self + 0x564);
-    float f;
-    if (st != 0x223 && (st < 0x223 || st >= 0x277 || st < 0x275)) {
-        if (self[0x1700] & 1)
-            f = 0.2617993950843811f;
-        else
-            f = -0.2617993950843811f;
-    } else {
-        if (self[0x1700] & 1)
-            f = 0.12217304855585098f;
-        else
-            f = -0.12217304855585098f;
+    if (st == 0x223)
+        goto small;
+    if (st < 0x223)
+        goto big;
+    if (st < 0x277) {
+        if (st < 0x275)
+            goto big;
+        goto small;
     }
-    *(float *)(self + 0x16FC) = f;
+big:
+    if (self[0x1700] & 1)
+        *(float *)(self + 0x16FC) = 0.2617993950843811f;
+    else
+        *(float *)(self + 0x16FC) = -0.2617993950843811f;
+    goto done;
+small:
+    if (self[0x1700] & 1)
+        *(float *)(self + 0x16FC) = 0.12217304855585098f;
+    else
+        *(float *)(self + 0x16FC) = -0.12217304855585098f;
+done:
     self[0x1700]++;
 }
-#endif
 
 extern "C" void func_001CFE88(void *, int);
 

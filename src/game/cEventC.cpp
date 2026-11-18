@@ -145,7 +145,7 @@ extern "C" void func_002990A0()
 
 #ifdef NONMATCHING
 extern int DISPLAY_W, D_003C11C8, D_003C11AC, D_003C11B4, D_00586B80;
-// near-miss: 26 differing words, same size; loop register allocation differs (original keeps 0x800 inside the loop, mine hoists constants into different saved regs)
+// near-miss: 26 differing words, same size; loop register allocation differs (original keeps 0x800 inside the loop and holds mask in fp, mask|0x8000 in s7, -1 in s6; mine hoists 0x800 into fp). Tried: named mask locals in both orders, unsigned masks, lx/w temps for 0x800 - DISPLAY_W/2, cast variants (26 or worse)
 // DRAFT: GAME 0x29FDE0
 extern "C" void func_0029FDE0(EvBuf *b, int h)
 {

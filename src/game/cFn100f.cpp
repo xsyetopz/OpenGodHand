@@ -144,7 +144,7 @@ extern "C" void SetParts__12cPartsCameraP6cPartsN21(void *, void *, void *, void
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x124EC0
-// diff: IsSet/Gt idiom matches the stack stores; only s0/s1 are swapped (self vs CamManager, 29 words)
+// diff: IsSet/Gt idiom matches the stack stores; only s0/s1 are swapped (self vs CamManager, 29 words; also tried: CamManager used directly (38 words), local copy of self before/after cm, cm declared after the first call)
 extern "C" void func_00124EC0(char *self)
 {
     void *a, *b;

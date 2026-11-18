@@ -11,31 +11,31 @@ extern "C" void func_002B2080(BlkQ *d)
 }
 
 // DRAFT: GAME 0x2B42F0
-// diff: 30 words, flag word is 64-bit (lw/dsrl) in the original; ours sign-extends the masked store (dsll32/dsra32) and lays the arms out differently
+// diff: 29 words; dsrl/sw now match (int g + long fl = g); original lays the bit-set arm first (beqz bit), ours emits bnez; if/else, switch, goto, (bit || hi==0x8000) tried
 #ifdef NONMATCHING
 extern "C" void func_002B42F0(char *self)
 {
-    long fl = *(int *)(self + 0x14);
+    int g = *(int *)(self + 0x14);
+    long fl = g;
     unsigned long bit = ((unsigned long)fl >> 6) & 1;
-    int nf = fl & -9;
-    *(int *)(self + 0x14) = nf;
-    if (!bit) {
-        unsigned short *p = *(unsigned short **)(self + 0x8C);
-        unsigned hi = *p & 0xFF00;
-        if (hi == 0x8000) {
-            self[0xF] = 0;
-            self[0xC] = 7;
-        } else if (hi == 0x9000) {
-            func_002B21F0(self, p[1]);
-            self[0xF] = 0;
-            self[0xC] = 0;
-        } else {
-            self[0xF] = 0;
-            self[0xC] = 0;
-        }
-    } else {
+    *(int *)(self + 0x14) = g & -9;
+    if (bit) {
         self[0xF] = 0;
         self[0xC] = 7;
+    } else {
+        unsigned short *p = *(unsigned short **)(self + 0x8C);
+        switch (*p & 0xFF00) {
+        case 0x8000:
+            self[0xF] = 0;
+            self[0xC] = 7;
+            break;
+        case 0x9000:
+            func_002B21F0(self, p[1]);
+        default:
+            self[0xF] = 0;
+            self[0xC] = 0;
+            break;
+        }
     }
     self[0xD] = 0;
     self[0xE] = 0;

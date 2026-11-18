@@ -54,8 +54,16 @@ static inline void F1ATail(char *self, int a, int b, int c)
 #define F1A_TAIL(A, B, C) F1ATail(self, A, B, C);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1A06F0
+// DRAFT: GAME 0x1A06F0 - 29 words differ: head matches; tail loads 6/0x11/0x2E twice (store regs vs arg regs a1-a3), orig reuses a1-a3 for stores; tried store permutations, hoisted locals, inline tail fn, char/short callee arg types.
 extern "C" int func_001A06F0(char *self)
+{
+    F1A_HEAD(1.2f, 1.5f, 1.2f)
+    F1A_TAIL(6, 0x11, 0x2E)
+    return 1;
+}
+
+// DRAFT: GAME 0x1A0BD8 - identical to 0x1A06F0 (same 29 words differ).
+extern "C" int func_001A0BD8(char *self)
 {
     F1A_HEAD(1.2f, 1.5f, 1.2f)
     F1A_TAIL(6, 0x11, 0x2E)

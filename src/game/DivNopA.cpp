@@ -79,7 +79,7 @@ extern "C" int getReelItem__9cCoreSave(char *);
 extern "C" void func_001F5650(char *, int, int, int, int, int, int, int);
 
 // DRAFT: GAME 0x2BDDE0
-// diff: 8 words; prologue scheduling (mov.s f20,f12 goes into the jal delay slot in the original)
+// diff: 8 words; prologue scheduling (mov.s f20,f12 goes into the jal delay slot in the original, swc1 f20 saved after s1); u=t copy temps and nested-if forms tried, copies get propagated
 // needs DIVNOP: 2
 extern "C" int func_002BDDE0(char *a, int b, int c, float t)
 {

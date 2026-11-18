@@ -3,7 +3,7 @@ extern float D_00741DC0;
 extern float D_00747A14;
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2FA350 (30 words off: original reuses f0 for cvt.w.s and reloads *p; volatile reload and temp variants tried)
+// DRAFT: GAME 0x2FA350 (29 words off with // DIVNOP: 2 under a FUNCTION tag; original stores *p before an in-place cvt.w.s f0,f0 and reloads *p, we CSE it and use cvt.w.s f1,f0; volatile, temp, *p *= forms, (int)(*p = ...) tried)
 extern "C" void func_002FA350(float *p)
 {
     float v = *p * 100.0f;

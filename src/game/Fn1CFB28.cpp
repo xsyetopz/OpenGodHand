@@ -10,7 +10,7 @@ struct Mdl {
     IV *d;
     char p1[0x2C];
     int a, b, c;
-    char p2[0x38];
+    char p2[0x3C];
     char *owner;
 };
 struct W {
@@ -19,7 +19,7 @@ struct W {
 extern "C" void calcParts__6cModel(void *, void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1CFB28
+// DRAFT: GAME 0x1CFB28 - ~37 words differ: frame/head/tail stores match (W local forces sw a0,0(sp)); model ptr lands in a2 then copied to a1 (orig keeps it in a1); tried if/else, ternary, early return, typed struct.
 extern "C" void func_001CFB28(char *self, Vec3 *pos, int arg)
 {
     char *dt = *(char **)(self + 0x600);
@@ -38,8 +38,14 @@ extern "C" void func_001CFB28(char *self, Vec3 *pos, int arg)
     *(int *)(self + 0x630) = 0;
     W w;
     w.f = *(unsigned char *)(self + 0x2B4);
-    Mdl *m = w.f ? **(Mdl ***)(self + 0x278) : 0;
-    if (m) {
+    Mdl *m;
+    if (w.f)
+        m = **(Mdl ***)(self + 0x278);
+    else
+        m = 0;
+    if (!m)
+        return;
+    {
         m->owner = self;
         m->a = 0;
         m->b = 0;
