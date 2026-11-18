@@ -15,3 +15,5 @@ __pycache__/
 /.ninja_*
 /tools/ext/
 /src/scratch/
+/debug_compiled_object.o
+/debug_source.c
