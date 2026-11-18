@@ -8,7 +8,7 @@ draft annotation holds it, or `free`. Without, it
 lists every address claimed twice, every address with more than one
 `// DRAFT: GAME 0x...` or `// NONMATCHING 0x...` annotation, and every draft
 address that a `// FUNCTION` also claims, plus every game `#ifdef NONMATCHING`
-block that carries no DRAFT tag. Addresses compare numerically, so
+block that carries no DRAFT tag, and every src/DIR/FILE source over 300 lines. Addresses compare numerically, so
 `0x1FA6F8` and `0x001FA6F8` are the same claim.
 """
 
@@ -32,6 +32,7 @@ def claims() -> dict[int, list[str]]:
     return found
 
 
+MAX_LINES = 300
 DRAFT = re.compile(r"^\s*//\s*(?:DRAFT|NONMATCHING)\b[:\s]*(?:GAME\s+)?0x([0-9A-Fa-f]+)")
 
 
@@ -99,7 +100,15 @@ def main() -> int:
     bare = untagged()
     for loc in bare:
         print(f"untagged NONMATCHING\t{loc}")
-    return 1 if dups or bare else 0
+    # tools/gate.sh refuses to build while a src/DIR/FILE source is over the limit, so report it here too.
+    # Deeper paths (src/game/newlib, src/sce/libio) hold upstream code kept at its original length.
+    long = [
+        s for s in configure.read_sources_all()
+        if len(Path(s).parts) == 3 and len((configure.ROOT / s).read_text().splitlines()) > MAX_LINES
+    ]
+    for src in long:
+        print(f"over {MAX_LINES} lines\t{src}")
+    return 1 if dups or bare or long else 0
 
 
 if __name__ == "__main__":

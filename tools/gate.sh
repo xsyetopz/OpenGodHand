@@ -28,9 +28,16 @@ for p in .venv asm assets original tools/bin tools/compilers tools/ext; do
   fi
 done
 stage() { git add -A src include docs config && git reset -q -- 'src/game/Probe*' 'src/game/tmp_*' 'src/*/_*'; git write-tree; }
+last=
 while true; do
   cd "$R"
-  if [ -z "$(.venv/bin/python tools/claimed.py 2>&1)" ] && [ -z "$(wc -l src/*/*.c* | awk '$1>300 && $2!="total"')" ]; then
+  # A failed precondition is logged once per distinct reason, so a stalled gate is never silent.
+  why="$(.venv/bin/python tools/claimed.py 2>&1 < /dev/null)$(wc -l src/*/*.c* < /dev/null | awk '$1>300 && $2!="total" {print " over 300 lines: " $2}')"
+  if [ -n "$why" ]; then
+    [ "$why" != "$last" ] && echo "blocked $(date +%T):$(echo "$why" | tr '\n' ' ')"
+    last=$why
+  else
+    last=
     T=$(stage)
     P=$(git rev-parse HEAD)
     if [ "$T" != "$(git rev-parse 'HEAD^{tree}')" ]; then
