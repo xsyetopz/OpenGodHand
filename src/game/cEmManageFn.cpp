@@ -1,6 +1,7 @@
 #define B(o) (*(signed char *)((char *)self + (o)))
 #define U(o) (*(unsigned char *)((char *)self + (o)))
 #define W(o) (*(int *)((char *)self + (o)))
+struct EmNode { int a; EmNode *next; int c; int d; };
 extern "C" {
 // FUNCTION: GAME 0x291FD8
 int func_00291FD8(char *self) { return W(0x530) > 0; }
@@ -100,4 +101,14 @@ void func_00294B18() { func_00294AE0((void *)1, 0xFFFF); }
 void func_00295928(void *a, int b) { if (b == 0xFFFF && a) roomInit__11cEmSetParam(&g_EmSet); }
 // FUNCTION: GAME 0x295958
 void func_00295958() { func_00295928((void *)1, 0xFFFF); }
+// FUNCTION: GAME 0x290958
+int func_00290958(char *p) { unsigned i; for (i = 0; i < 0x40; i++, p += 0x14) { if (*(unsigned char *)(p + 0x10) == 0) return i; } return -1; }
+// FUNCTION: GAME 0x290988
+int func_00290988(char *self, int k) { int n = 0; for (EmNode *p = *(EmNode **)(self + 0x500); p; p = p->next) { if (p->d == k) n++; } return n; }
+// FUNCTION: GAME 0x2919C0
+int func_002919C0(char *self, int u, int k) { int n = 0; for (EmNode *p = *(EmNode **)(self + 0x500); p; p = p->next) { char *o = (char *)p->c; if (o && *(int *)(o + 0x564) == k) n++; } return n; }
+// FUNCTION: GAME 0x295660
+char *func_00295660(char *self) { char *q = self + 0x10; char *f = self + 0x23; for (unsigned i = 0; i < 2; i++, q += 0x18, f += 0x18) { if (*(unsigned char *)f == 0) return q; } return 0; }
+// FUNCTION: GAME 0x290048
+void func_00290048(char *self, int a, int b) { if (a && b >= -1 && *(int *)(self + 8) == 0 && *(int *)(self + 0xC) == -1 && *(unsigned char *)(self + 0x10) != 1) { *(int *)(self + 8) = a; *(int *)(self + 0xC) = b; *(unsigned char *)(self + 0x10) = 1; } }
 }

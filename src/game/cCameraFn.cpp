@@ -393,3 +393,39 @@ extern "C" void func_002B8B20(char *p, int f)
         func_0030F5A0(p);
 }
 
+
+extern char D_0044D1C8[];
+extern char D_00451038[];
+extern char D_003BAFE0[];
+
+// FUNCTION: GAME 0x139C58
+extern "C" void _$_9cPlCamera(char *p, int f)
+{
+    *(char **)(p + 0x35C) = D_0041D8F8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x2D5CA8
+extern "C" void func_002D5CA8(char *p, int f)
+{
+    *(char **)(p + 0x30) = D_0044D1C8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x31EE10
+extern "C" void func_0031EE10(char *p, int f)
+{
+    *(char **)(p + 0x4) = D_00451038;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x372C80
+extern "C" void func_00372C80(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_003BAFE0;
+    if (f & 1)
+        func_0030F5A0(p);
+}

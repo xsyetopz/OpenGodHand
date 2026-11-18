@@ -214,11 +214,7 @@ int cSnd::BgmEvStart(eBgmPt a, eBgmReqNo b, int c)
     return 0;
 }
 
-#ifdef NONMATCHING
-// 0x2D1610 near-miss (336 vs 340 bytes): saved-register assignment of the loop
-// constants differs (orig mask=$s4,1=$s3,2=$s2; compiled mask=$s3) and the
-// original has one extra nop before the loop head.
-// DRAFT: GAME 0x2D1610
+// FUNCTION: GAME 0x2D1610
 void cSnd::BgmEventStart(eBgmReqNo r, int a, int b)
 {
     sBgmNode *p = (sBgmNode *)func_002D22B0(this, 0, r);
@@ -237,7 +233,8 @@ void cSnd::BgmEventStart(eBgmReqNo r, int a, int b)
     if (p->m_unk5E == 0) {
         for (sBgmNode *n = m_bgmList; n; n = n->m_next) {
             if (!(n->m_flags & 0x180000)) {
-                if (n != p && (n->m_flags & 1) != 1) {
+                unsigned t = n->m_flags & 1;
+                if (n != p && t != 1) {
                     n->m_flags |= 0x1000;
                     if (n->m_state != 2)
                         func_002CD4A8(n, 10.0f);
@@ -246,7 +243,6 @@ void cSnd::BgmEventStart(eBgmReqNo r, int a, int b)
         }
     }
 }
-#endif
 
 // FUNCTION: GAME 0x2CB8A0
 int cSnd::SeCall(eSeBlk b, short s1, short s2, short s3, unsigned u, int i)
@@ -393,7 +389,9 @@ void cSnd::BgmControl()
         if (!found)
             BgmEventStop(false);
     }
-    if ((D_00747A84 & 0x20000000) || (D_00747A84 & 0x80000)) {
+    unsigned ga = D_00747A84 & 0x20000000;
+    unsigned gb;
+    if (ga || (gb = D_00747A84 & 0x80000, gb)) {
         for (sBgmNode *n = m_bgmList; n; n = n->m_next) {
             if (n->m_state != 2 && n->m_unk60 && !func_00373A78(n))
                 func_002CD4A8(n, 30.0f);
@@ -403,8 +401,13 @@ void cSnd::BgmControl()
     }
     if (m_flagsAC & 0x200000) {
         if (!(m_flagsAC & 0x100000)) {
-            if (!(D_00747A84 & 0x20000000) && !(D_00747A84 & 0x80000))
-                func_002D0EA0(this);
+            unsigned d = D_00747A84;
+            unsigned a = d & 0x20000000;
+            if (!a) {
+                unsigned b = d & 0x80000;
+                if (!b)
+                    func_002D0EA0(this);
+            }
         }
     }
 }
