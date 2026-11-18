@@ -2,6 +2,16 @@
 // SCE library code (sd s0 prologues), built with ee-gcc 2.96 (C) at -O2 -G0.
 
 extern int D_00760DB0;
+extern int D_00459920[];
+extern void (*D_00459948[])();
+int func_00359518();
+long long func_003520D8();
+int func_00368FC0();
+int func_00368E90();
+void func_0035A4D0(int *, int);
+void func_00354B20(int *);
+int func_0035E0F0(int, int);
+int func_0035E9E8(int);
 void *memset(void *, int, unsigned int);
 void func_0034DF68(void *);
 void func_0034DF80(void *);
@@ -17,7 +27,7 @@ void func_0036C438(int *, int);
 void func_0036D6B0(int *, char *, int);
 int func_00368B18(int, int *, int);
 int func_00366E18();
-void func_0034DD70(int, int);
+void func_0034DD70();
 
 // FUNCTION: GAME 0x36B6D8
 int func_0036B6D8(char *a, int **b)
@@ -143,5 +153,99 @@ void func_00350048(int a, int *b, char *c)
     int r2 = func_00366E18(s1, c + 0xE0, s0[0x164 / 4], buf, buf + 1);
     if (r1 || r2)
         func_0034DD70(a, 0xFF000D0D);
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x35B0E8 constant 1 in v0 instead of v1 (2 words)
+void func_0035B0E8(int *a, int *b, int *c)
+{
+    int i = a[0];
+    int j = a[1];
+    int o = D_00459920[i];
+    void (*fn)() = D_00459948[i * 2 + j];
+    if (!fn) {
+        func_0034DD70(0, 0xFF000221, b, c);
+        *b = 0;
+        *c = 1;
+    } else
+        fn(o, a);
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x352008 31 words, frame/arg order
+void func_00352008(char *a, int b, int c, long long *d, long long *e, long long *f)
+{
+    long long buf;
+    int *v = (int *)(a + 0x1FB8);
+    int s3 = v[2];
+    *d = -1;
+    *e = -1;
+    if (c) {
+        func_00359518(a, v[4], c, &buf);
+        if (buf >= 0)
+            *d = func_003520D8(a + 0xD30, s3 + 0x118, b, &buf, f, e);
+    }
+}
+#endif
+
+// FUNCTION: GAME 0x366E18
+int func_00366E18(int a, int b, int c, int *d, int *e)
+{
+    *d = 0;
+    *e = 0;
+    if (func_00368FC0(a))
+        return func_00368E90(0, 0xFF020301, c, d, e);
+    return ((int (*)(int, int))*(int *)(a + 0xD4))(a, b);
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x354A70 prologue s-reg order (a2 copy)
+void func_00354A70(int *p, int *q, int n)
+{
+    if (n > 0) {
+        do {
+            p[0] = 0;
+            p[1] = 0;
+            func_0035A4D0(p + 3, 0);
+            n--;
+            p[2] = *q;
+            p[0x38 / 4] = 0;
+            q++;
+            p[0x3C / 4] = 1;
+            p[0x40 / 4] = 0;
+            p[0x44 / 4] = 0;
+            p[0x48 / 4] = 0;
+            p[0x4C / 4] = 0;
+            p[0x50 / 4] = 0;
+            func_00354B20(p + 0x5C / 4);
+            p[0x58 / 4] = -1;
+            p[0xE8 / 4] = 0;
+            p += 0xF0 / 4;
+        } while (n);
+    }
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x35E400 duplicate epilogue (bnel vs bne), 12 words
+int func_0035E400(int a, int b, int *c, int *d)
+{
+    int s0 = b & 0xFF;
+    unsigned char *p;
+    int s1;
+    *c = 0;
+    *d = 0;
+    s1 = func_0035E0F0(a, s0);
+    if (s1 && func_0035E9E8(s0) == 0xE0) {
+        p = (unsigned char *)(s1 + 0x1C);
+        *c = p[0];
+        *c = (*c << 4) | (p[1] >> 4);
+        *d = p[1];
+        *d = ((*d << 8) | p[2]) & 0xFFF;
+        return 1;
+    }
+    return 0;
 }
 #endif

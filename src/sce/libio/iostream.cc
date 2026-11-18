@@ -1,29 +1,49 @@
 // COMPILER: ee-gcc2.9-991111
+/* This is part of libio/iostream, providing -*- C++ -*- input/output.
+   Copyright (C) 1993, 1997, 2000 Free Software Foundation, Inc.
+
+   This file is part of the GNU IO Library.  This library is free
+   software; you can redistribute it and/or modify it under the
+   terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this library; see the file COPYING.  If not, write to the Free
+   Software Foundation, 59 Temple Place - Suite 330, Boston, MA  02111-1307,
+   USA.
+
+   As a special exception, if you link this library with files
+   compiled with a GNU compiler to produce an executable, this does not cause
+   the resulting executable to be covered by the GNU General Public License.
+   This exception does not however invalidate any other reasons why
+   the executable file might be covered by the GNU General Public License. */
+
+/* Written by Per Bothner (bothner@cygnus.com). */
+
+
+/* Reconstruction of libio/iostream.cc (egcs/gcc 2.95 libio) as built in the SCE
+   libstdc++ of God Hand. Only functions whose bytes match are kept; the
+   // DRAFT markers carry the original address (see docs/decomp.md; units keep
+   their func_ names, so the C++ symbols are not linked yet). */
 #define _STREAM_COMPAT
 #include "iostream.h"
 #include "_jump.h"
 #include "_sys.h"
 
-#define	BUF		(MAXEXP+MAXFRACT+1)	/* + decimal point */
+#define LONGEST long long
 
-//#define isspace(ch) ((ch)==' ' || (ch)=='\t' || (ch)=='\n')
+// Not reproduced yet; declared so the matching callers compile.
+extern int skip_ws(streambuf* sb);
+extern int read_int(istream& stream, unsigned LONGEST& val, int& neg);
+extern void write_int(ostream& stream, unsigned LONGEST val, int sign);
 
-istream::istream(streambuf *sb, ostream* tied)
-{
-  init (sb, tied);
-  _gcount = 0;
-}
-
-int skip_ws(streambuf* sb)
-{
-    int ch;
-    for (;;) {
-	ch = sb->sbumpc();
-	if (ch == EOF || !isspace(ch))
-	    return ch;
-    }
-}
-
+// DRAFT: GAME 0x387610
 istream& istream::get(char& c)
 {
     if (ipfx1()) {
@@ -46,6 +66,7 @@ istream& istream::get(char& c)
     return *this;
 }
 
+// DRAFT: GAME 0x3876D0
 int istream::peek()
 {
   if (!good())
@@ -58,6 +79,7 @@ int istream::peek()
   return ch;
 }
 
+// DRAFT: GAME 0x387788
 istream& istream::ignore(int n /* = 1 */, int delim /* = EOF */)
 {
     _gcount = 0;
@@ -91,23 +113,9 @@ istream& istream::ignore(int n /* = 1 */, int delim /* = EOF */)
     return *this;
 }
 
-istream& istream::read(char *s, streamsize n)
-{
-    if (ipfx1()) {
-	_IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
-				  _strbuf);
-	_gcount = _strbuf->sgetn(s, n);
-	if (_gcount != n)
-	    set(ios::failbit|ios::eofbit);
-	isfx();
-	_IO_cleanup_region_end (0);
-    }
-    else
-      _gcount = 0;
-    return *this;
-}
 
 int
+// DRAFT: GAME 0x387958
 istream::sync ()
 {
   streambuf *sb = rdbuf ();
@@ -122,6 +130,7 @@ istream::sync ()
     return 0;
 }
 
+// DRAFT: GAME 0x3879C0
 istream& istream::seekg(streampos pos)
 {
     pos = _strbuf->pubseekpos(pos, ios::in);
@@ -130,6 +139,7 @@ istream& istream::seekg(streampos pos)
     return *this;
 }
 
+// DRAFT: GAME 0x387A10
 istream& istream::seekg(streamoff off, _seek_dir dir)
 {
   streampos pos = _IO_seekoff (_strbuf, off, (int) dir, _IOS_INPUT);
@@ -138,6 +148,7 @@ istream& istream::seekg(streamoff off, _seek_dir dir)
   return *this;
 }
 
+// DRAFT: GAME 0x387A60
 streampos istream::tellg()
 {
 #if 0
@@ -150,6 +161,7 @@ streampos istream::tellg()
     return pos;
 }
 
+// DRAFT: GAME 0x387AB8
 istream& istream::operator>>(char& c)
 {
     if (ipfx0()) {
@@ -166,131 +178,12 @@ istream& istream::operator>>(char& c)
     return *this;
 }
 
-istream&
-istream::operator>> (char* ptr)
-{
-  register char *p = ptr;
-  int w = width(0);
-  if (ipfx0())
-    {
-      _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
-				_strbuf);
-      register streambuf* sb = _strbuf;
-      for (;;)
-	{
-	  int ch = sb->sbumpc();
-	  if (ch == EOF)
-	    {
-	      set(ios::eofbit);
-	      break;
-	    }
-	  else if (isspace(ch) || w == 1)
-	    {
-	      sb->sputbackc(ch);
-	      break;
-	    }
-	  else *p++ = ch;
-	  w--;
-	}
-      if (p == ptr)
-	set(ios::failbit);
-      isfx();
-      _IO_cleanup_region_end (0);
-    }
-  *p = '\0';
-  return *this;
-}
-
 #if defined(__GNUC__) && !defined(__STRICT_ANSI__)
 #define LONGEST long long
 #else
 #define LONGEST long
 #endif
 
-static int read_int(istream& stream, unsigned LONGEST& val, int& neg)
-{
-    if (!stream.ipfx0())
-      return 0;
-    int retval;
-    _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
-			      stream._strbuf);
-    register streambuf* sb = stream.rdbuf();
-    int base = 10;
-    int ndigits = 0;
-    register int ch = skip_ws(sb);
-    if (ch == EOF)
-	goto eof_fail;
-    neg = 0;
-    if (ch == '+') {
-	ch = skip_ws(sb);
-    }
-    else if (ch == '-') {
-	neg = 1;
-	ch = skip_ws(sb);
-    }
-    if (ch == EOF) goto eof_fail;
-    if (!(stream.flags() & ios::basefield)) {
-	if (ch == '0') {
-	    ch = sb->sbumpc();
-	    if (ch == EOF) {
-		val = 0;
-		goto unlock;
-	    }
-	    if (ch == 'x' || ch == 'X') {
-		base = 16;
-		ch = sb->sbumpc();
-		if (ch == EOF) goto eof_fail;
-	    }
-	    else {
-		sb->sputbackc(ch);
-		base = 8;
-		ch = '0';
-	    }
-	}
-    }
-    else if ((stream.flags() & ios::basefield) == ios::hex)
-	base = 16;
-    else if ((stream.flags() & ios::basefield) == ios::oct)
-	base = 8;
-    val = 0;
-    for (;;) {
-	if (ch == EOF)
-	    break;
-	int digit;
-	if (ch >= '0' && ch <= '9')
-	    digit = ch - '0';
-	else if (ch >= 'A' && ch <= 'F')
-	    digit = ch - 'A' + 10;
-	else if (ch >= 'a' && ch <= 'f')
-	    digit = ch - 'a' + 10;
-	else
-	    digit = 999;
-	if (digit >= base) {
-	    sb->sputbackc(ch);
-	    if (ndigits == 0)
-		goto fail;
-	    else
-		goto unlock;
-	}
-	ndigits++;
-	val = base * val + digit;
-	ch = sb->sbumpc();
-    }
-  unlock:
-    retval = 1;
-    goto out;
-  fail:
-    stream.set(ios::failbit);
-    retval = 0;
-    goto out;
-  eof_fail:
-    stream.set(ios::failbit|ios::eofbit);
-    retval = 0;
-  out:
-    stream.isfx();
-    _IO_cleanup_region_end (0);
-    return retval;
-}
 
 #define READ_INT(TYPE) \
 istream& istream::operator>>(TYPE& i)\
@@ -303,20 +196,21 @@ istream& istream::operator>>(TYPE& i)\
     return *this;\
 }
 
+// DRAFT: GAME 0x387F78
 READ_INT(short)
 READ_INT(unsigned short)
+// DRAFT: GAME 0x388038
 READ_INT(int)
 READ_INT(unsigned int)
+// DRAFT: GAME 0x3880F8
 READ_INT(long)
 READ_INT(unsigned long)
 #if defined(__GNUC__) && !defined(__STRICT_ANSI__)
 READ_INT(long long)
 READ_INT(unsigned long long)
 #endif
-#if _G_HAVE_BOOL
-READ_INT(bool)
-#endif
 
+// DRAFT: GAME 0x3882D8
 istream& istream::operator>>(long double& x)
 {
     if (ipfx0())
@@ -336,6 +230,7 @@ istream& istream::operator>>(long double& x)
     return *this;
 }
 
+// DRAFT: GAME 0x388380
 istream& istream::operator>>(double& x)
 {
     if (ipfx0())
@@ -362,6 +257,7 @@ istream& istream::operator>>(float& x)
     return *this;
 }
 
+// DRAFT: GAME 0x3884C0
 istream& istream::operator>>(register streambuf* sbuf)
 {
     if (ipfx0()) {
@@ -386,6 +282,7 @@ istream& istream::operator>>(register streambuf* sbuf)
     return *this;
 }
 
+// DRAFT: GAME 0x3885B0
 ostream& ostream::operator<<(char c)
 {
     if (opfx()) {
@@ -428,101 +325,8 @@ ostream& ostream::operator<<(char c)
    If SIGN>0, val is a signed non-negative number.
    If SIGN==0, val is unsigned. */
 
-static void write_int(ostream& stream, unsigned LONGEST val, int sign)
-{
-#define WRITE_BUF_SIZE (10 + sizeof(unsigned LONGEST) * 3)
-    char buf[WRITE_BUF_SIZE];
-    register char *buf_ptr = buf+WRITE_BUF_SIZE; // End of buf.
-    const char *show_base = "";
-    int show_base_len = 0;
-    int show_pos = 0; // If 1, print a '+'.
 
-    // Now do the actual conversion, placing the result at the *end* of buf.
-    // Note that we use separate code for decimal, octal, and hex,
-    // so we can divide by optimizable constants.
-    if ((stream.flags() & ios::basefield) == ios::oct) { // Octal
-	do {
-	    *--buf_ptr = (val & 7) + '0';
-	    val = val >> 3;
-	} while (val != 0);
-	if ((stream.flags() & ios::showbase) && (*buf_ptr != '0'))
-	    *--buf_ptr = '0';
-    }
-    else if ((stream.flags() & ios::basefield) == ios::hex) { // Hex
-	const char *xdigs = (stream.flags() & ios::uppercase) ? "0123456789ABCDEF0X"
-	    : "0123456789abcdef0x";
-	do {
-	    *--buf_ptr = xdigs[val & 15];
-	    val = val >> 4;
-	} while (val != 0);
-	if ((stream.flags() & ios::showbase)) {
-	    show_base = xdigs + 16; // Either "0X" or "0x".
-	    show_base_len = 2;
-	}
-    }
-    else { // Decimal
-#if defined(__GNUC__) && !defined(__STRICT_ANSI__)
-	// Optimization:  Only use long long when we need to.
-	while (val > UINT_MAX) {
-	    *--buf_ptr = (val % 10) + '0';
-	    val /= 10;
-	}
-	// Use more efficient (int) arithmetic for the rest.
-	register unsigned int ival = (unsigned int)val;
-#else
-	register unsigned LONGEST ival = val;
-#endif
-	do {
-	    *--buf_ptr = (ival % 10) + '0';
-	    ival /= 10;
-	} while (ival != 0);
-	if (sign > 0 && (stream.flags() & ios::showpos))
-	    show_pos=1;
-    }
-
-    int buf_len = buf+WRITE_BUF_SIZE - buf_ptr;
-    int w = stream.width(0);
-
-    // Calculate padding.
-    int len = buf_len+show_pos;
-    if (sign < 0) len++;
-    len += show_base_len;
-    int padding = len > w ? 0 : w - len;
-
-    // Do actual output.
-    register streambuf* sbuf = stream.rdbuf();
-    ios::fmtflags pad_kind =
-	stream.flags() & (ios::left|ios::right|ios::internal);
-    char fill_char = stream.fill();
-    if (padding > 0
-	&& pad_kind != (ios::fmtflags)ios::left
-	&& pad_kind != (ios::fmtflags)ios::internal) // Default (right) adjust.
-	if (_IO_padn(sbuf, fill_char, padding) < padding)
-	  goto failed;
-    if (sign < 0 || show_pos)
-      {
-	char ch = sign < 0 ? '-' : '+';
-	if (sbuf->sputc(ch) < 0)
-	  goto failed;
-      }
-    if (show_base_len)
-	if (_IO_sputn(sbuf, show_base, show_base_len) <= 0)
-	  goto failed;
-    if (pad_kind == (ios::fmtflags)ios::internal && padding > 0)
-      if (_IO_padn(sbuf, fill_char, padding) < padding)
-	goto failed;
-    if (_IO_sputn (sbuf, buf_ptr, buf_len) != buf_len)
-      goto failed;
-    if (pad_kind == (ios::fmtflags)ios::left && padding > 0) // Left adjustment
-      if (_IO_padn(sbuf, fill_char, padding) < padding)
-	goto failed;
-    stream.osfx();
-    return;
-  failed:
-    stream.set(ios::badbit);
-    stream.osfx();
-}
-
+// DRAFT: GAME 0x388A00
 ostream& ostream::operator<<(int n)
 {
     if (opfx()) {
@@ -538,6 +342,7 @@ ostream& ostream::operator<<(int n)
     return *this;
 }
 
+// DRAFT: GAME 0x388AA0
 ostream& ostream::operator<<(unsigned int n)
 {
     if (opfx()) {
@@ -550,6 +355,7 @@ ostream& ostream::operator<<(unsigned int n)
 }
 
 
+// DRAFT: GAME 0x388B18
 ostream& ostream::operator<<(long n)
 {
     if (opfx()) {
@@ -565,6 +371,7 @@ ostream& ostream::operator<<(long n)
     return *this;
 }
 
+// DRAFT: GAME 0x388BA8
 ostream& ostream::operator<<(unsigned long n)
 {
     if (opfx()) {
@@ -605,46 +412,13 @@ ostream& ostream::operator<<(unsigned long long n)
 }
 #endif /*__GNUC__*/
 
-ostream& ostream::operator<<(const char *s)
-{
-  if (opfx())
-    {
-      _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
-				_strbuf);
-      if (s == NULL)
-	s = "(null)";
-      int len = strlen(s);
-      int w = width(0);
-// FIXME: Should we: if (w && len>w) len = w;
-      char fill_char = fill();
-      register streambuf *sbuf = rdbuf();
-      register int padding = w > len ? w - len : 0;
-      if (!(flags() & ios::left) && padding > 0) // Default adjustment.
-	if (_IO_padn(sbuf, fill_char, padding) != padding)
-	  {
-	    set(ios::badbit);
-	    goto failed;
-	  }
-      if (_IO_sputn (sbuf, s, len) != len)
-	{
-	  set(ios::badbit);
-	  goto failed;
-	}
-      if (flags() & ios::left && padding > 0) // Left adjustment.
-	if (_IO_padn(sbuf, fill_char, padding) != padding)
-	  set(ios::badbit);
-     failed:
-      osfx();
-      _IO_cleanup_region_end (0);
-    }
-  return *this;
-}
 
 #if 0
 ostream& ostream::operator<<(const void *p)
 { Is in osform.cc, to avoid pulling in all of _IO_vfprintf by this file. */ }
 #endif
 
+// DRAFT: GAME 0x388FB0
 ostream& ostream::operator<<(register streambuf* sbuf)
 {
   if (opfx())
@@ -670,11 +444,13 @@ ostream& ostream::operator<<(register streambuf* sbuf)
   return *this;
 }
 
+// DRAFT: GAME 0x389090
 ostream::ostream(streambuf* sb, ostream* tied)
 {
   init (sb, tied);
 }
 
+// DRAFT: GAME 0x389170
 ostream& ostream::seekp(streampos pos)
 {
     pos = _strbuf->pubseekpos(pos, ios::out);
@@ -683,6 +459,7 @@ ostream& ostream::seekp(streampos pos)
     return *this;
 }
 
+// DRAFT: GAME 0x3891C0
 ostream& ostream::seekp(streamoff off, _seek_dir dir)
 {
   streampos pos = _IO_seekoff (_strbuf, off, (int) dir, _IOS_OUTPUT);
@@ -691,6 +468,7 @@ ostream& ostream::seekp(streamoff off, _seek_dir dir)
   return *this;
 }
 
+// DRAFT: GAME 0x389210
 streampos ostream::tellp()
 {
 #if 1
@@ -703,6 +481,7 @@ streampos ostream::tellp()
     return pos;
 }
 
+// DRAFT: GAME 0x389268
 ostream& ostream::flush()
 {
     if (_strbuf->sync())
@@ -710,11 +489,13 @@ ostream& ostream::flush()
     return *this;
 }
 
+// DRAFT: GAME 0x3892C0
 ostream& flush(ostream& outs)
 {
   return outs.flush();
 }
 
+// DRAFT: GAME 0x3892E0
 istream& ws(istream& ins)
 {
     if (ins.ipfx1()) {
@@ -735,6 +516,7 @@ istream& ws(istream& ins)
 // Differs from ws() manipulator in that failbit is set on EOF.
 // Called by ipfx() and ipfx0() if needed.
 
+// DRAFT: GAME 0x389398
 int istream::_skip_ws()
 {
     int ch = skip_ws(_strbuf);
@@ -748,17 +530,20 @@ int istream::_skip_ws()
     }
 }
 
+// DRAFT: GAME 0x389400
 ostream& ends(ostream& outs)
 {
     outs.put('\0');
     return outs;
 }
 
+// DRAFT: GAME 0x389438
 ostream& endl(ostream& outs)
 {
     return flush(outs.put('\n'));
 }
 
+// DRAFT: GAME 0x389470
 istream& lock(istream& ins)
 {
   _IO_flockfile (ins._strbuf);
@@ -781,6 +566,7 @@ ostream& unlock(ostream& outs)
 }
 
 
+// DRAFT: GAME 0x389490
 ostream& ostream::write(const char *s, streamsize n)
 {
     if (opfx()) {
@@ -794,16 +580,8 @@ ostream& ostream::write(const char *s, streamsize n)
     return *this;
 }
 
-void ostream::do_osfx()
-{
-    if (flags() & ios::unitbuf)
-	flush();
-    if (flags() & ios::stdio) {
-	fflush(stdout);
-	fflush(stderr);
-    }
-}
 
+// DRAFT: GAME 0x3895B0
 iostream::iostream(streambuf* sb, ostream* tied)
 {
   init (sb, tied);
@@ -812,6 +590,7 @@ iostream::iostream(streambuf* sb, ostream* tied)
 // NOTE: extension for compatibility with old libg++.
 // Not really compatible with fistream::close().
 #ifdef _STREAM_COMPAT
+// DRAFT: GAME 0x389710
 void ios::close()
 {
   if (_strbuf->_flags & _IO_IS_FILEBUF)
@@ -822,6 +601,7 @@ void ios::close()
   _state = badbit;
 }
 
+// DRAFT: GAME 0x389770
 int istream::skip(int i)
 {
     int old = (_flags & ios::skipws) != 0;
@@ -832,3 +612,4 @@ int istream::skip(int i)
     return old;
 }
 #endif
+

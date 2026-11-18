@@ -211,8 +211,8 @@ struct V2N { float x, y; };
 int chack_point_line(const cVec &p, const cVec &a, const cVec &b)
 {
     V2N u, v;
-    __asm__ volatile(".word 0xFBA00000" : : : "memory");
-    __asm__ volatile(".word 0xFBA00010" : : : "memory");
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(u));
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(v));
     u.x = a.x - p.x;
     u.y = a.y - p.y;
     v.x = b.x - p.x;
@@ -268,5 +268,54 @@ void GetPointCalcPointLine(const cVec &a, const cVec &b, const cVec &c, cVec *ou
     out->y = a.y + dy * t;
     out->z = a.z + dz * t;
     out->w = 1.0f;
+}
+#endif
+
+// FUNCTION: GAME 0x1508F8
+extern "C" void func_002D5070(char *);
+extern "C" char *func_001508F8(char *self)
+{
+    char *p = self + 0x3DC88;
+    int i = 0x1C1;
+    do {
+        char *q = p;
+        int j = 1;
+        do {
+            func_002D5070(q);
+            q += 8;
+        } while (--j != -1);
+        p += 0x10;
+    } while (--i != -1);
+    *(int *)(self + 8) = 0x2600;
+    *(int *)(self + 0) = 0;
+    *(int *)(self + 0xC) = 0;
+    *(int *)(self + 4) = 0;
+    return self;
+}
+
+// DRAFT: GAME 0x152340
+// diff: reg alloc (a2 vs v1 for divisor 8) and search-loop layout
+#ifdef NONMATCHING
+extern "C" int func_00151630(char *);
+static inline unsigned AlignPad152340(unsigned v, unsigned a)
+{
+    return v + (a - v % a) % a;
+}
+extern "C" int func_00152340(char *self, long key)
+{
+    unsigned a = 8;
+    unsigned v = (unsigned)self + (*(int *)(self + 4) * 4 + 0x10);
+    long *tbl = (long *)AlignPad152340(v, a);
+    if (func_00151630(self) == 3) {
+        int n = *(int *)(self + 4);
+        int i;
+        for (i = 0; i < n; i++) {
+            if (tbl[i] == key)
+                break;
+        }
+        if (i < n)
+            return i;
+    }
+    return -1;
 }
 #endif

@@ -1,0 +1,144 @@
+// Const-ref temporaries reproduce the lbu/sw-to-stack then register-branch pattern.
+static inline int IsSet(const int &v) { return v != 0; }
+static inline int Lt(const int &v, int n) { return n < v; }
+static inline char *Slot0(char *o)
+{
+    if (IsSet(*(unsigned char *)(o + 0x2B4)))
+        return **(char ***)(o + 0x278);
+    return 0;
+}
+static inline int InRange(const int &n, int i) { return i >= 0 && i < n; }
+static inline char *SlotN(char *o, int i)
+{
+    if ((unsigned char)InRange(*(unsigned char *)(o + 0x2B4), i))
+        return ((char **)*(char ***)(o + 0x278))[i];
+    return 0;
+}
+
+// FUNCTION: GAME 0x276E90
+extern "C" void SetParent__5cEm12P4cObjUi(char *self, char *par, int idx)
+{
+    if (par) {
+        char *a = Slot0(self);
+        if (a) {
+            char *c = SlotN(par, idx);
+            if (c) {
+                *(char **)(a + 0x148) = c;
+                *(int *)(self + 0x2168) = 8;
+                *(char **)(self + 0x21B0) = par;
+                *(char **)(self + 0x2188) = par;
+                *(int *)(self + 0x21B4) = idx;
+            }
+        }
+    }
+}
+
+// FUNCTION: GAME 0x27A768
+extern "C" void SetParent__5cEm53P4cObjUi(char *self, char *par, int idx)
+{
+    if (par) {
+        char *a = Slot0(self);
+        if (a) {
+            char *c = SlotN(par, idx);
+            if (c) {
+                *(char **)(a + 0x148) = c;
+                *(int *)(self + 0x2168) = 0xB;
+                *(char **)(self + 0x21B0) = par;
+                *(char **)(self + 0x2188) = par;
+                *(int *)(self + 0x21B4) = idx;
+            }
+        }
+    }
+}
+
+// FUNCTION: GAME 0x27B260
+extern "C" void SetParent__5cEm57P4cObjUi(char *self, char *par, int idx)
+{
+    if (par) {
+        char *a = Slot0(self);
+        if (a) {
+            char *c = SlotN(par, idx);
+            if (c) {
+                *(char **)(a + 0x148) = c;
+                *(int *)(self + 0x2168) = 0xB;
+                *(char **)(self + 0x21B0) = par;
+                *(char **)(self + 0x2188) = par;
+                *(int *)(self + 0x21B4) = idx;
+            }
+        }
+    }
+}
+
+// FUNCTION: GAME 0x283BE8
+extern "C" void func_00283BE8(char *self, char *par, int idx)
+{
+    if (par) {
+        char *a = Slot0(self);
+        if (a) {
+            char *c = SlotN(par, idx);
+            if (c) {
+                *(char **)(a + 0x148) = c;
+                *(int *)(self + 0x2168) = 4;
+                *(char **)(self + 0x21B0) = par;
+                *(char **)(self + 0x2188) = par;
+                *(int *)(self + 0x21B4) = idx;
+            }
+        }
+    }
+}
+
+// FUNCTION: GAME 0x2844C0
+extern "C" void func_002844C0(char *self, char *par, int idx)
+{
+    if (par) {
+        char *a = Slot0(self);
+        if (a) {
+            char *c = SlotN(par, idx);
+            if (c) {
+                *(char **)(a + 0x148) = c;
+                *(int *)(self + 0x2168) = 0xC;
+                *(char **)(self + 0x21B0) = par;
+                *(char **)(self + 0x2188) = par;
+                *(int *)(self + 0x21B4) = idx;
+            }
+        }
+    }
+}
+
+// FUNCTION: GAME 0x1A4E00
+extern "C" void setOpenFix__5cOm4f(char *self)
+{
+    if (self[0x761] == 0) {
+        if (Slot0(self)) {
+            char *o = Slot0(self);
+            *(float *)(o + 0x100) = *(float *)(self + 0x794);
+            *(int *)(o + 0x104) = 0;
+            *(int *)(o + 0x108) = 0;
+        }
+        self[0x2F7] = 0;
+        self[0x761] = 1;
+        self[0x760] = 0;
+        self[0x2F4] = 0;
+        self[0x2F5] = 0;
+        self[0x2F6] = 0;
+    }
+}
+
+// FUNCTION: GAME 0x1A4E88
+extern "C" void setCloseFix__5cOm4f(char *self)
+{
+    if (self[0x761] == 1) {
+        if (Slot0(self)) {
+            char *o = Slot0(self);
+            *(float *)(o + 0x100) = *(float *)(self + 0x798);
+            *(int *)(o + 0x104) = 0;
+            *(int *)(o + 0x108) = 0;
+        }
+        self[0x2F7] = 0;
+        self[0x761] = 0;
+        self[0x760] = 0;
+        self[0x2F4] = 0;
+        self[0x2F5] = 0;
+        self[0x2F6] = 0;
+    }
+}
