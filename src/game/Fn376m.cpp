@@ -197,9 +197,7 @@ extern "C" void func_00376260(Fn376Obj *o, Fn376Src *s)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3762D8
-// diff: 2 words, store to 0x2A is emitted before the store to 0x12
+// FUNCTION: GAME 0x3762D8
 extern "C" void func_003762D8(Fn376Obj *d, Fn376Src *s)
 {
     if (s->m_1A & 1) {
@@ -216,12 +214,10 @@ extern "C" void func_003762D8(Fn376Obj *d, Fn376Src *s)
     }
     if (s->m_1A & 8) {
         unsigned short t = s->m_34;
-        d->m_12 |= 4;
         d->m_2A = t;
+        d->m_12 |= 4;
     }
 }
-
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3767B0

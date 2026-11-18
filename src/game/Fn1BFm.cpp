@@ -33,9 +33,8 @@ extern "C" int func_001B80B0(char *self, int v)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x001B7118
-// diff: 4 words, vtable ptr in v0/fn in v1 instead of v1/v0
+// FUNCTION: GAME 0x001B7118
+// The virtual call is cast to an int-returning pointer: that gives the original v1 (vtable) / v0 (slot) allocation; a void cast swaps them.
 extern "C" int func_001B7118(char *self, char *a)
 {
     *(char **)(self + 0x5E0) = a;
@@ -47,10 +46,9 @@ extern "C" int func_001B7118(char *self, char *a)
             *(unsigned *)(self + 0x560) = v + 0x700;
     }
     char *vt = *(char **)(self + 0x214);
-    ((void (*)(char *))*(void **)(vt + 0x44))(self + *(short *)(vt + 0x40));
+    ((int (*)(char *))*(void **)(vt + 0x44))(self + *(short *)(vt + 0x40));
     return 1;
 }
-#endif
 
 // FUNCTION: GAME 0x001B15C8
 extern "C" void func_001B15C8(char *self, int a, int b, V3 *c, V3 *d)

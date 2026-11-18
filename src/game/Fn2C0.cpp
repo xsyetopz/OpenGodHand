@@ -157,7 +157,7 @@ extern "C" void func_002B8D88(char *self, int mode, int a, int b)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2C0D18 - s3/s4 param regs and const-store order differ (8 words)
+// DRAFT: GAME 0x2C0D18 - 4 words: s1/s4 hold trg/act swapped; const stores in 34,39,54,36 order and 35,3A,38,3B order are best of all 24 permutations; int/unsigned params no help
 extern "C" void AtInit__10cSceAtUnit9eSceAt_id12eAreaHitType12eAreaTrgType8eActType(
     char *self, int id, int hit, int trg, int act)
 {

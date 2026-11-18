@@ -22,7 +22,7 @@ extern "C" void func_00148200(float *m, float a, float b)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x14E778 - 4 words off: prologue move order (a0 to s4 before a1 to s2)
+// DRAFT: GAME 0x14E778 - 4 words off: prologue move order (a0 to s4 before a1 to s2); int callee, while loop, self copy, b=a local, unsigned a tried
 struct O;
 extern "C" int func_0014B638(void);
 extern "C" O *func_0014B6F8(O *, int);

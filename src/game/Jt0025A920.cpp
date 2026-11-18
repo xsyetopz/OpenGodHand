@@ -28,7 +28,7 @@ struct Eb {
 };
 
 // DRAFT: GAME 0x25A920
-// diff: 6 words, v0/v1 swapped for the m_1866/m_2F6 increments in case 0.
+// diff: 6 words, v0/v1 swapped for the m_1866/m_2F6 increments in case 0; swapped order, +=, ++x, temps, int temps tried
 #ifdef NONMATCHING
 extern "C" void func_0025A920(Eb *self)
 {

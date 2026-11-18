@@ -25,9 +25,9 @@ extern "C" void func_002A5930(char *self)
 {
     int *p = func_002A4F30(self, 0x10);
     if (p) {
-        *(unsigned long *)p = 0x70000000;
         p[2] = 0x11000000;
         p[3] = 0;
+        *(unsigned long *)p = 0x70000000;
         char *b = self + 0x28000;
         func_0031A650(D_00754C80, *(int *)(b + 0x2060), *(int *)(b + 0x2064), *(int *)(b + 0x2050));
     }
