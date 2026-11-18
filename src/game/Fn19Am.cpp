@@ -64,7 +64,7 @@ FN19A_SPH(func_0019A0B8, 3.59999990f, 3.5f, 3.59999990f, 7, 7)
 FN19A_SPH(func_0019A328, 2.79999995f, 2.79999995f, 2.79999995f, 7, 7)
 
 // DRAFT: GAME 0x19A590
-// diff: 16 words, same tail diff
+// diff: 12 words (constants fixed to 3.6/2.8/2.8), same tail store order/v0-v1 diff; single-store moves reach 10 words with order 5E4,5F0,5E8 head
 FN19A_SPH(func_0019A590, 3.59999990f, 2.79999995f, 2.79999995f, 7, 7)
 
 // DRAFT: GAME 0x19A808

@@ -183,20 +183,17 @@ extern "C" void func_001FAA68(char **self, unsigned int i, int v)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1FC4D0 - 16 words: bit test folds to srav/andi where target uses sllv/and/sltu
+// DRAFT: GAME 0x1FC4D0 - 11 words: t lands in v1/w in a0 (orig a2/v1) and mask order; tried and+sltu idiom, nested vs early returns, m hoisting, pointer forms
 extern "C" int func_001FC4D0(int **self, unsigned int idx)
 {
     int *t = *self;
-    if (!t)
+    if (t == 0)
         return 0;
-    unsigned int w = idx >> 5;
-    if (w < 4) {
-        unsigned int m = 1u << (idx & 31);
-        unsigned int v = t[0xB98 / 4 + w];
-        unsigned int r = v & m;
-        return r != 0;
-    }
-    return 0;
+    unsigned w = idx >> 5;
+    if (w >= 4)
+        return 0;
+    unsigned r = (unsigned)t[0xB98 / 4 + w] & (1u << (idx & 31));
+    return r != 0;
 }
 #endif
 

@@ -168,7 +168,7 @@ extern "C" int func_00191B98(char *self)
 }
 
 // DRAFT: GAME 0x187838
-// diff: 15 words; same tail register choice and store order
+// diff: 12 words; hoisted k1/pp/eight/s11/s89 locals fixed constants (15->12); 54A store lands last (delay slot) and -1 loads early; 11 random store perms and moving 54A did not help
 extern "C" int func_00187838(char *self)
 {
     FN180_HEAD(2.0f, 2.0f, 1.60000002f)

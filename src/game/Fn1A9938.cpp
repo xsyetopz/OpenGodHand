@@ -23,12 +23,11 @@ extern "C" void func_001A9938(char *self, int flag)
         ReleaseDamageGive__13cDamageManageP11cDamageGive(&g_DmgManage, g);
         *(void **)(self + 0x608) = 0;
     }
-    void *cs = &g_CollScr;
     char *p = self + 0x60C;
     for (int i = 2; i >= 0; i--, p += 4) {
         void *c = *(void **)p;
         if (c)
-            func_0012EC58(cs, c);
+            func_0012EC58(&g_CollScr, c);
     }
     KillEffect__FPC4cObji13eEspEraseMode(self, 3, 2);
     KillEffect__FPC4cObji13eEspEraseMode(self, 0xB, 2);

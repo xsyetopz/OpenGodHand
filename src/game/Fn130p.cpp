@@ -250,17 +250,17 @@ extern "C" void func_0013D400(char *self)
     do {
         func_002AA3D8(self, i);
         void *v = getIDWork__7cIDBasei(self, i);
-        *(void **)(w + i * 4) = v;
+        *(void **)((int)w + (i << 2)) = v;
         func_002AC9B8(self, v, 0);
         i++;
     } while (i < 11);
     restartAnim__7cIDBase(self);
     char *b = self + 0xD0;
     char *c = b;
+    char *cw = self + 0x120;
+    int k = 0;
     *(char *)(self + 0x90) = 1;
     *(int *)(*(char **)(self + 0xA4) + 0x78) = 0;
-    int k = 0;
-    char *cw = self + 0x120;
     *(int *)(*(char **)(self + 0xA4) + 0x40) = 0;
     move__7cIDBase(self);
     restartAnim__7cIDBase(b);

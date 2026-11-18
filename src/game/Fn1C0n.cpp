@@ -18,21 +18,22 @@ extern "C" void func_001CA1F8(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1C2328
-// diff: 16 differing words (76 vs 68 bytes)
+// diff: 14 words; orig has beql on the flag, shared return 0 up front and a nop after the first slti; tried nested ifs, r accumulator, unsigned range subtract, early-return chain (best, applied)
 extern "C" int func_001C2328(char *self)
 {
-    if (*(unsigned char *)(self + 0x2F4) != 0)
+    if (*(unsigned char *)(self + 0x2F4))
         return 0;
     int v = *(unsigned char *)(self + 0x2F6);
     if (v < 2)
         return 0;
     if (v < 4)
         return 1;
-    if (v >= 8)
-        return 0;
-    if (v < 6)
-        return 0;
-    return 1;
+    if (v < 8) {
+        if (v < 6)
+            return 0;
+        return 1;
+    }
+    return 0;
 }
 #endif
 
@@ -86,7 +87,7 @@ extern "C" int func_001C3C58(int *out, int *a)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1DBEB0
-// diff: 16 differing words (104 vs 104 bytes)
+// diff: 16 differing words; orig keeps self copy in a3 for both pointers, const 9 loaded in loop; tried char* pointer, self copy, for loops
 extern "C" void func_001DBEB0(char *self)
 {
     int i = 0x33;

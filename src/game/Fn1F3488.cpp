@@ -8,33 +8,38 @@ extern "C" void SetOffsetPosX__12CustomIDWorki(void *, int);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1F3488
+// 3 words differ: case 3 emits daddu a0 before lui a1 (beq vs beql); tried hoisted constant local, p set once, if/else split
 extern "C" void func_001F3488(char *self, unsigned a)
 {
-    unsigned s = a & 0xFFFF;
-    char *p = self + 0x980;
-    if (s != 1) {
-        switch (s) {
-        case 3:
-            SetColorAnimNormal__12CustomIDWorkG3COLUs(p, 0x80000000, 8);
-            SetNoDisp__12CustomIDWorkb(p, 0);
-            SetChildNoDisp__12CustomIDWorkb(p, 0);
-            return;
-        default:
-            SetOffsetPosX__12CustomIDWorki(p, 0x258);
-            ResetColorAnim__12CustomIDWork(p);
-            SetNoDisp__12CustomIDWorkb(p, 1);
-            SetChildNoDisp__12CustomIDWorkb(p, 1);
-            return;
-        case 2:
-            SetMoveOffsetPosX__12CustomIDWorkiiUs(p, 0x258, 0, 10);
-            goto tail;
-        }
-    } else {
+    int s = a & 0xFFFF;
+    char *p;
+    switch (s) {
+    case 0:
+    default:
+        p = self + 0x980;
+        SetOffsetPosX__12CustomIDWorki(p, 0x258);
+        ResetColorAnim__12CustomIDWork(p);
+        SetNoDisp__12CustomIDWorkb(p, 1);
+        SetChildNoDisp__12CustomIDWorkb(p, 1);
+        break;
+    case 1:
+        p = self + 0x980;
         SetOffsetPosX__12CustomIDWorki(p, 0);
         ResetColorAnim__12CustomIDWork(p);
+        goto tail;
+    case 2:
+        p = self + 0x980;
+        SetMoveOffsetPosX__12CustomIDWorkiiUs(p, 0x258, 0, 10);
 tail:
         SetNoDisp__12CustomIDWorkb(p, 0);
         SetChildNoDisp__12CustomIDWorkb(p, 0);
+        break;
+    case 3:
+        p = self + 0x980;
+        SetColorAnimNormal__12CustomIDWorkG3COLUs(p, 0x80000000, 8);
+        SetNoDisp__12CustomIDWorkb(p, 0);
+        SetChildNoDisp__12CustomIDWorkb(p, 0);
+        break;
     }
 }
 #endif

@@ -29,16 +29,25 @@ extern "C" void func_0027DB20(char *self, int k)
 extern "C" void func_0027DBF8(char *self, int k)
 {
     int s;
-    switch (k) {
-    case 1:
+    if (k == 1) {
         s = 2;
-        break;
-    case 2:
-        s = 4;
-        break;
-    default:
-        s = 0;
-        break;
+    } else {
+        if (k == 0) {
+        B(0x2F5) = 7;
+        B(0x2F7) = 0;
+        B(0x2F4) = 0;
+        B(0x2F6) = 0;
+        return;
+    }
+        if (k == 2) {
+            s = 4;
+        } else {
+        B(0x2F5) = 7;
+        B(0x2F7) = 0;
+        B(0x2F4) = 0;
+        B(0x2F6) = 0;
+        return;
+        }
     }
     B(0x2F5) = 7;
     B(0x2F6) = s;
