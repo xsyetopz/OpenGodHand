@@ -5,7 +5,10 @@
 
 The target is the original executable (original/extracted/SLUS_215.03). Words
 carrying a relocation in the compiled object are compared on their opcode
-fields only, because their address fields are filled in at link time. Exit
+fields, and their address fields are checked against the relocation symbol's
+address in the last full link (build/SLUS_215.03.elf), so a reference to the
+wrong symbol does not pass as a match. Without a linked ELF, or for symbols it
+does not define, only the opcode fields are compared. Exit
 status 0 means the function matches; otherwise a side-by-side listing marks
 the differing instructions.
 """
@@ -37,7 +40,35 @@ def units() -> dict[int, tuple[int, str]]:
     return {v: (s, n) for v, s, n in configure.read_units()}
 
 
-def compiled(obj: Path, sym: str) -> tuple[bytes, dict[int, int]]:
+LINKED = ROOT / "build/SLUS_215.03.elf"
+
+
+def linked_symbols() -> dict[str, int]:
+    if not LINKED.exists():
+        return {}
+    with LINKED.open("rb") as f:
+        tab = ELFFile(f).get_section_by_name(".symtab")
+        return {s.name: s["st_value"] for s in tab.iter_symbols() if s.name}
+
+
+def target_ok(kind: int, g: int, w: int, vram: int, addr: int | None) -> bool:
+    """Whether the original word `w` encodes the address the compiled word `g`
+    refers to, `addr` being its relocation symbol's address (None: unknown).
+    The objects use REL relocations, so the addend sits in the compiled field."""
+    if addr is None:
+        return True
+    if kind == 4:  # R_MIPS_26
+        return (w & 0x3FFFFFF) << 2 | (vram & 0xF0000000) == addr + ((g & 0x3FFFFFF) << 2)
+    if kind == 6:  # R_MIPS_LO16
+        lo = g & 0xFFFF
+        return (addr + lo - ((lo & 0x8000) << 1)) & 0xFFFF == w & 0xFFFF
+    if kind == 5:  # R_MIPS_HI16: the paired LO16 addend can carry one unit either way
+        hi = ((addr + ((g & 0xFFFF) << 16) + 0x8000) >> 16) & 0xFFFF
+        return ((w & 0xFFFF) - hi + 1) & 0xFFFF <= 2
+    return True
+
+
+def compiled(obj: Path, sym: str) -> tuple[bytes, dict[int, int], dict[int, str]]:
     with obj.open("rb") as f:
         elf = ELFFile(f)
         sec = elf.get_section_by_name(f".text.{sym}") or elf.get_section_by_name(".text")
@@ -52,13 +83,19 @@ def compiled(obj: Path, sym: str) -> tuple[bytes, dict[int, int]]:
             raise SystemExit(f"{obj}: no symbol {sym} in {sec.name}")
         data = sec.data()[start : start + size]
         relocs: dict[int, int] = {}
+        names: dict[int, str] = {}
         for rs in elf.iter_sections():
             if isinstance(rs, RelocationSection) and elf.get_section(rs["sh_info"]).name == sec.name:
+                syms = elf.get_section(rs["sh_link"])
                 for r in rs.iter_relocations():
                     off = r["r_offset"] - start
                     if 0 <= off < size:
                         relocs[off] = r["r_info_type"]
-        return data, relocs
+                        t = syms.get_symbol(r["r_info_sym"])
+                        # Section symbols (local literals, own sections) have no linked address.
+                        if t["st_info"]["type"] != "STT_SECTION" and t.name:
+                            names[off] = t.name
+        return data, relocs, names
 
 
 def disasm(word: int, vram: int) -> str:
@@ -87,7 +124,7 @@ def main() -> int:
     if subprocess.call(cmd, cwd=ROOT):
         return 2
     try:
-        got, relocs = compiled(obj, sym)
+        got, relocs, names = compiled(obj, sym)
     finally:
         obj.unlink(missing_ok=True)
     raw = ORIG.read_bytes()
@@ -96,13 +133,18 @@ def main() -> int:
     while len(want) > len(got) and want[-4:] == bytes(4):
         want = want[:-4]
 
+    linked = linked_symbols() if names else {}
     bad = 0
     lines = []
+    wrong = []
     for off in range(0, max(len(got), len(want)), 4):
         g = struct.unpack_from("<I", got, off)[0] if off < len(got) else None
         w = struct.unpack_from("<I", want, off)[0] if off < len(want) else None
         mask = MASK.get(relocs.get(off), 0xFFFFFFFF)
         ok = g is not None and w is not None and (g & mask) == (w & mask)
+        if ok and off in relocs and not target_ok(relocs[off], g, w, args.addr + off, linked.get(names.get(off))):
+            ok = False
+            wrong.append(f"  0x{args.addr + off:X}: {names[off]} (0x{linked[names[off]]:X}) is not the original target")
         bad += not ok
         gs = disasm(g, args.addr + off) if g is not None else ""
         ws = disasm(w, args.addr + off) if w is not None else ""
@@ -110,6 +152,7 @@ def main() -> int:
     if bad and not args.q:
         print(f"           {'original':<40} compiled")
         print("\n".join(lines))
+        print("\n".join(wrong))
     verdict = "MATCH" if not bad else f"{bad} differing words"
     print(f"{name} @ 0x{args.addr:X}: {verdict} ({len(got)} vs {len(want)} bytes)")
     return 0 if not bad else 1
