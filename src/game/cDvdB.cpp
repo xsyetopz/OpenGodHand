@@ -1,5 +1,7 @@
 #include "cDvdDecl.h"
 
+extern "C" void func_00201228(DvdMgr *, DvdSlot *);
+
 // FUNCTION: GAME 0x2018F0
 extern "C" void func_002018F0(DvdMgr *self)
 {

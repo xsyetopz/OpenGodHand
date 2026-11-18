@@ -11,7 +11,7 @@ The permuter wants a directory with base.c, target.o, compile.sh and
 settings.toml; this script derives all four from the repository:
 
   base.c       the draft function plus the declarations around it, as plain C:
-               `extern "C"` and NONMATCHING guards are stripped, other function
+               `extern "C"` (reduced to `extern`) and NONMATCHING guards are stripped, other function
                bodies and tag comments are dropped (pycparser parses C only,
                and base.c may hold one function). tools/permute_cxx.py lowers
                struct/class tags, bool and *_cast<T>; compile.sh undoes that.
@@ -67,7 +67,7 @@ def unwrap_extern_c(text: str) -> str:
             depth += {"{": 1, "}": -1}.get(text[i], 0)
             i += 1
         text = text[: m.start()] + text[m.end() : i - 1] + text[i:]
-    return re.sub(r'extern\s+"C"\s*', "", text)
+    return re.sub(r'extern\s+"C"\s*', "extern ", text)  # keep `extern`: `char x[];` alone would define it
 
 
 def c_name(unit: str, text: str, addr: int) -> str:
@@ -96,7 +96,7 @@ def make_base(src: Path, name: str, addr: int) -> tuple[str, str]:
     keep = []
     for chunk in top_level_chunks(text):
         body = chunk.rstrip().endswith("}") and "{" in chunk and not chunk.lstrip().startswith(("struct", "union", "enum", "typedef", "class", "static", "inline"))
-        if body and not re.search(rf"\b{re.escape(pattern)}\s*\(", chunk):
+        if body and not re.search(rf"\b{re.escape(pattern)}\s*\(", chunk.split("{", 1)[0]):  # the header, not a call in a body
             continue  # another function's body
         if body:
             keep.append(re.sub(rf"\b{re.escape(pattern)}\s*\(", cname + "(", chunk, count=1))

@@ -1,5 +1,6 @@
 // Small functions in the ProDG game-code island 0x370000-0x383FFF.
 #include "game/Fn37x.h"
+extern "C" void func_003733C8(Fn37Obj *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x373938

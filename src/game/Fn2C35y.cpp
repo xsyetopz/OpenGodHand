@@ -1,5 +1,6 @@
 extern char Sys[];
 #define SYS ((char *)sys)
+#define W(p, o) (*(int *)((p) + (o)))
 extern char D_00747A2C[];
 extern char *g_Sce;
 extern char g_SceAt[], g_ActBtn[];

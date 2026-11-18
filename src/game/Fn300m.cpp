@@ -80,7 +80,7 @@ extern "C" void func_00300E30(char *self, int a)
 extern "C" int func_00306A48(int *, unsigned, int *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x306AF0 (19 words off: original copies self to a2 and has separate return-1 sites)
+// DRAFT: GAME 0x306AF0 (19 words off: original copies self to a2 and has separate return-1 sites; early-copy, flat returns, base ptr, old local did not help)
 extern "C" int func_00306AF0(char *self, int idx, int *hdr)
 {
     if (hdr[0] == 0x444D45 && idx < 0x4E2) {
@@ -88,17 +88,17 @@ extern "C" int func_00306AF0(char *self, int idx, int *hdr)
         if (*slot)
             return 0;
         *slot = (int)hdr;
-        if (hdr[1]) {
-            unsigned i = 0;
-            int *d = (int *)self;
-            int t;
-            do {
-                if (func_00306A48(hdr, i, &t) && t)
-                    *d = t;
-                i++;
-                d++;
-            } while (i < (unsigned)hdr[1]);
-        }
+        if (!hdr[1])
+            return 1;
+        unsigned i = 0;
+        int *d = (int *)self;
+        int t;
+        do {
+            if (func_00306A48(hdr, i, &t) && t)
+                *d = t;
+            i++;
+            d++;
+        } while (i < (unsigned)hdr[1]);
         return 1;
     }
     return 0;

@@ -13,24 +13,18 @@ extern "C" void func_001F9E68(char **p)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1FC360 - gcc picks movn/extra reg; orig keeps r=1 in v0 then movz
+// FUNCTION: GAME 0x1FC360
 extern "C" int func_001FC360(char **p, int n)
 {
-    int r = 1;
     char *q = *p;
-    if (q == 0) {
+    if (!q)
         return 0;
-    }
-    int f = *(int *)(q + 0xB90);
+    int r = 1;
     int m = 1 << n;
-    if ((f & m) == 0) {
+    if (!(*(int *)(q + 0xB90) & m))
         r = 0;
-    }
     return r;
 }
-
-#endif
 
 // FUNCTION: GAME 0x1FF0B0
 extern "C" void func_001FF0B0(int *p)

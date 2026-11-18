@@ -1,6 +1,8 @@
 // Unnamed units in 0x2B0000-0x2C0000 (block copy, state reset).
 struct BlkQ { int b[0x2F]; };
 extern BlkQ D_005E7910;
+extern "C" void func_002B21F0(char *, int);
+extern "C" int func_002AF218(unsigned short *);
 
 // FUNCTION: GAME 0x2B2080
 extern "C" void func_002B2080(BlkQ *d)

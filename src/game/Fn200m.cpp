@@ -1,17 +1,19 @@
 // Mid-size units in 0x200000-0x230000.
 extern "C" void func_002011B0(void *);
+struct DvdSlot;
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2017A8 - self/b saved-register swap (s0/s1), loop 2 otherwise equal
-extern "C" char *func_002017A8(char *self)
+// DRAFT: GAME 0x2017A8 - 28 words off: self/b saved-register swap (s0/s1); original keeps a loop-2 precheck; do-while and e-first variants did not help
+extern "C" DvdSlot *func_002017A8(void *self_)
 {
-    char *b = self + 4;
-    char *e = b;
-    char *p = b;
+    char *self = (char *)self_;
+    char *e = self + 4;
+    char *b = e;
+    char *p = e;
     int i;
     for (i = 0; i < 0x20; i++, e += 0x88, p += 0x88) {
         if (*(int *)p == 0)
-            return e;
+            return (DvdSlot *)e;
     }
     func_002011B0(self);
     e = self + 4;
@@ -19,7 +21,7 @@ extern "C" char *func_002017A8(char *self)
     int end = (int)b + 0x1100;
     for (; (int)p < end; p += 0x88, e += 0x88) {
         if (*(int *)p == 0)
-            return e;
+            return (DvdSlot *)e;
     }
     return 0;
 }

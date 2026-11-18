@@ -41,7 +41,7 @@ def _casts(text: str) -> str:
 def lower(text: str) -> str:
     """base.c text with the common C++-only spellings rewritten as C."""
     text = _casts(text)
-    text = re.sub(r"^\s*(?:public|private|protected)\s*:\s*$", "", text, flags=re.M)
+    text = re.sub(r"\b(?:public|private|protected)\s*:(?!:)", "", text)
     text = re.sub(r"\bclass\b(?=\s+\w+\s*[{;])", "struct", text)
     text = re.sub(r"\benum\s+([A-Za-z_]\w*)\s*\{[^{}]*\}\s*;", lambda m: f"{m.group(0)}\ntypedef enum {m.group(1)} {m.group(1)};", text)
     head = []
