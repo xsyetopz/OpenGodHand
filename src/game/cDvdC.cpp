@@ -83,9 +83,19 @@ extern "C" void func_002009E8(int a, int b)
     }
 }
 
+struct DvdSys2 {
+    char _p[0x58C];
+    int m_58C;
+    char _p1[0x5AC - 0x590];
+    unsigned int *m_5AC;
+    unsigned short m_5B0;
+    char _p2[0x5E4 - 0x5B2];
+    unsigned int m_5E4;
+};
+extern DvdSys2 Sys;
 #ifdef NONMATCHING
 // DRAFT: GAME 0x201C28
-// diff: 1 word; original tests D_00747A24 bit 3 as `lw; dsrl 3` (64-bit shift), ours emits `srl`/`sra`.
+// diff: 1 word (Sys is now the shared DvdSys2 so the draft compiles); tried (unsigned long)/(long long)/UL mask/%2/>>= forms, all emit sra; original tests D_00747A24 bit 3 as `lw; dsrl 3` (64-bit shift), ours emits `srl`/`sra`.
 #include "game/cWorldTime.h"
 class cScenario {
 public:
@@ -95,15 +105,6 @@ extern cScenario *g_Sce;
 extern cWorldTime WorldTime;
 extern const char D_0042C7D0[];
 extern int D_00747A24;
-struct DvdSysX {
-    char _p[0x58C];
-    int m_58C;
-    char _p1[0x5B0 - 0x590];
-    unsigned short m_5B0;
-    char _p2[0x5E4 - 0x5B2];
-    unsigned int m_5E4;
-};
-extern DvdSysX Sys;
 class cE3 {
 public:
     char m_0;
@@ -167,12 +168,6 @@ extern "C" int func_00200B88(DvdMgr *self, char *name, unsigned int size, int id
     return req[1];
 }
 
-struct DvdSys2 {
-    char _p[0x5AC];
-    unsigned int *m_5AC;
-    unsigned short m_5B0;
-};
-extern DvdSys2 Sys;
 extern const char D_0042C768[];
 unsigned int *SearchData(unsigned int *, const char *, unsigned int);
 struct DvdJump {

@@ -10,7 +10,9 @@ struct ScrVec2D {
     ScrObj2D **m_4;
     ScrObj2D **m_8;
 };
-extern ScrVec2D *volatile scrArray;
+extern ScrVec2D *scrArray;
+// Raw byte-offset access keeps gcc from treating scrArray as loop-invariant (original reloads it).
+#define SCRU(o, off) *(unsigned *)((char *)(o) + (off))
 
 extern "C" {
 
@@ -27,9 +29,9 @@ void SetSuspendScrollLayerAll__FPCUi(const unsigned *mask)
         ScrObj2D *o = *p;
         unsigned id = o->m_2fd;
         if (mask[id >> 5] & (0x80000000u >> (id & 31)))
-            o->m_250 |= 0x8000;
+            SCRU(o, 0x250) |= 0x8000;
         else
-            o->m_250 &= 0xFFFF7FFF;
+            SCRU(o, 0x250) &= 0xFFFF7FFF;
         p++;
     } while (p != scrArray->m_8);
 }
@@ -46,9 +48,9 @@ void SetViewScrollIdAll__FPCUi(const unsigned *mask)
         unsigned id = o->m_2fd;
         if (id < 0x100) {
             if (mask[id >> 5] & (0x80000000u >> (id & 31)))
-                o->m_250 |= 2;
+                SCRU(o, 0x250) |= 2;
             else
-                o->m_250 &= 0xFFFFFFFD;
+                SCRU(o, 0x250) &= 0xFFFFFFFD;
         }
         s = scrArray;
     }

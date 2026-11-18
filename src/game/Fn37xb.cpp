@@ -54,18 +54,15 @@ extern "C" int func_00373298(Fn37Sel *o, int idx)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x373A78
-// diff: 5 words; loop-pointer addiu a0 scheduled before the blez instead of after the mtc1
+// FUNCTION: GAME 0x373A78
 extern "C" int func_00373A78(Fn37Obj *o)
 {
     if (!func_00373A50(o))
         return 1;
     if (func_00373B20(o) == 1) {
         int i;
-        float *p;
-        for (i = 0, p = (float *)o + 7; i < o->m_58; i++, p++)
-            if (0.0f < *p)
+        for (i = 0; i < o->m_58; i++)
+            if (0.0f < ((float *)o)[7 + i])
                 return 0;
         return 1;
     }
@@ -73,7 +70,6 @@ extern "C" int func_00373A78(Fn37Obj *o)
         return 0;
     return 1;
 }
-#endif
 
 // FUNCTION: GAME 0x3738A0
 extern "C" void func_003738A0(Fn37Obj *o, float f, int idx)

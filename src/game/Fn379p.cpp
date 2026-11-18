@@ -184,7 +184,7 @@ extern "C" void func_003772D8(Fn379C1 *);
 extern "C" void func_00376F18(Fn379C1 *);
 
 // DRAFT: GAME 0x376EA0
-// diff: 2 words; same delay-slot fill as 0x37BE98
+// diff: 2 words; same delay-slot fill as 0x37BE98 Tried: int callees, merged store, swapped branches, continue forms, f local, pointer compare.
 extern "C" void func_00376EA0(void)
 {
     Fn379C1 *e = D_0076E590;

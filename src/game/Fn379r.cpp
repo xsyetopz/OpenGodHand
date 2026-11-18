@@ -140,23 +140,21 @@ struct Fn379H3 {
 };
 extern "C" int func_00373A50(Fn379H3 *);
 extern "C" int func_00373B20(Fn379H3 *);
-extern "C" void func_00374720(Fn379H3 *, Fn379H3 *, float, float);
+extern "C" void func_00374720(Fn379H3 *, float, float, Fn379H3 *);
 extern "C" void func_003740C8(Fn379H3 *, float, float);
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3735E0
-// diff: 3 words; original moves a1 into the jal delay slot after the mov.s pair.
+// FUNCTION: GAME 0x3735E0
+// func_00374720 takes (o, x, y, p) so the pointer move lands in the jal delay slot.
 extern "C" void func_003735E0(Fn379H3 *o, Fn379H3 *p, float x, float y)
 {
     if (func_00373A50(o)) {
         if (x < 0.001f)
             x = 0.0f;
         if (func_00373B20(o) == 1)
-            func_00374720(o, p, x, y);
+            func_00374720(o, x, y, p);
         else
             func_003740C8(o, x, y);
     }
 }
-#endif
 
 struct Fn379S {
     char m_0[0x40];

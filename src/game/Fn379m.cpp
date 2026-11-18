@@ -162,7 +162,7 @@ extern "C" void func_00373B20(Fn379G *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x373B68
-// diff: 1 word (2 probes: int r=1 ternary, r=1 then r=p->m_10 both no help); the original has a dead `addiu v1, zero, 1` before the lw
+// diff: 1 word (2 probes: int r=1 ternary, r=1 then r=p->m_10 both no help); the original has a dead `addiu v1, zero, 1` before the lw Tried: int callee, r locals, ternary, volatile.
 extern "C" int func_00373B68(Fn379G *p)
 {
     if (!func_00373A50(p))

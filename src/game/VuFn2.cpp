@@ -234,7 +234,7 @@ struct LenPosLineReslt;
 float LengthPositionToGivenLine(const cVec &, const cVec &, const cVec &, LenPosLineReslt *);
 extern "C" void func_00147C60(void *, float *);
 // DRAFT: GAME 0x2BBCE0
-// diff: 4 words; original computes &t (s0) before &c (s2); here the two addiu are swapped
+// diff: 4 words; original computes &t (s0) before &c (s2); here the two addiu are swapped Tried: tp local before/after cp, tp passed to ApplyMatrix, declaration reorders, memory clobber.
 extern "C" int func_002BBCE0(void *a0, float *m, const float *p, float r)
 {
     cVec z;

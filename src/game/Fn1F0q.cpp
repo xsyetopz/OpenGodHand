@@ -6,7 +6,7 @@ extern int D_00568280;
 extern "C" int sceWrite(int, const void *, int);
 extern "C" int SdeSystemOutModeGet(void);
 extern "C" void *memset(void *, int, unsigned);
-extern "C" void func_001F45D8(void *);
+extern "C" void * func_001F45D8(void *);
 extern "C" void func_001EF978(void);
 extern "C" void func_001F29C0(void *, int, int);
 extern "C" void func_001FCCC0(void *);

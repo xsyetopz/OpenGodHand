@@ -16,11 +16,12 @@ struct ScrVecQ {
     ScrObjQ **m_4;
     ScrObjQ **m_8;
 };
-extern ScrVecQ *volatile scrArray;
+extern ScrVecQ *scrArray;
+// Raw byte-offset stores keep gcc from treating scrArray as loop-invariant, so it reloads each iteration like the original.
+#define SCRF(o, off) *(float *)((char *)(o) + (off))
+#define SCRU(o, off) *(unsigned *)((char *)(o) + (off))
 
-// DRAFT: GAME 0x2DB370
-// diff: 2 words, original fills the bnel slot with the scrArray reload and branches past it; ours emits bne plus nop
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2DB370
 void setColorScrollLayer(unsigned id, float r, float g, float b)
 {
     ScrVecQ *s = scrArray;
@@ -29,21 +30,18 @@ void setColorScrollLayer(unsigned id, float r, float g, float b)
         return;
     do {
         if (id == (*p)->m_2fd) {
-            (*p)->m_240 = r;
-            (*p)->m_244 = g;
-            (*p)->m_248 = b;
-            (*p)->m_310 = r;
-            (*p)->m_314 = g;
-            (*p)->m_318 = b;
+            SCRF(*p, 0x240) = r;
+            SCRF(*p, 0x244) = g;
+            SCRF(*p, 0x248) = b;
+            SCRF(*p, 0x310) = r;
+            SCRF(*p, 0x314) = g;
+            SCRF(*p, 0x318) = b;
         }
         p++;
     } while (p != scrArray->m_8);
 }
-#endif
 
-// DRAFT: GAME 0x2DB2B0
-// diff: 2 words, original fills the bnel slot with the scrArray reload and branches past it; ours emits bne plus nop
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2DB2B0
 void displayScrollLayer(unsigned id, bool on)
 {
     ScrVecQ *s = scrArray;
@@ -53,14 +51,13 @@ void displayScrollLayer(unsigned id, bool on)
     do {
         if (id == (*p)->m_2fd) {
             if (on)
-                (*p)->m_250 &= 0xFFFFFFFD;
+                SCRU(*p, 0x250) &= 0xFFFFFFFD;
             else
-                (*p)->m_250 |= 2;
+                SCRU(*p, 0x250) |= 2;
         }
         p++;
     } while (p != scrArray->m_8);
 }
-#endif
 
 struct PlrQ {
     char _p[0x54A];
