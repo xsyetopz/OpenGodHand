@@ -89,17 +89,15 @@ extern "C" void func_002AEDF0(LsHold *self, int t)
 
 struct OffEnt { int m_0; int m_4; };
 
-// DRAFT: GAME 0x2ACD78 - 1 word differs: original adds table base first (addu v0,a0,v0)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2ACD78
 extern "C" char *func_002ACD78(OffEnt *tab, int idx, unsigned n)
 {
     char *p;
-    if (idx == 0x21 || !n || !(p = ((char **)tab)[idx * 2]) || *(unsigned *)p < n)
+    if (idx == 0x21 || !n || !(p = *(char **)((int)tab + (idx << 3))) || *(unsigned *)p < n)
         return 0;
     int v = *(int *)(p + n * 4);
     return v ? (char *)(v + (int)p) : 0;
 }
-#endif
 
 extern "C" int isPageEndCode__11cMessCommonUs(unsigned short);
 

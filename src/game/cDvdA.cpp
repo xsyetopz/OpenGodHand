@@ -122,11 +122,10 @@ extern "C" void func_00200AC0(DvdMgr *self)
     self->m_cur = 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x200B20 - 2 words: gcc emits slti/bnez range check where the target has nop/beqz
+// FUNCTION: GAME 0x200B20
 extern "C" void func_00200B20(DvdMgr *self)
 {
-    switch (self->m_state) {
+    switch ((unsigned)self->m_state) {
     case 1:
         func_00201290(self);
         break;
@@ -139,7 +138,6 @@ extern "C" void func_00200B20(DvdMgr *self)
         break;
     }
 }
-#endif
 
 // FUNCTION: GAME 0x201718
 extern "C" void func_00201718(DvdMgr *self)

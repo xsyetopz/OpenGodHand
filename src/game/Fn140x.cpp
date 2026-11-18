@@ -119,3 +119,29 @@ extern "C" void func_001468B0(char *s)
     *(float *)(getIDWork__7cIDBasei(s + 0xA0, 0) + 0x3C) = -50.0f;
     *(short *)(s + 0x102) = 0x5A;
 }
+
+extern "C" int func_0031ED08(float);
+extern "C" int setMotionInfo__FP8cObjBaseUiUiUiffUs(char *, int, int, int, float, float, unsigned short);
+extern "C" int moveMotion__FP8cObjBase(char *);
+extern "C" void func_0014E818(char *, char *, float);
+extern "C" void addNullSpeed__8cObjBasef(char *, float);
+
+// FUNCTION: GAME 0x14EB90
+extern "C" void func_0014EB90(char *s)
+{
+    switch ((unsigned char)s[0x2F6]) {
+    case 0:
+        setMotionInfo__FP8cObjBaseUiUiUiffUs(s, *(int *)(s + 0x428), *(int *)(s + 0x42C), func_0031ED08(*(float *)(s + 0x438)), *(float *)(s + 0x440), *(float *)(s + 0x430), *(unsigned short *)(s + 0x434));
+        s[0x2F6] = (unsigned char)s[0x2F6] + 1;
+    case 1:
+        if (moveMotion__FP8cObjBase(s)) s[0x2F6]++;
+        func_0014E818(s, s + 0x4C0, *(float *)(s + 0x4B8));
+        addNullSpeed__8cObjBasef(s, 1.0f);
+        break;
+    case 2:
+        moveMotion__FP8cObjBase(s);
+        func_0014E818(s, s + 0x4C0, *(float *)(s + 0x4B8));
+        addNullSpeed__8cObjBasef(s, 1.0f);
+        break;
+    }
+}
