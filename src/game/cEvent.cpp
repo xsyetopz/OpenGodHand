@@ -727,26 +727,26 @@ extern "C" void func_00298CF0()
 }
 
 
-// near-miss: 33 differing words; original loads into v1 with no hoisted lui; mine hoists lui v0 and is 8 bytes longer
+// near-miss: 16 differing words, same size; original loads into v1 and orders tail blocks 3DA,2A2,2A3,2A6; mine loads into v0
 #ifdef NONMATCHING
 // DRAFT: GAME 0x298EF8
 extern "C" void func_00298EF8(EvObj *self, unsigned char idx)
 {
-    unsigned char v;
+    int v;
     if (!self)
         return;
     switch (self->m_kind) {
+    case 0x3DA:
+        v = D_003C0548[idx];
+        break;
     case 0x2A2:
         v = D_003C0548[0];
-        break;
-    case 0x2A3:
-        v = D_003C0549;
         break;
     case 0x2A6:
         v = D_003C054A;
         break;
-    case 0x3DA:
-        v = D_003C0548[idx];
+    case 0x2A3:
+        v = D_003C0549;
         break;
     default:
         return;
@@ -870,3 +870,22 @@ extern "C" void func_002990A0()
         o->m_flags &= ~2;
     }
 }
+
+#ifdef NONMATCHING
+extern int DISPLAY_W, D_003C11C8, D_003C11AC, D_003C11B4, D_00586B80;
+// near-miss: 26 differing words, same size; loop register allocation differs (original keeps 0x800 inside the loop, mine hoists constants into different saved regs)
+// DRAFT: GAME 0x29FDE0
+extern "C" void func_0029FDE0(EvBuf *b, int h)
+{
+    int i = 0;
+    func_00299868(b, 0x3F, 0xFF);
+    func_00299868(b, 0, 0x306);
+    unsigned v = (unsigned)(D_003C11AC + D_003C11C8 * h) >> 5;
+    func_00299868(b, 0x4D, (long)(DISPLAY_W / 128) << 16 | v);
+    for (; i < DISPLAY_W / 64; i++) {
+        func_00299868(b, 0x41, (long)(0x1F + i * 0x20) << 16 | (i << 5) | (long)(D_003C11B4 - 1) << 48);
+        func_00299868(b, 0xD, (long)(D_00586B80 << 4) << 16 | ((0x800 - DISPLAY_W / 2) << 4) | 0xFFFF00000000L);
+        func_00299868(b, 5, (long)((D_00586B80 + D_003C11B4) << 4) << 16 | 0xFFFF00008000L);
+    }
+}
+#endif

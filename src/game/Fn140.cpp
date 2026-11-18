@@ -122,46 +122,72 @@ extern "C" int func_0015FD68(char *self)
     return -1;
 }
 
-#define MODE60_A(ADDR)                                       \
-    extern "C" int func_00##ADDR(char *self)                 \
-    {                                                        \
-        unsigned char t = self[0x64];                        \
-        if (t == 0) {                                        \
-            *(int *)(self + 0x60) = 10;                      \
-            return 10;                                       \
-        }                                                    \
-        if (t == 1) {                                        \
-            *(int *)(self + 0x60) = -1;                      \
-            return -1;                                       \
-        }                                                    \
-        return -1;                                           \
-    }
-
-// FUNCTION: GAME 0x161B30
-MODE60_A(161B30)
-// FUNCTION: GAME 0x162720
-MODE60_A(162720)
-
-// FUNCTION: GAME 0x16EDE0
-extern "C" int func_0016EDE0(char *self)
+// DRAFT: GAME 0x161B30, 0x162720 (same body) and 0x16EDE0 (0 -> -1, 1 -> 10, else 10)
+// diff: original stores and returns the constant in v0 on two duplicated `jr; sw v0` tails; compiled
+// keeps -1 in v1 for the store (11 differing words, 56 vs 48 bytes). Tried r-variable, assignment-as-value.
+#ifdef NONMATCHING
+extern "C" int func_00161B30(char *self)
 {
     unsigned char t = self[0x64];
     if (t == 0) {
-        *(int *)(self + 0x60) = -1;
-        return -1;
-    }
-    if (t == 1) {
         *(int *)(self + 0x60) = 10;
         return 10;
     }
-    return 10;
+    if (t == 1) {
+        *(int *)(self + 0x60) = -1;
+        return -1;
+    }
+    return -1;
 }
+#endif
 
 // FUNCTION: GAME 0x15FEE0
 extern "C" void func_0015FEE0(char *self)
 {
-    int *q = (int *)(self + 0xF08);
+    int *a = (int *)(self + 0xEE8);
+    int m = -1;
     for (int i = 8; i >= 0; i--)
-        *q-- = -1;
+        a[i] = m;
     self[0xF15] = 0;
+}
+
+// DRAFT: GAME 0x1415E8
+// diff: original loop is `beqz; (v1--) sb sb; bgez; (a0+=0xC)` (52 bytes); compiled uses bgezl with a lw copy (60 bytes). for/do-while/struct forms tried.
+#ifdef NONMATCHING
+extern "C" void func_001415E8(char *self, char v)
+{
+    char **p = (char **)(self + 0x22F4);
+    for (int i = 16; i >= 0; i--) {
+        char *e = *p;
+        if (e) {
+            e[0x75] = 1;
+            e[0x76] = v;
+        }
+        p = (char **)((char *)p + 0xC);
+    }
+}
+#endif
+
+extern "C" void func_001468B0(void *self);
+extern "C" void func_001614D0(char *p);
+extern "C" void restartAnim__7cIDBase(void *self);
+
+// FUNCTION: GAME 0x146878
+extern "C" void func_00146878(char *self)
+{
+    func_001468B0(self);
+    *(short *)(self + 0x100) = 0;
+    restartAnim__7cIDBase(self);
+    self[0x1C] = 1;
+}
+
+// FUNCTION: GAME 0x164EF8
+extern "C" void func_00164EF8(char *self)
+{
+    func_001614D0(self);
+    *(int *)(self + 0x298) = 0;
+    self[0x5A] = 0;
+    self[0x5B] = 0;
+    self[0x5C] = 0;
+    self[0x5D] = 0;
 }

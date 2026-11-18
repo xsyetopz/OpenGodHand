@@ -350,7 +350,6 @@ void func_002AE970() { func_002AE940((void *)1, 0xFFFF); }
 void func_002AF6E0(int *p, int on) { if (on) *p |= 2; else *p &= -3; }
 
 extern char Mc;
-void func_002AE3D0(void *);
 // FUNCTION: GAME 0x2AD288
 void func_002AD288(int *self, int f) { self[4] = 0; self[5] = 0; if (f & 1) func_0030F5A0(); }
 // FUNCTION: GAME 0x2AE940

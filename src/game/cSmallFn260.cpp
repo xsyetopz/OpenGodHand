@@ -119,3 +119,47 @@ extern "C" void func_002896B0(unsigned char *self)
     if (self[0x2F4] == 0 && self[0x2F5] == 8)
         self[0x2F6] = 2;
 }
+
+extern "C" void dieCommon__7cOmBase(void *);
+extern "C" void KillEffect__FPC4cObji13eEspEraseMode(void *, int, int);
+extern "C" void func_0028EB88(void *, int);
+extern "C" void func_00279E70(void *);
+extern "C" void func_0028BEA8(void *);
+extern const char D_00447E68[];
+extern const char D_004483A8[];
+extern const char D_0044A408[];
+extern "C" void updateSetDataFlag__11cEmSetParamUiUi(void *, unsigned, unsigned, unsigned) ;
+struct cEmSetFwd { char x; };
+extern cEmSetFwd g_EmSet;
+
+// FUNCTION: GAME 0x27F170
+extern "C" void func_0027F170(cGameObj *o)
+{
+    g_CollSolidManage.ReleaseUnit(o);
+    KillEffect__FPC4cObji13eEspEraseMode(o, 1, 2);
+}
+
+struct Fn260State {
+    char _pad0[0x2F4];
+    unsigned char m_a, m_b, m_c, m_d;
+};
+
+// FUNCTION: GAME 0x281470
+extern "C" void func_00281470(Fn260State *s, unsigned char mode)
+{
+    switch (mode) {
+    case 0:
+    default:
+        s->m_d = 0;
+        s->m_b = 0xF;
+        s->m_a = 0;
+        s->m_c = 0;
+        break;
+    case 1:
+        s->m_d = 0;
+        s->m_a = 0;
+        s->m_c = 2;
+        s->m_b = 0xF;
+        break;
+    }
+}
