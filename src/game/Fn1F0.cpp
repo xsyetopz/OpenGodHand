@@ -45,19 +45,17 @@ extern "C" void func_001FC170(F1FC170 *s, unsigned a, int v)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1FC198 - extra nop and merged 0x1F return
+// FUNCTION: GAME 0x1FC198
 extern "C" int func_001FC198(char *p, unsigned a)
 {
     p = *(char **)p;
     if (!p)
         return 0x1F;
-    unsigned i = a & 0xFF;
-    if (i < 10)
-        return (unsigned char)p[i + 0x98];
-    return 0x1F;
+    unsigned char i = a;
+    if (i > 9)
+        return 0x1F;
+    return *(unsigned char *)(p + i + 0x98);
 }
-#endif
 
 // FUNCTION: GAME 0x1FCDB8
 extern "C" void func_001FCDB8(char *p)

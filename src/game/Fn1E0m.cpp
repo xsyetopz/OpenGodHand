@@ -57,8 +57,8 @@ extern "C" void func_001F6AF8(int *self)
 extern "C" int func_001F8550(float *c, float *p)
 {
     float y = c[1];
-    float py = p[1];
     float h = c[2];
+    float py = p[1];
     if (!(py < y) && !(y + h < py)) {
         float dx = p[0] - c[4];
         float dz = p[2] - c[5];
