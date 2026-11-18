@@ -97,12 +97,11 @@ struct Mdl190 {
 };
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1B3548 - n spill is sb/sltiu instead of sw/slt; same unresolved idiom as 0x1C2378
+// DRAFT: GAME 0x1B3548 - 4 words: Gt(const int&) idiom fixes the spill; original loads pi/0.9 constants before lwc1 (hoisted pi/k temps, x temp, *f reuse tried: worse)
+static inline int Gt(const int &v, int n) { return v > n; }
 extern "C" void func_001B3548(Mdl190 *self)
 {
-    unsigned char n = self->n;
-    const unsigned char &r = n;
-    char *e = (r > 2) ? self->tbl[2] : 0;
+    char *e = Gt(self->n, 2) ? self->tbl[2] : 0;
     float *f = (float *)(e + 0x100);
     float v = (*f - 3.1415927f) * 0.9f + 3.1415927f;
     *f = v;

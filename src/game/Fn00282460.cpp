@@ -4,7 +4,7 @@ extern "C" int moveMotion__FP8cObjBase(void *);
 #define B(o) (*(unsigned char *)(self + (o)))
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x282460
+// DRAFT: GAME 0x282460 - 57 differing words: original repeats a0/a3/f12/t0 arg setup per branch (276 bytes vs 244); tried per-branch calls, goto shared call, o reuse
 extern "C" void func_00282460(char *self)
 {
     switch (B(0x2F6)) {

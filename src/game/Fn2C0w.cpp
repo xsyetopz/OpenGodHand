@@ -16,9 +16,9 @@ extern "C" void func_002C4150(char *self, short a, int b, int c, int d, int e)
     *(char *)(self + 0xE4) = c;
     if (c == 1) {
         e = func_002C3890(self, (void *)func_002C41C8, e);
-        __asm__("" : "+r"(e));
         if (e >= 0)
-            *(unsigned char *)(*(char **)(self + 0x1C) + e * 0x58 + 0x50) |= 1;
+            *(unsigned char *)(*(char **)(self + 0x1C) + (e * 0x58) + 0x50) |= 1;
+        e = 0;
     } else {
         func_002C41C8();
     }

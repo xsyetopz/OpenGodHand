@@ -1,5 +1,5 @@
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1B7568
+// DRAFT: GAME 0x1B7568 - 68 words: range flag (a>=0x100 && a<0x1FF)==1 compiles to slti+movn and shifts regs (orig branches, a3 flag); tried unsigned short/int a, inline helper, if/else f; same as Fn1BD430 draft
 extern "C" void func_001B7568(char *self, char *o)
 {
     short t = *(short *)(o + 0x46);

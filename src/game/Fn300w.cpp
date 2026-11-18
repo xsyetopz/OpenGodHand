@@ -83,7 +83,6 @@ extern "C" void func_00307140(int a, int b)
     if (b == 0xFFFF && a) {
         func_00305A18(EspSys);
         char *p = D_00743250;
-        __asm__("" : "+r"(p));
         p += 0x380;
         for (int i = 999; i != -1; i--) {
             __asm__ volatile("sqc2 $vf0,0(%0)" : : "r"(p) : "memory");

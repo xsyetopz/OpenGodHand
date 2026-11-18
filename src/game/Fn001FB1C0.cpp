@@ -3,7 +3,7 @@
 extern unsigned char D_00747A51;
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1FB1C0
+// DRAFT: GAME 0x1FB1C0 - 50 differing words: i/off register swap (t2/t3), cvt.w.s lands in f4 not f0, loop slot offsets folded; tried do-while, off hoist, short/int param
 extern "C" void func_001FB1C0(char **self, int id, float *pos, float *ang, int a4, unsigned char *a5)
 {
     id &= 0xFFFF;

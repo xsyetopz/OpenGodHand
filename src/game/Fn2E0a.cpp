@@ -186,7 +186,7 @@ extern "C" void func_002EC218(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2E63C0
-// diff: 26 words; original tail layout (msg set in v0 vs a1, branch offsets). func_002D9F68 is variadic here (2-arg call sites).
+// diff: 26 words; original sets a1/a0 in each arm and only the jal is shared (draft keeps msg in v0, 236 vs 240 B). func_002D9F68 is variadic here (2-arg call sites). Tried: separate calls per arm (if/else, goto, early return; 244-248 B), msg default/else-if/else-block forms (26 words or worse).
 extern char D_00741DC8[], D_0044E3B0[], D_0044E3D8[], D_0044E3F8[], D_0044E418[];
 extern char *CreateObj__F6eObjIdT0(int, int);
 extern void ReleaseObj__FP4cObj(void *);
