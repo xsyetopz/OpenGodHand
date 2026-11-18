@@ -98,7 +98,7 @@ extern "C" ObjQ *func_00284A28(ObjQ *self)
 
 extern "C" void func_001FCDB8(void *);
 extern "C" char D_0042C4D8[], D_0042C4B8[];
-struct ObjR { int w0; Qv s10, s20; char p0[0x3C - 0x30]; int w3C; char p1[0x49 - 0x40]; unsigned char b49; char p2[0x50 - 0x4A]; void *vt50; };
+struct ObjR { int w0; char pz[0xC]; Qv s10, s20; char p0[0x3C - 0x30]; int w3C; char p1[0x49 - 0x40]; unsigned char b49; char p2[0x50 - 0x4A]; void *vt50; };
 // FUNCTION: GAME 0x1FCE20
 extern "C" ObjR *func_001FCE20(ObjR *self)
 {
