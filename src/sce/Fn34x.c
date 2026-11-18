@@ -1,4 +1,4 @@
-// COMPILER: ee-gcc3.2-030926
+// COMPILER: ee-gcc2.96
 // SCE library code (sd s0 prologues), built with ee-gcc 3.2 at -O2 -G0.
 
 void func_003403C8(char *);
