@@ -188,6 +188,20 @@ tools/divnop.py inserts them into the compiler's assembly:
 counts include every nop before the divide, so a nop the compiler already
 emits there is subtracted from its entry.
 
+## Inlined `cVec` operations
+
+The game's inlined `cVec` copies, subtractions and scales are VU0 macro code
+(`lqc2`/`vsub.xyz`/`sqc2`). include/cvecop.h reproduces each sequence as one
+asm block with memory operands, so the scalar code around it keeps its
+original order; matched uses are 0x138470 and 0x156AC0. Three source shapes
+around those helpers decide the layout:
+
+- Normalising is plain C (`len = func_00101E28(v); if (0.0f < len) { inv = 1.0f / len; ... }`).
+- A copy from a vector whose address the original keeps in a register uses
+  `cvecop_CopyR` through a pointer local; `cvecop_Copy` folds it to a stack offset.
+- Locals declared as separate `float v[4], u[4], n[4]` arrays take stack
+  offsets in declaration order.
+
 ## SCE library regions
 
 The SDK and runtime libraries (libsce, libstdc++ such as `endl__FR7ostream`)
