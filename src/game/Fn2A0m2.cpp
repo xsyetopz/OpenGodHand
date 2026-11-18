@@ -167,3 +167,50 @@ int func_002B2C98(E2B *self)
     return 1;
 }
 }
+
+struct S8 { int a, b; };
+struct S12 { int a, b, c; };
+extern "C" {
+void *memset(void *, int, unsigned);
+void *memcpy(void *, const void *, unsigned);
+
+// FUNCTION: GAME 0x2C7D18
+S8 Motion_seq_readSpdData__FPvUc(void *p, unsigned char t)
+{
+    S8 r;
+    memset(&r, 0, 8);
+    if (t == 1)
+        memcpy(&r, p, 8);
+    return r;
+}
+
+// FUNCTION: GAME 0x2C7F00
+S12 Motion_seq_readEffectData__FPvUc(void *p, unsigned char t)
+{
+    S12 r;
+    memset(&r, 0, 12);
+    if (t == 1)
+        memcpy(&r, p, 12);
+    return r;
+}
+}
+
+struct V { float x, y, z; };
+struct V4 { float x, y, z, w; };
+extern "C" {
+char *getUnit__13cSceAtManagerUi(void *, int);
+void func_002C1D68(void *, void *, void *);
+int HitCheck__C5cAreaRC4cVec(void *, void *);
+
+// FUNCTION: GAME 0x2C2F08
+int AtHitCheckNo__13cSceAtManagerRC4cVeci(void *self, V *v, int id)
+{
+    char *u = getUnit__13cSceAtManagerUi(self, id);
+    V4 p;
+    p.x = v->x; p.y = v->y; p.z = v->z; p.w = 1.0f;
+    char area[0x30];
+    if (!u) return 0;
+    func_002C1D68(self, area, u);
+    return HitCheck__C5cAreaRC4cVec(area, &p);
+}
+}

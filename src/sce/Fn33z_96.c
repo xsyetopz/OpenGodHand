@@ -1,94 +1,63 @@
 // COMPILER: ee-gcc2.96
-extern char D_00454458[], D_00454960[], D_00454948[];
-void func_00332808(int *, char *);
-void func_00334008(int *, char *);
-unsigned strlen(const char *);
-int func_00333470(int, int);
-int func_00334E98(int, int);
-void func_00334998(void);
-int func_00331C78(int);
-int func_00331F50(int);
-void func_00326050(char *);
-void func_00334500(char *);
-
-// FUNCTION: GAME 0x332DD0
-int func_00332DD0(int *a, int b, int c)
+extern void func_00336980(), func_00336588();
+struct Q { char c; };
+// FUNCTION: GAME 0x3366B8
+void func_003366B8(struct Q *o)
 {
-    int p, n;
-    if (a == 0) { func_00332808(a, D_00454458); return 0; }
-    if (c == 0) a[3] = b;
-    else if (c == 2) a[3] = a[2] + b;
-    else if (c == 1) a[3] = a[3] + b;
-    n = a[2];
-    p = a[3];
-    a[5] = 0;
-    if (p >= n) p = n;
-    if (p < 0) p = 0;
-    a[3] = p;
-    return p;
-}
-
-// FUNCTION: GAME 0x334738
-int func_00334738(int *a, int b, int c)
-{
-    int p, n;
-    if (a == 0) { func_00334008(a, D_00454960); return 0; }
-    if (c == 0) a[7] = b;
-    else if (c == 2) a[7] = a[4] + b;
-    else if (c == 1) a[7] = a[7] + b;
-    n = a[4];
-    p = a[7];
-    a[10] = 0;
-    if (p >= n) p = n;
-    if (p < 0) p = 0;
-    a[7] = p;
-    return p;
-}
-
-// FUNCTION: GAME 0x3334C8
-int func_003334C8(char *a, char *b)
-{
-    int n = strlen(a);
-    int i;
-    if (n != strlen(b)) return -1;
-    for (i = 0; i < n; ) {
-        int r = func_00333470(a[i], b[i]);
-        i++;
-        if (r != 0) return -1;
-    }
-    return 0;
-}
-
-// FUNCTION: GAME 0x334EF0
-int func_00334EF0(char *a, char *b)
-{
-    int n = strlen(a);
-    int i;
-    if (n != strlen(b)) return -1;
-    for (i = 0; i < n; ) {
-        int r = func_00334E98(a[i], b[i]);
-        i++;
-        if (r != 0) return -1;
-    }
-    return 0;
-}
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x334698
-// diff: 2 words, epilogue ld $s0/$s1 restore order swapped before tail call
-void func_00334698(char *a)
-{
-    int r;
-    if (a != 0) {
-        if (((unsigned char *)a)[2] >= 2) func_00334998();
-        if (a[1] == 0) {
-            func_00331C78(0x5000);
-            r = func_00331F50(*(int *)(a + 0x18));
-            func_00331C78(0x5001);
-            if (r < 0) func_00326050(D_00454948);
-            a[0] = 0;
-        } else a[0] = 0;
-        func_00334500(a);
+    if (o) {
+        func_00336980(o);
+        if (o->c == 1) {
+            o->c = 0;
+            func_00336588(o);
+            __asm__ volatile ("");
+        }
     }
 }
-#endif
+
+// FUNCTION: GAME 0x3312B8
+void func_003312B8(void)
+{
+    int i = 0x3FFF;
+    do {
+        i -= 0x20;
+        __asm__ volatile ("nop");
+    } while (i >= 0);
+}
+
+// FUNCTION: GAME 0x333FD8
+void func_00333FD8(void)
+{
+    int i = 0x1FFF;
+    do {
+        i -= 0x20;
+        __asm__ volatile ("nop");
+    } while (i >= 0);
+}
+
+extern int func_00334008(), func_00331570(), func_00331AD8(), func_003341B8(), func_00334A90(), func_003260C8();
+extern char D_004549C0[], D_004549D8[];
+struct S { char _0[2]; char c2; char _3[0x25]; int m28; int m2C; };
+// FUNCTION: GAME 0x334998
+int func_00334998(struct S *o)
+{
+    int i = 0;
+    if (!o)
+        return func_00334008(o, D_004549C0);
+    if ((unsigned char)o->c2 >= 2) {
+        if (o->m2C) func_00331570(o->m2C);
+        for (;;) {
+            func_00331AD8();
+            func_003341B8();
+            func_00334A90(o);
+            if (o->c2 != 2) { o->m28 = 0; break; }
+            i++;
+            if (i > 0x63FFF6) {
+                func_003260C8(D_004549D8);
+                o->m28 = 0;
+                break;
+            }
+            func_00333FD8();
+        }
+        o->c2 = 0;
+    }
+}

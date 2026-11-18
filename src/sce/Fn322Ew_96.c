@@ -40,7 +40,8 @@ void func_0032ED48(char *a, int b, int c)
     func_0032A9F0(*(int *)((int)a + (b << 2) + 0xC), c);
 }
 
-// FUNCTION: GAME 0x32F4F8
+#ifdef NONMATCHING
+// DRAFT: GAME 0x32F4F8 - 11 words: base-pointer register choice differs
 void func_0032F4F8(char *a, int b, int *c, int *d)
 {
     char *p = a + (b << 4);
@@ -48,6 +49,7 @@ void func_0032F4F8(char *a, int b, int *c, int *d)
     if (c) *c = *(int *)(b + 0x2B4);
     if (d) *d = *(int *)(p + 0x2B8);
 }
+#endif
 
 // FUNCTION: GAME 0x32EFE8
 void func_0032EFE8(char *a)
