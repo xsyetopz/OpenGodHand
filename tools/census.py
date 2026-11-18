@@ -31,7 +31,7 @@ def main(argv):
     if len(argv) not in (3, 5):
         sys.exit(__doc__)
     lo, hi = (int(x, 16) for x in argv[1:3])
-    mn, mx = (int(x) for x in argv[3:5]) if len(argv) == 5 else (40, 240)
+    mn, mx = (int(x, 0) for x in argv[3:5]) if len(argv) == 5 else (40, 240)
     names = sorted(
         int(p.stem, 16)
         for p in Path("asm/text").glob("*.s")

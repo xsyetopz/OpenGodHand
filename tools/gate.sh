@@ -16,10 +16,17 @@ B=$(git -C "$R" symbolic-ref --short HEAD)
 cd "$R"
 if [ ! -e "$G/.git" ]; then
   git worktree add -q --detach "$G" HEAD || exit 1
-  for p in .venv asm assets original tools/bin tools/compilers tools/ext; do
-    [ -e "$R/$p" ] && [ ! -e "$G/$p" ] && ln -s "$R/$p" "$G/$p"
-  done
 fi
+# A path that the worktree already holds as a real directory (original/ keeps a tracked README)
+# gets its missing children linked instead, so the ISO extract still reaches the snapshot.
+for p in .venv asm assets original tools/bin tools/compilers tools/ext; do
+  [ -e "$R/$p" ] || continue
+  if [ ! -e "$G/$p" ]; then
+    ln -s "$R/$p" "$G/$p"
+  elif [ -d "$G/$p" ] && [ ! -L "$G/$p" ]; then
+    for c in "$R/$p"/*; do [ -e "$G/$p/${c##*/}" ] || ln -s "$c" "$G/$p/${c##*/}"; done
+  fi
+done
 stage() { git add -A src include docs config && git reset -q -- 'src/game/Probe*' 'src/game/tmp_*' 'src/*/_*'; git write-tree; }
 while true; do
   cd "$R"
@@ -43,7 +50,7 @@ while true; do
         fi
         echo "HEAD moved $(date +%T)"; continue
       fi
-      echo "snapshot failed $(date +%T): $(grep -m3 -E 'FAILED|differ|MISMATCH|Error' "$L" | tr '\n' ' ')"
+      echo "snapshot failed $(date +%T): $(grep -m3 -iE 'FAILED|differ|MISMATCH|error' "$L" | tr '\n' ' ')"
     else
       echo "nothing to commit"; exit 0
     fi

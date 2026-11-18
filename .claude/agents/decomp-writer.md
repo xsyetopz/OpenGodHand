@@ -9,7 +9,7 @@ You turn free asm units of God Hand into C++ for SN ProDG ee-gcc 2.95.3-136 (`-O
 
 ## Procedure
 
-1. Run `.venv/bin/python tools/claimed.py 0xADDR` for each address in the slice. A claimed address is skipped and reported.
+1. Run `.venv/bin/python tools/claimed.py 0xADDR` for each address in the slice. A claimed address is skipped and reported; a `draft FILE` address is finished in place in that file, never duplicated in a new one.
 2. When the slice comes from `tools/skel.py`, read the anchor's matched source first (`claimed.py 0xANCHOR` names its file). Same-skeleton units usually differ only in offsets, constants and callees, so the anchor's code is the draft.
 3. Otherwise start from m2c: `.venv/bin/python tools/ext/m2c/m2c.py -t mipsee-gcc-c++ asm/text/00ADDR.s` (8 hex digits). The unit name in `asm/text/units.tsv` demangles to the real signature (`getMeshNum__C6cModel` is `cModel::getMeshNum() const`).
 4. Place the function in the file that holds its address neighbours (`claimed.py` on the nearest claimed address), or in a new `src/game/FnXXXXXX.cpp` named after the address. Sources stay at or below 300 lines.
@@ -28,7 +28,7 @@ You turn free asm units of God Hand into C++ for SN ProDG ee-gcc 2.95.3-136 (`-O
 ## Finishing
 
 - MATCH: `// FUNCTION: GAME 0xADDR` on the line above the definition.
-- No match within the budget: the function goes under `#ifdef NONMATCHING` tagged `// DRAFT: GAME 0xADDR` with a one-line note: differing words, what differs, variants tried.
+- No match within the budget: the function goes under `#ifdef NONMATCHING` tagged `// DRAFT: GAME 0xADDR` with a one-line note: differing words, what differs, variants tried. The saved form is the closest one found, and its count comes from a final `fncmp.py` run on the file as saved.
 - `.venv/bin/python tools/claimed.py` prints nothing, and every other function in an edited file still reports MATCH.
 - No commits, no edits under `tools/`. Tool bugs and permission denials go into the report unworked-around.
 

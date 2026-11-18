@@ -3,12 +3,12 @@
 
     python tools/claimed.py [0xADDR ...]
 
-With addresses, prints the source claiming each one, or `free`. Without, it
+With addresses, prints the source claiming each one, `draft FILE` when only a
+draft annotation holds it, or `free`. Without, it
 lists every address claimed twice, every address with more than one
 `// DRAFT: GAME 0x...` or `// NONMATCHING 0x...` annotation, and every draft
 address that a `// FUNCTION` also claims. Addresses compare numerically, so
-`0x1FA6F8` and `0x001FA6F8` are the same claim. Draft annotations do not count
-as claims when addresses are looked up.
+`0x1FA6F8` and `0x001FA6F8` are the same claim.
 """
 
 from __future__ import annotations
@@ -47,9 +47,16 @@ def drafts() -> dict[int, list[str]]:
 def main() -> int:
     found = claims()
     if len(sys.argv) > 1:
+        held = drafts()
         for arg in sys.argv[1:]:
             a = int(arg, 16)
-            print(f"0x{a:X}\t{', '.join(found[a]) if a in found else 'free'}")
+            if a in found:
+                owner = ", ".join(found[a])
+            elif a in held:
+                owner = "draft " + ", ".join(held[a])
+            else:
+                owner = "free"
+            print(f"0x{a:X}\t{owner}")
         return 0
     dups = {a: s for a, s in found.items() if len(s) > 1}
     for a, s in drafts().items():

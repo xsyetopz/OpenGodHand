@@ -11,7 +11,8 @@ Usage:
                   [--linkgen build/linkgen.tsv] [--asm asm/text]
 
 Run from the repository root. Anchors are `match` rows of linkgen.tsv plus
-functions already claimed by a source file; frag_* and tiny units are skipped.
+functions already claimed by a source file; frag_* and tiny units are skipped,
+and units held as a DRAFT are not listed as free.
 """
 import argparse
 import collections
@@ -20,6 +21,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import configure  # noqa: E402
+import claimed as claimed_mod  # noqa: E402
 
 
 def skeleton(path):
@@ -48,6 +50,8 @@ def main():
         if len(p) >= 3 and p[1] == "match":
             matched.add(int(p[0], 16))
     claimed = {x for al in configure.read_sources().values() for x in al}
+    # Drafted units belong to decomp-worker, so they are neither free nor anchors.
+    drafted = set(claimed_mod.drafts())
     groups = collections.defaultdict(list)
     for addr, size, name in configure.read_units():
         if name.startswith("frag_") or size < 0x20:
@@ -59,7 +63,7 @@ def main():
     rows = []
     for key, units in groups.items():
         anchors = [x for x in units if x in matched or x in claimed]
-        free = [x for x in units if x not in matched and x not in claimed]
+        free = [x for x in units if x not in matched and x not in claimed and x not in drafted]
         if anchors and free and len(key) > a.min_len:
             rows.append((len(free), len(key), min(anchors), sorted(free)))
     rows.sort(reverse=True)
