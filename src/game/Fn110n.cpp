@@ -360,7 +360,7 @@ extern "C" void func_0011A060(char *self)
             __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv110 *)v));
             v[0] = 0.0f;
             v[1] = 0.0f;
-            v[2] = 0.99737f;
+            v[2] = 0.99630004f;
             sceVu0ApplyMatrix(v, em + 0x80, v);
             **(float **)(self + 0xF0) = v[0];
             (*(float **)(self + 0xF0))[2] = v[2];
@@ -369,8 +369,8 @@ extern "C" void func_0011A060(char *self)
         }
         GetPlMotion__5cEm0015EM00_PLMOT_TYPEff(em, 0x52, 0.0f, 0.0f);
         *(short *)(self + 0x5E0) = 0;
-        func_00124E58(self);
         *(short *)(self + 0x5E2) = 0;
+        func_00124E58(self);
         func_0010A408(self, 5, 0, 0x2A, 0, 10);
         func_0010A420(self, 5, 0, 0x2A, 0, 10);
         B(0x1684) = 1;

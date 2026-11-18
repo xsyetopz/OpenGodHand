@@ -20,7 +20,8 @@ extern char Snd[];
 #define W(o) (*(unsigned *)(self + (o)))
 #define F(o) (*(float *)(self + (o)))
 
-// FUNCTION: GAME 0x2448E0
+// DRAFT: GAME 0x2448E0 - 8 words differ: store order and constant registers of the 0x623/0x531/0x617 stores in case 3, and the 0x564 == 0x20F test (original xori+beqz, mine addiu+beq)
+#ifdef NONMATCHING
 extern "C" void func_002448E0(char *self)
 {
     SetActive__21cCollisionSolidManageP8cGameObjb(g_CollSolidManage, self, 0);
@@ -46,10 +47,10 @@ extern "C" void func_002448E0(char *self)
         W(0x604) = 0;
         B(0x2F6)++;
     case 3:
+        B(0x623) = 1;
         B(0x531) = 0xFF;
         F(0x54C) = 2.0f;
         B(0x617) = 1;
-        B(0x623) = 1;
         SetTgtTurn__8cGameObjRC4cVecf(self, self + 0x16A0, F(0x5A8) * 0.098174773f);
         UH(0x434) |= 8;
         moveMotion__FP8cObjBase(self);
@@ -112,3 +113,4 @@ extern "C" void func_002448E0(char *self)
         break;
     }
 }
+#endif

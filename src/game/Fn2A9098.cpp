@@ -3,15 +3,18 @@ struct Elem {
     int a;
     float key;
 };
+static inline int Less(const float &a, const float &b) { return a < b; }
 
-// FUNCTION: GAME 0x2A9098
+// DRAFT: GAME 0x2A9098 - 11 words differ: the compare result and q swap v0/v1 (size matches, 100 B)
+#ifdef NONMATCHING
 extern "C" void func_002A9098(Elem *p, Elem key)
 {
     Elem *q = p - 1;
-    while (key.key < q->key) {
+    while (Less(key.key, q->key)) {
         *p = *q;
         p = q;
         q = p - 1;
     }
     *p = key;
 }
+#endif
