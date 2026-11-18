@@ -5,12 +5,19 @@ full build still reproduces `SLUS_215.03` byte for byte.
 
 ## Toolchain
 
-- Compiler: SCE ee-gcc 2.96 (`2.96-ee-001003-1`), C++ (GCC 2 mangling), run by
-  `tools/eecc.py` (native on x86 Linux, Docker `linux/386` elsewhere).
+- Compiler: SN Systems ProDG ee-gcc 2.95.3 (decomp.me package
+  `ee-gcc2.95.3-136`), C++ with GCC 2 mangling. Its prologues save callee-saved
+  registers with `sq` (`addiu sp,-0x20; sq s0,0x10(sp); sd ra,0(sp)`), which
+  the SCE gcc 2.9x/2.96 builds never emit, and it does not enable strict
+  aliasing at -O2. Build 136 is the only package that matches every function
+  decompiled so far; builds 114 and 273a miss `cMessage::ckMessage`.
+- `tools/eecc.py` runs the Windows executables under Wine, in the i386
+  container from `tools/docker/wine.Dockerfile` unless the host is x86 Linux
+  with Wine. The SCE "GCC2096 SCE3020" string in the executable belongs to the
+  linked SCE libraries, not the game code.
 - Flags: `tools/configure.py` `CXXFLAGS` (`-O2 -G0 -ffunction-sections ...`).
   `-ffunction-sections` does not change code bytes; it lets the linker place each
-  function at its original address. Compiler flags are still being confirmed;
-  report functions that only match with extra flags.
+  function at its original address.
 - Docker invocations need the Claude Code sandbox disabled.
 
 ## Workflow
@@ -38,5 +45,9 @@ full build still reproduces `SLUS_215.03` byte for byte.
 - Functions whose compiled output needs its own `.rodata` (string literals,
   float constants, switch jump tables) or `.data` cannot be linked yet: the
   linker script takes only `.text.*` from compiled objects. Skip them for now.
-- Keep a function in asm (no annotation) until it matches; non-matching
-  attempts stay out of `src/game/`.
+- Keep a function in asm (no annotation) until it matches. A non-matching
+  attempt worth keeping goes inside `#ifdef NONMATCHING` with a comment naming
+  its address and remaining difference, so it neither links nor collides with
+  the asm unit's symbol.
+- Functions with no symbol (`func_XXXXXXXX`) are declared `extern "C"` so the
+  call links against the asm label.

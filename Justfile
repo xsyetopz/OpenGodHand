@@ -5,7 +5,8 @@ py := if os() == "windows" { venv / "Scripts/python.exe" } else { venv / "bin/py
 iso_in := "original/SLUS-21503.iso"
 iso_out := "build/SLUS-21503.iso"
 
-[windows] set shell := ["powershell.exe", "-NoLogo", "-Command"]
+[windows]
+set shell := ["powershell.exe", "-NoLogo", "-Command"]
 
 # Create .venv from requirements.txt when it is missing.
 venv:
@@ -31,3 +32,14 @@ iso: build
 # Remove build/ and build.ninja (rerun `just setup` afterwards); original/, asm/ and assets/ are kept.
 clean:
     {{ py }} -c "import shutil;[shutil.rmtree(d,ignore_errors=True) for d in ('build',)];import os;os.path.exists('build.ninja') and os.remove('build.ninja')"
+
+# Extra arguments go to tools/live.py, e.g. `just live --port 8766 --interval 2`.
+# Serve the live progress treemap at http://127.0.0.1:8765/ and refresh it when src/ or objects change.
+[unix, positional-arguments]
+live *args: configure
+    {{ py }} tools/live.py "$@"
+
+# PowerShell has no "$@", so arguments are re-split on spaces there.
+[windows]
+live *args: configure
+    {{ py }} tools/live.py {{ args }}

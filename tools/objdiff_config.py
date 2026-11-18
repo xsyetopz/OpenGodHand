@@ -2,13 +2,17 @@
 
 `configure.py` calls `emit()` to write `objdiff.json` and to obtain the ninja
 statements that build the objects objdiff compares. One objdiff unit exists per
-group, where a group is a C++ class (from the GCC 2.x mangled name), `sdk` for
-`sce*` library functions, or `misc` for free functions and unnamed `func_*`.
+group, where a group approximates a translation unit: units are walked in link order and a
+new group opens whenever the class of a named function changes (GCC 2.x mangled
+name). Free and unnamed `func_*` functions join the preceding group. Groups are
+named after their class, `_2`, `_3` on repeats; `sdk` (sce*, Sde*, kernel calls)
+and `libc` (memcpy, __builtin_*, ...) are keys of their own. Categories: game,
+sdk, libc/runtime, unknown (groups before the first named function).
 
 target_path  build/expected/<group>.o   all asm units of the group, assembled
                                         from a generated build/expected/<group>.s
-base_path    build/actual/<group>.o     `ld -r` of the compiled src objects that
-                                        define at least one function of the group;
+base_path    build/actual/<group>.o     the compiled src object (`ld -r` when several)
+                                        that defines at least one function of the group;
                                         omitted while the group has none (0%)
 """
 
@@ -26,12 +30,22 @@ SPECIAL = re.compile(r"^(?:__tf|__vt_|_\$_)(\d+)")
 QUALIFIED = re.compile(r"__(?:C)?(?:Q[2-9_]+)?(\d+)")
 
 
-def group_of(name: str) -> str:
-    """Return the class, `sdk` or `misc` for a symbol name."""
-    if name.startswith("sce"):
-        return "sdk"
-    if name.startswith("func_"):
-        return "misc"
+LIBC = set(
+    "atanf cosf sinf powf sqrtf memcmp memcpy memmove memset strcat strcmp strcpy strlen strncmp strncpy "
+    "_cleanup _exit printf sprintf vsprintf abort __assert atexit atof atoi malloc free strtod strrchr "
+    "strtok strtol".split()
+)
+LIBC_PREFIX = ("__builtin_", "__nw", "__dl", "__vec_", "__throw", "__eh")
+KERNEL = set(
+    "CreateThread DeleteThread TerminateThread GetThreadId CreateSema DeleteSema SignalSema iSignalSema "
+    "WaitSema PollSema FlushCache DelayThread StartThread".split()
+)
+CATEGORY = {"class": "game", "sdk": "sdk", "libc": "libc", "none": "unknown"}
+CATEGORY_NAMES = {"game": "Game", "sdk": "SDK", "libc": "libc/runtime", "unknown": "Unknown"}
+
+
+def class_of(name: str) -> str | None:
+    """Class named by a GCC 2.x mangled symbol, or None for free functions and unnamed symbols."""
     m = SPECIAL.match(name)
     candidates = [(m.group(1), m.end(1))] if m else [(x.group(1), x.end(1)) for x in QUALIFIED.finditer(name)]
     for digits, end in candidates:
@@ -39,23 +53,48 @@ def group_of(name: str) -> str:
         cls = name[end : end + n]
         if len(cls) == n and re.fullmatch(r"[A-Za-z_]\w*", cls):
             return cls
-    return "misc"
+    return None
+
+
+def key_of(name: str) -> tuple[str, str] | None:
+    """(kind, key) that opens or continues a group; None folds into the current group."""
+    if name.startswith("func_"):
+        return None
+    if name.startswith(("sce", "Sde")) or name in KERNEL:
+        return "sdk", "sdk"
+    if name in LIBC or name.startswith(LIBC_PREFIX):
+        return "libc", "libc"
+    cls = class_of(name)
+    return ("class", cls) if cls else None
 
 
 def group_units(units) -> dict[str, list[tuple[int, int, str]]]:
-    groups: dict[str, list] = defaultdict(list)
+    """Approximate translation units: walk units in link order and open a group whenever the
+    class of a named function differs from the current group's. Unnamed and free functions
+    join the current group; any before the first named function form `unknown`."""
+    groups: dict[str, list] = {}
+    kinds: dict[str, str] = {}
+    count: dict[str, int] = defaultdict(int)
+    cur_key, cur = None, None
     for u in units:
-        groups[group_of(u[2])].append(u)
-    # macOS file systems are case-insensitive; keep group file names distinct.
+        k = key_of(u[2])
+        if cur is None or (k is not None and k[1] != cur_key):
+            kind, key = k or ("none", "unknown")
+            count[key] += 1
+            cur = key if count[key] == 1 else f"{key}_{count[key]}"
+            cur_key = key
+            groups[cur], kinds[cur] = [], kind
+        groups[cur].append(u)
     seen: dict[str, str] = {}
-    for g in sorted(groups):
+    for g in groups:  # macOS file systems are case-insensitive
         if seen.setdefault(g.lower(), g) != g:
             raise SystemExit(f"groups {seen[g.lower()]!r} and {g!r} differ only by case")
-    return dict(groups)
+    group_units.kinds = kinds
+    return groups
 
 
 def category(group: str) -> str:
-    return group if group in ("sdk", "misc") else "classes"
+    return CATEGORY[group_units.kinds[group]]
 
 
 def emit(units, sources: dict[Path, list[int]]) -> list[str]:
@@ -89,9 +128,13 @@ def emit(units, sources: dict[Path, list[int]]) -> list[str]:
             "target_path": f"build/expected/{g}.o",
             "metadata": {"progress_categories": [category(g)], "auto_generated": False},
         }
-        if srcs_of.get(g):
+        if len(srcs_of.get(g, ())) == 1:  # a lone object needs no `ld -r`
+            unit["base_path"] = next(iter(srcs_of[g]))
+        elif srcs_of.get(g):
             n.append(f"build build/actual/{g}.o: ldr {' '.join(sorted(srcs_of[g]))}")
             unit["base_path"] = f"build/actual/{g}.o"
+            actual.append(unit["base_path"])
+        if "base_path" in unit and unit["base_path"] not in actual:
             actual.append(unit["base_path"])
         out_units.append(unit)
 
@@ -103,11 +146,7 @@ def emit(units, sources: dict[Path, list[int]]) -> list[str]:
         "build_base": False,
         "watch_patterns": ["src/**/*.c", "src/**/*.cpp", "src/**/*.h", "include/**/*.h"],
         "units": out_units,
-        "progress_categories": [
-            {"id": "classes", "name": "Classes"},
-            {"id": "sdk", "name": "SDK"},
-            {"id": "misc", "name": "Misc"},
-        ],
+        "progress_categories": [{"id": c, "name": n} for c, n in CATEGORY_NAMES.items()],
     }
     (ROOT / "objdiff.json").write_text(json.dumps(cfg, indent=2) + "\n")
     n.append(f"build build/report.json: report objdiff.json {' '.join(expected + actual)} | tools/bin/objdiff-cli")

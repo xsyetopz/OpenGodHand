@@ -25,7 +25,7 @@ TARGET = "SLUS_215.03"
 TEXT_BASE = 0x100000
 
 ASFLAGS = "-EL -march=r5900 -mabi=o64 -mno-pdr -G0 -Iinclude"
-# SCE ee-gcc 2.96 (2.96-ee-001003-1); see docs/compiler.md for how these were matched.
+# SN Systems ProDG ee-gcc 2.95.3 (build 136), selected by tools/eecc.py.
 CXXFLAGS = "-O2 -G0 -ffunction-sections -fno-common -Iinclude -Isrc"
 
 # Sections outside .text keep a single unit each; order matches the original link.
@@ -64,6 +64,9 @@ def read_sources() -> dict[Path, list[int]]:
     found: dict[Path, list[int]] = {}
     for path in sorted((ROOT / "src").rglob("*.c*")) if (ROOT / "src").exists() else []:
         if path.suffix not in (".c", ".cpp", ".cc"):
+            continue
+        # src/scratch/ (gitignored) holds matching experiments that duplicate real sources.
+        if path.relative_to(ROOT).parts[:2] == ("src", "scratch"):
             continue
         addrs = [int(m.group(1), 16) for line in path.read_text().splitlines() if (m := ANNOT.match(line))]
         if addrs:

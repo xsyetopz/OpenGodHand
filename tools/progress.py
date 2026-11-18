@@ -5,11 +5,12 @@ Usage:
   python tools/progress.py             build build/report.json with ninja, then draw
   python tools/progress.py --no-build  read an existing report (what `ninja progress` uses)
   ninja progress                       same as the first form, through the build graph
+  python tools/progress.py --json      write build/progress.json (for tools/live.py) instead of the SVG
 
 The report comes from `tools/bin/objdiff-cli report generate` (see
 tools/objdiff_config.py); a function counts as matched when objdiff reports a
 fuzzy match of 100%. Output is the self-contained build/progress.svg: one block
-per category (classes, sdk, misc), one labelled rectangle per group sized by code
+per category (game, sdk, libc/runtime, unknown), one labelled rectangle per group sized by code
 bytes, and one cell per function (green matched, grey not) in address order. The
 overall percentage is printed by code bytes and by function count.
 """
@@ -20,6 +21,7 @@ import argparse
 import json
 import subprocess
 import sys
+import time
 from html import escape
 from pathlib import Path
 
@@ -73,9 +75,10 @@ def squarify(items: list[tuple[object, float]], x: float, y: float, w: float, h:
 def load(report: Path) -> list[dict]:
     """Flatten the report into groups: name, category, functions [(name, size, matched)]."""
     data = json.loads(report.read_text())
+    names = {c["id"]: c["name"] for c in data.get("categories", [])}
     groups = []
     for u in data.get("units", []):
-        cats = u.get("metadata", {}).get("progress_categories") or ["misc"]
+        cats = u.get("metadata", {}).get("progress_categories") or ["unknown"]
         fns = [
             (
                 f.get("metadata", {}).get("demangled_name") or f["name"],
@@ -84,8 +87,43 @@ def load(report: Path) -> list[dict]:
             )
             for f in u.get("functions", [])
         ]
-        groups.append({"name": u["name"], "cat": cats[0], "fns": fns, "size": sum(f[1] for f in fns)})
+        groups.append({"name": u["name"], "cat": names.get(cats[0], cats[0]), "fns": fns, "size": sum(f[1] for f in fns)})
     return groups
+
+
+def write_json(groups: list[dict], title: str, path: Path, recent_max: int = 40) -> None:
+    """Write summary plus per-function state. `recent` keeps newly matched functions across
+    rewrites by reading the previous file, so a page opened later still sees them."""
+    now = time.time()
+    old, recent = None, []
+    if path.exists():
+        try:
+            prev = json.loads(path.read_text())
+            recent = prev.get("recent", [])
+            old = {(g["name"], f[0]) for g in prev["groups"] for f in g["fns"] if f[2]}
+        except (ValueError, KeyError, IndexError):
+            pass
+    fresh = [
+        {"fn": f[0], "group": g["name"], "t": now}
+        for g in groups
+        for f in g["fns"]
+        if f[2] and old is not None and (g["name"], f[0]) not in old
+    ]
+    fns = [f for g in groups for f in g["fns"]]
+    doc = {
+        "title": title,
+        "updated": now,
+        "functions": {"matched": sum(f[2] for f in fns), "total": len(fns)},
+        "bytes": {"matched": sum(f[1] for f in fns if f[2]), "total": sum(f[1] for f in fns)},
+        "recent": (fresh + recent)[:recent_max],
+        "groups": [
+            {"name": g["name"], "cat": g["cat"], "size": g["size"], "fns": [[n, s, int(ok)] for n, s, ok in g["fns"]]}
+            for g in groups
+        ],
+    }
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(doc, separators=(",", ":")))
+    tmp.replace(path)  # readers never see a partial file
 
 
 def cells(g: dict, x: float, y: float, w: float, h: float, out: list[str]) -> None:
@@ -149,6 +187,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--report", type=Path, default=ROOT / "build/report.json")
     ap.add_argument("--out", type=Path, default=ROOT / "build/progress.svg")
+    ap.add_argument("--json", action="store_true", help="write build/progress.json instead of the SVG")
     ap.add_argument("--no-build", action="store_true", help="do not run ninja to refresh the report")
     args = ap.parse_args()
     if not args.no_build:
@@ -160,7 +199,11 @@ def main() -> int:
     pct = 100.0 * done_n / total_n if total_n else 0.0
     title = f"{TITLE}: {pct:.2f}% ({done_n}/{total_n})"
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(render(groups, title))
+    if args.json:
+        args.out = args.out.with_suffix(".json")
+        write_json(groups, title, args.out)
+    else:
+        args.out.write_text(render(groups, title))
     print(f"{title}")
     print(f"functions: {done_n}/{total_n} = {pct:.2f}%")
     print(f"code bytes: {done_b}/{total_b} = {100.0 * done_b / total_b if total_b else 0.0:.2f}%")

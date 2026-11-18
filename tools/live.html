@@ -1,0 +1,120 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>God Hand progress</title>
+<style>
+  body { margin: 0; background: #14161a; color: #e6e6e6; font: 13px Helvetica, Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; }
+  header { padding: 8px 12px; display: flex; gap: 16px; align-items: baseline; }
+  h1 { font-size: 22px; margin: 0; }
+  #sub, #stale { color: #9aa0a6; }
+  #err { color: #ff7b72; }
+  main { flex: 1; display: flex; min-height: 0; }
+  #map { flex: 1; min-width: 0; }
+  aside { width: 260px; overflow: auto; padding: 0 12px; border-left: 1px solid #2c3037; }
+  aside h2 { font-size: 13px; color: #9aa0a6; margin: 8px 0; }
+  li { list-style: none; padding: 2px 0; word-break: break-all; }
+  ul { margin: 0; padding: 0; }
+  .grp { color: #9aa0a6; }
+  rect.fn { fill: #4a4f57; } rect.ok { fill: #3fb950; }
+  @keyframes flash { 0% { fill: #ffffff; } 100% { fill: #3fb950; } }
+  rect.flash { animation: flash 2.5s ease-out; }
+  text { pointer-events: none; font-size: 11px; fill: #fff; stroke: #000; stroke-width: 2.5px; paint-order: stroke; }
+  text.cat { font-size: 10px; fill: #9aa0a6; stroke: none; }
+</style>
+<header><h1 id="title">God Hand</h1><span id="sub"></span><span id="err"></span><span id="stale"></span></header>
+<main><svg id="map"></svg><aside><h2>Recent matches</h2><ul id="recent"></ul></aside></main>
+<script>
+const NS = "http://www.w3.org/2000/svg", GREY = "#4a4f57";
+const svg = document.getElementById("map");
+let doc = null, sig = "", cells = new Map(), lastOk = 0;
+
+function squarify(items, x, y, w, h) {
+  items = items.filter(i => i.v > 0).sort((a, b) => b.v - a.v);
+  const out = [], total = items.reduce((s, i) => s + i.v, 0);
+  if (!items.length || w <= 0 || h <= 0) return out;
+  let rest = items.map(i => ({ k: i.k, a: i.v * w * h / total }));
+  const worst = (row, side) => { const s = row.reduce((t, r) => t + r.a, 0);
+    return Math.max(...row.map(r => Math.max(side * side * r.a / (s * s), s * s / (side * side * r.a)))); };
+  while (rest.length) {
+    const side = Math.min(w, h), row = [rest[0]]; let i = 1;
+    while (i < rest.length && worst([...row, rest[i]], side) <= worst(row, side)) row.push(rest[i++]);
+    rest = rest.slice(i);
+    const s = row.reduce((t, r) => t + r.a, 0);
+    if (w >= h) { const cw = s / h; let cy = y; for (const r of row) { out.push({ k: r.k, x, y: cy, w: cw, h: r.a / cw }); cy += r.a / cw; } x += cw; w -= cw; }
+    else { const rh = s / w; let cx = x; for (const r of row) { out.push({ k: r.k, x: cx, y, w: r.a / rh, h: rh }); cx += r.a / rh; } y += rh; h -= rh; }
+  }
+  return out;
+}
+const el = (n, a, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; };
+
+function layout() {
+  const W = svg.clientWidth, H = svg.clientHeight;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.replaceChildren(); cells = new Map();
+  const cats = {};
+  for (const g of doc.groups) (cats[g.cat] ||= []).push(g);
+  const catRects = squarify(Object.entries(cats).map(([k, gs]) => ({ k, v: gs.reduce((s, g) => s + g.size, 0) })), 2, 2, W - 4, H - 4);
+  for (const c of catRects) {
+    const gs = cats[c.k], head = c.h > 40 && c.w > 60 ? 13 : 0;
+    el("rect", { x: c.x, y: c.y, width: c.w, height: c.h, fill: "#0b0c0e", stroke: "#2c3037" });
+    const lab = el("text", { x: c.x + 4, y: c.y + 10, class: "cat" });
+    lab.dataset.cat = c.k; lab.textContent = head ? c.k : "";
+    for (const r of squarify(gs.map(g => ({ k: g, v: g.size })), c.x + 1, c.y + head + 1, c.w - 2, c.h - head - 2)) {
+      const g = r.k, n = g.fns.length, inner = r.w > 8 && r.h > 8 ? 1 : 0;
+      const x = r.x + inner, y = r.y + inner, w = r.w - 2 * inner, h = r.h - 2 * inner;
+      const cols = Math.max(1, Math.min(n, Math.round(Math.sqrt(n * w / h)))), rows = Math.ceil(n / cols);
+      const cw = w / cols, ch = h / rows, gap = Math.min(cw, ch) >= 4 ? 1 : 0.5;
+      const dense = Math.min(cw, ch) < 2.5, arr = [];
+      if (dense) arr.push(el("rect", { x, y, width: w, height: h, class: "fn" }));
+      else g.fns.forEach((f, i) => { const e = el("rect", { x: x + (i % cols) * cw + gap / 2, y: y + Math.floor(i / cols) * ch + gap / 2, width: cw - gap, height: ch - gap, class: "fn" });
+        e.appendChild(document.createElementNS(NS, "title")).textContent = `${f[0]} (${f[1]} bytes)`; arr.push(e); });
+      cells.set(g.name, { arr, dense });
+      const t = el("rect", { x: r.x, y: r.y, width: r.w, height: r.h, fill: "none", stroke: "#0b0c0e" });
+      t.appendChild(document.createElementNS(NS, "title")).textContent = g.name;
+      if (r.w > 7 * g.name.length + 6 && r.h > 22) el("text", { x: r.x + 4, y: r.y + 12 }).textContent = g.name;
+    }
+  }
+}
+
+function paint(animate) {
+  for (const g of doc.groups) {
+    const c = cells.get(g.name); if (!c) continue;
+    if (c.dense) { c.arr[0].setAttribute("class", "fn" + (g.fns.filter(f => f[2]).length * 2 > g.fns.length ? " ok" : "")); continue; }
+    g.fns.forEach((f, i) => {
+      const e = c.arr[i], on = !!f[2];
+      if (e.classList.contains("ok") === on) return;
+      e.classList.toggle("ok", on); e.classList.remove("flash");
+      if (on && animate) { void e.getBoundingClientRect(); e.classList.add("flash"); }
+    });
+  }
+  for (const t of svg.querySelectorAll("text.cat")) {
+    const gs = doc.groups.filter(g => g.cat === t.dataset.cat);
+    if (t.textContent) t.textContent = `${t.dataset.cat} (${gs.reduce((s, g) => s + g.fns.filter(f => f[2]).length, 0)}/${gs.reduce((s, g) => s + g.fns.length, 0)})`;
+  }
+}
+
+function render(next) {
+  const animate = doc !== null;
+  doc = next;
+  const s = doc.groups.map(g => g.name + g.size + g.fns.length).join("|");
+  const rebuilt = s !== sig;
+  if (rebuilt) { sig = s; layout(); }
+  paint(animate && !rebuilt);
+  document.getElementById("title").textContent = doc.title;
+  const b = doc.bytes;
+  document.getElementById("sub").textContent = `${(100 * b.matched / b.total).toFixed(2)}% of ${b.total} code bytes`;
+  document.getElementById("recent").replaceChildren(...doc.recent.map(r => { const li = document.createElement("li");
+    li.innerHTML = `<b></b> <span class="grp"></span>`; li.firstChild.textContent = r.fn; li.lastChild.textContent = `${r.group} ${new Date(r.t * 1000).toLocaleTimeString()}`; return li; }));
+}
+
+async function poll() {
+  try {
+    const r = await fetch("progress.json", { cache: "no-cache" });  // revalidates; 304 when unchanged
+    if (r.status === 200) render(await r.json());
+    lastOk = Date.now();
+    const st = await (await fetch("status.json", { cache: "no-cache" })).json().catch(() => null);
+    document.getElementById("err").textContent = st && !st.ok ? "last refresh failed: " + st.message : "";
+  } catch (e) { /* server restarting */ }
+  document.getElementById("stale").textContent = doc ? `updated ${new Date(doc.updated * 1000).toLocaleTimeString()}` : "waiting for progress.json";
+}
+window.addEventListener("resize", () => { if (doc) { sig = ""; render(doc); } });
+poll(); setInterval(poll, 3000);
+</script>
