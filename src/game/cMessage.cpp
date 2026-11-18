@@ -24,8 +24,7 @@ cMessageNode *cMessage::searchWorkId(unsigned short id) const
     return 0;
 }
 
-// 0x2AECD0: differs only by the assembler hazard nop between the next-pointer load and the loop branch
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2AECD0
 void cMessage::closeAll()
 {
     cMessageNode *n = m_list;
@@ -36,10 +35,8 @@ void cMessage::closeAll()
         } while (n);
     }
 }
-#endif
 
-// 0x2AEC88: differs only by two assembler nops after the call
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2AEC88
 void cMessage::deleteAll()
 {
     cMessageNode *n = m_list;
@@ -49,7 +46,6 @@ void cMessage::deleteAll()
         } while (n);
     }
 }
-#endif
 
 // FUNCTION: GAME 0x2AEBF8
 int cMessage::deleteWorkId(unsigned short id)

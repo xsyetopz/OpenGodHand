@@ -4,6 +4,7 @@
 class cIDBase {
 public:
     void trans();
+    void release();
 };
 
 #endif

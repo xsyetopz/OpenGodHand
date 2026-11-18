@@ -12,7 +12,6 @@ D_Ev297BF8 = 0x0;
 
 /* Data addresses taken by the cEvent callbacks around 0x298000. */
 D_Ev586AF0 = 0x586AF0;
-D_Ev569B90 = 0x569B90;
 D_Ev44A9B0 = 0x44A9B0;
 D_Ev44A9B8 = 0x44A9B8;
 D_Ev44A9D0 = 0x44A9D0;

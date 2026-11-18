@@ -429,4 +429,166 @@ void func_0022C1A8(char *self)
 }
 #endif
 
+// FUNCTION: GAME 0x239570
+void func_00239570(char *self)
+{
+    char *pl = (char *)Getplayer();
+    g_CollSolidManage.SetActive((cGameObj *)self, 0);
+    switch (B(0x2F6)) {
+    case 0: {
+        B(0x1864) = 0;
+        char *t = *(char **)(self + 0x304);
+        func_002A8578(self, *(int *)(t + 0x3B38) + (int)t, *(int *)(t + 0x3B3C) + (int)t, 0, 0.0f, 0, 0);
+        B(0x2F6)++;
+        *(short *)(self + 0x56E) = 0xF;
+    }
+    case 1:
+        if (*(short *)(self + 0x56E)) {
+            *(unsigned short *)(self + 0x56E) = *(unsigned short *)(self + 0x56E) - 1;
+            char *q = pl + 0x550;
+            char *p = *(char **)(self + 0xF0);
+            __asm__ volatile("lqc2 $vf4,0(%0)\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,0(%0)" : : "r"(p), "r"(q) : "memory");
+        }
+        *(float *)(self + 0x54C) = 3.0f;
+        if (moveMotion((cObjBase *)self)) {
+            B(0x2F4) = 0;
+            B(0x2F5) = 0x6C;
+            B(0x2F6) = 0;
+            B(0x2F7) = 0;
+        }
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+    }
+}
+
+// FUNCTION: GAME 0x239698
+void func_00239698(char *self)
+{
+    char *pl = (char *)Getplayer();
+    g_CollSolidManage.SetActive((cGameObj *)self, 0);
+    switch (B(0x2F6)) {
+    case 0: {
+        B(0x1864) = 0;
+        char *t = *(char **)(self + 0x304);
+        func_002A8578(self, *(int *)(t + 0x1484) + (int)t, *(int *)(t + 0x1488) + (int)t, 0, 0.0f, 0, 0);
+        B(0x2F6)++;
+        *(short *)(self + 0x56E) = 0xF;
+    }
+    case 1:
+        if (*(short *)(self + 0x56E)) {
+            *(unsigned short *)(self + 0x56E) = *(unsigned short *)(self + 0x56E) - 1;
+            char *q = pl + 0x550;
+            char *p = *(char **)(self + 0xF0);
+            __asm__ volatile("lqc2 $vf4,0(%0)\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,0(%0)" : : "r"(p), "r"(q) : "memory");
+        }
+        *(float *)(self + 0x54C) = 3.0f;
+        if (moveMotion((cObjBase *)self)) {
+            B(0x2F4) = 0;
+            B(0x2F5) = 0x6C;
+            B(0x2F6) = 0;
+            B(0x2F7) = 0;
+        }
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+    }
+}
+
+// FUNCTION: GAME 0x23A010
+void func_0023A010(char *self)
+{
+    char *pl = (char *)Getplayer();
+    g_CollSolidManage.SetActive((cGameObj *)self, 0);
+    *(float *)(self + 0x54C) = 3.0f;
+    switch (B(0x2F6)) {
+    case 0: {
+        B(0x1864) = 0;
+        char *t = *(char **)(self + 0x304);
+        func_002A8578(self, *(int *)(t + 0x1054) + (int)t, *(int *)(t + 0x1058) + (int)t, 0, 0.0f, 0, 0);
+        B(0x2F6)++;
+        *(short *)(self + 0x56E) = 0xF;
+    }
+    case 1:
+        if (*(short *)(self + 0x56E)) {
+            *(unsigned short *)(self + 0x56E) = *(unsigned short *)(self + 0x56E) - 1;
+            char *q = pl + 0x550;
+            char *p = *(char **)(self + 0xF0);
+            __asm__ volatile("lqc2 $vf4,0(%0)\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,0(%0)" : : "r"(p), "r"(q) : "memory");
+        }
+        if (moveMotion((cObjBase *)self)) {
+            B(0x2F4) = 0;
+            B(0x2F5) = 0x6C;
+            B(0x2F6) = 0;
+            B(0x2F7) = 0;
+        }
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+    }
+}
+
+// FUNCTION: GAME 0x236C60
+void func_00236C60(char *self)
+{
+    char *pl = (char *)Getplayer();
+    g_CollSolidManage.SetActive((cGameObj *)self, 0);
+    *(float *)(self + 0x54C) = 3.0f;
+    switch (B(0x2F6)) {
+    case 0: {
+        B(0x1864) = 0;
+        char *t = *(char **)(self + 0x304);
+        func_002A8578(self, *(int *)(t + 0x1D98) + (int)t, *(int *)(t + 0x1D9C) + (int)t, 0, 0.0f, 0, 0);
+        B(0x2F6)++;
+        *(short *)(self + 0x56E) = 0xF;
+    }
+    case 1:
+        *(unsigned int *)(self + 0x250) |= 0x40000;
+        if (*(short *)(self + 0x56E)) {
+            *(unsigned short *)(self + 0x56E) = *(unsigned short *)(self + 0x56E) - 1;
+            char *q = pl + 0x550;
+            char *p = *(char **)(self + 0xF0);
+            __asm__ volatile("lqc2 $vf4,0(%0)\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,0(%0)" : : "r"(p), "r"(q) : "memory");
+        }
+        if (moveMotion((cObjBase *)self)) {
+            B(0x2F4) = 0;
+            B(0x2F5) = 0x6C;
+            B(0x2F6) = 0;
+            B(0x2F7) = 0;
+        }
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+    }
+}
+
+// FUNCTION: GAME 0x236D98
+void func_00236D98(char *self)
+{
+    char *pl = (char *)Getplayer();
+    g_CollSolidManage.SetActive((cGameObj *)self, 0);
+    *(float *)(self + 0x54C) = 3.0f;
+    switch (B(0x2F6)) {
+    case 0: {
+        B(0x1864) = 0;
+        char *t = *(char **)(self + 0x304);
+        func_002A8578(self, *(int *)(t + 0x2EF8) + (int)t, *(int *)(t + 0x2EFC) + (int)t, 0, 0.0f, 0, 0);
+        B(0x2F6)++;
+        *(short *)(self + 0x56E) = 0xF;
+    }
+    case 1:
+        *(unsigned int *)(self + 0x250) |= 0x40000;
+        if (*(short *)(self + 0x56E)) {
+            *(unsigned short *)(self + 0x56E) = *(unsigned short *)(self + 0x56E) - 1;
+            char *q = pl + 0x550;
+            char *p = *(char **)(self + 0xF0);
+            __asm__ volatile("lqc2 $vf4,0(%0)\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,0(%0)" : : "r"(p), "r"(q) : "memory");
+        }
+        if (moveMotion((cObjBase *)self)) {
+            B(0x2F4) = 0;
+            B(0x2F5) = 0x6C;
+            B(0x2F6) = 0;
+            B(0x2F7) = 0;
+        }
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+    }
+}
+
 }

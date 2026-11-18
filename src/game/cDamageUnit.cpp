@@ -6,8 +6,7 @@ int func_001FCA38(sDmgNode *, int, const cMatrix &, const cVec &, float, cDamage
 int func_001FCAE8(sDmgNode *, int, const cMatrix &, const cVec &, const cVec &, float, float, cDamageUnit *);
 }
 
-#ifdef NONMATCHING
-// 0x1FDAF0: only diff is 3 nops the original emits between the list-walk lw and its bnel
+// FUNCTION: GAME 0x1FDAF0
 int cDamageUnit::AddDamageCollSphere(const cMatrix &m, const cVec &v, float r)
 {
     if (!m_enabled)
@@ -31,10 +30,8 @@ int cDamageUnit::AddDamageCollSphere(const cMatrix &m, const cVec &v, float r)
     }
     return id;
 }
-#endif
 
-#ifdef NONMATCHING
-// 0x1FDC00: only diff is 3 nops the original emits between the list-walk lw and its bnel
+// FUNCTION: GAME 0x1FDC00
 int cDamageUnit::AddDamageCollCylinder(const cMatrix &m, const cVec &a, const cVec &b, float r, float h)
 {
     if (!m_enabled)
@@ -58,7 +55,6 @@ int cDamageUnit::AddDamageCollCylinder(const cMatrix &m, const cVec &a, const cV
     }
     return id;
 }
-#endif
 
 // FUNCTION: GAME 0x1FD668
 void cDamageUnit::SetDamageCollActive(bool on)

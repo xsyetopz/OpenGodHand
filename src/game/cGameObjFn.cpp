@@ -263,15 +263,13 @@ int func_002AEDC0(char *self, u8 v)
     return c;
 }
 
-// 0x2AF028: 8 words differ; bnez/nop placement in the loop tail (assembler nop rule)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2AF028
 void func_002AF028(char *self)
 {
     for (char *n = *(char **)(self + 0x10); n; n = *(char **)(n + 8))
         func_002B16F0(n);
 }
 
-#endif
 
 // FUNCTION: GAME 0x2AF6B8
 void func_002AF6B8(int *p, int on)

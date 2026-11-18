@@ -290,3 +290,138 @@ extern "C" void *func_001BFA78()
     }
     return &D_00786148;
 }
+
+// Constructor-style stubs: base ctor func_001B6E90, vtable store at +0x214, field init.
+extern "C" void func_001B6E90(void *self);
+extern const char D_00428160[];
+extern const char D_004282F0[];
+extern const char D_004283D8[];
+extern const char D_00428928[];
+extern const char D_00428B58[];
+extern const char D_00428C20[];
+extern const char D_004290C8[];
+extern const char D_004292F0[];
+
+// FUNCTION: GAME 0x1B1B38
+extern "C" void *func_001B1B38(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_004283D8;
+    *(int *)(self + 0x600) = 0;
+    *(short *)(self + 0x604) = 0;
+    return self;
+}
+
+// FUNCTION: GAME 0x1B8108
+extern "C" void *func_001B8108(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_00428B58;
+    return self;
+}
+
+// FUNCTION: GAME 0x1B8FF8
+extern "C" void *func_001B8FF8(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_004290C8;
+    return self;
+}
+
+// FUNCTION: GAME 0x1BBAC8
+extern "C" void *func_001BBAC8(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_00429190;
+    return self;
+}
+
+// FUNCTION: GAME 0x1BFAC8
+extern "C" void *func_001BFAC8(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_004297D8;
+    return self;
+}
+
+#ifdef NONMATCHING
+// Near-misses: sqc2 variants differ only by vtable temp register (v1 vs v0); 1BE8B0/1BF478 differ in temp register order.
+extern "C" void *func_001B0290(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_00428160;
+    __asm__ volatile("sqc2 $vf0,0x610(%0)" : : "r"(self) : "memory");
+    return self;
+}
+
+extern "C" void *func_001B0CE8(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_004282F0;
+    __asm__ volatile("sqc2 $vf0,0x610(%0)" : : "r"(self) : "memory");
+    __asm__ volatile("sqc2 $vf0,0x620(%0)" : : "r"(self) : "memory");
+    __asm__ volatile("sqc2 $vf0,0x640(%0)" : : "r"(self) : "memory");
+    __asm__ volatile("sqc2 $vf0,0x650(%0)" : : "r"(self) : "memory");
+    return self;
+}
+
+extern "C" void *func_001B24E8(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_00428588;
+    __asm__ volatile("sqc2 $vf0,0x610(%0)" : : "r"(self) : "memory");
+    return self;
+}
+
+extern "C" void *func_001B6710(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_00428928;
+    __asm__ volatile("sqc2 $vf0,0x600(%0)" : : "r"(self) : "memory");
+    __asm__ volatile("sqc2 $vf0,0x610(%0)" : : "r"(self) : "memory");
+    *(int *)(self + 0x620) = 0;
+    *(int *)(self + 0x624) = 0;
+    return self;
+}
+
+extern "C" void *func_001B87A8(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_00428C20;
+    __asm__ volatile("sqc2 $vf0,0x600(%0)" : : "r"(self) : "memory");
+    __asm__ volatile("sqc2 $vf0,0x610(%0)" : : "r"(self) : "memory");
+    *(char *)(self + 0x630) = 0;
+    *(int *)(self + 0x620) = 0;
+    return self;
+}
+
+extern "C" void *func_001BBEB8(char *self)
+{
+    func_001B6E90(self);
+    *(const void **)(self + 0x214) = D_004292F0;
+    __asm__ volatile("sqc2 $vf0,0x610(%0)" : : "r"(self) : "memory");
+    *(int *)(self + 0x620) = 0;
+    *(int *)(self + 0x634) = 0;
+    *(short *)(self + 0x630) = 0;
+    *(int *)(self + 0x644) = 0;
+    return self;
+}
+
+extern "C" void *func_001BE8B0(char *self)
+{
+    func_001B6E90(self);
+    *(int *)(self + 0x604) = 0x3E9;
+    *(const void **)(self + 0x214) = D_00429620;
+    *(int *)(self + 0x600) = 0;
+    return self;
+}
+
+extern "C" void *func_001BF478(char *self)
+{
+    func_001B6E90(self);
+    *(char *)(self + 0x600) = -1;
+    *(const void **)(self + 0x214) = D_004296F0;
+    return self;
+}
+
+#endif

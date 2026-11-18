@@ -320,14 +320,14 @@ struct EvObj {
 };
 
 extern char D_Ev586AF0[];
-extern char D_Ev569B90[];
+extern char CoreSave[]; // 0x569B70
 extern char D_Ev44A9B0[];
 extern char D_Ev44A9B8[];
 extern char D_Ev44A9D0[];
 extern char D_Ev44A9D8[];
-extern "C" int func_001FC0A8(char *);
-extern "C" void func_0014A338(EvObj *, char *, int);
-extern "C" void func_002DB2B0(int, int);
+extern "C" int getCostumeNo__9cCoreSave(char *);
+extern "C" void setMeshDisplay__6cModelPCcb(EvObj *, char *, int);
+extern "C" void displayScrollLayer__FUib(int, int);
 extern "C" void func_00298088(EvObj *);
 extern "C" void func_00298110(EvObj *, int, int);
 extern "C" void func_002981D8(EvObj *, int, int);
@@ -357,7 +357,7 @@ extern "C" void func_00298088(EvObj *self)
 {
     if (self) {
         unsigned k = self->m_kind;
-        int v = func_001FC0A8(D_Ev569B90);
+        int v = getCostumeNo__9cCoreSave(CoreSave);
         if (k == 1639) {
             if (v) {
                 self->m_flags |= 2;
@@ -379,13 +379,13 @@ extern "C" void func_00298110(EvObj *self, int, int n)
         switch (self->m_kind) {
         case 1541:
             if (n >= 16) {
-                func_0014A338(self, D_Ev44A9B0, 0);
-                func_0014A338(self, D_Ev44A9B8, 1);
+                setMeshDisplay__6cModelPCcb(self, D_Ev44A9B0, 0);
+                setMeshDisplay__6cModelPCcb(self, D_Ev44A9B8, 1);
             }
             break;
         case 1543:
             if (n >= 16) {
-                func_0014A338(self, D_Ev44A9B0, 0);
+                setMeshDisplay__6cModelPCcb(self, D_Ev44A9B0, 0);
             }
             break;
         }
@@ -405,13 +405,13 @@ extern "C" void func_002981D8(EvObj *self, int, int n)
         switch (self->m_kind) {
         case 1541:
             if (n >= 18) {
-                func_0014A338(self, D_Ev44A9D0, 0);
-                func_0014A338(self, D_Ev44A9D8, 1);
+                setMeshDisplay__6cModelPCcb(self, D_Ev44A9D0, 0);
+                setMeshDisplay__6cModelPCcb(self, D_Ev44A9D8, 1);
             }
             break;
         case 1543:
             if (n >= 18) {
-                func_0014A338(self, D_Ev44A9D0, 0);
+                setMeshDisplay__6cModelPCcb(self, D_Ev44A9D0, 0);
             }
             break;
         }
@@ -429,7 +429,7 @@ extern "C" void func_002982A0(EvObj *self)
 {
     if (self) {
         unsigned k = self->m_kind;
-        int v = func_001FC0A8(D_Ev569B90);
+        int v = getCostumeNo__9cCoreSave(CoreSave);
         if (k == 1539) {
             if ((unsigned char)(v - 4) < 2) {
                 self->m_flags |= 2;
@@ -449,8 +449,8 @@ extern "C" void func_00298338(int a, float f)
 {
     if (f == 0.0f) {
         if (a == 0 || a == 4) {
-            func_002DB2B0(30, 0);
-            func_002DB2B0(31, 0);
+            displayScrollLayer__FUib(30, 0);
+            displayScrollLayer__FUib(31, 0);
         }
     }
 }
@@ -469,15 +469,161 @@ extern "C" void func_002983D0(int a, float f)
     switch (a) {
     case 0:
         if (f == 0.0f) {
-            func_002DB2B0(30, 0);
-            func_002DB2B0(31, 0);
+            displayScrollLayer__FUib(30, 0);
+            displayScrollLayer__FUib(31, 0);
         }
         break;
     case 13:
         if (f == 101.0f) {
-            func_002DB2B0(30, 0);
-            func_002DB2B0(31, 0);
+            displayScrollLayer__FUib(30, 0);
+            displayScrollLayer__FUib(31, 0);
         }
         break;
     }
+}
+
+struct EvQw {
+    long lo, hi;
+};
+
+struct EvPk {
+    EvQw *cur;
+    EvQw *start;
+    long x8;
+    unsigned cnt;
+    unsigned short tag;
+};
+
+struct EvBuf {
+    char _pad[0x10000];
+    EvPk pk;
+};
+
+struct EvPk2 {
+    char _p[0x4080];
+    EvQw *cur;
+    EvQw *start;
+    long x8;
+    int cnt;
+    char _q[0x24 - 0x14];
+    int m_a4, m_a8, m_ac, m_b0;
+    char _r[0x48 - 0x34];
+    long m_c8;
+};
+
+extern "C" void func_002987F8();
+extern "C" void func_002988A8();
+extern "C" void func_00298A78();
+extern "C" void func_00298C18(int);
+extern "C" void func_00298EF8();
+extern "C" void func_002991D8();
+
+// FUNCTION: GAME 0x2987B0
+extern "C" void func_002987B0()
+{
+    char *d = D_Ev586AF0;
+    func_00297B20(d, (void *)func_002987F8);
+    func_00297B40(d, (void *)func_002988A8);
+}
+
+// FUNCTION: GAME 0x298A50
+extern "C" void func_00298A50()
+{
+    func_00297B40(D_Ev586AF0, (void *)func_00298A78);
+}
+
+// FUNCTION: GAME 0x298BF0
+extern "C" void func_00298BF0()
+{
+    func_00297B20(D_Ev586AF0, (void *)func_00298C18);
+}
+
+// FUNCTION: GAME 0x298C18
+extern "C" void func_00298C18(int a)
+{
+    if (a == 3) {
+        displayScrollLayer__FUib(22, 0);
+    } else {
+        displayScrollLayer__FUib(22, 1);
+    }
+}
+
+// FUNCTION: GAME 0x298ED0
+extern "C" void func_00298ED0()
+{
+    func_00297B40(D_Ev586AF0, (void *)func_00298EF8);
+}
+
+// FUNCTION: GAME 0x2991B0
+extern "C" void func_002991B0()
+{
+    func_00297B40(D_Ev586AF0, (void *)func_002991D8);
+}
+
+// FUNCTION: GAME 0x299860
+extern "C" void func_00299860()
+{
+}
+
+// FUNCTION: GAME 0x299868
+extern "C" void func_00299868(EvBuf *self, long a, long b)
+{
+    EvPk *p = &self->pk;
+    p->cur->lo = b;
+    p->cur->hi = a;
+    p->cur++;
+    p->cnt++;
+}
+
+// FUNCTION: GAME 0x299348
+extern "C" void func_00299348(EvBuf *self0)
+{
+    EvPk2 *self = (EvPk2 *)&self0->pk;
+    self->m_c8 = 0;
+    self->m_a8 = 0;
+    self->m_ac = 0;
+    self->m_b0 = 0;
+    self->m_a4 = 0;
+}
+
+// FUNCTION: GAME 0x2998A0
+extern "C" void func_002998A0(EvBuf *self, long a, float x, float y)
+{
+    EvPk *p = &self->pk;
+    float *c = (float *)p->cur;
+    c[0] = x;
+    c[1] = y;
+    p->cur->hi = a;
+    p->cur++;
+    p->cnt++;
+}
+
+// FUNCTION: GAME 0x2998D8
+extern "C" void func_002998D8(EvBuf *self, int tag, long b)
+{
+    EvPk *p = &self->pk;
+    EvQw *c = p->cur;
+    p->tag = (unsigned char)tag;
+    p->x8 = b;
+    p->cnt = 0;
+    p->start = c;
+    p->cur = c + 1;
+}
+
+// FUNCTION: GAME 0x2999D0
+extern "C" void func_002999D0(EvBuf *self, long a, long b)
+{
+    EvPk2 *p = (EvPk2 *)&self->pk;
+    p->cur->lo = b;
+    p->cur->hi = a;
+    p->cur++;
+    p->cnt++;
+}
+
+// FUNCTION: GAME 0x299908
+extern "C" void func_00299908(EvBuf *self)
+{
+    EvPk *p = &self->pk;
+    p->start->lo = p->cnt | ((long)p->tag << 15) | (1L << 60);
+    p->start->hi = p->x8;
 }

@@ -105,8 +105,7 @@ int cEmManage::ChkActiveEm(cEmBase *em)
     return 0;
 }
 
-#ifdef NONMATCHING
-// 0x2908C0: 4 words differ: original has a real nop between the jal delay-slot lw and the bnel; ours emits none
+// FUNCTION: GAME 0x2908C0
 void cEmManage::ReleaseEmAll()
 {
     for (cEmNode *n = m_list; n;) {
@@ -120,4 +119,3 @@ void cEmManage::ReleaseEmAll()
         }
     }
 }
-#endif

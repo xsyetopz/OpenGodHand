@@ -371,14 +371,12 @@ extern "C" void func_0012AC28(pl00 *self)
     }
 }
 
-#ifdef NONMATCHING
-// 0x1268F0: original has a nop between sltiu and the loop bnez; compiled bnez follows sltiu directly
+// FUNCTION: GAME 0x1268F0
 extern "C" void func_001268F0(pl00 *self)
 {
     for (unsigned i = 0; i < 5; i++)
         self->m_unk1644[i] = 0;
 }
-#endif
 
 enum eEffDataType { EFF_DATA_0 = 0 };
 enum eEffId { EFF_61 = 0x61, EFF_79 = 0x79 };
@@ -532,4 +530,53 @@ void capVu0Length(const float *p);
 extern "C" void func_00101E28(const float *p)
 {
     capVu0Length(p);
+}
+
+// FUNCTION: GAME 0x1004C8
+extern "C" int func_001004C8(cModel *self)
+{
+    if (D_00747A80 & 0x200000)
+        return 1;
+    return self->isClip() != 0;
+}
+
+class cGameObjClip {
+public:
+    int isClip() const;
+};
+
+// FUNCTION: GAME 0x107F20
+extern "C" int func_00107F20(cGameObjClip *self)
+{
+    if (D_00747A80 < 0)
+        return 1;
+    return self->isClip() != 0;
+}
+
+// FUNCTION: GAME 0x100318
+extern "C" void func_00100318()
+{
+}
+
+struct cDtorObj {
+    char _pad[0x214];
+    void *m_vptr;
+};
+extern char D_0041B730[];
+extern char D_0041B6A0[];
+extern "C" void _$_7cPlBase(cDtorObj *);
+extern "C" void _$_8cObjBase(cDtorObj *);
+
+// FUNCTION: GAME 0x102128
+extern "C" void func_00102128(cDtorObj *self)
+{
+    self->m_vptr = D_0041B730;
+    _$_7cPlBase(self);
+}
+
+// FUNCTION: GAME 0x100508
+extern "C" void func_00100508(cDtorObj *self)
+{
+    self->m_vptr = D_0041B6A0;
+    _$_8cObjBase(self);
 }

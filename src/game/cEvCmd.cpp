@@ -405,3 +405,180 @@ extern "C" void func_002B2158(cEvCmd *self, unsigned short a, unsigned char b, i
     self->m_e = 0;
     self->m_f = 0;
 }
+
+struct cEvView {
+    char _pad0[0x1C];
+    int m_1c;
+    char _pad20[0x6C - 0x20];
+    int m_6c;
+    char _pad70[0x88 - 0x70];
+    float m_88;
+    float m_8c;
+};
+
+extern "C" {
+unsigned short func_002B1290();
+void func_002AFED0(cEvView *self, int a, int b, int c, float d, float e);
+}
+
+// FUNCTION: GAME 0x2B0420
+extern "C" void func_002B0420(cEvView *self, int a)
+{
+    int d = self->m_1c - self->m_6c;
+    func_002AFED0(self, func_002B1290(), a, d, self->m_88, self->m_8c);
+}
+
+struct cEvSlot {
+    int m_first;
+    char _pad4[0xAC - 4];
+};
+
+struct cEvSlotList {
+    cEvSlot *m_slots;
+};
+
+static inline unsigned char isSlotUsed(cEvSlot *p)
+{
+    if (p->m_first)
+        return 1;
+    return 0;
+}
+
+extern "C" void func_002B4A50(cEvSlotList *l);
+
+// FUNCTION: GAME 0x2B4E48
+extern "C" int func_002B4E48(cEvSlotList *l)
+{
+    func_002B4A50(l);
+    cEvSlot *p = l->m_slots;
+    for (int i = 0; i < 3; i++, p++) {
+        if (isSlotUsed(p) == 1)
+            return 0;
+    }
+    return 1;
+}
+
+// FUNCTION: GAME 0x2B4F38
+extern "C" int func_002B4F38(cEvSlotList *l)
+{
+    cEvSlot *p = l->m_slots;
+    for (int i = 0; i < 3; i++, p++) {
+        if (isSlotUsed(p) == 0)
+            return i;
+    }
+    return -1;
+}
+
+struct cEvLink {
+    char _pad0[4];
+    struct cEvLinkList *m_list;
+    cEvLink *m_head;
+    cEvLink *m_prev;
+    cEvLink *m_next;
+};
+
+struct cEvLinkList {
+    char _pad0[8];
+    cEvLink *m_first;
+};
+
+// FUNCTION: GAME 0x2B5E58
+extern "C" int func_002B5E58(cEvLinkList *l)
+{
+    cEvLink *p = l->m_first;
+    int n = 0;
+    if (p) {
+        n = 1;
+        p = p->m_next;
+        while (p) {
+            p = p->m_next;
+            n++;
+        }
+    }
+    return n;
+}
+
+// FUNCTION: GAME 0x2B5E90
+extern "C" cEvLink *func_002B5E90(cEvLinkList *l, int n)
+{
+    cEvLink *p = l->m_first;
+    while (n-- != 0)
+        p = p->m_next;
+    return p;
+}
+
+// FUNCTION: GAME 0x2B5EC0
+extern "C" void func_002B5EC0(cEvLink *self)
+{
+    if (self->m_list) {
+        if (self->m_next)
+            self->m_next->m_prev = self->m_prev;
+        if (self->m_prev)
+            self->m_prev->m_next = self->m_next;
+        else
+            self->m_list->m_first = self->m_next;
+        self->m_next = 0;
+        self->m_prev = 0;
+        self->m_list = 0;
+    }
+}
+
+// FUNCTION: GAME 0x2B5E50
+extern "C" int func_002B5E50(cEvLinkList *l)
+{
+    return *(int *)((char *)l + 4);
+}
+
+extern unsigned char D_003C2554;
+extern unsigned char D_003C2555;
+
+// FUNCTION: GAME 0x2B6598
+extern "C" void func_002B6598()
+{
+    D_003C2555 = 0;
+    D_003C2554 = 0;
+}
+
+extern unsigned int D_00747A80;
+
+// FUNCTION: GAME 0x2B8978
+extern "C" int func_002B8978()
+{
+    unsigned t = D_00747A80 & 0x10000000;
+    return t != 0;
+}
+
+extern "C" {
+void func_002B4850(int a, unsigned short b);
+void func_002B5028(int a, unsigned short b);
+void func_002B5AF8(void *movie, int a, int b);
+void func_002B5BB8(void *movie, int a, int b);
+}
+extern int Movie;
+
+// FUNCTION: GAME 0x2B4880
+extern "C" void func_002B4880()
+{
+    func_002B4850(1, 0xFFFF);
+}
+
+// FUNCTION: GAME 0x2B5C00
+extern "C" void func_002B5C00()
+{
+    func_002B5028(1, 0xFFFF);
+}
+
+// 0x2B48A0 near-miss: only the scheduling of `lui v0` vs `daddu a1,a0` differs
+// (original moves a0 to a1 first); same shape as 0x2B48C8, which matches.
+#ifdef NONMATCHING
+extern "C" void func_002B48A0(int a, int b)
+{
+    func_002B5AF8(&Movie, a, b);
+}
+#endif
+
+// FUNCTION: GAME 0x2B48C8
+extern "C" void func_002B48C8(int a, int b)
+{
+    func_002B5BB8(&Movie, a, b);
+}

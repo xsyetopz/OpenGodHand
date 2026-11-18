@@ -421,9 +421,7 @@ int cCoreSave::getAllKillEmNum(int n)
     return m_save->m_allKillEmNum[n];
 }
 
-#ifdef NONMATCHING
-// NONMATCHING 0x1FBF90
-// Remaining diff (7 words): original loop has no nop before the back-branch `beqz` (60 bytes); ours adds a delay-slot nop (64).
+// FUNCTION: GAME 0x1FBF90
 void cCoreSave::setClearStage(unsigned short n)
 {
     if (m_save) {
@@ -436,7 +434,6 @@ void cCoreSave::setClearStage(unsigned short n)
         m_save->m_clearStage = f;
     }
 }
-#endif
 
 #ifdef NONMATCHING
 // NONMATCHING 0x1FB868

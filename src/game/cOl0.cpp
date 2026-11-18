@@ -451,3 +451,61 @@ extern "C" void func_0017EA28() { func_001BC0A0(); }
 extern "C" void func_0017EB98() { func_001BD6B0(); }
 // FUNCTION: GAME 0x17F470
 extern "C" void func_0017F470() { func_001BC0A0(); }
+
+// Per-class SeCall pairs, constructors that return this, and destructors releasing the damage unit.
+extern "C" {
+extern const char D_004205E0[];
+extern const char D_004206B0[];
+extern const char D_00420780[];
+extern const char D_00420850[];
+extern const char D_00421590[];
+extern const char D_00421740[];
+extern const char D_00421C80[];
+extern const char D_00422178[];
+extern const char D_00422308[];
+void func_001B6E90(void *self);
+void func_001BD580(void *self);
+void func_001BFAC8(void *self);
+void func_001BFB00(void *self, void *a);
+}
+
+// FUNCTION: GAME 0x170470
+extern "C" void func_00170470(cObj *o) { Snd.SeCall((eSeBlk)0x2, 0, *o, 0, 0, 0, 0); Snd.SeCall((eSeBlk)0x2, 0x2, *o, 0, 0, 0, 0); }
+// FUNCTION: GAME 0x170538
+extern "C" sOlObj *func_00170538(sOlObj *s) { func_001BFAC8(s); s->m_vt = D_004205E0; return s; }
+// FUNCTION: GAME 0x170570
+extern "C" void func_00170570(sOlDmg *s, void *a) { s->m_vt = D_004205E0; if (s->m_dmg) { func_001FE278(&g_DmgManage, s->m_dmg); s->m_dmg = 0; } func_001BFB00(s, a); }
+// FUNCTION: GAME 0x170700
+extern "C" void func_00170700(cObj *o) { Snd.SeCall((eSeBlk)0x2, 0xA, *o, 0, 0, 0, 0); Snd.SeCall((eSeBlk)0x2, 0xC, *o, 0, 0, 0, 0); }
+// FUNCTION: GAME 0x1707C8
+extern "C" sOlObj *func_001707C8(sOlObj *s) { func_001BFAC8(s); s->m_vt = D_004206B0; return s; }
+// FUNCTION: GAME 0x170800
+extern "C" void func_00170800(sOlDmg *s, void *a) { s->m_vt = D_004206B0; if (s->m_dmg) { func_001FE278(&g_DmgManage, s->m_dmg); s->m_dmg = 0; } func_001BFB00(s, a); }
+// FUNCTION: GAME 0x170990
+extern "C" void func_00170990(cObj *o) { Snd.SeCall((eSeBlk)0x2, 0xA, *o, 0, 0, 0, 0); Snd.SeCall((eSeBlk)0x2, 0xC, *o, 0, 0, 0, 0); }
+// FUNCTION: GAME 0x170A58
+extern "C" sOlObj *func_00170A58(sOlObj *s) { func_001BFAC8(s); s->m_vt = D_00420780; return s; }
+// FUNCTION: GAME 0x170A90
+extern "C" void func_00170A90(sOlDmg *s, void *a) { s->m_vt = D_00420780; if (s->m_dmg) { func_001FE278(&g_DmgManage, s->m_dmg); s->m_dmg = 0; } func_001BFB00(s, a); }
+// FUNCTION: GAME 0x170C20
+extern "C" void func_00170C20(cObj *o) { Snd.SeCall((eSeBlk)0x2, 0xA, *o, 0, 0, 0, 0); Snd.SeCall((eSeBlk)0x2, 0xC, *o, 0, 0, 0, 0); }
+// FUNCTION: GAME 0x170CE8
+extern "C" sOlObj *func_00170CE8(sOlObj *s) { func_001BFAC8(s); s->m_vt = D_00420850; return s; }
+// FUNCTION: GAME 0x170D20
+extern "C" void func_00170D20(sOlDmg *s, void *a) { s->m_vt = D_00420850; if (s->m_dmg) { func_001FE278(&g_DmgManage, s->m_dmg); s->m_dmg = 0; } func_001BFB00(s, a); }
+// FUNCTION: GAME 0x170F00
+extern "C" sOlObj *func_00170F00(sOlObj *s) { func_001BD580(s); s->m_vt = D_00420920; return s; }
+// FUNCTION: GAME 0x171B10
+extern "C" sOlObj *func_00171B10(sOlObj *s) { func_001BD580(s); s->m_vt = D_00420D68; return s; }
+// FUNCTION: GAME 0x178810
+extern "C" sOlObj *func_00178810(sOlObj *s) { func_001B6E90(s); s->m_vt = D_00421590; return s; }
+// FUNCTION: GAME 0x178DB8
+extern "C" void func_00178DB8(sOlDmg *s, void *a) { s->m_vt = D_00421740; if (s->m_dmg) { func_001FE278(&g_DmgManage, s->m_dmg); s->m_dmg = 0; } func_001C2820(s, a); }
+// FUNCTION: GAME 0x17C4A8
+extern "C" sOlObj *func_0017C4A8(sOlObj *s) { func_001BD580(s); s->m_vt = D_00421C80; return s; }
+// FUNCTION: GAME 0x17EA98
+extern "C" sOlObj *func_0017EA98(sOlObj *s) { func_001BD580(s); s->m_vt = D_00422178; return s; }
+// FUNCTION: GAME 0x17EC08
+extern "C" sOlObj *func_0017EC08(sOlObj *s) { func_001B6E90(s); s->m_vt = D_00422240; return s; }
+// FUNCTION: GAME 0x17EE40
+extern "C" sOlObj *func_0017EE40(sOlObj *s) { func_001B6E90(s); s->m_vt = D_00422308; return s; }
