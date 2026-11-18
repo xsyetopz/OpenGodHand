@@ -18,6 +18,12 @@ void func_00397450(int *, int, int);
 void func_00366C50(int *, int, int);
 int func_0036C920(int);
 extern int D_003EE278;
+extern char D_003EC668[];
+void func_00348950(char *, int), func_00345EC8(int);
+void func_00348670(int, int, int, int, int);
+void func_00327FA8(int, int, int, int, int);
+void func_00327E18(int, int, int, int, int);
+void func_00328448(int, int);
 void func_0035EF30(int, void *), func_0035EF38(int, void *), func_0035EF40(int, void *);
 void func_0035EF50(int, void *), func_0035EF60(int, void *), func_0035EF70(int, void *);
 int func_0035EF78();
@@ -39,7 +45,7 @@ int func_003569E0(int, int, int, int, int, int, int, int);
 void func_00355BB8(int, int);
 void func_00368E80(char *), func_00369118(char *), func_00369130(char *), func_00369158(char *);
 extern void func_00366EC0();
-void func_0035F788(int, int *, int *);
+int func_0035F788();
 int func_00329F98(int);
 void func_0032A160(int, int *, int *);
 int func_00360B18();
@@ -57,7 +63,7 @@ int func_00342E80();
 int func_00347080();
 int func_003470F0();
 int func_00347160(int);
-void func_00346C58(int, int, int *);
+int func_00346C58();
 void func_0035F578(int, int *, int, int *, int, int, int, int);
 void func_0035F698(int, int *, int *);
 void func_0035EA30(int, int *, int, int, int, int);
@@ -498,14 +504,20 @@ int func_00346C58(int a, char *b, char *c)
     func_00346FA0(b, c);
     func_00346FC0(a, b, c);
     func_00347008(a, c);
-    ci[0x88 / 4] = bi[0x88 / 4];
-    ci[0x8C / 4] = bi[0x8C / 4];
+    {
+        int x = bi[0x88 / 4];
+        int y = bi[0x8C / 4];
+        ci[0x88 / 4] = x;
+        ci[0x8C / 4] = y;
+    }
     ci[0x90 / 4] = func_00346D80(a, b);
     ci[0x94 / 4] = func_00346E20(a, bi[0x30 / 4]);
     return func_00346D08(a, b);
 }
 
-// FUNCTION: GAME 0x34AA20
+#ifdef NONMATCHING
+// DRAFT: GAME 0x34AA20
+// diff: buf+4/buf+8 kept in s2/s3 and frame 0x40 vs 0x30 (CSE of &buf[1],&buf[2]), 44 words
 void func_0034AA20(char *a)
 {
     int buf[3];
@@ -520,18 +532,37 @@ void func_0034AA20(char *a)
         *(long long *)(a + 0x9D8) = func_0034CCB0(*(long long *)(a + 0x9D8), buf[2]);
     }
 }
+#endif
 
 // FUNCTION: GAME 0x36A668
 int func_0036A668(int a, int *b, int *c)
 {
     int **o = func_00338B90((void *)b[0], b[1]);
-    int r = -1;
-    if (o) {
-        int n;
-        r = func_0036A3E8(a, o);
-        n = ((int (*)(int **, int))(*o)[9])(o, 1);
-        *c = b[1] - n;
-        ((void (*)(int **))(*o)[3])(o);
-    }
+    int r, n;
+    if (!o)
+        return -1;
+    r = func_0036A3E8(a, o);
+    n = ((int (*)(int **, int))(*o)[9])(o, 1);
+    *c = b[1] - n;
+    ((void (*)(int **))(*o)[3])(o);
     return r;
 }
+
+// FUNCTION: GAME 0x3428A0
+void func_003428A0(int a, int b, int c, int d)
+{
+    func_00348950(D_003EC668, 0);
+    func_00345EC8(a);
+    func_00348670(a, 0, b, c, d);
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x349AD0
+// diff: reg assignment: compiler gives s3=a0, original s0=a0 (9 words)
+void func_00349AD0(int a, int b, int c, int d, int e)
+{
+    func_00327FA8(a, b, c, d, e);
+    func_00327E18(a, b, c, d, e);
+    func_00328448(a, e);
+}
+#endif

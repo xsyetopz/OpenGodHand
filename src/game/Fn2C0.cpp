@@ -138,20 +138,26 @@ extern "C" int func_002C9AD0(char *self, int idx)
     return getSkill__9cCoreSave8PL_SKILL(&CoreSave, (self + idx)[0x14]) == 1;
 }
 
-// FUNCTION: GAME 0x2B8D88
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2B8D88 - prologue/reg copies of a,b differ (140 vs 136 bytes)
 extern "C" void func_002B8D88(char *self, int mode, int a, int b)
 {
-    int *p = (int *)(self + 0x1C);
+    int x = a;
+    int y = b;
     if (mode == 1) {
-        p[a] |= 1 << b;
-        p[b] |= 1 << a;
+        int *p = (int *)(self + 0x1C);
+        p[x] |= 1 << y;
+        p[y] |= 1 << x;
     } else {
-        p[a] &= ~(1 << b);
-        p[b] |= ~(1 << a);
+        int *p = (int *)(self + 0x1C);
+        p[x] &= ~(1 << y);
+        p[y] |= ~(1 << x);
     }
 }
+#endif
 
-// FUNCTION: GAME 0x2C0D18
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2C0D18 - s3/s4 param regs and const-store order differ (8 words)
 extern "C" void AtInit__10cSceAtUnit9eSceAt_id12eAreaHitType12eAreaTrgType8eActType(
     char *self, int id, int hit, int trg, int act)
 {
@@ -164,4 +170,41 @@ extern "C" void AtInit__10cSceAtUnit9eSceAt_id12eAreaHitType12eAreaTrgType8eActT
     self[0x39] = 8;
     self[0x34] = 3;
     *(unsigned short *)(self + 0x36) = 0xFFFF;
+}
+#endif
+
+extern "C" void *Font;
+extern "C" unsigned char func_002A4C00(void *, unsigned);
+extern "C" void func_002B3460(void *);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2B33D8 - dsrl/andi bit tests emitted with extra sign-extends (26 words)
+extern "C" void func_002B33D8(char *self)
+{
+    if (*(int *)(self + 0x1C)) {
+        unsigned char v = func_002A4C00(Font, **(unsigned short **)(self + 0x8C));
+        unsigned long f = *(unsigned *)(self + 0x14);
+        if (!((f >> 1) & 1) || ((f >> 2) & 1) || (v & 1)) {
+            *(unsigned *)(self + 0x14) |= 2;
+        } else {
+            func_002B3460(self);
+        }
+    }
+}
+#endif
+
+struct SeData12 {
+    char c[12];
+};
+extern "C" void *memcpy(void *, const void *, unsigned);
+
+// FUNCTION: GAME 0x2C7DA8
+extern "C" SeData12 Motion_seq_readSeData__FPvUc(void *src, unsigned char flag)
+{
+    SeData12 t;
+    memset(&t, 0, 12);
+    if (flag == 1) {
+        memcpy(&t, src, 12);
+    }
+    return t;
 }

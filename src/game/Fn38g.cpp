@@ -146,13 +146,17 @@ extern "C" int func_00376588(Fn38Src *a, Fn38Src *b)
     return 0;
 }
 
-// FUNCTION: GAME 0x376618
+#ifdef NONMATCHING
+// DRAFT: GAME 0x376618
+// diff: 11 words; a/b swapped between s1 and s2 (otherwise identical)
 extern "C" int func_00376618(Fn38Src *a, Fn38Src *b)
 {
     Fn38Cmd *c;
     func_003768B0(a);
     c = func_0037D170();
-    if (c) {
+    if (!c)
+        return 0;
+    {
         c->m_00 = 1;
         c->m_04 = b->m_04;
         c->m_08 = a->m_04;
@@ -171,4 +175,88 @@ extern "C" int func_00376618(Fn38Src *a, Fn38Src *b)
         return 0;
     }
     return 0;
+}
+#endif
+
+struct Fn38Slot {
+    unsigned short m_00;
+    char _pad02[0x10];
+    short m_12;
+};
+
+struct Fn38Mgr {
+    char _pad0[0x40];
+    Fn38Slot m_40[8];
+};
+
+extern "C" void func_00376B80(Fn38Mgr *, Fn38Slot *);
+
+// FUNCTION: GAME 0x376720
+extern "C" void func_00376720(Fn38Mgr *o)
+{
+    Fn38Slot *p = o->m_40;
+    int i = 7;
+    do {
+        unsigned h = p->m_00;
+        if (h != 0 && (h & 2) == 0) {
+            if (p->m_12 == 0) {
+                p->m_00 = h | 2;
+                func_00376B80(o, p);
+            } else
+                p->m_12--;
+        }
+        p = (Fn38Slot *)((char *)p + 0x14);
+    } while (--i >= 0);
+}
+
+struct Fn38Evt {
+    unsigned short m_00;
+    char _pad02[0x10];
+    unsigned short m_12;
+    char _pad14[4];
+    short m_18;
+    short m_1A;
+    char _pad1C[4];
+    short m_20;
+    short m_22;
+    short m_24;
+    short m_26;
+};
+
+extern "C" void func_00376AE0(Fn38Evt *, int);
+extern "C" void func_00378070(short *);
+extern "C" short func_003780B0(int, int);
+extern "C" void func_00376D28(Fn38Evt *, int);
+
+// FUNCTION: GAME 0x3767B0
+extern "C" void func_003767B0(Fn38Evt *o)
+{
+    unsigned h = o->m_00;
+    if (h & 0x100) {
+        short a = o->m_18;
+        short b = o->m_1A;
+        o->m_00 = h & 0xFEFF;
+        if (a == b) {
+            if (a == 0)
+                func_00376AE0(o, 0);
+        } else {
+            func_00378070(&o->m_18);
+            o->m_12 |= 1;
+        }
+    }
+}
+
+// FUNCTION: GAME 0x376820
+extern "C" void func_00376820(Fn38Evt *o)
+{
+    if (o->m_12 & 1) {
+        o->m_24 = func_003780B0(o->m_20, o->m_18);
+        o->m_26 = func_003780B0(o->m_22, o->m_18);
+        func_00376D28(o, 1);
+    }
+    if (o->m_12 & 2)
+        func_00376D28(o, 2);
+    if (o->m_12 & 4)
+        func_00376D28(o, 4);
+    o->m_12 = 0;
 }

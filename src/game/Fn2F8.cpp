@@ -445,6 +445,38 @@ void func_002D5250(unsigned short a)
     } else
         ((cTaskWork *)D_00752C04)->sleep(a);
 }
+
+// FUNCTION: GAME 0x2C0CB0
+int func_002C0CB0(float *c, float *p)
+{
+    float dx = p[0] - c[0];
+    float dy = p[1] - c[8];
+    float dz = p[2] - c[1];
+    float r = c[2];
+    float l = dx * dx + dy * dy + dz * dz;
+    // The two nops ahead of sqrt.s are the hazard padding of the original inline template (see VuFn.cpp).
+    __asm__ volatile("nop\n\tnop\n\tsqrt.s %0,%0" : "+f"(l));
+    if (r < l)
+        return 0;
+    return 1;
+}
+
+// FUNCTION: GAME 0x2C0C28
+int func_002C0C28(float *c, float *p)
+{
+    if (p[1] < c[8])
+        return 0;
+    if (c[9] < p[1])
+        return 0;
+    float dx = p[0] - c[0];
+    float dz = p[2] - c[1];
+    float r = c[2];
+    float l = dx * dx + dz * dz;
+    __asm__ volatile("nop\n\tnop\n\tsqrt.s %0,%0" : "+f"(l));
+    if (r < l)
+        return 0;
+    return 1;
+}
 }
 
 #include "CustomIDWork.h"
@@ -469,4 +501,18 @@ sBgmTbl *cBgmData::GetTblPtr(int i)
     else
         r = 0;
     return r;
+}
+
+#include "cCoreSave.h"
+extern cCoreSave CoreSave;
+
+// FUNCTION: GAME 0x2C9B10
+extern "C" void func_002C9B10(char *p, int i)
+{
+    if (*(int *)p) {
+        char *b = p + 0x14;
+        char *s = b + i;
+        if (CoreSave.getSkill((PL_SKILL)*s) == 1)
+            CoreSave.setSkill((PL_SKILL)*s, 0);
+    }
 }

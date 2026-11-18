@@ -57,7 +57,9 @@ extern "C" long func_003AE128(int *self, int a1, int a2, int a3)
 }
 
 // Round 26.
-// FUNCTION: GAME 0x3A93F8
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3A93F8
+// diff: original indexes t[j]/s[j] with addu a3 (no strength reduction); ours strength-reduces to a pointer (124 vs 116 bytes)
 extern "C" char *func_003A93F8(char *s, char *t)
 {
     if (!*s)
@@ -81,7 +83,11 @@ extern "C" char *func_003A93F8(char *s, char *t)
     return 0;
 }
 
-// FUNCTION: GAME 0x3A95A8
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3A95A8
+// diff: 3 words, the i=0 / q=s+n / p=s setup instructions are scheduled in a different order
 extern "C" char *func_003A95A8(char *s)
 {
     int n = 0;
@@ -91,8 +97,7 @@ extern "C" char *func_003A95A8(char *s)
     if (n > 0) {
         char *q = s + n;
         char *p = s;
-        int i;
-        i = 0;
+        int i = 0;
         do {
             unsigned char c = *q;
             char d = *p;
@@ -105,4 +110,93 @@ extern "C" char *func_003A95A8(char *s)
         } while (i < n);
     }
     return s;
+}
+#endif
+
+extern "C" int func_003AD0F8(int);
+
+// FUNCTION: GAME 0x3A9260
+extern "C" int func_003A9260(char *a, char *b)
+{
+    while (*a) {
+        if (func_003AD0F8(*a) != func_003AD0F8(*b))
+            break;
+        a++;
+        b++;
+    }
+    return func_003AD0F8((unsigned char)*a) - func_003AD0F8((unsigned char)*b);
+}
+
+struct Ent {
+    int m_0;
+    unsigned m_4;
+    int m_8;
+};
+
+extern "C" int func_00394328(int, unsigned);
+
+// FUNCTION: GAME 0x394348
+extern "C" int func_00394348(Ent *e, int n, unsigned key)
+{
+    unsigned i = n - 1;
+    if (n) {
+        do {
+            unsigned w = e->m_4;
+            if ((w >> 8) == key) {
+                if (!func_00394328(e->m_0, w & 0xff))
+                    return 0;
+            }
+            e++;
+        } while (--i != (unsigned)-1);
+    }
+    return 1;
+}
+
+struct Cfg {
+    int m_0;
+    int m_4;
+};
+
+struct Rec {
+    char _pad[10];
+    unsigned char m_a;
+    unsigned char m_b;
+};
+
+struct Tab {
+    char _pad[12];
+    Rec *m_c;
+    int m_10;
+};
+
+extern Cfg D_003F5520;
+extern int D_0040A420;
+extern Tab *D_003F852C;
+
+// FUNCTION: GAME 0x394D58
+extern "C" int func_00394D58(int *out)
+{
+    D_003F5520.m_4 = 0x31415926;
+    D_003F5520.m_0 = 0;
+    if (out)
+        *out = D_0040A420;
+    Tab *t = D_003F852C;
+    int n = t->m_10;
+    if (n) {
+        Rec *r = t->m_c;
+        do {
+            int v = r->m_a;
+            if (v < 0)
+                return 7;
+            if (v < 2) {
+                r->m_b = 0;
+            } else {
+                if (v >= 5)
+                    return 7;
+                r->m_b = 1;
+            }
+            r++;
+        } while (--n);
+    }
+    return 0;
 }

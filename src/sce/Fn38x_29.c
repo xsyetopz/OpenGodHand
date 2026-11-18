@@ -178,25 +178,10 @@ int func_003999D0(void)
     return r;
 }
 
-struct SB { unsigned flags; int m4; int m8; };
-struct Ios { struct SB *sb; struct Ios *tie; char pad[0x12]; unsigned char st; };
-struct Is { struct Ios *ios; int cnt; };
-void func_00389268(struct Ios *);
+#include "iostream.h"
+
 int func_0038B168(struct SB *, int);
 int func_0038EAE0(struct SB *);
-
-static inline int ipfx(struct Is *s)
-{
-    if (s->ios->st) {
-        s->ios->st |= 2;
-        return 0;
-    }
-    if (s->ios->tie) {
-        if (s->ios->sb->m8 == s->ios->sb->m4)
-            func_00389268(s->ios->tie);
-    }
-    return 1;
-}
 
 // FUNCTION: GAME 0x387788
 struct Is *func_00387788(struct Is *s, int n, int delim)

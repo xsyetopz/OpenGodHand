@@ -195,3 +195,76 @@ struct V16Y {
 
 // FUNCTION: GAME 0x1746B0
 FN17_STOP(func_001746B0)
+
+struct vtQ {
+    char _p[0x80];
+    short adj;
+    short _pad;
+    cVec *(*fn)(void *);
+};
+struct sP1 {
+    char _p0[0x214];
+    vtQ *m_vt;
+    char _p218[0x8D0 - 0x218];
+    cVec m_8d0;
+};
+
+// FUNCTION: GAME 0x17B568
+extern "C" cVec *func_0017B568(sP1 *s)
+{
+    cVec *p = s->m_vt->fn((char *)s + s->m_vt->adj);
+    s->m_8d0 = *p;
+    s->m_8d0.y += 4.1f;
+    return &s->m_8d0;
+}
+
+// FUNCTION: GAME 0x171B70
+extern "C" int func_00171B70(sC3 *s)
+{
+    func_001B6FB8(s);
+    float k = 3.2f;
+    struct { cVec v; float w; } t;
+    t.v.x = k;
+    t.v.y = 3.1f;
+    t.v.z = 0.2f;
+    t.w = 1.0f;
+    s->m_600 = t.v;
+    func_001BDA00(s);
+    func_001BD698(s);
+    func_001BDD88(s, k);
+    s->m_5a0 |= 0x10;
+    return 1;
+}
+
+struct sTy {
+    char _p0[0x2F4];
+    unsigned char m_2f4, m_2f5, m_2f6, m_2f7;
+    char _p2f8[0x654 - 0x2F8];
+    unsigned short m_t;
+};
+struct cSndY {
+    void SeCall(int, int, void *, int, void *, int, int) __asm__("SeCall__4cSnd6eSeBlksR4cObjP4cObjP6cPartsUii");
+};
+extern cSndY Snd;
+
+// FUNCTION: GAME 0x1793D0
+extern "C" void func_001793D0(sTy *s)
+{
+    switch (s->m_2f5) {
+    case 0:
+        Snd.SeCall(2, 2, s, 0, 0, 0, 0);
+        s->m_t = 15;
+        s->m_2f5 = 1;
+        s->m_2f6 = 0;
+        s->m_2f7 = 0;
+    case 1:
+        s->m_t--;
+        if ((short)s->m_t <= 0) {
+            s->m_2f7 = 0;
+            s->m_2f4 = 0;
+            s->m_2f5 = 0;
+            s->m_2f6 = 0;
+        }
+        break;
+    }
+}
