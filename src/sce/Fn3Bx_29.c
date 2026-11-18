@@ -143,6 +143,70 @@ int func_003B2E38(int a, int b, int c, int d)
     return func_003B26C8(0x80000008, d, 0x40, 0, 0, 0) ? 0 : 0x800;
 }
 
+struct SifReq {
+    int m_0;
+    int _p4[3];
+    int m_10;
+    int m_14;
+    int _p18;
+    int m_1C;
+    int m_20;
+    int m_24;
+    int m_28;
+    int m_2C;
+};
+struct SifRn {
+    int _p0[2];
+    int m_8;
+};
+extern void func_003B7898(int, void *, void *);
+extern struct SifRn *func_003B2DE8(int, int);
+
+// FUNCTION: GAME 0x3B2D10
+void func_003B2D10(struct SifReq *a, int b)
+{
+    struct SifReq *s;
+    int u;
+    int t;
+    if (a->m_10 & 4)
+        s = (struct SifReq *)func_003B2BC0((int *)b, (unsigned)a->m_10 >> 16);
+    else
+        s = (struct SifReq *)func_003B2B90(b);
+    u = a->m_14;
+    t = a->m_1C;
+    s->m_14 = u;
+    s->m_1C = t;
+    s->m_20 = 0x8000000C;
+    s->m_24 = a->m_20;
+    s->m_28 = a->m_24;
+    s->m_2C = a->m_28;
+    if (func_003B26C8(0x80000008, s, 0x40, a->m_20, a->m_24, a->m_28) == 0)
+        func_003B7898(0x800, func_003B2CD0, s);
+}
+
+// FUNCTION: GAME 0x3B2E78
+void func_003B2E78(struct SifReq *a, int b)
+{
+    struct SifReq *s = (struct SifReq *)func_003B2B90(b);
+    struct SifRn *n;
+    int r;
+    int u = a->m_14;
+    int t = a->m_1C;
+    s->m_1C = t;
+    s->m_14 = u;
+    s->m_20 = 0x80000009;
+    n = func_003B2DE8(a->m_20, b);
+    if (!n) {
+        s->m_24 = 0;
+        s->m_28 = 0;
+    } else {
+        s->m_24 = (int)n;
+        s->m_28 = n->m_8;
+    }
+    if (func_003B26C8(0x80000008, s, 0x40, 0, 0, 0) == 0)
+        func_003B7898(0x800, func_003B2E38, s);
+}
+
 extern int func_003B63A0();
 extern void func_003B63F0();
 extern int func_003AF9F0();

@@ -17,6 +17,14 @@ extern int func_0032A9F0();
 extern void *memset();
 extern char D_00452C98[], D_00452DB0[], D_003D1E70[];
 extern int D_003D1E68;
+extern int func_0032F4F0();
+extern int func_0032F528();
+extern int func_0033BF18();
+extern void func_0032E770();
+extern void func_0032ECD8();
+extern int func_0032F330();
+extern char D_00452DE8[], D_00452E20[];
+extern int D_003D147C;
 
 // FUNCTION: GAME 0x32DFC0
 void func_0032DFC0(char *o, int a, int b)
@@ -79,4 +87,83 @@ void func_0032F428(char *o)
     if (o)
         memset(o, 0, 0x1964);
     func_0033FC88();
+}
+
+// FUNCTION: GAME 0x32E2B8
+int func_0032E2B8(char *o)
+{
+    if (!o) {
+        func_0033FCB0(D_00452DE8);
+        return -1;
+    }
+    if ((unsigned char)(o[1] - 1) < 3)
+        return func_0032F4F0(*(int *)(o + 4));
+    return 0;
+}
+
+// FUNCTION: GAME 0x32E348
+int func_0032E348(char *o)
+{
+    if (!o) {
+        func_0033FCB0(D_00452E20);
+        return -1;
+    }
+    if ((unsigned char)(o[1] - 1) < 3)
+        return func_0032F528(*(int *)(o + 4));
+    return 0;
+}
+
+// FUNCTION: GAME 0x32E720
+void func_0032E720(int a)
+{
+    if (func_0033BF18(&D_003D147C)) {
+        func_0032E770(a);
+        D_003D147C = 0;
+    }
+}
+
+// FUNCTION: GAME 0x32EC78
+void func_0032EC78(int a, int b, int c)
+{
+    func_0033FCA0();
+    func_0033FC70();
+    func_0032ECD8(a, b, c);
+    func_0033FC88();
+    func_0033FCA8();
+}
+
+// FUNCTION: GAME 0x32F2D8
+int func_0032F2D8(int a, int b, int c)
+{
+    int r;
+    func_0033FC70();
+    r = func_0032F330(a, b, c);
+    func_0033FC88();
+    return r;
+}
+
+// FUNCTION: GAME 0x32F470
+void func_0032F470(char *o)
+{
+    func_0033FC70();
+    *(int *)(o + 0x10) = 0;
+    *(int *)(o + 8) = 0;
+    *(int *)(o + 0xC) = 0;
+    o[1] = 1;
+    func_0033FC88();
+}
+
+// FUNCTION: GAME 0x32F538
+int func_0032F538(char *o)
+{
+    int n = *(int *)(o + 0x2B0);
+    int s = 0;
+    if (n > 0) {
+        int *p = (int *)(o + 0x2BC);
+        do {
+            s += *p;
+            p += 4;
+        } while (--n);
+    }
+    return s;
 }

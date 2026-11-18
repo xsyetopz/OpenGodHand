@@ -92,21 +92,41 @@ extern int WaitSema(int);
 extern int SignalSema(int);
 extern char D_007814C0[];
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3B3A48 (2 words off: sll into $v1 instead of $s0)
+// FUNCTION: GAME 0x3B3A48
 char *func_003B3A48(unsigned n)
 {
+    char *r;
     func_003B3858();
     WaitSema(D_003FAEE8);
     if (n >= 0x20) {
         SignalSema(D_003FAEE8);
         return 0;
     }
-    n <<= 4; n = n + (unsigned)D_007814C0;
+    r = D_007814C0 + (n << 4);
     SignalSema(D_003FAEE8);
-    return (char *)n;
+    return r;
 }
-#endif
+
+extern int sceSifCallRpc(int, int, int, int, int, int, int, int, int);
+extern int DelayThread(int);
+
+// FUNCTION: GAME 0x3B3958
+int func_003B3958(int a, int b, int c, int d, int e, int f, int g, int h, int x, int y)
+{
+    int cnt = 0;
+    int i = 1;
+    unsigned r;
+    do {
+        r = (unsigned)sceSifCallRpc(a, b, c, d, e, f, g, h, x) >> 31;
+        if (r == 0 || y != 0)
+            break;
+        DelayThread(i * 1000);
+        if (i < 0x7F)
+            i = i * 2;
+        cnt++;
+    } while (cnt < 0x65);
+    return r;
+}
 
 // FUNCTION: GAME 0x3B38D0
 int *func_003B38D0(void)
