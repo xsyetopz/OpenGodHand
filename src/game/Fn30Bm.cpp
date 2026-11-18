@@ -159,8 +159,8 @@ extern "C" int Start__6cMovieib(void *, int, int);
 extern "C" int GetStatus__6cMovieUi(void *, int);
 extern "C" void Stop__6cMovieUi(void *, int);
 extern "C" void sleep__9cTaskWorkUs(void *, unsigned short);
-extern "C" void execute__12cTaskManagerRFv_vi(void *, void (*)(), int);
-extern "C" void exit__9cTaskWork(void *);
+extern "C" int execute__12cTaskManagerRFv_vi(void *, void (*)(), int);
+extern "C" int exit__9cTaskWork(void *);
 extern "C" void func_002A5998();
 extern "C" void func_0030D5C8();
 

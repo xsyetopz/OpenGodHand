@@ -68,13 +68,14 @@ extern "C" char *func_00292DC8(char *self, const float *pos, float r)
 extern char *g_Sce;
 extern "C" char *func_002951B0(char *, char *);
 
-// DRAFT: GAME 0x295860 - 9 words differ: s3 counter init and a0/v1 use in the g_Sce test are scheduled differently
+// DRAFT: GAME 0x295860 - 2 words differ: original sets s2 (n = 0) before s0 (e = self + 0x10)
 #ifdef NONMATCHING
 extern "C" int func_00295860(char *self)
 {
-    int n = 0;
-    if (*(unsigned char *)(*(char **)&g_Sce + 0x14) == 1)
+    int n;
+    if (*(unsigned char *)(g_Sce + 0x14) == 1)
         return 0;
+    n = 0;
     char *e = self + 0x10;
     for (unsigned i = 0; i < 2; i++, e += 0x18) {
         if (*(unsigned char *)(e + 0x13)) {

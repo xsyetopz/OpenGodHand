@@ -142,24 +142,26 @@ extern "C" void func_00150138(char *self)
     func_00147BF8(self, self, self + 0x110);
 }
 
-// DRAFT: GAME 0x1563F0
-// diff: branch layout (orig bnez to normal arm placed after denormal; 27 words)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x1563F0
 unsigned short F32toF16(float f)
 {
     unsigned u = *(unsigned *)&f;
     unsigned a = u & 0x7FFFFFFF;
     unsigned sign = (u >> 16) & 0x8000;
+    unsigned short r;
     if (a > 0x47FFEFFF)
-        return (unsigned short)(sign | 0x7FFF);
-    if (a <= 0x387FFFFF) {
-        unsigned e = a >> 23;
-        unsigned m = (a & 0x7FFFFF) | 0x800000;
-        a = m >> (0x71 - e);
-    } else {
-        a += 0xC8000000;
+        r = sign | 0x7FFF;
+    else {
+        if (a <= 0x387FFFFF) {
+            unsigned e = a >> 23;
+            unsigned s = 0x71 - e;
+            unsigned m = (a & 0x7FFFFF) | 0x800000;
+            a = m >> s;
+        } else {
+            a += 0xC8000000;
+        }
+        unsigned t = a + 0xFFF + ((a >> 13) & 1);
+        r = sign | (t >> 13);
     }
-    a = a + 0xFFF + ((a >> 13) & 1);
-    return (unsigned short)(sign | (a >> 13));
+    return r;
 }
-#endif
