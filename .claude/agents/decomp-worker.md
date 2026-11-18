@@ -30,6 +30,7 @@ God Hand game code is matched byte-for-byte with SN ProDG ee-gcc 2.95.3-136 at `
 - Removing a wrong `volatile` or `__asm__` barrier.
 - A hoisted constant temp (`unsigned k = 0xFFFFFFFF;`, `long k = 0x32001;`) for lui/li order.
 - `unsigned long u = f; unsigned long b = (u >> 3) & 1;` for dsrl instead of sra.
+- In a switch fallthrough, `x++` instead of `x = 1` (or `= 2`) lets gcc reuse the case-compare constant.
 - `% 2` versus `& 1`; a `for` loop with a comma increment; an indexed copy instead of a pointer increment.
 
 ## Report

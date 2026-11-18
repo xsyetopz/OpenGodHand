@@ -17,7 +17,7 @@ Workflow:
 - Re-run the draft scan (fncmp over every DRAFT) periodically and work nearest-first.
 - `just live` serves the progress feed; objdiff.json and build/progress.svg give the decomp.dev-style treemap.
 
-Matching idioms that worked: store order permutations (brute force small sets), separate early returns or duplicated tails, int-returning callee declarations matching their definitions, correct callee arity, *(T*)((int)p+(i<<k)) for addu order, dropping wrong volatile or __asm__ barriers, hoisted constant temps for lui/li order, unsigned long copies for dsrl vs sra, % 2 vs & 1, comma-increment for loops, indexed copies instead of pointer increments. Unsolved: original emits slti; xori 1 joined via a1 plus andi 0xFF for range tests (0x2DDDF8, 0x1B8030, 0x291AC8); six bool forms failed.
+Matching idioms that worked: store order permutations (brute force small sets), separate early returns or duplicated tails, int-returning callee declarations matching their definitions, correct callee arity, *(T*)((int)p+(i<<k)) for addu order, dropping wrong volatile or __asm__ barriers, hoisted constant temps for lui/li order, unsigned long copies for dsrl vs sra, % 2 vs & 1, x++ instead of x = const in switch fallthrough, comma-increment for loops, indexed copies instead of pointer increments. Unsolved: original emits slti; xori 1 joined via a1 plus andi 0xFF for range tests (0x2DDDF8, 0x1B8030, 0x291AC8); six bool forms failed.
 
 Orchestration:
 - The main session orchestrates, verifies every worker MATCH with fncmp before gating, and fixes tool bugs itself.
