@@ -100,7 +100,7 @@ extern "C" int func_001FC708(void *);
 extern "C" void trans__7cIDBase(void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x140638 - 27 words differ: self lands in s1 not s2; 0x80000000 mask test folds to bgezl
+// DRAFT: GAME 0x140638 - 27 words differ: self lands in s1 not s2; 0x80000000 mask test folds to bgezl; tried m declared earlier/nested-if (36 words, self in s2 but lui after lw and extra nops), 1u<<31 (27)
 extern "C" void func_00140638(char *self)
 {
     if (*(int *)(self + 0xA0) == 0) {

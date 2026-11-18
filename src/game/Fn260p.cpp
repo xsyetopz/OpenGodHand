@@ -1,6 +1,6 @@
 // Small helpers from 0x260000-0x280000.
 
-// DRAFT: GAME 0x27DC50 - original compare chain is 1,0,2,3 (about 12 words differ)
+// DRAFT: GAME 0x27DC50 - original compare chain is 1,0,2,3 (27 words; if/else chain 1,0,2,3 gave 23)
 #ifdef NONMATCHING
 extern "C" void func_0027DC50(char *self, int k)
 {

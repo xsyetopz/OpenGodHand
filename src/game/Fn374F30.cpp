@@ -24,18 +24,17 @@ struct Fn374Ent {
 extern "C" Fn374Ent *func_0037D170(void);
 extern int D_00773250[];
 
-// DRAFT: GAME 0x374F30
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x374F30
 extern "C" int func_00374F30(int a, Fn374Blk *b)
 {
     Fn374Ent *e = func_0037D170();
     if (!e)
         return -1;
-    e->he = 1;
     e->h0 = 1;
+    e->bd = 1;
+    e->he = 1;
     e->w4 = a;
     e->bc = 0x10;
-    e->bd = 1;
     e->h12 = -1;
     e->w8 = 0;
     e->h10 = 0;
@@ -53,4 +52,3 @@ extern "C" int func_00374F30(int a, Fn374Blk *b)
     }
     return 0;
 }
-#endif

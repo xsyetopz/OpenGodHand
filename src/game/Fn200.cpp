@@ -57,22 +57,21 @@ void func_00201018(Tbl200 *self)
 
 
 
-// DRAFT: GAME 0x201FA0
-// diff: 34 words, nested sqc2 loop is folded into a pointer compare instead of separate counters
-#ifdef NONMATCHING
 struct Qa200 { float f[4] __attribute__((aligned(16))); };
 #define QZ200(f) __asm__ volatile("sqc2 $vf0,%0" : "=m"(f))
 extern const char D_004479C8[];
 extern const char D_0042C7F0[];
 extern "C" void *func_0028EB00(void *);
+// FUNCTION: GAME 0x201FA0
 extern "C" void *func_00201FA0(char *self)
 {
     func_0028EB00(self);
     *(const void **)(self + 0x214) = D_004479C8;
     QZ200(*(Qa200 *)(self + 0x6C0));
     QZ200(*(Qa200 *)(self + 0x6D0));
+    Qa200 *p = (Qa200 *)(self + 0x1620);
     QZ200(*(Qa200 *)(self + 0x1630));
-    *(unsigned char *)(self + 0x1651) = 0xFF;
+    ((unsigned char *)p)[0x31] = 0xFF;
     QZ200(*(Qa200 *)(self + 0x1660));
     QZ200(*(Qa200 *)(self + 0x1680));
     QZ200(*(Qa200 *)(self + 0x1690));
@@ -80,16 +79,20 @@ extern "C" void *func_00201FA0(char *self)
     QZ200(*(Qa200 *)(self + 0x16B0));
     QZ200(*(Qa200 *)(self + 0x1840));
     Qa200 *q = (Qa200 *)(self + 0x18A0);
-    for (int i = 3; i >= 0; i--)
-        for (int j = 1; j >= 0; j--) {
+    for (int i = 3; i != -1;) {
+        int ni = i - 1;
+        Qa200 *nx = q + 2;
+        for (int j = 1; j != -1; j--) {
             QZ200(*q);
             q++;
         }
+        q = nx;
+        i = ni;
+    }
     QZ200(*(Qa200 *)(self + 0x1950));
     *(const void **)(self + 0x4AC) = D_0042C7F0;
     return self;
 }
-#endif
 
 class classFADE {
 public:

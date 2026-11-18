@@ -139,7 +139,7 @@ extern "C" int func_0031A650(char *self, int idx, int a, int b, int c)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x312708 (18 words differ: original hoists lui 0x8000, o in s0)
+// DRAFT: GAME 0x312708 (27 words differ: original hoists lui 0x8000 into s1 across the call; tried k temp, |k|2 split, t temps; `!(flags & k)` keeps s1 but gives and/bnel instead of bltz (25 words))
 struct RObj { char p0[0x214]; VT *vt; char p1[0x38]; int flags; };
 extern "C" void func_002CBE18(void *, void *);
 extern char Snd[];
@@ -154,8 +154,7 @@ extern "C" void ReleaseObj__FP4cObj(RObj *o)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x312908 (18 words differ: original keeps &tmp in a2 early, nop after bne)
+// FUNCTION: GAME 0x312908
 struct Vec { int p0; cObj **b; cObj **e; cObj **c; };
 struct Wrap { Vec *v; };
 extern "C" void func_00317FF0(Vec *, cObj **, cObj **);
@@ -164,18 +163,17 @@ extern "C" cObj **insert__19cObjPtrArrayWrapperPP4cObjP4cObj(Wrap *w, cObj **pos
     cObj *tmp = val;
     unsigned size = w->v ? (w->v->e - w->v->b) : 0;
     Vec *v = w->v;
-    unsigned cap = v ? (v->c - v->b) : 0;
+    cObj **bb;
+    unsigned cap = v ? (bb = v->b, v->c - bb) : 0;
     if (size >= cap)
         return 0;
     cObj **r = &tmp;
     int idx = pos - v->b;
-    if (v->e == v->c || pos != v->e)
-        func_00317FF0(v, pos, r);
-    else {
+    if (v->e != v->c && pos == v->e) {
         if (pos)
             *pos = *r;
         v->e++;
-    }
+    } else
+        func_00317FF0(v, pos, r);
     return v->b + idx;
 }
-#endif

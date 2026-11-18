@@ -20,7 +20,9 @@ extern "C" void Main__9BlackJack(char *self)
     int *p;
     int *a = (int *)(self + 0x17D4);
     int *b;
-    D_003BDF58[*(int *)(self + 0x1804)].fn(self + D_003BDF58[*(int *)(self + 0x1804)].off);
+    int k = *(int *)(self + 0x1804);
+    short o = ((short *)D_003BDF58)[k * 4];
+    D_003BDF58[k].fn(self + o);
     for (i = 4, p = a; i >= 0; p++) {
         int v = *p;
         i--;
@@ -32,7 +34,7 @@ extern "C" void Main__9BlackJack(char *self)
         i--;
         if (v) func_001D0DF8(v);
     }
-    for (i = 4, p = b; i >= 0; p++) {
+    for (p = b, i = 4; i >= 0; p++) {
         int v = *p;
         i--;
         if (v) func_001D0CE8(v);

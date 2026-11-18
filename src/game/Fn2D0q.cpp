@@ -210,33 +210,28 @@ struct EntQ { unsigned short m_0; unsigned short _p; int m_4, m_8, m_c, m_10, m_
 extern EntQ D_003C3138[];
 extern EntQ D_003C3120;
 
-// DRAFT: GAME 0x2D0B88
-// diff: 31 words, original keeps the last match via beql plus daddu in the slot; ours emits xor/movz
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2D0B88
 extern "C" EntQ *func_002D0B88(unsigned id)
 {
     unsigned short key = id;
     EntQ *r = 0;
-    EntQ *p = D_003C3138;
-    do {
-        if (p->m_0 == key)
-            r = p;
-        p++;
-    } while (p < D_003C3138 + 44);
+    for (unsigned i = 0; i < 44; i++)
+        if (D_003C3138[i].m_0 == key)
+            r = &D_003C3138[i];
     if (!r) {
         unsigned hi = key >> 8;
         int v = (unsigned char)(hi - 1) > 7 ? 2 : hi + 1;
-        r = &D_003C3120;
-        r->m_0 = key;
-        r->m_4 = v;
-        r->m_8 = v;
-        r->m_c = v;
-        r->m_10 = v;
-        r->m_14 = v;
+        EntQ *q = &D_003C3120;
+        q->m_0 = key;
+        q->m_4 = v;
+        q->m_8 = v;
+        q->m_c = v;
+        q->m_10 = v;
+        q->m_14 = v;
+        r = q;
     }
     return r;
 }
-#endif
 
 extern unsigned D_00747A84;
 

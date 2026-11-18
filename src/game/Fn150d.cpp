@@ -150,7 +150,7 @@ extern "C" int func_00152340(char *self, long key)
 #endif
 
 // DRAFT: GAME 0x159510
-// diff: loop tail duplication (bnel+lbu in delay slots) and handler-call reg alloc
+// 27 words differ: loop tail duplication (bnel+lbu in delay slots) and handler-call reg alloc; tried while-loops with merged/nested conditions and comma increment (27-33)
 #ifdef NONMATCHING
 typedef float (*MotionFn159510)(char *, char *, int, float);
 extern MotionFn159510 D_003BD910[];

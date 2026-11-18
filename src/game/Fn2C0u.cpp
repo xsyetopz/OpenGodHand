@@ -2,7 +2,7 @@
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2D0220
-// diff: 29 words, return-0 stub placement (original falls through to a shared stub, compiled branches to the epilogue)
+// diff: 29 words, return-0 stub placement (orig has stub A shared by ==0x80 and !exist after FileExist, plus separate fail stub, success last; ours merges all return-0 into one). Tried: nested if(exist), swapped success/fail order, != 0x80 wrapper; none better than 24-29
 struct Fn2Dw { char _0[8]; char *w8; void *wC; char _10[8]; int w18; void *w1C; int w20; char name[0x40]; };
 extern char Dvd[], SoundHeap[], D_0044D0A0[];
 extern "C" {
