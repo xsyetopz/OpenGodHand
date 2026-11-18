@@ -1,6 +1,5 @@
 // FLAGS: -Iinclude/newlib -Iinclude/newlib/machine
 // newlib 1.9.0 libc/stdio/vsprintf.c (0x3A7AE8).
-#define _impure_ptr D_003FA62C
 #include <limits.h>
 #include <stdio.h>
 

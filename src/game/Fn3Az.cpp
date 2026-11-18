@@ -30,7 +30,7 @@ struct Reent {
     FList m_1d8;
 };
 
-extern Env *D_003FA62C;
+extern Env *_impure_ptr;
 
 // FUNCTION: GAME 0x3A6830
 extern "C" int func_003A6830(Reent *self, int (*fn)(Stream *))
@@ -53,18 +53,18 @@ extern "C" int func_003A6830(Reent *self, int (*fn)(Stream *))
 // FUNCTION: GAME 0x3A7B88
 extern "C" int atexit(void (*f)(void))
 {
-    Atx *a = D_003FA62C->m_148;
+    Atx *a = _impure_ptr->m_148;
     if (!a) {
-        a = &D_003FA62C->m_14c;
-        D_003FA62C->m_148 = a;
+        a = &_impure_ptr->m_14c;
+        _impure_ptr->m_148 = a;
     }
     if (a->m_n >= 32) {
         a = (Atx *)malloc(136);
         if (!a)
             return -1;
         ((int *)a)[1] = 0;
-        ((Atx **)a)[0] = D_003FA62C->m_148;
-        D_003FA62C->m_148 = a;
+        ((Atx **)a)[0] = _impure_ptr->m_148;
+        _impure_ptr->m_148 = a;
     }
     int n = a->m_n;
     a->m_fn[n] = f;
@@ -111,30 +111,6 @@ struct Mp {
 };
 
 extern "C" void *func_003AF7B8(void *, int, int);
-
-// FUNCTION: GAME 0x3AE818
-extern "C" Bigint *func_003AE818(Mp *self, int k)
-{
-    if (!self->m_4c) {
-        self->m_4c = (Bigint **)func_003AF7B8(self, 4, 16);
-        if (!self->m_4c)
-            return 0;
-    }
-    Bigint *b = self->m_4c[k];
-    if (b) {
-        self->m_4c[k] = (Bigint *)b->m_0;
-    } else {
-        int x = 1 << k;
-        b = (Bigint *)func_003AF7B8(self, 1, (x << 2) + 20);
-        if (!b)
-            return 0;
-        b->m_4 = k;
-        b->m_8 = x;
-    }
-    b->m_10 = 0;
-    b->m_c = 0;
-    return b;
-}
 
 // FUNCTION: GAME 0x3A9498
 extern "C" char *func_003A9498(char *s, const char *delim, char **save)
@@ -190,7 +166,7 @@ struct Uio {
 extern "C" int func_003AE1D0(void *, Uio *);
 
 // FUNCTION: GAME 0x3A68C8
-extern "C" unsigned func_003A68C8(char *buf, unsigned size, unsigned n, void *fp)
+extern "C" unsigned fwrite(char *buf, unsigned size, unsigned n, void *fp)
 {
     unsigned total = n * size;
     Uio uio;

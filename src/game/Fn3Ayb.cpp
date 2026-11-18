@@ -58,34 +58,6 @@ extern "C" int func_00394290(Ent2 *e, int n, unsigned key, int base)
     return 1;
 }
 
-// FUNCTION: GAME 0x3AEB38
-extern "C" int func_003AEB38(unsigned x)
-{
-    int n = 0;
-    if (!(x & 0xFFFF0000)) {
-        n = 16;
-        x <<= 16;
-    }
-    if (!(x & 0xFF000000)) {
-        n += 8;
-        x <<= 8;
-    }
-    if (!(x & 0xF0000000)) {
-        n += 4;
-        x <<= 4;
-    }
-    if (!(x & 0xC0000000)) {
-        n += 2;
-        x <<= 2;
-    }
-    if (!(x & 0x80000000)) {
-        n++;
-        if (!(x & 0x40000000))
-            return 32;
-    }
-    return n;
-}
-
 // FUNCTION: GAME 0x3A9538
 extern "C" int func_003A9538(char *s, int n)
 {
@@ -115,7 +87,7 @@ struct Big {
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3AF118
 // diff: original shares one `x<y?-1:1` tail (sltu in bnel delay slot) and keeps a3=a+0x14 as loop base; ours 18 words off
-extern "C" int func_003AF118(Big *a, Big *b)
+extern "C" int __mcmp(Big *a, Big *b)
 {
     int d = a->m_10 - b->m_10;
     if (d)

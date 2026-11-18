@@ -3,7 +3,7 @@
 
 extern int D_003F8590[];
 extern int D_003F8560[];
-extern int *D_003FA62C;
+extern int *_impure_ptr;
 extern void func_0031E870(long, long);
 
 // FUNCTION: GAME 0x395388
@@ -42,5 +42,5 @@ int func_003A4AC8(long *p)
 // FUNCTION: GAME 0x3A4FB8
 int *func_003A4FB8(void)
 {
-    return D_003FA62C;
+    return _impure_ptr;
 }

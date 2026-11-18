@@ -1,5 +1,5 @@
 // ProDG libc-adjacent game code in 0x3A53A8-0x3AF7B8 (continued from Fn3Az.cpp).
-extern void *D_003FA62C;
+extern void *_impure_ptr;
 
 struct Rt2 {
     char _pad[0x38];
@@ -27,7 +27,7 @@ extern "C" int func_003A5F68(Fp *fp)
     if (!fp)
         return 0;
     if (!fp->m_54)
-        fp->m_54 = (Rt2 *)D_003FA62C;
+        fp->m_54 = (Rt2 *)_impure_ptr;
     if (!fp->m_54->m_38)
         func_003A61F0(fp->m_54);
     if (!fp->m_c)
@@ -67,7 +67,7 @@ struct St {
 };
 
 extern "C" int func_003ADFA8(void *, int, St *);
-extern "C" int func_003A6E60(void);
+extern "C" int __sseek(void);
 
 // FUNCTION: GAME 0x3A6950
 extern "C" void func_003A6950(Fq *fp)
@@ -81,7 +81,7 @@ extern "C" void func_003A6950(Fq *fp)
     }
     if (fp->m_e < 0 || func_003ADFA8(fp->m_54, fp->m_e, &st) < 0) {
         fp->m_c |= 0x800;
-    } else if ((st.m_mode & 0xf000) == 0x8000 && fp->m_28 == func_003A6E60) {
+    } else if ((st.m_mode & 0xf000) == 0x8000 && fp->m_28 == __sseek) {
         fp->m_4c = 0x400;
         fp->m_c |= 0x400;
     } else {
@@ -100,7 +100,7 @@ extern "C" int func_003AE730(Fq *fp)
 {
     unsigned c;
     if (!fp->m_54)
-        fp->m_54 = D_003FA62C;
+        fp->m_54 = _impure_ptr;
     if (!((Rt2 *)fp->m_54)->m_38)
         func_003A61F0((Rt2 *)fp->m_54);
     c = fp->m_c;
@@ -135,7 +135,7 @@ struct Bg {
     int m_10;
 };
 
-extern "C" long func_003AF3D8(Bg *, int *);
+extern "C" long _b2d(Bg *, int *);
 extern "C" long func_0031E5F0(long, long);
 
 
@@ -149,44 +149,7 @@ struct Rm {
 };
 
 extern int D_0045FCD8[];
-extern "C" Bn *func_003AE8F8(Rm *, Bn *, int, int);
-extern "C" Bn *func_003AEC80(Rm *, int);
-extern "C" Bn *func_003AECB8(Rm *, Bn *, Bn *);
-extern "C" void func_003AE8C0(Rm *, Bn *);
-
-// FUNCTION: GAME 0x3AEEC0
-extern "C" Bn *func_003AEEC0(Rm *self, Bn *b, int k)
-{
-    Bn *p5;
-    int i = k & 3;
-    if (i)
-        b = func_003AE8F8(self, b, D_0045FCD8[i - 1], 0);
-    k >>= 2;
-    if (!k)
-        return b;
-    p5 = self->m_48;
-    if (!p5) {
-        p5 = self->m_48 = func_003AEC80(self, 625);
-        p5->m_next = 0;
-    }
-    for (;;) {
-        if (k & 1) {
-            Bn *t = func_003AECB8(self, b, p5);
-            func_003AE8C0(self, b);
-            b = t;
-        }
-        k >>= 1;
-        if (!k)
-            break;
-        {
-            Bn *q = p5->m_next;
-            if (!q) {
-                q = func_003AECB8(self, p5, p5);
-                p5->m_next = q;
-                q->m_next = 0;
-            }
-            p5 = q;
-        }
-    }
-    return b;
-}
+extern "C" Bn *_multadd(Rm *, Bn *, int, int);
+extern "C" Bn *_i2b(Rm *, int);
+extern "C" Bn *_multiply(Rm *, Bn *, Bn *);
+extern "C" void _Bfree(Rm *, Bn *);

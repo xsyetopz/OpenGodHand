@@ -24,8 +24,8 @@ struct Bigint {
     struct Bigint *next;
     int k;
     int maxwds;
+    short on_stack;
     short sign;
-    short wds0;
     int wds;
     unsigned int x[1];
 };
@@ -45,15 +45,15 @@ struct Bigint *func_0038F4E8(int k)
     rv->k = k;
     rv->maxwds = x;
     rv->wds = 0;
-    rv->wds0 = 0;
     rv->sign = 0;
+    rv->on_stack = 0;
     return rv;
 }
 
 // FUNCTION: GAME 0x38F548
 void func_0038F548(struct Bigint *v)
 {
-    if (v && !v->sign)
+    if (v && !v->on_stack)
         free(v);
 }
 
@@ -64,7 +64,7 @@ void func_0038F570(struct Bigint *a, struct Bigint *b)
     unsigned int *x = a->x;
     unsigned int *y = b->x;
     a->wds = n;
-    a->wds0 = b->wds0;
+    a->sign = b->sign;
     while (--n >= 0)
         *x++ = *y++;
 }
@@ -95,11 +95,11 @@ struct Bigint *func_0038F980(struct Bigint *v, int i)
 // FUNCTION: GAME 0x38F4C0
 struct Bigint *func_0038F4C0(struct Bigint *b)
 {
-    b->sign = 1;
+    b->on_stack = 1;
     b->k = 3;
     b->maxwds = 8;
     b->wds = 0;
-    b->wds0 = 0;
+    b->sign = 0;
     return b;
 }
 

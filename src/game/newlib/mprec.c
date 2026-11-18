@@ -92,7 +92,7 @@
 /* reent.c knows this value */
 #define _Kmax 15
 
-// (already matched elsewhere: GAME 0x3AE818)
+// FUNCTION: GAME 0x3AE818
 _Bigint *
 _DEFUN (Balloc, (ptr, k), struct _reent *ptr _AND int k)
 {
@@ -131,7 +131,7 @@ _DEFUN (Balloc, (ptr, k), struct _reent *ptr _AND int k)
   return rv;
 }
 
-// (already matched elsewhere: GAME 0x3AE8C0)
+// FUNCTION: GAME 0x3AE8C0
 void
 _DEFUN (Bfree, (ptr, v), struct _reent *ptr _AND _Bigint * v)
 {
@@ -231,7 +231,7 @@ _DEFUN (s2b, (ptr, s, nd0, nd, y9),
   return b;
 }
 
-// (already matched elsewhere: GAME 0x3AEB38)
+// FUNCTION: GAME 0x3AEB38
 int
 _DEFUN (hi0bits,
 	(x), register __ULong x)
@@ -423,7 +423,7 @@ _DEFUN (mult, (ptr, a, b), struct _reent * ptr _AND _Bigint * a _AND _Bigint * b
   return c;
 }
 
-// (already matched elsewhere: GAME 0x3AEEC0)
+// FUNCTION: GAME 0x3AEEC0
 _Bigint *
 _DEFUN (pow5mult,
 	(ptr, b, k), struct _reent * ptr _AND _Bigint * b _AND int k)

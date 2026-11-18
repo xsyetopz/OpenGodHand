@@ -92,21 +92,24 @@ extern "C" void func_003033A8(ObjG *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1BD1A0
-// diff: 10 words; original does lwu+dsra for the flag test, loads tgt before the Sv ctor, stores c5,c6,c7 in a different order
+// diff: 3 words (VSUB_FN form from Fn180.cpp): only the c5/c6/c7 byte-store order differs
 struct SvM { float v[3]; SvM &operator=(const float *o){ if (v != o) { v[0]=o[0]; v[1]=o[1]; v[2]=o[2]; } return *this; } };
 struct ObjH { char p0[0xF0]; float *tgt; char p1[0x2F4-0xF4]; char c4, c5, c6, c7; char p2[0x490-0x2F8]; float org[4]; char p3[0x5B0-0x4A0]; unsigned int fl; char p4[0x5C0-0x5B4]; SvM out; };
 extern "C" void func_001BD1A0(ObjH *a0)
 {
     ObjH *self = a0;
-    if ((((unsigned long long)self->fl >> 1) & 1)) return;
-    {
+    long f = self->fl;
+    long b = (f >> 1) & 1;
+    if (b == 0) {
         float *tp = self->tgt;
+        float *o = self->org;
         Sv16 t;
-        Sv d;
-        __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)d.v) : "r"(tp), "r"(self->org));
+        Sv16 d;
+        __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv *)d.v));
+        __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)d.v) : "r"(tp), "r"(o));
         __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)t.v) : "r"(d.v));
         self->out = t.v;
-        self->c4 = 2; self->c5 = 0; self->fl |= 1; self->c6 = self->c7 = 0;
+        self->c4 = 2; self->c5 = 0; self->fl |= 1; self->c6 = 0; self->c7 = 0;
     }
 }
 // DRAFT: GAME 0x2EA798

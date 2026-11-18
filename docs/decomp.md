@@ -165,7 +165,7 @@ The libraries come from more than one SCE compiler, all built as C at -O2:
 
 The boundaries follow runs of `sd` versus `sq` prologues; `sq` runs inside the
 library span (0x372CB0-0x387430, 0x393FD8-0x394F20, 0x3A53A8-0x3AF7B8, and the
-single unit 0x3BAFF8) are ProDG game code.
+units 0x3BAFF8, 0x3BB058, 0x3BB178, 0x3BB468, 0x3BB4F0, 0x3BB980, 0x3BBA10) are ProDG game code.
 
 A one-call wrapper `void f(){ g(); }` tells 2.9 and 2.96 apart: 2.9 emits a
 bare `j` (8 bytes), while 2.96 keeps a dead frame around the tail jump

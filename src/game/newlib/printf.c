@@ -1,6 +1,5 @@
 // FLAGS: -Iinclude/newlib -Iinclude/newlib/machine
 // newlib 1.9.0 libc/stdio/printf.c (0x3A6A20).
-#define _impure_ptr D_003FA62C
 #include <stdio.h>
 #undef va_start
 #undef va_end

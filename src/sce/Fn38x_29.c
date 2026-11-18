@@ -13,7 +13,7 @@ void *func_0038CFC0(void *);
 
 struct F39 { unsigned char *p; int cnt; };
 struct O39 { char pad[0x58]; struct F39 *f; };
-int func_003A6C10(struct F39 *);
+int __srget(struct F39 *);
 unsigned func_003A6308(char *, int, int, struct F39 *);
 
 // FUNCTION: GAME 0x39AE50
@@ -61,7 +61,7 @@ long func_00393628(struct O39 *o, char *b, long n)
         struct F39 *f = o->f;
         int c;
         if (--f->cnt < 0)
-            c = func_003A6C10(f);
+            c = __srget(f);
         else
             c = *f->p++;
         if (c == -1)
