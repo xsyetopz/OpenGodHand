@@ -1,0 +1,81 @@
+name: God Hand (USA) SLUS-21503
+# SHA-1 of the flat memory image produced by `objcopy -O binary --gap-fill=0` from SLUS_215.03.
+sha1: 2a81167afa727a9e4293803a8139192e87cfdf17
+options:
+  basename: SLUS_215.03
+  target_path: build/SLUS_215.03.rom
+  elf_path: build/SLUS_215.03.elf
+  base_path: ..
+  platform: ps2
+  compiler: EEGCC
+
+  asm_path: asm
+  src_path: src
+  build_path: build
+  asset_path: assets
+
+  # .reginfo ri_gp_value; equals _sbss start + 0x7FF0. No code uses $gp-relative data (-G0).
+  gp_value: 0x00468CF0
+  ld_gp_expression: main_SBSS_START + 0x7FF0
+
+  ld_script_path: build/SLUS_215.03.ld
+  ld_dependencies: False
+  ld_wildcard_sections: True
+  ld_bss_contains_common: True
+  ld_generate_symbol_per_data_segment: True
+
+  create_asm_dependencies: False
+  find_file_boundaries: False
+  o_as_suffix: True
+
+  symbol_addrs_path:
+    - config/symbols.sndata.txt
+    - config/symbols.txt
+  undefined_funcs_auto_path: build/undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/undefined_syms_auto.txt
+
+  string_encoding: ASCII
+  data_string_encoding: ASCII
+  rodata_string_guesser_level: 2
+  data_string_guesser_level: 2
+
+  named_regs_for_c_funcs: False
+  use_legacy_include_asm: False
+  asm_function_macro: glabel
+  asm_data_macro: dlabel
+  asm_end_label: endlabel
+
+  section_order:
+    - .text
+    - .data
+    - .sndata
+    - .rodata
+    - .gcc_except_table
+    - .sbss
+    - .bss
+
+  auto_link_sections:
+    - .data
+    - .rodata
+    - .gcc_except_table
+    - .sbss
+    - .bss
+
+segments:
+  - name: main
+    type: code
+    start: 0x000000
+    vram: 0x00100000
+    bss_size: 0x325AB4
+    subalign: null
+    subsegments:
+      - [0x000000, asm, text]                         # .text 0x00100000
+      - [0x2BBF20, pad]                                # zero fill to .data alignment
+      - [0x2BBF80, data, data]                        # .data 0x003BBF80
+      - { start: 0x30A400, type: data, name: sndata, section_order: .sndata }  # .sndata 0x0040A400
+      - [0x31B570, pad]
+      - [0x31B580, rodata, rodata]                    # .rodata 0x0041B580
+      - [0x360C00, gcc_except_table, gcc_except_table] # 0x00460C00
+      - { type: sbss, vram: 0x00460D00, name: sbss }
+      - { type: bss, vram: 0x00460E00, name: bss }
+  - [0x360CE4]

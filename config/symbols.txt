@@ -1,0 +1,2 @@
+// Calls the SN linker left unresolved (see .sndata table A); keep zero words unsymbolized.
+sn_unresolved = 0x00000000; // ignore:True

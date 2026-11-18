@@ -5,3 +5,9 @@ original/hashes.json
 build/
 __pycache__/
 *.py[cod]
+/asm/
+/assets/
+/.venv/
+/tools/compilers/
+/build.ninja
+/.ninja_*
