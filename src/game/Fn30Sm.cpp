@@ -1,16 +1,26 @@
 // Small game functions at 0x300000-0x310000 (2.95.3-136 C++).
 extern "C" void func_002FBE88(void);
-extern "C" void func_00306AA8(void);
+extern "C" void func_00306AA8(int *);
 extern "C" void func_003028E8(void *);
 extern "C" void func_002FB7B0(int);
 extern "C" void func_00300C00(int, int);
 extern "C" void func_002F7110(void *);
 extern "C" int func_003069A8(char *, unsigned, char **);
 extern "C" int func_00306A08(char *, unsigned, char **);
+extern "C" void func_003128B0(void *);
+extern "C" void func_002A9528(void *);
+extern "C" int func_00303A20(void *);
+extern "C" int func_003AF980(int, void *, int);
+extern "C" void func_003B0740(int);
+extern "C" void func_0030D190(void);
+extern "C" void KillEffect__FPC4cObji13eEspEraseMode(int, int, int);
+extern "C" char objArray[], scrArray[], D_00754C50[], objbaseArray[], D_00754C20[], D_00754C10[];
 extern "C" int D_00450080;
 extern "C" int D_0044FCF8;
 
 struct E16 { int a, b, c, d; };
+struct T4 { char pad[0x108]; char *s; char pad2[0x240 - 0x10C]; int a, b, c, d; };
+struct U5 { char pad[0x414]; unsigned m; };
 struct S4 { char pad[0xF0]; void *p; };
 struct S5A { char pad[0x420]; float f; void *p; };
 struct S5B { int pad[0x100]; unsigned a, b, c, d, e, f; };
@@ -19,7 +29,7 @@ struct S5B { int pad[0x100]; unsigned a, b, c, d, e, f; };
 extern "C" void func_003052E8(void) { func_002FBE88(); }
 
 // FUNCTION: GAME 0x306A88
-extern "C" void func_00306A88(void) { func_00306AA8(); }
+extern "C" void func_00306A88(int *a) { func_00306AA8(a); }
 
 // FUNCTION: GAME 0x304F58
 extern "C" void func_00304F58(S4 *s) { s->p = &D_0044FCF8; func_003028E8(s); }
@@ -103,6 +113,52 @@ extern "C" int func_003089F0(int *a, int k) {
 extern "C" int func_00308D68(int *a, int k) {
     for (int i = 0; i < 0x20; i++) { if (!a[i]) return 0; if (a[i] == k) return 1; }
     return 0;
+}
+
+// FUNCTION: GAME 0x304BF8
+extern "C" int func_00304BF8(T4 *t) {
+    char *s = t->s;
+    if (s) {
+        t->a = (unsigned char)s[0x2F4]; t->b = (unsigned char)s[0x2F5];
+        t->c = (unsigned char)s[0x2F6]; t->d = (unsigned char)s[0x2F7];
+        return func_00303A20(t);
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x305F58
+extern "C" void func_00305F58(U5 *u, int n) {
+    unsigned b = 1u << n;
+    if (u->m & b) { u->m &= ~b; KillEffect__FPC4cObji13eEspEraseMode(0, n + 0x2200, 2); }
+}
+
+// FUNCTION: GAME 0x306A08
+extern "C" int func_00306A08(char *a, unsigned i, char **o) {
+    *o = 0;
+    char *b = a + *(int *)(a + 0xC);
+    if (i >= *(unsigned *)(b + 4)) return 0;
+    return func_003069A8(b, i, o);
+}
+
+// FUNCTION: GAME 0x306AA8
+extern "C" void func_00306AA8(int *a) {
+    for (unsigned i = 0; i < 0x4E2; i++) a[0x40 + i] = 0;
+    for (unsigned i = 0; i < 0x40; i++) a[i] = 0;
+}
+
+// FUNCTION: GAME 0x30D1F8
+extern "C" void func_0030D1F8(void) {
+    *(volatile int *)0x10000000 = 0;
+    *(volatile int *)0x10000020 = 0x2589;
+    *(volatile int *)0x10000010 |= 0x1C2;
+    func_003AF980(9, (void *)func_0030D190, 0);
+    func_003B0740(9);
+}
+
+// FUNCTION: GAME 0x30F5F0
+extern "C" void func_0030F5F0(void) {
+    func_003128B0(objArray); func_003128B0(scrArray); func_003128B0(D_00754C50); func_003128B0(objbaseArray);
+    func_002A9528(D_00754C20); func_002A9528(D_00754C10);
 }
 
 #ifdef NONMATCHING

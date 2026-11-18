@@ -149,3 +149,97 @@ void func_0033A028(void)
 {
     func_00340AE8(D_00455BB8);
 }
+
+extern long func_00334B20(), func_00334310();
+extern void func_003363F8(), func_0033D4D8(), func_003302B0(), func_00398DA0();
+extern int D_003D8408, D_003D8404, D_003DA4D0, D_003DA4D4;
+extern char D_003D9DC0[], D_003EB858[];
+
+// FUNCTION: GAME 0x333288
+int func_00333288(int *p)
+{
+    return (int)((((long)p[5]) << 11) & 0xFFFFFFFFUL);
+}
+
+// FUNCTION: GAME 0x334B88
+int func_00334B88(void)
+{
+    return (int)(func_00334B20() >> 32);
+}
+
+// FUNCTION: GAME 0x3342E8
+int func_003342E8(void)
+{
+    return (int)func_00334310();
+}
+
+// FUNCTION: GAME 0x336510
+int func_00336510(int a)
+{
+    int x;
+    func_003363F8(a, &x);
+    return x;
+}
+
+// FUNCTION: GAME 0x33D578
+void func_0033D578(short *a, int b, int c, int d)
+{
+    func_0033D4D8(a, a + b, d);
+}
+
+// FUNCTION: GAME 0x33F3D0
+void func_0033F3D0(char *a, int b)
+{
+    func_003B0640(a, a + b - 1);
+}
+
+// FUNCTION: GAME 0x3302E0
+void func_003302E0(int a)
+{
+    func_003302B0(&D_003D8408, a, 0);
+}
+
+// FUNCTION: GAME 0x330E70
+void func_00330E70(int a, int b)
+{
+    if (!a) {
+        D_003D8404 = 0;
+        D_003D8408 = 0;
+    } else {
+        D_003D8404 = a;
+        D_003D8408 = b;
+    }
+}
+
+// FUNCTION: GAME 0x335D18
+void func_00335D18(int a, int b)
+{
+    if (!a) {
+        D_003DA4D0 = 0;
+        D_003DA4D4 = 0;
+    } else {
+        D_003DA4D0 = a;
+        D_003DA4D4 = b;
+    }
+}
+
+// FUNCTION: GAME 0x3312E8
+void func_003312E8(void)
+{
+    func_00331C78(0x1300);
+    func_00398DA0(0);
+    func_00331C78(0x1301);
+}
+
+// FUNCTION: GAME 0x333AD8
+void func_00333AD8(void)
+{
+    memset(D_003D9DC0, 0, 0x10);
+}
+
+// FUNCTION: GAME 0x33F888
+void func_0033F888(void)
+{
+    memset(D_003EB858, 0, 0x3C0);
+}
+

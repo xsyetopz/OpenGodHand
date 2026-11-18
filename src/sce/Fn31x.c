@@ -14,7 +14,7 @@ int func_0031FAE8(char *(*f0)(void), int (*f1)(void), int a, int b, int (*f3)(vo
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x31DFA8 (27 words differ, all from one missing nop: the original aligns the e == 0x7FF block)
+// DRAFT: GAME 0x31DFA8 (27 words differ, all from one missing nop: the original has a nop before the e == 0x7FF bnel, aligning it to 8 bytes; upstream fp-bit.c text, -msoft-float and the available -f flags do not emit it)
 struct UD { unsigned cls; int sign, exp, pad; unsigned long long frac; };
 void func_0031DFA8(unsigned long long *p, struct UD *u)
 {

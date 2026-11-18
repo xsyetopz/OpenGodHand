@@ -18,25 +18,6 @@ struct ScrVecQ {
 };
 extern ScrVecQ *volatile scrArray;
 
-// DRAFT: GAME 0x2DB318
-// diff: 2 words, original fills the bnel slot with the scrArray reload and branches past it; ours emits bne plus nop
-#ifdef NONMATCHING
-void setAlphaScrollLayer(unsigned id, float a)
-{
-    ScrVecQ *s = scrArray;
-    ScrObjQ **p = s->m_4;
-    if (p == s->m_8)
-        return;
-    do {
-        if (id == (*p)->m_2fd) {
-            (*p)->m_24c = a;
-            (*p)->m_31c = a;
-        }
-        p++;
-    } while (p != scrArray->m_8);
-}
-#endif
-
 // DRAFT: GAME 0x2DB370
 // diff: 2 words, original fills the bnel slot with the scrArray reload and branches past it; ours emits bne plus nop
 #ifdef NONMATCHING

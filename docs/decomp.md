@@ -194,6 +194,10 @@ A one-call wrapper `void f(){ g(); }` tells 2.9 and 2.96 apart: 2.9 emits a
 bare `j` (8 bytes), while 2.96 keeps a dead frame around the tail jump
 (`addiu sp; sd ra; ld ra; j; addiu sp`, 20 bytes). Below 0x328000 both shapes
 occur, so each object takes whichever compiler its framed functions match.
+Within 0x320000-0x328098 the switch from 2.9 to 2.96 lies between 0x3224F8
+and 0x3229D0. Framed units below it save `ra` at 0x10 per saved register, as
+2.9 does (20 of 20 sampled); units from 0x3229D0 save `ra` at 8 per register,
+as 2.96 does (`src/sce/Fn320_29.c` versus `src/sce/Fn320_96.c`).
 That span also holds ProDG game objects (`SearchCameraData` at 0x31CE38),
 recognisable by `sq` prologues; they match only `ee-gcc2.95.3-136`
 (`src/sce/Fn31y.c`: 0x31C238, 0x31CA88, 0x31D2F8, 0x31D6E8), while their

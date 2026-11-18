@@ -176,3 +176,105 @@ extern "C" void func_001C8DD8(char *self)
         ((void (*)(char *))*(void **)(vt + 0xA4))(self + *(short *)(vt + 0xA0));
     }
 }
+
+extern const char D_00429C80[];
+extern "C" void func_001FE278(void *, void *);
+extern "C" void func_001B6F38(void *, void *);
+extern "C" void func_001DEE60(void *, int, void *);
+
+// FUNCTION: GAME 0x001DEC70
+extern "C" void *func_001DEC70(char *self)
+{
+    *(int *)self = 0;
+    __7cIDBase(self + 0x10);
+    char *w = self + 0x60;
+    int i = 0x10;
+    do {
+        __12CustomIDWork(w);
+        w += 0x7C;
+    } while (--i != -1);
+    return self;
+}
+
+// FUNCTION: GAME 0x001DF758
+extern "C" void func_001DF758(void *a, void *b)
+{
+    func_001DEE60(a, 6, b);
+    func_001DEE60(a, 7, b);
+    func_001DEE60(a, 8, b);
+    func_001DEE60(a, 9, b);
+    func_001DEE60(a, 10, b);
+}
+
+// FUNCTION: GAME 0x001C2820
+extern "C" void func_001C2820(char *self, void *d)
+{
+    *(const char **)(self + 0x214) = D_00429C80;
+    void *p = *(void **)(self + 0x600);
+    if (p) {
+        func_001FE278(g_DmgManage, p);
+        *(int *)(self + 0x600) = 0;
+    }
+    if (*(int *)(self + 0x604)) {
+        func_001FE278(g_DmgManage, *(void **)(self + 0x600));
+        *(int *)(self + 0x600) = 0;
+    }
+    func_001B6F38(self, d);
+}
+
+struct V16 {
+    float x, y, z, w;
+} __attribute__((aligned(16)));
+extern "C" void SetEffectPos__F12eEffDataType6eEffIdP4cObjRC4cVecfi(int, int, void *, void *, float, int);
+
+// FUNCTION: GAME 0x001C2B80
+extern "C" void func_001C2B80(char *self)
+{
+    V16 v;
+    __asm__ volatile("sqc2 $vf0,0(%0)" : : "r"(&v) : "memory");
+    char *vt = *(char **)(self + 0x214);
+    V16 *p = ((V16 * (*)(char *))*(void **)(vt + 0x84))(self + *(short *)(vt + 0x80));
+    if (&v != p) {
+        v.x = p->x;
+        v.y = p->y;
+        v.z = p->z;
+    }
+    int e = *(int *)(self + 0x5E4);
+    if (e)
+        SetEffectPos__F12eEffDataType6eEffIdP4cObjRC4cVecfi(0, e, 0, &v, 1.0f, -1);
+}
+
+// FUNCTION: GAME 0x001C2CE0
+extern "C" void func_001C2CE0(char *self)
+{
+    V16 v;
+    __asm__ volatile("sqc2 $vf0,0(%0)" : : "r"(&v) : "memory");
+    char *vt = *(char **)(self + 0x214);
+    V16 *p = ((V16 * (*)(char *))*(void **)(vt + 0x84))(self + *(short *)(vt + 0x80));
+    if (&v != p) {
+        v.x = p->x;
+        v.y = p->y;
+        v.z = p->z;
+    }
+    int e = *(int *)(self + 0x5EC);
+    if (e)
+        SetEffectPos__F12eEffDataType6eEffIdP4cObjRC4cVecfi(0, e, 0, &v, 1.0f, -1);
+}
+
+struct T5 {
+    int a[5];
+};
+extern const T5 D_0042B5D0;
+extern "C" void func_001DD258(void *, int);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x001DDAB0
+// diff: 11 words, table-copy temps in a1/a2/a3 vs a1/a3/t0
+extern "C" void func_001DDAB0(void *self, unsigned char i)
+{
+    if (i < 5) {
+        T5 t = D_0042B5D0;
+        func_001DD258(self, t.a[i]);
+    }
+}
+#endif

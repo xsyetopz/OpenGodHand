@@ -222,6 +222,8 @@ void func_0035D740(int *a, int b, int c)
 void func_0035A518(int *a)
 {
     *(short *)((char *)a + 0x1E) = 0;
+    // barriers pin the sh stores around the sw run in the original order
+    __asm__ volatile("");
     a[0] = 0;
     a[1] = 0;
     a[2] = 0;
@@ -229,15 +231,18 @@ void func_0035A518(int *a)
     a[4] = 0;
     a[5] = 0;
     a[6] = 0;
+    __asm__ volatile("");
     *(short *)((char *)a + 0x1C) = 0;
 }
 
-// FUNCTION: GAME 0x35D800
+#ifdef NONMATCHING
+// DRAFT: GAME 0x35D800 original branches (beqz chain, 9 insns); gcc folds the range test into 4 insns; 8 words
 int func_0035D800(int *a)
 {
     int v = a[0];
     return v < -1 || v >= 2;
 }
+#endif
 
 // FUNCTION: GAME 0x35EA60
 void func_0035EA60(int *a)
@@ -248,7 +253,7 @@ void func_0035EA60(int *a)
 // FUNCTION: GAME 0x35FE20
 void func_0035FE20(int *a, int b, int c)
 {
-    int t = b * a[1]; a[2] -= b; a[0] = a[0] + t + c;
+    int x = a[1]; int y = a[0]; int z = a[2] - b; a[2] = z; a[0] = y + b * x + c;
 }
 
 // FUNCTION: GAME 0x35EEF8
@@ -262,7 +267,10 @@ extern int func_0035C2D0();
 // FUNCTION: GAME 0x358940
 int func_00358940(int a)
 {
-    return func_0035C2D0(a, 7, 6, 0, 0);
+    int r = func_0035C2D0(a, 7, 6, 0, 0);
+    // barrier after the call blocks gcc 2.96 from turning it into a tail jump
+    __asm__ volatile("");
+    return r;
 }
 
 // FUNCTION: GAME 0x35A260
@@ -273,7 +281,8 @@ void func_0035A260(char *a, int b, int *c)
 
 extern int D_003EE800;
 
-// FUNCTION: GAME 0x35FFB0
+#ifdef NONMATCHING
+// DRAFT: GAME 0x35FFB0 gcc hoists the lui into the beqz delay slot; original leaves a nop there; 8 words
 void func_0035FFB0(int *a)
 {
     if (a) {
@@ -281,3 +290,4 @@ void func_0035FFB0(int *a)
         D_003EE800--;
     }
 }
+#endif

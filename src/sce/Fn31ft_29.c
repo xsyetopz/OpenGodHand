@@ -69,6 +69,8 @@ INLINE static int iszero (fp_number_type * x) { return x->class == CLASS_ZERO; }
 #define ALIAS(n, a) __asm__ (".globl " #n "\n\t" #n " = " #a)
 ALIAS (__pack_f, func_0031EB38);
 ALIAS (__unpack_f, func_0031EC48);
+ALIAS (fptodp, func_0031EDD0);
+ALIAS (__muldi3, func_0031DE10);
 
 // FUNCTION: GAME 0x31EB38
 FLO_type

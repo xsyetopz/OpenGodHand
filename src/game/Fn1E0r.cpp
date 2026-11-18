@@ -188,7 +188,8 @@ public:
     int m_flags;
 };
 
-// FUNCTION: GAME 0x1EFE70
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1EFE70 - 7 words: D_00747A78 address/flag load scheduling
 void ColiseumBattle::PlCtrlOff(bool on)
 {
     int v;
@@ -201,4 +202,63 @@ void ColiseumBattle::PlCtrlOff(bool on)
         v = m_flags & mk;
     }
     m_flags = v;
+}
+#endif
+
+void displayScrollLayer(unsigned int, bool);
+
+// FUNCTION: GAME 0x1E3D78
+extern "C" void func_001E3D78(char *self, int a, int b)
+{
+    unsigned short *h = (unsigned short *)(self + 0x4A8);
+    *h = 0;
+    if (b)
+        *h = 0x8000;
+    if (a) {
+        *h |= 0x4000;
+        displayScrollLayer(*(unsigned *)(self + 0x430), true);
+    } else
+        displayScrollLayer(*(unsigned *)(self + 0x430), false);
+}
+
+// FUNCTION: GAME 0x1E6C80
+extern "C" void func_001E6C80(char *self, int a, int b)
+{
+    unsigned short *h = (unsigned short *)(self + 0x3E2);
+    *h = 0;
+    if (b)
+        *h = 0x8000;
+    if (a) {
+        *h |= 0x4000;
+        displayScrollLayer(*(unsigned *)(self + 0x3C8), true);
+    } else
+        displayScrollLayer(*(unsigned *)(self + 0x3C8), false);
+}
+
+// FUNCTION: GAME 0x1E6D48
+extern "C" void func_001E6D48(char *self, int a, int b)
+{
+    unsigned short *h = (unsigned short *)(self + 0x3E4);
+    *h = 0;
+    if (b)
+        *h = 0x8000;
+    if (a) {
+        *h |= 0x4000;
+        displayScrollLayer(*(unsigned *)(self + 0x3C8), true);
+    } else
+        displayScrollLayer(*(unsigned *)(self + 0x3C8), false);
+}
+
+// FUNCTION: GAME 0x1E6E10
+extern "C" void func_001E6E10(char *self, int a, int b)
+{
+    unsigned short *h = (unsigned short *)(self + 0x3E6);
+    *h = 0;
+    if (b)
+        *h = 0x8000;
+    if (a) {
+        *h |= 0x4000;
+        displayScrollLayer(*(unsigned *)(self + 0x3C8), true);
+    } else
+        displayScrollLayer(*(unsigned *)(self + 0x3C8), false);
 }

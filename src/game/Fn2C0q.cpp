@@ -190,15 +190,6 @@ extern "C" int func_002C9BB0(char *self, int idx, unsigned char v)
         return setSkill__9cCoreSave8PL_SKILLSc(CoreSave, (self + idx)[0x14], v);
 }
 
-// FUNCTION: GAME 0x2CC500
-extern "C" char *func_002CC500(char *self)
-{
-    func_00372C68(self);
-    *(char **)(self + 0x80) = D_0044CEE8;
-    func_002CC578(self);
-    return self;
-}
-
 // FUNCTION: GAME 0x2CC5E8
 extern "C" void func_002CC5E8(char *self)
 {
@@ -226,18 +217,6 @@ extern "C" int func_002CF888(char *self)
     return 1;
 }
 
-// FUNCTION: GAME 0x2CF9A8
-extern "C" int func_002CF9A8(char *self)
-{
-    char *d = D_00603A40;
-    int r = 0;
-    if (func_002D2EE8(d, *(int *)(self + 0x30))) {
-        if (func_002D2EE8(d, *(int *)(self + 0x34)))
-            r = 1;
-    }
-    return r;
-}
-
 // FUNCTION: GAME 0x2CFB60
 extern "C" void func_002CFB60(char *self)
 {
@@ -245,6 +224,39 @@ extern "C" void func_002CFB60(char *self)
     func_00374B70(*(short *)(self + 0x2C), *(int *)(self + 0x14), *(int *)(self + 0x18), *(int *)(self + 0x1C), *(int *)(o + 0x18));
     func_00375988(*(short *)(self + 0x2C), *(int *)(self + 0x14), *(int *)(self + 0x18), *(int *)(self + 0x1C));
     func_002CFCB0(self, 0x40);
+}
+
+extern char D_00602F80[], D_00603310[], D_006036A0[];
+extern "C" void func_002CD780(char *a);
+
+// FUNCTION: GAME 0x2CC578
+extern "C" void func_002CC578(char *self)
+{
+    memset(self, 0, 0xDC);
+    *(int *)(self + 0x90) = -1;
+    *(int *)(self + 0x8C) = -1;
+    *(int *)(self + 0x94) = 0;
+    *(int *)(self + 0xBC) = 0;
+    *(int *)(self + 0xC0) = 0;
+    *(int *)(self + 0xC8) = 0;
+}
+
+// FUNCTION: GAME 0x2CD500
+extern "C" void func_002CD500(char *self, float x, unsigned flags)
+{
+    *(float *)(self + 0xC8) = x;
+    *(unsigned *)(self + 0x98) |= flags;
+    func_003735E0(self, -1, 0.01f, x);
+}
+
+// FUNCTION: GAME 0x2CD9A0
+extern "C" void func_002CD9A0(int on, int id)
+{
+    if (id == 0xFFFF && on) {
+        func_002CD780(D_00602F80);
+        func_002CD780(D_00603310);
+        func_002CD780(D_006036A0);
+    }
 }
 
 #ifdef NONMATCHING

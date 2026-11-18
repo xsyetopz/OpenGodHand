@@ -72,24 +72,20 @@ struct T5 { char pad[0xC]; int n; struct E5 e[1]; };
 extern struct T5 *D_003F1A98;
 extern void func_0036CB58();
 
-// FUNCTION: GAME 0x369020
-struct E5 *func_00369020(void)
-{
-    int i;
-    int n = D_003F1A98->n;
-    struct E5 *e = D_003F1A98->e;
-    for (i = 0; i < n; i++, e++)
-        if (e->f == 1) return e;
-    return 0;
-}
 
 // FUNCTION: GAME 0x36C518
 void func_0036C518(int idx, int v)
 {
     int n = D_00766CE8.n;
     struct E4 *e = D_00766CE8.e;
-    for (; n > 0; n--, e++)
-        if (e->f == 2) *(int *)((char *)e + 0x190 + idx * 4) = v;
+    if (n > 0) {
+        int off = idx * 4 + 0x190;
+        do {
+            if (e->f == 2) *(int *)((char *)e + off) = v;
+            n--;
+            e++;
+        } while (n);
+    }
 }
 
 // FUNCTION: GAME 0x36CAB0
@@ -106,6 +102,19 @@ int *func_0036CAB0(void)
 }
 
 #ifdef NONMATCHING
+// DRAFT: GAME 0x369020
+// diff: 17 words off: orig builds the element base in v0 then copies to a0; ours folds it (3 probes)
+struct E5 *func_00369020(void)
+{
+    struct T5 *t = D_003F1A98;
+    int i = 0;
+    int n = t->n;
+    struct E5 *e;
+    for (e = t->e; i < n; i++, e++)
+        if (e->f == 1) return e;
+    return 0;
+}
+
 // DRAFT: GAME 0x36A070
 // diff: 18 words off: orig reuses a2=2 for the 0x35C compare, ours loads a second 2 into a3 (2 probes)
 int func_0036A070(char *a)

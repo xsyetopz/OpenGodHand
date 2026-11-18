@@ -5,6 +5,10 @@ void func_002D31B0(int, unsigned int);
 void *memset(void *, int, unsigned);
 int Check__4cDvd6eDvdId(void *, int);
 void set__13cActionButton12eScePriority8eActType11eActBtnTypePvT48eActFunc(void *, int, int, int, int, int, int);
+float Adjust_theta__Ff(float);
+void func_003AFB30(int, int);
+int SignalSema(int);
+void func_003AFAE0();
 void sceVu0ApplyMatrix(float *, float *, float *);
 int func_002D22B0(void *, int, int);
 void func_002D2F78(void *, int, int, int, int);
@@ -192,3 +196,26 @@ extern "C" void func_002DB7A8()
 {
     set__13cActionButton12eScePriority8eActType11eActBtnTypePvT48eActFunc(g_ActBtn, 0xB, 0x14, 0x11, 0, 0, 0);
 }
+
+// FUNCTION: GAME 0x2DA8D8
+extern "C" float Ang_mult_late__Ffff(float a, float b, float t)
+{
+    float x = Adjust_theta__Ff(b);
+    float y = Adjust_theta__Ff(a);
+    float d = Adjust_theta__Ff(y - x);
+    return Adjust_theta__Ff(x + d * t);
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2D5990 - 2 words: original loads the *self pointer into v1 (mine v0) before the SignalSema arg load
+extern "C" void func_002D5990(char *self)
+{
+    *(short *)(self + 0xC) = 2;
+    if (*(int *)(self + 4) == -1) return;
+    func_003AFB30(*(int *)(self + 4), 1);
+    char *o = *(char **)self;
+    SignalSema(*(int *)(o + 0x28));
+    *(int *)(self + 4) = -1;
+    func_003AFAE0();
+}
+#endif
