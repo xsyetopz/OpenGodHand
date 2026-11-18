@@ -159,6 +159,26 @@ int func_00368DF0(void)
     return func_00368AA8();
 }
 
+extern void *memset();
+extern void func_00360280();
+extern int func_00360520();
+extern int func_003605B0();
+struct A9 { char pad0[4]; int t; char pad1[0x34]; float f3C; float f40; void (*f44)(char *, char *, float, float); };
+
+// FUNCTION: GAME 0x360428
+void func_00360428(struct A9 *a, int b, int c, char *buf)
+{
+    char *buf2 = buf + 0x400;
+    memset(buf, 0, 0x400);
+    func_00360280(a, b, c, buf2);
+    if (a->f44 == 0) {
+        if (a->t == 0x10) { func_00360520(a, buf2, buf); return; }
+        func_003605B0(a, buf2, buf);
+        return;
+    }
+    a->f44(buf2, buf, a->f3C, a->f40);
+}
+
 #ifdef NONMATCHING
 extern int func_0036C688();
 extern int func_0036C440();

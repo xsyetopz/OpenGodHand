@@ -22,17 +22,6 @@ extern "C" void func_001EEC68(char *self)
 
 extern "C" void func_001E8DF0(char *, int *, int *, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1E7E68 - 2 words: andi/sltiu use v0 instead of a3
-extern "C" void func_001E7E68(void *a, void *b, void *c, unsigned int d)
-{
-    unsigned int e = d & 0xFFFF;
-    d = e;
-    if (b && c && d < 0x16)
-        func_001E8DF0();
-}
-#endif
-
 class cSlot1E {
 public:
     void run();
@@ -198,15 +187,3 @@ extern "C" void func_001E3240(char *self, int on)
         displayScrollLayer(*(unsigned *)(self + 0x404), true);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1E87E0 - 2 words: andi/sltiu use v0 instead of a3
-extern "C" void func_001E87E0(int *self, void *a, void *b, unsigned short d)
-{
-    if (a && b && d <= 0x15) {
-        func_001E8DF0();
-        self[1] = 0;
-        self[2] = 0;
-        self[3] = 0;
-    }
-}
-#endif

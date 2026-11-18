@@ -31,6 +31,7 @@ extern "C" void func_001E6718(int *self)
 
 class CustomIDWork {
 public:
+    CustomIDWork();
     void SetMessNo(int);
     void SetDisp(bool);
     void SetNumber(int);
@@ -247,12 +248,12 @@ public:
     unsigned int m_f2 : 1;
 };
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1EEC98 - 11 words: target loads flags with lwu+dsra
+// FUNCTION: GAME 0x1EEC98
 void ColiseumBattle::Main()
 {
     (this->*D_003BE548[m_st])();
-    if (m_f2)
+    long l = *(unsigned *)((char *)this + 0x54);
+    long b = (l >> 2) & 1;
+    if (b)
         D_005CAE40 = 0xF;
 }
-#endif

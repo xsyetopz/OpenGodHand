@@ -24,17 +24,17 @@ public:
 };
 extern classFADE Fade;
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1EFD00 - 2 words: target lwu+dsra, mine lw+srl
+// FUNCTION: GAME 0x1EFD00
 extern "C" void func_001EFD00(char *self)
 {
     int *f = (int *)(self + 0x54);
-    if ((*f >> 1) & 1) {
+    long l = *(unsigned *)f;
+    long b = (l >> 1) & 1;
+    if (b) {
         Fade.kill();
         *f &= -3;
     }
 }
-#endif
 
 // FUNCTION: GAME 0x1E66C0
 extern "C" void func_001E66C0(int *self)
@@ -187,23 +187,6 @@ public:
     int m_pad[0x15];
     int m_flags;
 };
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1EFE70 - 7 words: D_00747A78 address/flag load scheduling
-void ColiseumBattle::PlCtrlOff(bool on)
-{
-    int v;
-    if (on) {
-        KeyStop();
-        v = m_flags | 4;
-    } else {
-        int mk = -5;
-        D_00747A78 &= 0xFDFFFFFF;
-        v = m_flags & mk;
-    }
-    m_flags = v;
-}
-#endif
 
 void displayScrollLayer(unsigned int, bool);
 

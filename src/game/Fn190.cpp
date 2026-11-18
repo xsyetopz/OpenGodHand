@@ -31,33 +31,6 @@ extern "C" void func_00195980(sF *s)
     s->vt->fn((char *)s + s->vt->adj);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x194CB0
-// original lays the shared epilogue first and the bgez branches back to it; compiled has bne/b around the early return (5 words)
-extern "C" void func_00194CB0(char *self)
-{
-    unsigned char s = *(unsigned char *)(self + 0x2F6);
-    if (s != 0) {
-        if (s != 1)
-            return;
-    } else {
-        *(unsigned short *)(self + 0xAF0) = 0;
-        *(unsigned char *)(self + 0x2F6) = 1;
-        *(unsigned char *)(self + 0x2F7) = 0;
-    }
-    int t = *(unsigned short *)(self + 0xAF0) - 1;
-    *(unsigned short *)(self + 0xAF0) = t;
-    if ((short)t < 0) {
-        unsigned char b = *(unsigned char *)(self + 0x2F5);
-        *(unsigned char *)(self + 0x2F5) = 2;
-        *(unsigned char *)(self + 0xAF2) = b;
-        *(unsigned char *)(self + 0x2F6) = 0;
-        *(unsigned char *)(self + 0x2F7) = 0;
-    }
-}
-
-#endif
-
 // FUNCTION: GAME 0x19C050
 extern "C" void func_0019C050(char *self)
 {

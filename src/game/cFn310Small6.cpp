@@ -70,6 +70,62 @@ extern "C" int func_0031A600(char *self, int idx, int a, int b)
         return func_0014FF00(*slot(self, idx), a, b, b);
 }
 
+extern "C" void *getMeshPtr__6cModeli(void *, int);
+extern "C" int getMeshNum__C6cModel(void *);
+extern "C" void func_00155D60(void *, unsigned, int);
+// FUNCTION: GAME 0x319D60
+extern "C" void Set_test__9objScrollUl(void *self, unsigned v)
+{
+    int n = getMeshNum__C6cModel(self);
+    for (int i = 0; i < n; i++) {
+        void *m = getMeshPtr__6cModeli(self, i);
+        func_00155D60(m, v, 0);
+        func_00155D60(m, v, 1);
+    }
+}
+// FUNCTION: GAME 0x31BB08
+extern "C" void Pad_act_set__13classPAD_WORKUiUi(char *p, unsigned id, unsigned a)
+{
+    unsigned char *e = (unsigned char *)p + 0x160;
+    unsigned i = 0;
+    while (*e) {
+        if (++i >= 0x20)
+            return;
+        e += 0x10;
+    }
+    e[0] = id >> 24;
+    e[1] = id >> 16;
+    e[2] = id >> 8;
+    e[3] = id;
+    *(unsigned short *)(e + 6) = a >> 16;
+    *(unsigned short *)(e + 4) = a + 1;
+    *(unsigned short *)(e + 0xA) = 0;
+    *(unsigned short *)(e + 0xC) = 0;
+}
+
+struct SysT { char p[0x210]; unsigned a; char q[0x370]; unsigned b; };
+extern SysT Sys;
+extern "C" void func_003AFF50(int);
+extern "C" void FlushCache(int);
+extern "C" int sceGsSyncPath(int, int);
+// FUNCTION: GAME 0x31A538
+extern "C" void func_0031A538(int *src)
+{
+    SysT *s = &Sys;
+    unsigned n = s->a & 1;
+    if (s->b & 0x20000000)
+        func_003AFF50(0);
+    else
+        FlushCache(0);
+    sceGsSyncPath(0, 0);
+    *(volatile int *)0x1000E010 = 2;
+    *(volatile int *)0x1000E020 = 2;
+    *(volatile int *)0x10009020 = 0;
+    *(volatile int *)0x10009030 = *(int *)((char *)src + n * 0x80);
+    *(volatile int *)0x10009000 = 0x45;
+    *(volatile int *)0x10009000 = 0x145;
+}
+
 #ifdef NONMATCHING
 // DRAFT: GAME 0x31A650 (2 words differ: a1/a3 arg moves swapped)
 extern "C" int func_0031A650(char *self, int idx, int a, int b, int c)
@@ -95,5 +151,31 @@ extern "C" void ReleaseObj__FP4cObj(RObj *o)
         int f = 0x80000002;
         o->flags |= f;
     }
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x312908 (18 words differ: original keeps &tmp in a2 early, nop after bne)
+struct Vec { int p0; cObj **b; cObj **e; cObj **c; };
+struct Wrap { Vec *v; };
+extern "C" void func_00317FF0(Vec *, cObj **, cObj **);
+extern "C" cObj **insert__19cObjPtrArrayWrapperPP4cObjP4cObj(Wrap *w, cObj **pos, cObj *val)
+{
+    cObj *tmp = val;
+    unsigned size = w->v ? (w->v->e - w->v->b) : 0;
+    Vec *v = w->v;
+    unsigned cap = v ? (v->c - v->b) : 0;
+    if (size >= cap)
+        return 0;
+    cObj **r = &tmp;
+    int idx = pos - v->b;
+    if (v->e == v->c || pos != v->e)
+        func_00317FF0(v, pos, r);
+    else {
+        if (pos)
+            *pos = *r;
+        v->e++;
+    }
+    return v->b + idx;
 }
 #endif

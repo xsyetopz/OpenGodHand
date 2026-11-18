@@ -84,7 +84,7 @@ void cOl2b::setCloseFix()
     }
 }
 
-// 0x1804F8: same diff as setOpenFix (in-range bool copy + andi 0xFF)
+// 0x1804F8: same diff as setOpenFix (in-range bool copy + andi 0xFF)  // diff: 2 words (best: unsigned char accumulator, build/wip-ae9/v5.cpp)
 void cOl2b::setInitFix()
 {
     if (m_state != 0) {

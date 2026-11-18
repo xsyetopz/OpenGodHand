@@ -100,22 +100,6 @@ extern "C" void trans__7cIDBase(void *self);
 extern char *CoreSave;
 #endif
 
-// DRAFT: GAME 0x13DAE0 - 2 words: original ends the CoreSave flag test with beqz+nop and a shared epilogue; mine emits beql with the lq in the delay slot
-#ifdef NONMATCHING
-extern "C" void func_0013DAE0(char *self)
-{
-    if (D_00747A84 & 0x8000000)
-        return;
-    if (D_00747A84 & 0x2000000)
-        return;
-    if (*(unsigned *)(CoreSave + 0x14) & 0x4000000) {
-        trans__7cIDBase(self + 0xD0);
-        trans__7cIDBase(self);
-        return;
-    }
-}
-#endif
-
 // DRAFT: GAME 0x133330 - 7 words: original sets t3 after the beqz and uses addu t3,v1 / (x<<4)+tbl operand order; mine swaps the two addu operands and hoists the t3 init
 #ifdef NONMATCHING
 class cCollisionScroll2 {

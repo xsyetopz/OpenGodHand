@@ -33,46 +33,6 @@ struct Em {
     unsigned char m_623;
 };
 
-// DRAFT: GAME 0x247218
-// diff: 7 words; original keeps the loaded offsets in v1/a0 and adds the base into a1/a2, mine loads straight into a1/a2
-#ifdef NONMATCHING
-extern "C" void func_00247218(Em *self)
-{
-    self->m_617 = 1;
-    switch (self->m_2F6) {
-    case 0: {
-        int t = func_00276468(self) & 0xFFFF;
-        Pm *p;
-        int a, b;
-        if (self->m_564 == 0x24F) {
-            p = self->m_304;
-            a = p->m_1F70;
-            b = p->m_1F74;
-        } else {
-            p = self->m_304;
-            a = p->m_1F78;
-            b = p->m_1F7C;
-        }
-        a += (int)p;
-        b += (int)p;
-        func_002A8578(self, a, b, 10, t, 0, 0.0f);
-        self->m_568 = 10;
-        self->m_623 = 1;
-        self->m_2F6++;
-    }
-    case 1:
-        if (moveMotion__FP8cObjBase(self))
-            func_002705D8(self);
-        addNullSpeed_Rotation__8cObjBasef(self, 1.0f);
-        addNullSpeed__8cObjBasef(self, 1.0f);
-        if (self->m_568 > 0)
-            self->m_568--;
-        else
-            self->m_623 = 0;
-    }
-}
-#endif
-
 // DRAFT: GAME 0x246F40
 // diff: 3 words; the original increments m_2F6 through v1, mine through v0
 #ifdef NONMATCHING
