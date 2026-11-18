@@ -3,7 +3,7 @@ extern int D_0077DB88;
 extern "C" long func_003B0450(int, int);
 extern "C" long func_003B0390(int, int, int);
 extern "C" long func_003B02E8(int, int, int);
-extern "C" long func_003B0398(int);
+extern "C" int func_003B0398(int);
 extern "C" long func_003B0268(int, int, int);
 
 // FUNCTION: GAME 0x3ADFA8
@@ -37,10 +37,10 @@ extern "C" long func_003AE068(int *self, int a1, int a2, int a3)
 }
 
 // FUNCTION: GAME 0x3AE0C8
-extern "C" long func_003AE0C8(int *self, int a1)
+extern "C" int func_003AE0C8(int *self, int a1)
 {
     D_0077DB88 = 0;
-    long r = func_003B0398(a1);
+    unsigned r = func_003B0398(a1);
     if (r == -1 && D_0077DB88)
         *self = D_0077DB88;
     return r;

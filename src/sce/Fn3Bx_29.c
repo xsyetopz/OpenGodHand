@@ -136,3 +136,9 @@ int func_003B7C18(void)
         return func_003B7C58();
     return func_003B0110();
 }
+
+// FUNCTION: GAME 0x3B2E38
+int func_003B2E38(int a, int b, int c, int d)
+{
+    return func_003B26C8(0x80000008, d, 0x40, 0, 0, 0) ? 0 : 0x800;
+}

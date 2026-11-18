@@ -138,3 +138,111 @@ extern "C" void func_001641B8(char *self)
     }
 }
 #endif
+
+struct MeshHdr {
+    char _pad[0x14];
+    unsigned short n;
+};
+struct MeshBase {
+    char _pad[0x20];
+    int off[1];
+};
+// DRAFT: GAME 0x1551E0
+// diff: 23 words; original divides by a variable 0x18 (a2) with break check, a second 0x18 check before mul by 0x90, bnez-skip for q++; compiled folds to movz. 0x1552F0 is the same unit with 0x70.
+#ifdef NONMATCHING
+extern "C" int func_001551E0(char *self, int i)
+{
+    MeshBase *b = *(MeshBase **)(self + 0x388);
+    MeshHdr *h = (MeshHdr *)((char *)b + b->off[i]);
+    MeshBase *volatile k0 = b;
+    MeshHdr *volatile k1 = h;
+    (void)k0;
+    (void)k1;
+    int n = h->n;
+    int d = 0x18;
+    int q = n / d;
+    if (n % d)
+        q++;
+    int m = 0x90;
+    return q * m + 0x10;
+}
+
+#endif
+
+struct Tab8 {
+    unsigned lo, hi;
+};
+extern Tab8 D_004A5D80[];
+// DRAFT: GAME 0x155BE8
+// diff: 25 words; semantics match (64-bit pack of two table words), but scheduling/reg choice differ and compiled is 4 bytes longer (original reuses v0 for 0x10000000 in both paths).
+#ifdef NONMATCHING
+extern "C" void func_00155BE8(char **self, int idx, int slot)
+{
+    char *o = self[slot + 0x88];
+    if (idx >= 0) {
+        Tab8 *t = &D_004A5D80[idx & 0xFF];
+        unsigned a = t->hi | 0x30000000;
+        unsigned b = t->lo & 0x0FFFFFFF;
+        *(long *)(o + 0x50) = ((long)b << 32) | (long)a;
+        *(long *)(o + 0x60) = 0x10000000;
+    } else {
+        *(long *)(o + 0x50) = 0x10000000;
+        *(long *)(o + 0x60) = 0x10000000;
+    }
+}
+#endif
+
+extern "C" void func_00157568(void *p);
+extern "C" void func_00157C18(void *p);
+// FUNCTION: GAME 0x1582A0
+extern "C" void func_001582A0(char *self, int a, int b, float f, int pad, unsigned short flags)
+{
+    float c;
+    if (*(int *)(self + 0x428) != a || *(int *)(self + 0x42C) != b || (c = *(float *)(self + 0x440), !((flags & 4) ? (c == -f) : (c == f))))
+        func_00157568(self);
+    func_00157C18(self);
+}
+
+struct V4f {
+    float x, y, z, w;
+};
+extern "C" void func_001B6FB8(void *self);
+extern "C" void *func_001FE218(void *mgr, void *self, int kind);
+extern "C" void func_001FDC00(void *e, void *at, V4f *a, V4f *b, float s, float t);
+extern "C" void func_001C28A0(void *self);
+// DRAFT: GAME 0x16FD68
+// diff: 8-10 words; calls/vectors/branch match, only the tail halfword/byte store order and v0/v1 choice for 0x620/6 differ (scheduler).
+#ifdef NONMATCHING
+extern "C" int func_0016FD68(char *self)
+{
+    V4f a, b;
+    func_001B6FB8(self);
+    a.x = 0;
+    a.y = 0;
+    a.z = 0;
+    a.w = 1.0f;
+    void *e = func_001FE218(g_DmgManage, self, 2);
+    *(void **)(self + 0x600) = e;
+    if (e) {
+        V4f *q = &b;
+        b.x = 0;
+        b.y = 0;
+        b.z = 0;
+        q->w = 1.0f;
+        func_001FDC00(e, self + 0x80, &a, q, 3.0f, 0.8f);
+    }
+    char *p = self + 0x620;
+    *(int *)(self + 0x5E8) = 0;
+    *(int *)(self + 0x5E4) = 0;
+    *(int *)(self + 0x5F0) = 0;
+    *(int *)(self + 0x5EC) = 0;
+    *(short *)(self + 0x54A) = 1;
+    *(char *)(self + 0x60C) = 6;
+    *(short *)(self + 0x5F6) = -1;
+    *(short *)(self + 0x548) = 1;
+    *(short *)(self + 0x5F4) = -1;
+    *(char **)(self + 0x608) = p;
+    func_001C28A0(self);
+    return 1;
+}
+#endif

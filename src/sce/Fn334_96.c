@@ -89,3 +89,75 @@ void func_0033C240(int *a) { int p = a[0xC0 / 4]; if (p) D_003E9D18(p); }
 
 // FUNCTION: GAME 0x334BA8
 int func_00334BA8(void) { return (int)(func_00334B20_l() & 0xFFFFFFFFUL); }
+
+// Round 24: 0x60-0x80 byte framed units
+void func_00329028(void);
+void func_00329040(void);
+void func_003298F0(void *);
+void func_0032E720(void *);
+void func_0033FCA0(void);
+void func_0033FCA8(void);
+int func_0032D3A8(int, int, int, int);
+void func_00329EA8(int);
+void func_003298C0(int);
+int func_0032F4C8(int);
+void func_0032B660(int, int);
+int func_00328F30(int);
+int func_003277A0(int);
+void func_0032A6D0(void *, int, int);
+unsigned strlen(const char *);
+extern char D_003C7420[];
+extern char D_003D1488[];
+struct V { int (**vt)(struct V *, int); };
+
+// FUNCTION: GAME 0x328300
+void func_00328300(int *s) {
+    func_00329028();
+    if ((s[0] & 0xFFFF00) == 0x10200) {
+        ((char *)s)[0x48] = 1;
+        if (((char *)s)[0x47] == 1) ((char *)s)[0x47] = 0;
+    } else ((char *)s)[1] = 1;
+    func_00329040();
+}
+
+// FUNCTION: GAME 0x328E78
+void func_00328E78(int *a, struct V *b) {
+    int x, y;
+    a[1] = (int)b;
+    func_00329028();
+    x = b->vt[9](b, 0);
+    y = b->vt[9](b, 1);
+    a[0x10] = x + y;
+    func_00329040();
+    a[7] = a[6] = a[0x10];
+}
+
+// FUNCTION: GAME 0x329AF0
+void func_00329AF0(void) { char *p = D_003C7420; int i; for (i = 15; i >= 0; i--, p += 0xC8) if (*p == 1) func_003298F0(p); }
+
+// FUNCTION: GAME 0x32EC00
+void func_0032EC00(void) { char *p = D_003D1488; int i; for (i = 3; i >= 0; i--, p += 0x278) if (*p == 1) func_0032E720(p); }
+
+// FUNCTION: GAME 0x32D340
+int func_0032D340(int a, int b, int c, int d) { int r; func_0033FCA0(); r = func_0032D3A8(a, b, c, d); func_0033FCA8(); return r; }
+
+// FUNCTION: GAME 0x32EE88
+void func_0032EE88(char *s) { int i; int *p; i = 0; if (s[3] > 0) { p = (int *)(s + 0xC); do { if (*p) { int v = *p; *p = 0; func_003298C0(v); } i++; p++; } while (i < s[3]); } }
+
+// FUNCTION: GAME 0x32EF00
+void func_0032EF00(char *s) { int i; for (i = 0; i < s[3]; i++) func_00329EA8(((int *)(s + 0xC))[i]); }
+
+// FUNCTION: GAME 0x32F068
+void func_0032F068(int *s, int b) { int n = func_0032F4C8(s[1]); int i; for (i = 0; i < n; i++) func_0032B660(s[3 + i], b); }
+
+// FUNCTION: GAME 0x32D0F8
+int func_0032D0F8(int sv) { int *s = (int *)sv; if (!s) return 0; if (s[2] == 0) { int *t = (int *)s[0x94 / 4]; if (!t) return 0; if (t[0x28 / 4]) return func_00328F30(t[0x28 / 4]); return 0; } return func_00328F30(s[2]); }
+
+// FUNCTION: GAME 0x32C2A8
+void func_0032C2A8(char *s) { if (func_003277A0(*(int *)(s + 4)) == 1) { func_0032A6D0(s, 0, *(short *)(s + 0x42)); return; } func_0032A6D0(s, 0, *(short *)(s + 0x42)); func_0032A6D0(s, 1, *(short *)(s + 0x44)); }
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x330518
+// diff: 4 words (copy of n = strlen + 1 into a3 happens before the loop setup in the original)
+void func_00330518(char *s) { unsigned n = strlen(s) + 1; unsigned i; for (i = 0; i < n; i++) { int c = (unsigned char)s[i]; if ((unsigned)(c - 0x61) < 0x1A) s[i] = c - 0x20; } }
+#endif

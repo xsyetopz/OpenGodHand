@@ -18,6 +18,27 @@ void func_00397450(int *, int, int);
 void func_00366C50(int *, int, int);
 int func_0036C920(int);
 extern int D_003EE278;
+extern int D_003EE0A4;
+void func_00355AC8();
+int func_003569E0(int, int, int, int, int, int, int, int);
+void func_00355BB8(int, int);
+void func_00368E80(char *), func_00369118(char *), func_00369130(char *), func_00369158(char *);
+extern void func_00366EC0();
+void func_0035F788(int, int *, int *);
+int func_00329F98(int);
+void func_0032A160(int, int *, int *);
+int func_00360B18();
+int func_00360C58();
+void func_0035C5A0(int, long long *, long long *, int *);
+void func_00349F80(int, int, int *);
+void func_00349FB0(int, int, int *);
+int CreateSema(void *);
+void func_00355988(int *);
+void func_00366960(int, int, int);
+int func_00342BC8();
+void func_00342D00();
+int func_00342E50();
+int func_00342E80();
 int func_00347080();
 int func_003470F0();
 int func_00347160(int);
@@ -88,7 +109,9 @@ void func_0034CBB0(void)
     ((void (*)(int **))(*o)[3])(o);
 }
 
-// FUNCTION: GAME 0x34BEB8
+#ifdef NONMATCHING
+// DRAFT: GAME 0x34BEB8
+// diff: store order: 0x28 hoisted, epilogue lds interleaved, 15 words
 void func_0034BEB8(char *a, int *b, int *c, int i)
 {
     int *pb = b + i;
@@ -109,10 +132,13 @@ void func_0034BEB8(char *a, int *b, int *c, int i)
     s[9] = 0;
     s[0xA] = 0;
 }
+#endif
 
 typedef struct { char c[24]; } S24;
 
-// FUNCTION: GAME 0x34C158
+#ifdef NONMATCHING
+// DRAFT: GAME 0x34C158
+// diff: s1/s2/s3 reg assignment and copy placed before b[1]=c, 20 words
 void func_0034C158(char *p, S24 *a, int *b, int c)
 {
     char lk[16];
@@ -125,6 +151,7 @@ void func_0034C158(char *p, S24 *a, int *b, int c)
     func_003592D0(p + 0x28);
     func_0034DF80(lk);
 }
+#endif
 
 // FUNCTION: GAME 0x3550D0
 int func_003550D0(int a, int b, int c)
@@ -155,7 +182,9 @@ int func_003465E8(int a, int b, int c)
     return 0;
 }
 
-// FUNCTION: GAME 0x358598
+#ifdef NONMATCHING
+// DRAFT: GAME 0x358598
+// diff: store order: 0x28 hoisted above 0x1C, 11 words
 void func_00358598(int *p)
 {
     func_00366C50(p, 0, 0x10);
@@ -172,8 +201,11 @@ void func_00358598(int *p)
     p[9] = -1;
     p[10] = -1;
 }
+#endif
 
-// FUNCTION: GAME 0x35B500
+#ifdef NONMATCHING
+// DRAFT: GAME 0x35B500
+// diff: lw/addu/sw ordering of the two += updates, 7 words
 void func_0035B500(char *a)
 {
     char lk[16];
@@ -184,6 +216,7 @@ void func_0035B500(char *a)
     s[0x2CC / 4] += r;
     func_0034DF80(lk);
 }
+#endif
 
 // FUNCTION: GAME 0x34C748
 void func_0034C748(char *a, int i, int b, int c)
@@ -207,7 +240,9 @@ void func_0034C6D8(char *a, int i, int *b, int *c)
     func_0034DF80(lk);
 }
 
-// FUNCTION: GAME 0x347008
+#ifdef NONMATCHING
+// DRAFT: GAME 0x347008
+// diff: load/store interleave differs (struct-copy scheduling), 10 words
 void func_00347008(int a, char *b)
 {
     int *d = (int *)(b + 0x60);
@@ -221,6 +256,7 @@ void func_00347008(int a, char *b)
     d[5] = func_00347160(s[5]);
     d[6] = func_00347160(s[6]);
 }
+#endif
 
 // FUNCTION: GAME 0x3498E8
 void func_003498E8(char *a, int b, int c)
@@ -251,4 +287,168 @@ void func_0034D6F0(int a, int *b)
     b[4] = func_0034DA50(a, func_0035DFE0);
     b[5] = func_0034DA50(a, func_0035E030);
     b[6] = func_0034DA50(a, func_0035E080);
+}
+
+// FUNCTION: GAME 0x34F188
+int func_0034F188(int **a, int b, int c)
+{
+    int buf[2];
+    ((void (*)())(*a)[6])(a, 0, c, buf);
+    func_00366960(buf[0], b, buf[1]);
+    ((void (*)(int **, int, int *))(*a)[8])(a, 1, buf);
+    return buf[1];
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x342E88
+// diff: constants folded (0x840 vs separate +0x40,+0x40,+0x800) and add order, 22 words
+int func_00342E88(int a)
+{
+    int v[11];
+    int t, u;
+    func_00342BC8(a, &v[0], &v[1], &v[2], &v[3], &v[4], &v[5]);
+    func_00342D00(a, &v[6], &v[7]);
+    t = func_00342E50(a, &v[8], &v[9], &v[10]);
+    u = func_00342E80();
+    return v[1] + v[2] + v[3] + 0x40 + t + (v[0] + v[4]) + (v[6] + 0x40 + (v[7] + v[5])) + u + 0x800;
+}
+#endif
+
+// FUNCTION: GAME 0x359370
+void func_00359370(int *p, int b, int c)
+{
+    int *q = (int *)(((b + 7) & -8));
+    int n = c - ((int)q - b);
+    memset(q, 0, n);
+    p[0] = (int)q;
+    p[4] = 0;
+    p[2] = 0;
+    p[3] = 0;
+    p[1] = n / 16;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x355910
+// diff: 4 words, store order 0x18,0x8,0,0x50 vs 0,0x50,0x18,0x8
+int func_00355910(int *p, int a, unsigned int b, int c, int d, int e)
+{
+    int sema[6];
+    p[0x54 / 4] = e;
+    p[6] = c << 11;
+    p[2] = c;
+    p[0] = a;
+    p[0x50 / 4] = d;
+    p[1] = (b & 0xFFFFFFF) | 0x20000000;
+    sema[2] = 1;
+    sema[1] = 1;
+    p[0x40 / 4] = CreateSema(sema);
+    func_00355988(p);
+    *(long long *)(p + 0x48 / 4) = 0;
+    return 1;
+}
+#endif
+
+// FUNCTION: GAME 0x356648
+int func_00356648(int a, int b, int c)
+{
+    int v[4];
+    int r;
+    func_00355AC8(a, &v[0], &v[1], &v[2], &v[3]);
+    r = func_003569E0((v[0] & 0xFFFFFFF) | 0x20000000, v[1], (v[2] & 0xFFFFFFF) | 0x20000000, v[3], b, c, 0, 0);
+    func_00355BB8(a, r);
+    return r;
+}
+
+// FUNCTION: GAME 0x35FAD8
+void func_0035FAD8(int *p, int b, int c)
+{
+    int v;
+    memset(p, 0, 0x94);
+    v = (b + 0x1F) & -0x20;
+    p[0x50 / 4] = b;
+    p[0x54 / 4] = c;
+    p[0] = 1;
+    p[0x3C / 4] = v + 0x400;
+    p[0x40 / 4] = v + 0x800;
+    p[0x44 / 4] = v + 0xC00;
+    p[0x58 / 4] = -1;
+    p[1] = 0;
+    p[2] = 0;
+    p[3] = 0;
+    p[0x28 / 4] = 1;
+    p[0x2C / 4] = 0;
+    p[0x34 / 4] = 0;
+    p[0x38 / 4] = v;
+    p[0x64 / 4] = 0;
+}
+
+// FUNCTION: GAME 0x369078
+int *func_00369078(int *p)
+{
+    char *q = (char *)p;
+    func_00366C50(p, 0, 0x40);
+    p[0] = 2;
+    func_00368E80(q + 4);
+    p[4] = 2;
+    func_00369118(q + 0x18);
+    func_00369130(q + 0x28);
+    func_00369130(q + 0x48);
+    func_00369130(q + 0x68);
+    func_00369130(q + 0x88);
+    func_00369158(q + 0xA8);
+    p[0xD0 / 4] = 0;
+    p[0xD8 / 4] = 0;
+    p[0xDC / 4] = 0;
+    p[0xD4 / 4] = (int)func_00366EC0;
+    p[0xE0 / 4] = 0;
+    p[0xE4 / 4] = 0;
+    p[0xE8 / 4] = 0;
+    return p;
+}
+
+// FUNCTION: GAME 0x349988
+void func_00349988(char *a, int b, int c, int d, int e, int f, int g)
+{
+    int buf[40];
+    int buf2[28];
+    int s = *(int *)(a + 0xA8);
+    func_00346C58((int)a, b, buf);
+    func_0035F578(s, buf, c, buf2, d, e, f, g);
+    func_0035F788(s, buf, buf2);
+}
+
+// FUNCTION: GAME 0x34B0F0
+void func_0034B0F0(int a, int b, int *c, int *d)
+{
+    int w[2];
+    long long A[2], B[2];
+    int C[4];
+    D_003EE0A4 = func_00329F98(b);
+    func_0032A160(b, &w[0], &w[1]);
+    A[0] = w[0];
+    A[1] = w[1];
+    B[0] = func_00360B18();
+    B[1] = func_00360C58();
+    func_0035C5A0(a, A, B, C);
+    *c = C[0];
+    *d = C[2];
+}
+
+// FUNCTION: GAME 0x34A038
+void func_0034A038(char *a, int b, int c, int *d)
+{
+    int buf[2];
+    int *s1 = *(int **)(a + 0x2004);
+    int s3 = s1[1];
+    int n;
+    func_00349F80(s3, s1[2], buf);
+    n = buf[1];
+    if (c < n)
+        n = c;
+    if (n > 0x19000)
+        n = 0x19000;
+    func_00366960(buf[0], b, n);
+    func_00349FB0(s3, n, buf);
+    s1[0x48 / 4] += n;
+    *d = n;
 }

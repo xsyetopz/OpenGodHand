@@ -125,3 +125,55 @@ int func_00397590(volatile unsigned *p)
         func_003B63F0();
     return s;
 }
+
+extern char D_003F9840[], D_003FA1C0[], D_003F9810[], D_003F86C0[];
+extern int D_003F866C, D_003F8668;
+int func_00398EB0(int);
+int func_00398BB0(int);
+int sceSifCallRpc(void *, int, int, void *, int, void *, int, void *, void *);
+int SignalSema(int);
+
+// FUNCTION: GAME 0x399910
+int func_00399910(void)
+{
+    int r;
+    if (!func_00398EB0(1))
+        return -1;
+    if (sceSifCallRpc(D_003FA1C0, 3, 0, 0, 0, D_003F9840, 4, 0, 0) < 0) {
+        SignalSema(D_003F866C);
+        return -1;
+    }
+    r = *(int *)((unsigned)D_003F9840 | 0x20000000);
+    SignalSema(D_003F866C);
+    return r;
+}
+
+// FUNCTION: GAME 0x398D08
+int func_00398D08(void)
+{
+    int r;
+    if (!func_00398BB0(2))
+        return 0;
+    if (sceSifCallRpc(D_003F9810, 0xE, 0, 0, 0, D_003F86C0, 4, 0, 0) < 0) {
+        SignalSema(D_003F8668);
+        return 0;
+    }
+    r = *(int *)((unsigned)D_003F86C0 | 0x20000000);
+    SignalSema(D_003F8668);
+    return r;
+}
+
+// FUNCTION: GAME 0x3999D0
+int func_003999D0(void)
+{
+    int r;
+    if (!func_00398EB0(3))
+        return -1;
+    if (sceSifCallRpc(D_003FA1C0, 4, 0, 0, 0, D_003F9840, 4, 0, 0) < 0) {
+        SignalSema(D_003F866C);
+        return -1;
+    }
+    r = *(int *)((unsigned)D_003F9840 | 0x20000000);
+    SignalSema(D_003F866C);
+    return r;
+}

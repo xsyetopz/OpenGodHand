@@ -3,19 +3,17 @@ extern "C" void *memset(void *, int, unsigned);
 
 extern "C" int *func_002B4FE8(void *, int);
 
-// near-miss: 5 differing words; original uses beqz with the free-arg load in its delay slot, mine emits beql with a store in the slot
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2B5BB8
+// FUNCTION: GAME 0x2B5BB8
 extern "C" void func_002B5BB8(void *a, int b, int c)
 {
     int *p = func_002B4FE8(a, c);
+    void *h = (void *)p[1];
     if (p[0]) {
-        free__5cHeapPv((void *)p[1], (void *)p[0]);
+        free__5cHeapPv(h, (void *)p[0]);
     }
-    p[1] = 0;
     p[0] = 0;
+    p[1] = 0;
 }
-#endif
 
 extern int *D_007479F4;
 extern "C" void stopSeq__7cPadVib(void *);
@@ -138,4 +136,32 @@ extern "C" int func_002C9AD0(char *self, int idx)
         return 0;
     }
     return getSkill__9cCoreSave8PL_SKILL(&CoreSave, (self + idx)[0x14]) == 1;
+}
+
+// FUNCTION: GAME 0x2B8D88
+extern "C" void func_002B8D88(char *self, int mode, int a, int b)
+{
+    int *p = (int *)(self + 0x1C);
+    if (mode == 1) {
+        p[a] |= 1 << b;
+        p[b] |= 1 << a;
+    } else {
+        p[a] &= ~(1 << b);
+        p[b] |= ~(1 << a);
+    }
+}
+
+// FUNCTION: GAME 0x2C0D18
+extern "C" void AtInit__10cSceAtUnit9eSceAt_id12eAreaHitType12eAreaTrgType8eActType(
+    char *self, int id, int hit, int trg, int act)
+{
+    memset(self, 0, 0x9C);
+    self[0x3B] = trg;
+    self[0x38] = hit;
+    self[0x3A] = act;
+    self[0x35] = id;
+    *(unsigned short *)(self + 0x36) = 0xFFFF;
+    self[0x34] = 3;
+    self[0x39] = 8;
+    self[0x54] = 0x31;
 }

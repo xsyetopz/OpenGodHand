@@ -184,3 +184,114 @@ extern "C" void func_001467E8(char *self)
     *(short *)(self + 0x100) = 0;
     func_001468B0(self);
 }
+
+extern "C" void func_0031EEC8(void *, char *);
+extern "C" void func_0031EEA8(void *, char *, void *);
+extern int __ti15cCollisionSolid[];
+extern char D_0041D830[], D_0041D848[], D_0041D860[];
+extern int D_00785548[], D_00785558[];
+
+// FUNCTION: GAME 0x1342B8
+extern "C" int *func_001342B8()
+{
+    if (!D_00785548[0]) {
+        if (!__ti15cCollisionSolid[0])
+            func_0031EEC8(__ti15cCollisionSolid, D_0041D830);
+        func_0031EEA8(D_00785548, D_0041D848, __ti15cCollisionSolid);
+    }
+    return D_00785548;
+}
+
+// FUNCTION: GAME 0x134330
+extern "C" int *func_00134330()
+{
+    if (!D_00785558[0]) {
+        if (!__ti15cCollisionSolid[0])
+            func_0031EEC8(__ti15cCollisionSolid, D_0041D830);
+        func_0031EEA8(D_00785558, D_0041D860, __ti15cCollisionSolid);
+    }
+    return D_00785558;
+}
+
+extern int __ti21cCollisionScrollSolid[];
+extern char D_0041D5D0[], D_0041D5E8[], D_0041D600[], D_0041D880[];
+extern int D_00785528[], D_00785538[], D_00785568[];
+
+// FUNCTION: GAME 0x133810
+extern "C" int *func_00133810()
+{
+    if (!D_00785528[0]) {
+        if (!__ti21cCollisionScrollSolid[0])
+            func_0031EEC8(__ti21cCollisionScrollSolid, D_0041D5D0);
+        func_0031EEA8(D_00785528, D_0041D5E8, __ti21cCollisionScrollSolid);
+    }
+    return D_00785528;
+}
+
+// FUNCTION: GAME 0x133888
+extern "C" int *func_00133888()
+{
+    if (!D_00785538[0]) {
+        if (!__ti21cCollisionScrollSolid[0])
+            func_0031EEC8(__ti21cCollisionScrollSolid, D_0041D5D0);
+        func_0031EEA8(D_00785538, D_0041D600, __ti21cCollisionScrollSolid);
+    }
+    return D_00785538;
+}
+
+// FUNCTION: GAME 0x1343A8
+extern "C" int *func_001343A8()
+{
+    if (!D_00785568[0]) {
+        if (!__ti15cCollisionSolid[0])
+            func_0031EEC8(__ti15cCollisionSolid, D_0041D830);
+        func_0031EEA8(D_00785568, D_0041D880, __ti15cCollisionSolid);
+    }
+    return D_00785568;
+}
+
+extern "C" int func_00135EC8(void *, void *, void *, void *, float *);
+extern "C" int func_001361A0(void *, float *);
+
+// FUNCTION: GAME 0x1365B8
+extern "C" int func_001365B8(void *a, void *b, void *c, void *d, float *e)
+{
+    float t[4];
+    __asm__ volatile("sqc2 $vf0,0(%0)" : : "r"(t) : "memory");
+    if (!func_00135EC8(a, b, d, c, t))
+        return 0;
+    if (!func_001361A0(c, t))
+        return 0;
+    if (e && e != t) {
+        e[0] = t[0];
+        e[1] = t[1];
+        e[2] = t[2];
+    }
+    return 1;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x12CA60
+// diff: original branches on the lbu register before the stack store; mine reloads c from the stack (6 words)
+extern "C" int func_0012CA60(char *self)
+{
+    volatile int c;
+    int *o;
+    if (*(unsigned *)(self + 0x15F4) & 0x200000)
+        return 1;
+    c = *(unsigned char *)(self + 0x2B4);
+    if (c)
+        o = **(int ***)(self + 0x278);
+    else
+        o = 0;
+    if (o == 0)
+        return 0;
+    {
+        float *a = *(float **)(self + 0xF0);
+        float *b = *(float **)((char *)o + 0xF0);
+        if (b[1] < a[1] + 0.8f)
+            return 1;
+    }
+    return 0;
+}
+#endif

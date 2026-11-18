@@ -44,3 +44,79 @@ extern "C" void func_003182D8(void *p, int f)
 }
 #endif
 
+
+struct LNode { LNode *prev; LNode *next; int _8; unsigned key; };
+extern "C" void func_00307060(void *);
+extern "C" int func_00305858(void *, int);
+extern "C" void *func_003058D8(void *, int);
+extern "C" void getEffTypeString__FPc12eEffDataType(char *, int);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x306FF8
+// 15 words differ: loop tail is rotated in the original (bnel back to the top); store order in the insert-before branch
+extern "C" void func_00306FF8(char *self, LNode *n)
+{
+    LNode *c = (LNode *)(self + 0x4200);
+    if (c) {
+        for (;;) {
+            if (n->key < c->key) {
+                n->next = c;
+                LNode *pv = c->prev;
+                n->prev = pv;
+                pv->next = n;
+                c->prev = n;
+                break;
+            }
+            if (c->next) {
+                c = c->next;
+                continue;
+            }
+            c->next = n;
+            n->prev = c;
+            n->next = 0;
+            break;
+        }
+    }
+    func_00307060(self);
+}
+#endif
+
+// FUNCTION: GAME 0x3059A8
+extern "C" int func_003059A8(void *self, int type, int x)
+{
+    char buf[16];
+    int r;
+    if (type == 5)
+        r = 0;
+    else {
+        void *e = func_003058D8(self, type);
+        if (!e) {
+            getEffTypeString__FPc12eEffDataType(buf, type);
+            r = 0;
+        } else
+            r = func_00305858(e, x);
+    }
+    return r;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x306F10
+// 3 words differ: original computes (self + 0x300) first and adds i * 4 after; gcc adds self to i * 4 first
+extern "C" int func_00306F10(char *self, int i)
+{
+    struct Ob { char _p[0xA]; unsigned short cnt; };
+    Ob **sp;
+    Ob *o;
+    short r;
+    if (i >= 32 || (o = *(sp = (Ob **)(self + 0x300) + i)) == 0)
+        return -1;
+    r = --o->cnt;
+    if (r < 0)
+        return r;
+    if (r == 0) {
+        func_00306FF8(self, (LNode *)*sp);
+        *sp = 0;
+    }
+    return r;
+}
+#endif

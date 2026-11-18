@@ -171,14 +171,14 @@ extern "C" void func_00373FC8(void **o)
 }
 
 // FUNCTION: GAME 0x374120
-extern "C" void func_00374120(void **o)
+extern "C" void func_00374120(void **o, int, int)
 {
     if (*o)
         func_0032A6D0(*o);
 }
 
 // FUNCTION: GAME 0x374148
-extern "C" void func_00374148(void **o)
+extern "C" void func_00374148(void **o, int, int)
 {
     if (*o)
         func_00336D08(*o);
@@ -317,8 +317,6 @@ extern "C" void func_00373560(Fn37Obj4 *o, float f, int a)
 }
 
 extern "C" void func_00374820(Fn37Obj *, int, int);
-extern "C" void call_00374120(Fn37Obj *, int, int) __asm__("func_00374120");
-extern "C" void call_00374148(Fn37Obj *, int, int) __asm__("func_00374148");
 extern "C" int func_003748A8(Fn37Obj *);
 extern "C" int func_00374170(Fn37Obj *);
 
@@ -329,7 +327,7 @@ extern "C" void func_00373690(Fn37Obj *o, int a, int b)
         if (o->m_58 >= 2)
             func_00374820(o, b, a);
         else
-            call_00374120(o, b, a);
+            func_00374120((void **)o, b, a);
     }
 }
 
@@ -338,7 +336,7 @@ extern "C" void func_00373708(Fn37Obj *o, int a, int b)
 {
     if (func_00373A50(o)) {
         if (func_00373B20(o) != 1)
-            call_00374148(o, a, b);
+            func_00374148((void **)o, a, b);
     }
 }
 
@@ -368,3 +366,108 @@ extern "C" float func_00373938(Fn37Obj *o, int i)
     return r;
 }
 #endif
+
+struct Fn37Pk {
+    char b[15];
+} __attribute__((packed));
+
+struct Fn37Ent {
+    char _pad0[0xA];
+    unsigned char m_0A;
+    unsigned char m_0B;
+    char _pad0C[4];
+    unsigned char m_10;
+    Fn37Pk m_11;
+    char _pad20[1];
+};
+
+struct Fn37Sel {
+    char _pad0[0x4C];
+    int m_4C;
+    char _pad50[4];
+    int m_54;
+    int m_58;
+    Fn37Pk m_5C;
+    char _pad6B[1];
+    Fn37Ent *m_6C;
+    Fn37Ent *m_70;
+    int m_74;
+    int m_78;
+    int m_7C;
+};
+
+extern "C" int func_00374508(Fn37Sel *o, int, Fn37Ent *);
+extern "C" int func_00373F38(Fn37Sel *o, int, Fn37Ent *, int, int);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x373298
+// diff: 73 words; entry pointer lands in v1 not a0, 4C load not hoisted above the type test, t0 spilled (register-var workaround)
+extern "C" int func_00373298(Fn37Sel *o, int idx)
+{
+    Fn37Ent *e = o->m_6C + idx;
+    int r;
+    register int t __asm__("$8");
+    o->m_70 = e;
+    o->m_58 = e->m_0A;
+    o->m_78 = idx;
+    o->m_54 = e->m_0B & 3;
+    o->m_5C = e->m_11;
+    r = 0;
+    if (o->m_70->m_10) {
+        r = o->m_7C;
+        if (func_00373B20((Fn37Obj *)o) == 1) {
+            r = func_00374508(o, o->m_74, o->m_70);
+        } else {
+            if (((o->m_70->m_0B >> 2) & 3) < 2) {
+                if (o->m_4C & 0x10) {
+                    t = 1;
+                } else {
+                    o->m_4C &= ~0x10;
+                    t = 0;
+                }
+            }
+            r = func_00373F38(o, o->m_74, o->m_70, r, t);
+        }
+    }
+    if (r == 0)
+        func_003733C8((Fn37Obj *)o);
+    return r;
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x373A78
+// diff: 5 words; loop-pointer addiu a0 scheduled before the blez instead of after the mtc1
+extern "C" int func_00373A78(Fn37Obj *o)
+{
+    if (!func_00373A50(o))
+        return 1;
+    if (func_00373B20(o) == 1) {
+        int i;
+        float *p;
+        for (i = 0, p = (float *)o + 7; i < o->m_58; i++, p++)
+            if (0.0f < *p)
+                return 0;
+        return 1;
+    }
+    if (0.0f < ((float *)o)[6])
+        return 0;
+    return 1;
+}
+#endif
+
+// FUNCTION: GAME 0x3738A0
+extern "C" void func_003738A0(Fn37Obj *o, float f, int idx)
+{
+    if (func_00373A50(o)) {
+        if (func_00373B20(o) == 1) {
+            if (idx < 0) {
+                int i;
+                for (i = 0; i < o->m_58; i++)
+                    ((float *)o)[0x2C / 4 + i] = f;
+            } else
+                *(float *)((char *)o + (idx << 2) + 0x2C) = f;
+        } else
+            ((float *)o)[8] = f;
+    }
+}
