@@ -93,40 +93,6 @@ extern "C" void func_003A6950(Fq *fp)
     fp->m_10 = (char *)fp + 0x43;
 }
 
-#ifdef NONMATCHING
-static inline long SetHi(long b, int v)
-{
-    return (b & 0xffffffffL) | ((long)v << 32);
-}
-
-static inline long SetLo(long b, unsigned v)
-{
-    return (b & (long)0xffffffff00000000L) | v;
-}
-
-// DRAFT: GAME 0x3AF310
-// diff: gcc folds the hi/lo insert masks (128 vs 200 bytes); original keeps (b&0xffffffff)|e<<32 then &0xffffffff00000000 unfolded
-extern "C" long func_003AF310(long a, long b)
-{
-    int e = ((int)(a >> 32) & 0x7ff00000) + (int)0xfcc00000;
-    if (e > 0) {
-        b = SetHi(b, e);
-        b = SetLo(b, 0);
-    } else {
-        e = (-e) >> 20;
-        if (e < 20) {
-            b = SetHi(b, 0x80000 >> e);
-            b = SetLo(b, 0);
-        } else {
-            e -= 20;
-            b = SetHi(b, 0);
-            b = SetLo(b, e <= 30 ? 1 << (31 - e) : 1);
-        }
-    }
-    return b;
-}
-#endif
-
 // DRAFT: GAME 0x3AE730
 // diff: original has a nop after the reloaded lw a0,0x54(s0) before lw v0,0x38(a0) (same as 3A6130); rest matches
 #ifdef NONMATCHING
@@ -172,25 +138,6 @@ struct Bg {
 extern "C" long func_003AF3D8(Bg *, int *);
 extern "C" long func_0031E5F0(long, long);
 
-// DRAFT: GAME 0x3AF6F0
-// diff: frame 0x40 vs 0x50; original keeps call result in s2 and a2 (daddu s2,v0 / a2,v0), mine uses a2/a3 temporaries
-#ifdef NONMATCHING
-extern "C" long func_003AF6F0(Bg *a, Bg *b)
-{
-    int e[2];
-    long p, q;
-    int d;
-    func_003AF3D8(a, &e[0]);
-    q = p = func_003AF3D8(b, &e[1]);
-    d = ((a->m_10 - b->m_10) << 5) + (e[0] - e[1]);
-    if (d > 0) {
-        p = (p & 0xffffffffL) | ((long)((int)(p >> 32) + (d << 20)) << 32);
-    } else {
-        q = (q & 0xffffffffL) | ((long)((int)(q >> 32) - (d << 20)) << 32);
-    }
-    return func_0031E5F0(p, q);
-}
-#endif
 
 struct Bn {
     Bn *m_next;

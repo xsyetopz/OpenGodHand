@@ -106,16 +106,18 @@ extern "C" void func_0037B660(Fn38Pa *o)
     }
 }
 
+#ifdef NONMATCHING
 struct Fn38In { unsigned short m_00; char _p02[2]; unsigned char m_04; unsigned char m_05; char _p06[0xA]; int m_10; int m_14; unsigned short m_18, m_1A, m_1C, m_1E, m_20, m_22; char _p24[0x26]; unsigned short m_4A, m_4C, m_4E; };
 struct Fn38Ou { unsigned short m_00; unsigned char m_02; unsigned char m_03; int m_04; int m_08; unsigned short m_0C, m_0E, m_10, m_12, m_14, m_16, m_18, m_1A, m_1C; char _p1E[2]; };
 extern Fn38In D_0076CF20[];
 extern Fn38Ou D_0076A9C0[];
 
-// FUNCTION: GAME 0x37CE20
+// DRAFT: GAME 0x37CE20
+// diff: 33 words; lui order of the two table bases and bnel delay-slot fill differ
 extern "C" void func_0037CE20(void)
 {
-    Fn38In *s = D_0076CF20;
     Fn38Ou *o = D_0076A9C0;
+    Fn38In *s = D_0076CF20;
     int i;
     for (i = 0x2F; i >= 0; i--) {
         if (s->m_00 == 0) {
@@ -142,3 +144,4 @@ extern "C" void func_0037CE20(void)
         s++;
     }
 }
+#endif

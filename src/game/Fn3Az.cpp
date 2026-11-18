@@ -205,52 +205,6 @@ extern "C" unsigned func_003A68C8(char *buf, unsigned size, unsigned n, void *fp
     return (total - uio.m_resid) / size;
 }
 
-// DRAFT: GAME 0x3AEBC0
-// diff: final bit test; original uses xori+andi and 1 fewer word (192 vs 196 bytes)
-#ifdef NONMATCHING
-extern "C" int func_003AEBC0(unsigned *x)
-{
-    unsigned y = *x;
-    int k;
-    if (y & 7) {
-        if (y & 1)
-            return 0;
-        if (y & 2) {
-            y >>= 1;
-            *x = y;
-            return 1;
-        }
-        y >>= 2;
-        *x = y;
-        return 2;
-    }
-    k = 0;
-    if (!(y & 0xFFFF)) {
-        k = 16;
-        y >>= 16;
-    }
-    if (!(y & 0xFF)) {
-        k += 8;
-        y >>= 8;
-    }
-    if (!(y & 0xF)) {
-        k += 4;
-        y >>= 4;
-    }
-    if (!(y & 3)) {
-        k += 2;
-        y >>= 2;
-    }
-    if ((~y) & 1) {
-        y >>= 1;
-        k++;
-        if (!y)
-            return 32;
-    }
-    *x = y;
-    return k;
-}
-#endif
 
 extern "C" int func_003AD0F8(int);
 

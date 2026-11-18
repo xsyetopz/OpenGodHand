@@ -80,3 +80,87 @@ extern "C" void func_002BF420(char *p)
     }
 }
 #endif
+
+extern int D_00586B34;
+extern unsigned char D_0074748C;
+
+// FUNCTION: GAME 0x2967B0
+extern "C" int func_002967B0(void)
+{
+    if (*(int *)D_00747A2C < 0) {
+        return 0;
+    }
+    unsigned long f = D_00586B34;
+    unsigned long a = (f >> 1) & 1;
+    if (a) {
+        return 1;
+    }
+    unsigned long b = (f >> 2) & 1;
+    if (b) {
+        return 1;
+    }
+    unsigned long c = (f >> 3) & 1;
+    if (c) {
+        return 1;
+    }
+    return (D_0074748C >> 2) & 1;
+}
+
+extern char EventConfig[];
+extern "C" void func_00297660(void *);
+extern "C" void setEventNo__12cEventConfigi(void *, int);
+
+// FUNCTION: GAME 0x2975F8
+extern "C" void initEnv__6cEventi(char *self, int no)
+{
+    unsigned long f = *(int *)(self + 8);
+    unsigned long b = (f >> 1) & 1;
+    if (!b) {
+        func_00297660(self);
+        *(int *)(self + 0x18) = no;
+        setEventNo__12cEventConfigi(EventConfig, no);
+        *(int *)(self + 8) |= 2;
+    }
+}
+
+extern "C" int func_001FF638(void *);
+extern "C" void func_001FF3A0(void *);
+
+// FUNCTION: GAME 0x1FF338
+extern "C" int func_001FF338(char *self)
+{
+    int n = *(int *)(self + 4);
+    if (n < 0) {
+        return 0;
+    }
+    if (n > 0) {
+        return 1;
+    }
+    unsigned long f = *(int *)(self + 8);
+    unsigned long b = (f >> 1) & 1;
+    if (b) {
+        return 0;
+    }
+    if (!func_001FF638(self)) {
+        return 0;
+    }
+    func_001FF3A0(self);
+    return 1;
+}
+
+extern char g_EmSet;
+
+// FUNCTION: GAME 0x2C33D8
+extern "C" void func_002C33D8(char *self)
+{
+    g_EmSet = 0;
+    void (*fn)() = *(void (**)())(*(char **)(self + 0xD4) + 4);
+    if (fn) {
+        fn();
+    }
+    unsigned long f = D_00747A24;
+    unsigned long b = (f >> 6) & 1;
+    if (b || (f & 0x200)) {
+        self[0x14] = 0;
+    }
+}

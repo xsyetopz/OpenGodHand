@@ -165,16 +165,6 @@ extern "C" void func_003AE8C0(FreeList *self, FreeNode *p)
 }
 
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3AEC80
-// diff: original copies v0 to v1 and stores 0x14 before 0x10 with the constant held in a0
-extern "C" void func_003AEC80(void *self, int a)
-{
-    Pr *r = func_003AE818(self, 1);
-    r->m_10 = 1;
-    r->m_14 = a;
-}
-#endif
 
 // Round 24.
 extern "C" void func_003A8048(void *);

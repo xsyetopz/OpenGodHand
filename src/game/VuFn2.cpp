@@ -186,7 +186,6 @@ extern "C" void func_002B5FC8(cNode *self, const float *p)
     self->setLocalTranslation(*(const cVec *)&c);
 }
 
-#ifdef NONMATCHING
 extern "C" void *func_001B6E90(void *);
 extern "C" char D_00422498[];
 struct QK { char b0, b1, b2, pa; int w4, w8; int arr[8]; int w2C; int w30, w34, w38, w3C; char pb[0x10]; Sv16 sv[14]; int w130, w134, w138, w13C; };
@@ -195,8 +194,7 @@ struct ObjK {
     QK q;
 };
 #define SVZ(k) __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv *)self->q.sv[k].v))
-// DRAFT: GAME 0x17F4E0
-// diff: 22 words; vt/q register swap (v0/v1), loop counter in a1 and pointer in a0 instead of a0/v1
+// FUNCTION: GAME 0x17F4E0
 extern "C" ObjK *func_0017F4E0(ObjK *self)
 {
     func_001B6E90(self);
@@ -206,7 +204,6 @@ extern "C" ObjK *func_0017F4E0(ObjK *self)
     SVZ(0); SVZ(1); SVZ(2); SVZ(3); SVZ(4); SVZ(5); SVZ(6);
     SVZ(7); SVZ(8); SVZ(9); SVZ(10); SVZ(11); SVZ(12); SVZ(13);
     q->b0 = 0;
-    q->w13C = 0;
     q->b1 = 0;
     q->b2 = 0;
     q->w4 = 0;
@@ -218,10 +215,10 @@ extern "C" ObjK *func_0017F4E0(ObjK *self)
     q->w130 = 0;
     q->w134 = 0;
     q->w138 = 0;
+    q->w13C = 0;
     for (unsigned i = 0; i < 8; i++) q->arr[i] = 0;
     return self;
 }
-#endif
 
 extern "C" void func_002B5D58(void *, void *);
 extern "C" char D_0044B310[];
