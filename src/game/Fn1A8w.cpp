@@ -29,7 +29,7 @@ extern "C" void func_001B7BB8(OmB *s) {
     long k = 1;
     if (a != k) {
         s->w5B0 = (int)s->w5B0 | 0x10;
-        if (canItemDrop__7cOmBase(s) == k) {
+        if (canItemDrop__7cOmBase((OmB *)s) == k) {
             if (s->w560 != 0xFFFF) {
                 CreateItem__9cEmManageRC4cVec6eObjIdUi(g_EmManage, s->w0F0, s->w560, 0);
             } else {
@@ -94,5 +94,114 @@ extern "C" void func_001C2C40(OmD *s)
             s->b6 = 0;
             s->b7 = 0;
         }
+    }
+}
+
+struct OmE { char pad[0x2FE]; unsigned short h2FE; char p1[0x5B0 - 0x300]; unsigned w5B0; char p2[4]; unsigned w5B8; };
+// FUNCTION: GAME 0x1B79E0
+extern "C" long func_001B79E0(OmE *s)
+{
+    long k = 1;
+    long a = s->w5B0;
+    if (((a >> 1) & 1) == k) return 0;
+    long b = s->w5B8;
+    if (((b >> 13) & 1) == k) return 0;
+    if (canItemDrop__7cOmBase((OmB *)s) == k) {
+        int h = s->h2FE;
+        if (h < 0x3DA) return 1;
+        if (h >= 0x3DE && h != 0x3EA) return 1;
+    }
+    long c = s->w5B8;
+    return (c >> 8) & 1;
+}
+
+struct OmF { char pad[0x214]; const void *vt; char p1[0x650 - 0x218]; void *w650; int w654; char p2[0x68C - 0x658]; void *w68C; };
+struct Hh { char pad[0x2FE]; unsigned short h2FE; };
+extern char D_0042AA98[], g_DmgManage[], EspSys[];
+extern "C" int ReleaseDamageGive__13cDamageManageP11cDamageGive(void *, void *);
+extern "C" void KillEffect__FPC4cObji13eEspEraseMode(void *, int, int);
+extern "C" void effDataRelease__6espSys12eEffDataType(void *, int);
+extern "C" void dieCommon__7cOmBase(void *);
+extern "C" void func_001B6F38(void *, void *);
+// FUNCTION: GAME 0x1C91B0
+extern "C" void func_001C91B0(OmF *s, void *a1)
+{
+    s->vt = D_0042AA98;
+    if (s->w650) {
+        if (ReleaseDamageGive__13cDamageManageP11cDamageGive(g_DmgManage, s->w650)) {
+            s->w650 = 0;
+            s->w654 = -1;
+        }
+    }
+    KillEffect__FPC4cObji13eEspEraseMode(s, 8, 2);
+    if (((Hh *)s)->h2FE == 0x3AE)
+        effDataRelease__6espSys12eEffDataType(EspSys, 0x206);
+    if (s->w68C) {
+        dieCommon__7cOmBase(s->w68C);
+        s->w68C = 0;
+    }
+    func_001B6F38(s, a1);
+}
+
+class cFnY;
+typedef void (cFnY::*cFnYPmf)();
+class cFnY {
+public:
+    virtual void v();
+    char pad[0x2F4];
+    unsigned char type;
+};
+extern char g_CollSolidManage[];
+extern cFnYPmf D_003BDC98[];
+extern cFnYPmf D_003BDE40[];
+extern "C" int func_001B76B0(cFnY *);
+extern "C" void func_001B76D8(cFnY *);
+extern "C" void func_002A87E8(cFnY *, int);
+extern "C" void func_001C0450(cFnY *);
+extern "C" void ChkHit__21cCollisionSolidManageP8cGameObj(void *, void *);
+
+// FUNCTION: GAME 0x1B0468
+extern "C" void func_001B0468(cFnY *self)
+{
+    if (func_001B76B0(self)) {
+        (self->*D_003BDC98[self->type])();
+        ChkHit__21cCollisionSolidManageP8cGameObj(g_CollSolidManage, self);
+        func_002A87E8(self, 0);
+        func_001B76D8(self);
+    }
+}
+
+// FUNCTION: GAME 0x1C0378
+extern "C" void func_001C0378(cFnY *self)
+{
+    if (func_001B76B0(self)) {
+        (self->*D_003BDE40[self->type])();
+        if (*((unsigned char *)self + 0x675) == 0)
+            func_002A87E8(self, 0);
+        func_001C0450(self);
+        func_001B76D8(self);
+    }
+}
+
+class cFnW;
+typedef void (cFnW::*cFnWPmf)();
+class cFnW {
+public:
+    virtual void v();
+    char pad[0x2F4];
+    unsigned char type;
+};
+extern cFnWPmf D_003BDD60[];
+extern "C" void calcParts__6cModel(void *);
+extern "C" void calcWorldParts__6cModel(void *);
+// FUNCTION: GAME 0x1B5A58
+extern "C" void func_001B5A58(cFnW *self)
+{
+    if (func_001B76B0((cFnY *)self)) {
+        (self->*D_003BDD60[self->type])();
+        func_002A87E8((cFnY *)self, 0);
+        calcParts__6cModel(self);
+        calcWorldParts__6cModel(self);
+        func_001B76D8((cFnY *)self);
     }
 }

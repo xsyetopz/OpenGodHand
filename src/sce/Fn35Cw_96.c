@@ -44,3 +44,26 @@ char *func_0035DDB0(char *s, int *out)
     *out = v;
     return s;
 }
+
+typedef struct { char c[0x80]; } S80;
+extern int func_0036D688(), func_0036D8E8(), func_0036C5F8(), func_00369F20();
+
+// FUNCTION: GAME 0x36DA80
+void func_0036DA80(char *a, char *b)
+{
+    if (func_0036D688()) {
+        func_0036D8E8(0, 0xFF03020C);
+        return;
+    }
+    *(S80 *)b = *(S80 *)(a + 0x58);
+}
+
+// FUNCTION: GAME 0x36A0D0
+int func_0036A0D0(char *a, char *b)
+{
+    if (func_0036C5F8()) {
+        return func_00369F20(0, 0xFF03020C);
+    }
+    *(S80 *)b = *(S80 *)(a + 0x1D0);
+    return 0;
+}

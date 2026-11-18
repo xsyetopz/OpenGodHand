@@ -35,6 +35,16 @@ struct E44 { int a, b, c; char pad[0x44 - 12]; };
 extern char D_0042C2D8[], D_0042C2B0[];
 extern "C" void func_001F7AE8(E44 *);
 
+extern "C" void *memset(void *, int, unsigned int);
+extern char D_005686D0[];
+extern char *CoreSave;
+extern "C" void func_001FAFA8(void *);
+extern "C" void func_001FC138(void *);
+extern "C" void setGameDifficulty__9cCoreSave11eDifficulty(void *, int);
+extern "C" int func_001FEE00(void *);
+extern "C" void func_001FF090(void *);
+extern "C" void func_001FF448(void *);
+
 // FUNCTION: GAME 0x1F4B98
 extern "C" void func_001F4B98(void *o, unsigned short i, int a, int b)
 {
@@ -204,4 +214,70 @@ extern "C" void func_001F7A30(int a, int b)
             w++;
         } while (m != -1);
     }
+}
+
+// FUNCTION: GAME 0x1FEA48
+extern "C" int func_001FEA48(char *self)
+{
+    int i = func_001FEE00(self);
+    int r;
+    if (i < 0) r = 0;
+    else {
+        int off = i * 0x5C;
+        func_001FF090(*(char **)(self + 8) + off);
+        int base = *(int *)(self + 8);
+        char *p = (char *)(off + base);
+        r = *(int *)(p + 0x10);
+    }
+    return r;
+}
+
+// FUNCTION: GAME 0x1FEF30
+extern "C" void clear__12cDataManager(char *self)
+{
+    int i = *(int *)(self + 4);
+    i--;
+    asm("" : "+r"(i));
+    if (i != -1) {
+        int off = i * 0x5C;
+        do {
+            i--;
+            func_001FF448(*(char **)(self + 8) + off);
+            off -= 0x5C;
+        } while (i != -1);
+    }
+}
+
+// FUNCTION: GAME 0x1FEFD0
+extern "C" int isUnload__12cDataManager6eObjId(char *self, int id)
+{
+    int i = *(int *)(self + 4);
+    i--;
+    asm("" : "+r"(i));
+    if (i != -1) {
+        int base = *(int *)(self + 8);
+        int o = i * 0x5C;
+        char *p = (char *)(o + base);
+        do {
+            if (*(int *)(p + 0x20) == id && *(int *)p != 8) return 0;
+            i--;
+            p -= 0x5C;
+        } while (i != -1);
+    }
+    return 1;
+}
+
+// FUNCTION: GAME 0x1F9848
+extern "C" void systemInit__9cCoreSave(char **self)
+{
+    memset(D_005686D0, 0, 0x14A0);
+    CoreSave = D_005686D0;
+    func_001FAFA8(self);
+    unsigned i = 0;
+    do {
+        *(char *)(*(int *)self + i + 0xB0) = -1;
+        i++;
+    } while (i < 0x80);
+    func_001FC138(self);
+    setGameDifficulty__9cCoreSave11eDifficulty(self, 1);
 }

@@ -85,17 +85,16 @@ int func_0035EB60(int *a, int *b)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3581E0 bnez skip target: original returns the nonzero callee result (skips daddu v0); 1 word
+// FUNCTION: GAME 0x3581E0
 int func_003581E0(char *a)
 {
-    if (func_00358A48(a))
-        return 0;
+    int r = func_00358A48(a);
+    if (r)
+        return r;
     *(int *)(a + 0x4C) = 6;
     func_00358FF8(a);
     return 0;
 }
-#endif
 
 // FUNCTION: GAME 0x35A8A8
 int func_0035A8A8(int a)
@@ -123,15 +122,14 @@ void func_0035BB60(long *a, long b)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x35C1C0 a0+d*0x74 kept in a0 by the original; gcc uses v0; 2 words
+// FUNCTION: GAME 0x35C1C0
 void func_0035C1C0(char *a, int b, int c, int d)
 {
     char *p = a + b * 0x44;
     *(int *)(p + c * 4 + 0x1F44) = d;
-    *(int *)(a + d * 0x74 + 0x135C) = b;
+    char *q = a + d * 0x74;
+    *(int *)(q + 0x135C) = b;
 }
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x35A5E0 original copies hi into v1 before the branch; gcc skips it; 9 words
@@ -141,16 +139,15 @@ int func_0035A5E0(char *a, int b)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x352258 mult and sd ra are swapped in the prologue; 2 words
+// FUNCTION: GAME 0x352258
 int func_00352258(int a)
 {
-    int r = func_003B7FE0((long)a * 0x55D4A80);
+    int m = a * 0x55D4A80;
+    int r = func_003B7FE0(m);
     // barrier after the call blocks gcc 2.96 from turning it into a tail jump
     __asm__ volatile("");
     return r;
 }
-#endif
 
 extern void *memcpy();
 extern int func_00351C00();
@@ -211,33 +208,27 @@ int func_00356368()
 
 extern int func_0035D7B8();
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x35DE38 s0/s1 spill order in the prologue is swapped (sd s1 before sd s0); 2 words
+// FUNCTION: GAME 0x35DE38
 int func_0035DE38(int *a, int *b)
 {
-    char *p = (char *)a[1] + 0xB0;
     *b = 0;
     if (func_0035D7B8(a)) {
-        *b = *(unsigned char *)p;
+        *b = *(unsigned char *)((char *)a[1] + 0xB0);
         return 1;
     }
     return 0;
 }
-#endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x35DE88 s0/s1 spill order in the prologue is swapped (sd s1 before sd s0); 2 words
+// FUNCTION: GAME 0x35DE88
 int func_0035DE88(int *a, int *b)
 {
-    char *p = (char *)a[1] + 0xB0;
     *b = 0;
     if (func_0035D7B8(a)) {
-        *b = *(unsigned char *)(p + 1);
+        *b = *(unsigned char *)((char *)a[1] + 0xB1);
         return 1;
     }
     return 0;
 }
-#endif
 
 // FUNCTION: GAME 0x355408
 char *func_00355408(char *a, char *b)

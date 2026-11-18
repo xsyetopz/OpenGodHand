@@ -145,3 +145,84 @@ extern "C" void func_0014EB90(char *s)
         break;
     }
 }
+
+extern "C" char *Getplayer__Fv();
+extern "C" void restartAnim__7cIDBase(char *);
+extern "C" void move__7cIDBase(char *);
+
+// FUNCTION: GAME 0x143BE8
+extern "C" void func_00143BE8(char *s)
+{
+    char *a = s + 0x500;
+    char *b = s + 0x550;
+    char *c = s + 0x4B0;
+    char **arr = (char **)(s + 0x4A0);
+    unsigned short i = 0;
+    *(int *)(s + 0x90) = 0;
+    *(char **)(s + 0x98) = Getplayer__Fv();
+    *(float *)(s + 0x5D0) = 20.0f;
+    restartAnim__7cIDBase(s);
+    s[0x1C] = 1;
+    restartAnim__7cIDBase(a);
+    a[0x1C] = 1;
+    move__7cIDBase(a);
+    restartAnim__7cIDBase(b);
+    b[0x1C] = 1;
+    move__7cIDBase(b);
+    restartAnim__7cIDBase(c);
+    c[0x1C] = 1;
+    do {
+        *(char **)((char *)arr + (i << 2)) = getIDWork__7cIDBasei(s, i);
+        i = i + 1;
+    } while (i < 2);
+    *(char **)(s + 0x5A4) = getIDWork__7cIDBasei(s + 0x500, 0);
+    *(char **)(s + 0x5A8) = getIDWork__7cIDBasei(s + 0x550, 0);
+    *(char **)(s + 0x5A0) = getIDWork__7cIDBasei(s + 0x4B0, 0);
+    s[0x5DD] = 0;
+    *(unsigned *)(s + 0x5D8) = 0x80808080;
+    s[0x5DC] = 0;
+}
+
+extern "C" void *memset(void *, int, unsigned);
+extern "C" void func_00140BF0(char *, char *, int);
+extern "C" void func_0013D3C0(char *);
+extern "C" void func_0013ECF0(char *);
+extern "C" void func_0013C808(char *);
+extern "C" void func_0013F2F8(char *);
+extern "C" void func_0013E7D8(char *);
+extern "C" void func_00147018(char *);
+
+// FUNCTION: GAME 0x140C88
+extern "C" void func_00140C88(char *s)
+{
+    char *p;
+    int i;
+    memset(s + 0x22F0, 0, 0xCC);
+    p = s + 0x22F4;
+    func_00140BF0(s, s + 0x6E0, 1);
+    func_00140BF0(s, s + 0x460, 3);
+    func_00140BF0(s, s + 0xEA0, 6);
+    func_00140BF0(s, s + 0xCC0, 4);
+    func_00140BF0(s, s + 0x1380, 7);
+    func_00140BF0(s, s + 0x1470, 8);
+    func_00140BF0(s, s + 0x1520, 0xE);
+    func_00140BF0(s, s + 0x15C0, 9);
+    func_00140BF0(s, s + 0x1CB0, 0xF);
+    func_00140BF0(s, s + 0x1910, 0x10);
+    func_00140BF0(s, s + 0x1AE0, 0x11);
+    func_0013D3C0(s);
+    func_0013ECF0(s + 0x3A0);
+    func_0013C808(s + 0x1DC0);
+    func_0013F2F8(s + 0x1E90);
+    func_0013E7D8(s + 0x2220);
+    func_00147018(s + 0x1A20);
+    for (i = 0x10; i >= 0; i--) {
+        char *o = *(char **)p;
+        if (o) {
+            char *vt = *(char **)(o + 0x80);
+            ((void (*)(char *))*(void **)(vt + 0x14))(o + *(short *)(vt + 0x10));
+        }
+        p += 0xC;
+    }
+    s[0x23BC] = 0;
+}

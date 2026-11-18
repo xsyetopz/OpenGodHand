@@ -135,3 +135,106 @@ extern "C" int func_00375BF0(Fn37Rs *s)
     d->p = *(Fn37Rp *)s;
     return d->w4;
 }
+
+// FUNCTION: GAME 0x37C4C0
+struct Fn37Ke { unsigned short h0; char _2[3]; unsigned char b5; char _6[0xA]; int w10; char _14[0x3C]; };
+struct Fn37Ko { char _0[4]; int w4; char _8[5]; unsigned char bd; char _e[0x1C]; unsigned short h2a; };
+extern Fn37Ke D_0076CF20[];
+extern "C" void func_0037C5C8(Fn37Ke *, Fn37Ko *, int);
+extern "C" void func_0037C5F8(Fn37Ke *, Fn37Ko *, int);
+extern "C" void func_0037C618(Fn37Ke *, Fn37Ko *, int);
+extern "C" void func_0037C6A0(Fn37Ke *);
+extern "C" void func_0037C4C0(Fn37Ko *o)
+{
+    Fn37Ke *e = D_0076CF20;
+    int i;
+    unsigned f;
+    for (i = 0x32; i >= 0; i--, e++) {
+        if (e->h0 && (e->b5 & o->bd) && e->w10 == o->w4) {
+            f = o->h2a;
+            if (f & 1) func_0037C5C8(e, o, 1);
+            if (f & 2) func_0037C5C8(e, o, 2);
+            if ((o->bd & 8) && (f & 3)) func_0037C6A0(e);
+            if (f & 4) func_0037C5F8(e, o, 4);
+            if (f & 8) func_0037C618(e, o, 8);
+        }
+    }
+}
+
+// FUNCTION: GAME 0x37FD28
+struct Fn37Q4 { int w0, w4, w8, wc; };
+struct Fn37Qa { char _0[6]; unsigned char b6; };
+struct Fn37Qb { char _0[1]; unsigned char b1; char _2; unsigned char b3; };
+extern "C" {
+void func_00323A70(int);
+int func_003A92E0(Fn37Q4 *, const char *, int);
+void func_0031C900(Fn37Q4 *);
+int func_00381B38(Fn37Qa *, char *, Fn37Qb *);
+int func_00380AE8(Fn37Qa *, char *, Fn37Qb *);
+void func_0032DA28(int, int, int);
+void func_0032BB48(int, int, int);
+}
+extern "C" int func_0037FD28(Fn37Qa *a, Fn37Qb *b)
+{
+    Fn37Q4 *p = *(Fn37Q4 **)((char *)b + 0xF8);
+    char *s;
+    int r;
+    if (!p->w0 && !p->w4 && !p->w8 && !p->wc) return 1;
+    func_00323A70(*(int *)((char *)b + 0xF4));
+    if (!func_003A92E0(*(Fn37Q4 **)((char *)b + 0xF8), "AIXF", 4)) b->b3 |= 2;
+    else b->b3 &= 0xFD;
+    func_0031C900(*(Fn37Q4 **)((char *)b + 0xF8));
+    if (b->b3 & 2) {
+        s = (char *)b + 0xCC;
+        r = func_00381B38(a, s, b);
+        if (r) { b->b1 = r; return 1; }
+        func_0032DA28(*(int *)(s + 0x20), 0xFF, a->b6);
+        return 0;
+    }
+    s = (char *)b + 0x6C;
+    r = func_00380AE8(a, s, b);
+    if (r == 0) {
+        func_0032BB48(*(int *)(s + 0x30), 0xFF, a->b6);
+        return 0;
+    }
+    b->b1 = r;
+    return 1;
+}
+
+// FUNCTION: GAME 0x378760
+struct Fn37Ym { char _0[4]; signed char b4; signed char b5; char _6[0x2E]; int w34; };
+extern int D_003F21B8;
+extern "C" {
+void func_00378AA8(Fn37Ym *);
+void func_00378BF8(Fn37Ym *);
+void func_00378CE0(Fn37Ym *);
+void func_0037B620(Fn37Ym *);
+void func_0037AC68(Fn37Ym *);
+void func_0037E128(int, Fn37Ym *);
+void func_0037DC88(int, int);
+}
+extern "C" void func_00378760(Fn37Ym *s)
+{
+    if (s->w34 & 0x800) {
+        s->b4 = 1;
+        if (D_003F21B8) {
+            func_0037DC88(D_003F21B8, 3);
+            D_003F21B8 = 0;
+        }
+    } else {
+        switch (s->b5) {
+        case 0: func_00378AA8(s); break;
+        case 1: func_00378BF8(s); break;
+        case 2: func_00378CE0(s); break;
+        case 3: func_0037B620(s); break;
+        case 4: func_0037AC68(s); break;
+        case 5: func_0037E128(D_003F21B8, s); break;
+        }
+        if (s->b4) {
+            if (D_003F21B8) {
+                func_0037DC88(D_003F21B8, 3);
+                D_003F21B8 = 0;
+            }
+        }
+    }
+}
