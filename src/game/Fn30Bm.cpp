@@ -159,13 +159,13 @@ extern "C" int Start__6cMovieib(void *, int, int);
 extern "C" int GetStatus__6cMovieUi(void *, int);
 extern "C" void Stop__6cMovieUi(void *, int);
 extern "C" void sleep__9cTaskWorkUs(void *, unsigned short);
-extern "C" int execute__12cTaskManagerRFv_vi(void *, void (*)(), int);
-extern "C" int exit__9cTaskWork(void *);
+extern "C" void execute__12cTaskManagerRFv_vi(void *, void (*)(), int);
+extern "C" void exit__9cTaskWork(void *);
 extern "C" void func_002A5998();
 extern "C" void func_0030D5C8();
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x30DA08 (6 words off: s2/s3 roles of the Movie and GlobalTask addresses swapped; declaration-order swap, local copies, for(;;) loop, hoisted pointer no change)
+// DRAFT: GAME 0x30DA08 (6 words off; all 15 int/void combos of Stop/sleep/execute/exit tried, no change: s2/s3 roles of the Movie and GlobalTask addresses swapped; declaration-order swap, local copies, for(;;) loop, hoisted pointer no change)
 extern "C" void func_0030DA08()
 {
     int id = Start__6cMovieib(Movie, 0, 1);

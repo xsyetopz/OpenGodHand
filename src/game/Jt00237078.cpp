@@ -16,7 +16,7 @@ extern char Sys[];
 #define H(o) (*(short *)(self + (o)))
 #define UH(o) (*(unsigned short *)(self + (o)))
 
-// DRAFT: GAME 0x237078 - 6 words differ (~15 forms tried: struct VE, split fn/vt temps, cast forms, cond forms): the vtable pointer sits in v1 and the slot in v0 in the original; mine swaps them in the m_3AC & 1 virtual call
+// DRAFT: GAME 0x237078 - 6 words differ (callee int/void changes tried, none helped; ~15 forms tried: struct VE, split fn/vt temps, cast forms, cond forms): the vtable pointer sits in v1 and the slot in v0 in the original; mine swaps them in the m_3AC & 1 virtual call
 #ifdef NONMATCHING
 extern "C" void func_00237078(char *self)
 {

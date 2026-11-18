@@ -24,15 +24,21 @@ extern "C" void func_00134520(void **self, int a1, int a2, float f)
     if (r) D_00460D18++;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1346F8 - 12 words: target keeps self/a1/a2 in s1/s2/s3, mine allocates s3/s1/s2 (register order only)
+// FUNCTION: GAME 0x1346F8
 extern "C" void CreateUnit__21cCollisionSolidManageP8cGameObjQ225cCollisionSolidManageUnit9ePRIORITYf(char *self, int a1, int a2, float f)
 {
     void *r;
     if (!a1 || func_001346C8(self, a1, a2, f)) return;
     if (*(char **)self) {
         char *n = *(char **)self;
-        while (*(char **)(n + 0x10)) n = *(char **)(n + 0x10);
+        // The identical self-test branches come from the permuter; they
+        // reproduce the original's s1/s2/s3 allocation of self, a1 and a2.
+        while (*(char **)(n + 0x10)) {
+            if (self)
+                n = *(char **)(n + 0x10);
+            else
+                n = *(char **)(n + 0x10);
+        }
         r = func_00134430(func_0030F550(0x40), a1, a2, f);
         *(void **)(n + 0x10) = r;
     } else {
@@ -41,5 +47,4 @@ extern "C" void CreateUnit__21cCollisionSolidManageP8cGameObjQ225cCollisionSolid
     }
     if (r) *(int *)(self + 4) += 1;
 }
-#endif
 

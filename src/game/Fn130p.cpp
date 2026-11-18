@@ -115,8 +115,7 @@ extern "C" void func_0013D698(char *self)
     }
 }
 
-// DRAFT: GAME 0x13C818 (loop addu operand order differs after 4 tries)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x13C818
 extern "C" void roomInit__12cCockBossBar(char *self)
 {
     if (!*(int *)(self + 0x94)) {
@@ -134,17 +133,15 @@ extern "C" void roomInit__12cCockBossBar(char *self)
     *(short *)(self + 0xB4) = 0;
     *(int *)(self + 0xB8) = 0;
     unsigned short i = 0;
-    char *w = self + 0xBC;
+    int w = (int)self + 0xBC;
     do {
         void *v = getIDWork__7cIDBasei(self, i);
-        *(void **)(w + i * 4) = v;
+        *(void **)(w + (i << 2)) = v;
         i++;
     } while (i < 5);
 }
-#endif
 
-// DRAFT: GAME 0x13E7E8 (loop addu operand order differs after 4 tries)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x13E7E8
 extern "C" void roomInit__16cCockLastBossBar(char *self)
 {
     if (!*(int *)(self + 0x94)) {
@@ -159,11 +156,11 @@ extern "C" void roomInit__16cCockLastBossBar(char *self)
     restartAnim__7cIDBase(self);
     *(unsigned *)(self + 0xA0) = 0x20000000;
     *(float *)(self + 0xA4) = 1.0f;
-    char *w;
+    int w;
     unsigned short i = 0;
-    w = self + 0xC0;
+    w = (int)self + 0xC0;
     do {
-        *(void **)(w + i * 4) = getIDWork__7cIDBasei(self, i);
+        *(void **)(w + (i << 2)) = getIDWork__7cIDBasei(self, i);
         i++;
     } while (i < 4);
     self[0x79] = 0;
@@ -171,7 +168,6 @@ extern "C" void roomInit__16cCockLastBossBar(char *self)
     self[0x7B] = 0;
     self[0x7C] = 0;
 }
-#endif
 
 // DRAFT: GAME 0x13ED28 (addu operand order of 4 hoisted bases differs after 4 tries)
 #ifdef NONMATCHING
