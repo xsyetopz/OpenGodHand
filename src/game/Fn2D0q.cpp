@@ -1,3 +1,5 @@
+#include "game/cEmManage.h"
+
 // Scroll layer setters and player-state callbacks (0x2DB000-0x2DCD00).
 struct ScrObjQ {
     char _p0[0x240];
@@ -75,5 +77,68 @@ void displayScrollLayer(unsigned id, bool on)
         }
         p++;
     } while (p != scrArray->m_8);
+}
+#endif
+
+struct PlrQ {
+    char _p[0x54A];
+    short m_54a;
+};
+PlrQ *Getplayer();
+extern "C" int func_0010B698(PlrQ *);
+#define PQ(s, o, T) (*(T *)((char *)(s) + (o)))
+
+#define PSTATE_B(NAME, ID)                                                                        \
+    extern "C" void NAME()                                                                        \
+    {                                                                                             \
+        PlrQ *q = Getplayer();                                                                    \
+        if (q->m_54a <= 0 || func_0010B698(q) || g_EmManage.m_slotWait > 0 ||                     \
+            g_EmManage.CkPlCatched())                                                             \
+            return;                                                                               \
+        PQ(q, 0x2F4, char) = 0;                                                                   \
+        PQ(q, 0x2F5, char) = ID;                                                                  \
+        PQ(q, 0x2F6, char) = 0;                                                                   \
+        PQ(q, 0x2F7, char) = 0;                                                                   \
+    }
+
+// FUNCTION: GAME 0x2DCA58
+PSTATE_B(func_002DCA58, 0x31)
+// FUNCTION: GAME 0x2DCCD0
+PSTATE_B(func_002DCCD0, 0x32)
+
+// FUNCTION: GAME 0x2DC898
+extern "C" void func_002DC898(int arg)
+{
+    PlrQ *q = Getplayer();
+    if (q->m_54a <= 0 || func_0010B698(q) || g_EmManage.m_slotWait > 0 || g_EmManage.CkPlCatched())
+        return;
+    PQ(q, 0x694, int) = arg;
+    PQ(q, 0x2F5, char) = 0x44;
+    PQ(q, 0x2F4, char) = 0;
+    PQ(q, 0x2F6, char) = 0;
+    PQ(q, 0x2F7, char) = 0;
+}
+
+float capVu0MagnitudeSqXZ(const float *, const float *);
+float Turn_dest(const float *, float, const float *, float);
+
+// DRAFT: GAME 0x2DB7E0
+// diff: 24 words, original keeps the Turn_dest result in f1 and fabs-selects into f2 with a mov.s in the bc1f slot; ours copies zero into f1
+#ifdef NONMATCHING
+extern "C" int func_002DB7E0(const float *arg)
+{
+    PlrQ *q = Getplayer();
+    float m = capVu0MagnitudeSqXZ(PQ(q, 0xF0, const float *), arg);
+    if (2.0f < m)
+        return 0;
+    if (m < 0.5f)
+        return 1;
+    float t = Turn_dest(PQ(q, 0xF0, const float *), PQ(q, 0x104, float), arg, 3.1415927f);
+    float a;
+    if (t < 0.0f)
+        a = -t;
+    else
+        a = t;
+    return a < 0.2617994f;
 }
 #endif

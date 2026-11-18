@@ -189,8 +189,10 @@ def main() -> int:
     ro_names = {v: n for row, units in sections if row[0] == ".rodata" for v, _sz, n in units}
     absolute: dict[str, int] = {}
     unit_at = {v: n for _row, units in sections for v, _sz, n in units}
+    taken = {e[2] for e in cfg["compiled"]}
     for entry in cfg["compiled"]:
-        found = find_symbol(ROOT / entry[1], entry[0], entry[2], spans[entry[0]], raw, {e[2] for e in cfg["compiled"]})
+        found = find_symbol(ROOT / entry[1], entry[0], entry[2], spans[entry[0]], raw, taken)
+        taken.add(found)
         if found != entry[2]:  # the compiler mangled a name the original lacks
             absolute[entry[2]] = entry[0]
             entry[2] = found

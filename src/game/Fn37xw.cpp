@@ -66,3 +66,52 @@ extern "C" int func_00373118(Fn37Init *o, int a, int *p, int flag)
         o->m_4C |= 0x10;
     return 1;
 }
+
+extern "C" int func_0037D1A8(int, int);
+extern "C" int func_0037D060(int);
+extern "C" int func_0037D220(int, int);
+extern "C" int func_0037D100(int);
+
+// FUNCTION: GAME 0x3750E0
+extern "C" int func_003750E0(int a)
+{
+    return func_0037D1A8(1, a) != 0 ? 1 : (func_0037D060(a) != 0 ? 2 : 0);
+}
+
+// FUNCTION: GAME 0x375128
+extern "C" int func_00375128(short a)
+{
+    return func_0037D220(1, a) != 0 ? 1 : (func_0037D100((unsigned short)a) != 0 ? 2 : 0);
+}
+
+struct Fn37Vec7 {
+    int m_0, m_4, m_8, m_C, m_10, m_14, m_18;
+};
+extern Fn37Vec7 D_0076B580;
+struct Fn37Dst {
+    char _pad[0xA8];
+    int m_A8, m_AC, m_B0, m_B4, m_B8, m_BC, m_C0;
+};
+
+// FUNCTION: GAME 0x3754A8
+extern "C" void func_003754A8(Fn37Dst *o)
+{
+    o->m_A8 = D_0076B580.m_0;
+    o->m_AC = D_0076B580.m_4;
+    o->m_B0 = D_0076B580.m_8;
+    o->m_B4 = D_0076B580.m_C;
+    o->m_B8 = D_0076B580.m_10;
+    o->m_BC = D_0076B580.m_14;
+    o->m_C0 = D_0076B580.m_18;
+}
+
+struct Fn37Ent {
+    int w[8];
+};
+extern Fn37Ent D_0076A7D4[];
+
+// FUNCTION: GAME 0x374980
+extern "C" void func_00374980(short i, Fn37Ent *out)
+{
+    *out = D_0076A7D4[i];
+}

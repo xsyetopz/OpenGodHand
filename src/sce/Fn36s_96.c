@@ -299,3 +299,40 @@ int func_0036DA30(int *p)
     return 1;
 }
 #endif
+
+extern void func_0036D938();
+extern int D_003F2048[];
+
+// FUNCTION: GAME 0x36D7F8
+void func_0036D7F8(int *p, int a, int b)
+{
+    int *q;
+    if (func_0036D688(p)) {
+        func_0036D8E8(0, 0xFF030203);
+        return;
+    }
+    q = p + 1;
+    q[0] = a;
+    q[1] = b;
+}
+
+// FUNCTION: GAME 0x36DB80
+void func_0036DB80(char *p, int *out)
+{
+    char *q = p + 0x160;
+    if (func_0036D688(p)) {
+        func_0036D8E8(0, 0xFF03020D);
+        return;
+    }
+    *out = *(int *)(q + 0x2D4);
+}
+
+// FUNCTION: GAME 0x36D8E8
+int func_0036D8E8(int *o, int r)
+{
+    if (o == 0)
+        func_0036D938(D_003F2048);
+    else
+        func_0036D938(o + 1);
+    return r;
+}

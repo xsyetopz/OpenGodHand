@@ -84,8 +84,12 @@ full build still reproduces `SLUS_215.03` byte for byte.
 - Jump tables: a `switch` function that matches under fncmp links together
   with its table. linkgen places the object's `.rodata` over the original
   `jtbl_` unit (replacing `asm/data/rodata/<addr>.o`) when that section is
-  exactly the table: same size, address-aligned, and every word equals the
-  original target. Extra `.rodata` in the object (strings, floats, a second
+  exactly the table: address-aligned, every relocated word equals the original
+  target, and every other word equals the original bytes. Size may differ by
+  zero padding only: an original unit may end in zero words past the section,
+  and SN as pads a game section to 16 bytes, which linkgen trims in the gated
+  copy (patching `sh_size`, so `.rel.rodata` survives) when the dropped tail is
+  zero and unrelocated. Extra `.rodata` in the object (strings, floats, a second
   table) keeps the function gated in asm; split such a function into its own
   source file. Annotate it `// FUNCTION` as usual (example: 0x122A50).
 - Keep a function in asm (no annotation) until it matches. A non-matching
@@ -139,6 +143,14 @@ These source shapes reproduce patterns this compiler emits only one way:
   the preceding callee with an `int` return (`extern "C" int SetDisable__13cSceAtManagerUs(...)`
   instead of `void`). The unused return value shifts register allocation
   (matched 0x1DFD90, 0x1D4F48, 0x1641B8, 0x17FC58). Check the callee's other call sites in the file.
+- Variadic functions: the toolchains ship no `va-mips.h`, and
+  `__builtin_next_arg` always yields the frame top (the slot after the last
+  register save), whatever parameter it names. The original's `ap` points at
+  the first anonymous register save, `8 * (8 - named)` bytes lower, so write
+  `ap = (va_list)((char *)__builtin_next_arg(fmt) - 8 * (8 - named));`
+  directly before the call that consumes it; assigned earlier, gcc hoists it
+  and reallocates registers (matched newlib `sprintf`, `fprintf`, 0x33B6E8,
+  0x38AF78).
 
 ## Open problem: `div.s` padding
 
@@ -179,7 +191,12 @@ bare `j` (8 bytes), while 2.96 keeps a dead frame around the tail jump
 (`addiu sp; sd ra; ld ra; j; addiu sp`, 20 bytes). Below 0x328000 both shapes
 occur, so each object takes whichever compiler its framed functions match.
 That span also holds ProDG game objects (`SearchCameraData` at 0x31CE38),
-recognisable by `sq` prologues; they belong in `src/game` as C++.
+recognisable by `sq` prologues; they match only `ee-gcc2.95.3-136`
+(`src/sce/Fn31y.c`: 0x31C238, 0x31CA88, 0x31D2F8, 0x31D6E8), while their
+`sd`-saving neighbours stay on 2.9-991111 (`src/sce/Fn31x.c`). The island
+0x372CB0-0x387430 is likewise game C++ under the default compiler
+(`src/game/Fn37xa.cpp`, `Fn37xw.cpp`); 2.96, 2.9 and 3.2 lose 0x373430 by
+16-21 words.
 The sign-extending wrappers at 0x38A1D8-0x38BA68 match only ee-gcc 3.2 with
 `-fno-optimize-sibling-calls`. ee-gcc 3.2 otherwise matched only small wrappers, which 2.96 also
 matches, and loses every larger function by 15-23 words. 2.96 must compile C,

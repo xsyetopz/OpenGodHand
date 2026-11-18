@@ -10,3 +10,8 @@ void func_002B9DB8(int a, int b, ...)
 void func_002BA3F0(int a, int b, ...)
 {
 }
+
+// FUNCTION: GAME 0x201F48
+void debugPrint__9cScenarioPCce(void *self, const char *fmt, ...)
+{
+}

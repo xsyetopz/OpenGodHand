@@ -73,7 +73,10 @@ def find_symbol(obj: Path, vram: int, sym: str, span: int, raw: bytes, taken: se
     """Return the compiled symbol for the unit at `vram`: `sym` when the object
     has its section, otherwise the one other function section whose bytes equal
     the original (a member function the compiler named by mangling, such as a
-    macro-generated `operator>>`). Falls back to `sym` when none or several do."""
+    macro-generated `operator>>`). Identical bodies are taken in symbol order;
+    falls back to `sym` when none matches."""
+    if not obj.exists():
+        return sym
     with obj.open("rb") as f:
         elf = ELFFile(f)
         if elf.get_section_by_name(f".text.{sym}") is not None:
@@ -84,4 +87,4 @@ def find_symbol(obj: Path, vram: int, sym: str, span: int, raw: bytes, taken: se
             and s.name not in taken and elf.get_section(s["st_shndx"]).name == f".text.{s.name}"
         ]
     hits = [n for n in found if matches(obj, vram, n, span, raw)]
-    return hits[0] if len(hits) == 1 else sym
+    return hits[0] if hits else sym
