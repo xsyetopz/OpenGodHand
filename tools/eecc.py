@@ -64,6 +64,22 @@ IMAGE = "godhand-eecc:wine"
 DOCKERFILE = ROOT / "tools/docker/wine.Dockerfile"
 
 
+def volumes() -> list[str]:
+    """Docker -v arguments: ROOT, plus the real target of each symlinked input outside it.
+
+    A gate worktree links tools/compilers and other ignored inputs back to the main checkout;
+    the container follows those links, so their targets must be mounted at the same paths.
+    """
+    out = ["-v", f"{ROOT}:{ROOT}"]
+    for parent in (ROOT, ROOT / "tools"):
+        for p in parent.iterdir():
+            if p.is_symlink():
+                t = p.resolve()
+                if ROOT not in t.parents and t.exists():
+                    out += ["-v", f"{t}:{t}"]
+    return out
+
+
 def ensure_toolchain(name: str) -> Path:
     home = ROOT / "tools/compilers" / name
     if home.exists():
@@ -154,7 +170,7 @@ def serve(box: str) -> int:
     ensure_image(docker)
     subprocess.call([docker, "rm", "-f", box], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.check_call([
-        docker, "run", "-d", "--name", box, "--platform", "linux/386", "-v", f"{ROOT}:{ROOT}",
+        docker, "run", "-d", "--name", box, "--platform", "linux/386", *volumes(),
         "-e", "WINEDEBUG=-all", IMAGE, "sleep", "infinity",
     ], stdout=subprocess.DEVNULL)
     return subprocess.call([docker, "exec", box, "wineserver", "-p"])
@@ -187,7 +203,7 @@ def main() -> int:
             cmd = [docker, "exec", "-w", str(cwd), "-e", "WINEDEBUG=-all", box, *exe, *gcc_args]
         else:
             cmd = [
-                docker, "run", "--rm", "--platform", "linux/386", "-v", f"{ROOT}:{ROOT}", "-w", str(cwd),
+                docker, "run", "--rm", "--platform", "linux/386", *volumes(), "-w", str(cwd),
                 "-e", "WINEDEBUG=-all", IMAGE, *exe, *gcc_args,
             ]
     sn_as = ensure_toolchain(SN_AS[0]) / SN_AS[1] if gcc.suffix == ".exe" else None
