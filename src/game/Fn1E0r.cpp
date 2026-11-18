@@ -82,13 +82,12 @@ extern "C" void func_001E7908(char *self, int m, int n)
 
 class cIDBase {
 public:
-    void release();
+    int release();
     void move();
 };
-void free__5cHeapPv(void *, void *);
+int free__5cHeapPv(void *, void *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1E7368 - 3 words: IDSys load uses v0/v1 swapped
+// FUNCTION: GAME 0x1E7368
 extern "C" void func_001E7368(char *self)
 {
     ((cIDBase *)(self + 0x530))->release();
@@ -101,7 +100,6 @@ extern "C" void func_001E7368(char *self)
     if (q)
         free__5cHeapPv(*(void **)(q - 0x20), q);
 }
-#endif
 
 extern "C" void func_001E8F78(float);
 

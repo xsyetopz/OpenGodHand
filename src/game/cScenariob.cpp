@@ -221,13 +221,3 @@ extern "C" void func_002C3968(cScenario *self, int n)
     if (n >= 0)
         memset((char *)self + 0x54 + n * 8, 0, 8);
 }
-
-#ifdef NONMATCHING
-// 0x2C4350: near-miss; original loads a message global via lui/lw (0x23A4 offset) and calls func_2AEDA0 with different branch layout
-extern "C" int func_002C4350(cScenario *self)
-{
-    if (self->m_messNo != 0xFFFF)
-        return Message->ckMessage(self->m_messNo);
-    return 0;
-}
-#endif

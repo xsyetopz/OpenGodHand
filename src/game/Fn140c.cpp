@@ -10,7 +10,7 @@ void func_002A9800(void *, void *);
 extern char CoreSave[];
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1415E8 - 7-9 words differ: gcc rotates the loop into bgezl and orders the sb stores 75 then 76
+// DRAFT: GAME 0x1415E8 - 7-9 words differ: gcc rotates the loop into bgezl and orders the sb stores 75 then 76; tried do-while, for, pointer-increment, hoisted one
 extern "C" void func_001415E8(char *p, int a)
 {
     char **q = (char **)(p + 0x22F4);

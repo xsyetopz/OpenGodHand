@@ -68,22 +68,6 @@ extern "C" void func_00124E68(pl00 *self, float a)
         ((cGameObj *)self)->SetTgtTurn(*o->m_vtab->m_fn((char *)o + o->m_vtab->m_delta), a);
 }
 
-#ifdef NONMATCHING
-// 0x12CA60: original spills the index byte to 0(sp) (sp frame 0x10, address-taken temp in an inlined helper); mine has no frame
-extern "C" int func_0012CA60(pl00 *self)
-{
-    if (self->m_unk15F4 & 0x200000)
-        return 1;
-    unsigned int idx = self->m_unk2B4;
-    pl00 *o = getHolderObj(self, idx);
-    if (!o)
-        return 0;
-    if (o->m_pos->y < self->m_pos->y + 0.8f)
-        return 1;
-    return 0;
-}
-#endif
-
 // FUNCTION: GAME 0x10A408
 extern "C" void func_0010A408(pl00 *self, int a, int b, int c, int d, short e)
 {
@@ -114,14 +98,6 @@ extern "C" void func_00107DE0(int a, int b)
         D_004615F0.y = 0;
     }
 }
-
-#ifdef NONMATCHING
-// 0x123908: 11 words differ (original has 0x20 frame, s0 = &CamManager, tail call to func_138F88)
-extern "C" int func_00123908()
-{
-    return CamManager.isCk_CamClass(1);
-}
-#endif
 
 // FUNCTION: GAME 0x1020F0
 extern "C" int func_001020F0(cModel *self)

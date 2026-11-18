@@ -140,17 +140,6 @@ extern "C" int func_00273EE0(void *self)
     return 1;
 }
 
-// 0x2744B8: near-miss, 9 words differ (original 40 bytes, ours 36).
-#ifdef NONMATCHING
-extern "C" bool func_002744B8(void *self)
-{
-    if (AT(int, self, 0x564) == 0x211)
-        return AT(unsigned int, self, 0x16D4) & 0x20;
-    return false;
-}
-
-#endif
-
 // FUNCTION: GAME 0x276090
 extern "C" void func_00276090(void *self, bool b)
 {
@@ -202,15 +191,3 @@ extern "C" void func_0027B240(void *self)
 {
     func_00104010(self, (char *)self + 0x2130, (char *)self + 0x5B0);
 }
-
-// 0x2714B0: near-miss, guessed body is wrong (original 56 bytes, ours 44); wrapper around func_0030F5C8.
-#ifdef NONMATCHING
-extern "C" void func_002714B0(void *self)
-{
-    void *p = AT(void *, self, 0x1860);
-    if (p) {
-        AT(void *, self, 0x1860) = 0;
-        func_0030F5C8(p);
-    }
-}
-#endif

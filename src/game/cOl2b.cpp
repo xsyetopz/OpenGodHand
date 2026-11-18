@@ -50,6 +50,7 @@ extern cVec16 D_00568020[3];
 extern cVec16 D_00567FC0[3];
 
 #ifdef NONMATCHING
+// DRAFT: GAME 0x180388
 // 0x180388: ~10 words differ: original keeps the in-range bool in a1 (daddu a1,v0 + andi 0xFF) before testing it; ours tests slt result directly
 void cOl2b::setOpenFix()
 {
@@ -67,6 +68,7 @@ void cOl2b::setOpenFix()
     }
 }
 
+// DRAFT: GAME 0x180440
 // 0x180440: same diff as setOpenFix (in-range bool copy + andi 0xFF)
 void cOl2b::setCloseFix()
 {
@@ -110,6 +112,7 @@ extern void *func_SetEffect(int, int, cObj *, void *, int, unsigned) __asm__("Se
 extern void func_KillEffect(int, int, int) __asm__("KillEffect__F12eEffDataType6eEffId13eEspEraseMode");
 
 #ifdef NONMATCHING
+// DRAFT: GAME 0x1805A8
 // 0x1805A8: ours hoists the lui/addiu of Snd above the parts lookup (a0/v1 allocation shifts, 26 words differ)
 void cOl2b::setFire()
 {

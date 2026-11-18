@@ -4,7 +4,7 @@ extern "C" int moveMotion__FP8cObjBase(void *);
 #define B(o) (*(unsigned char *)(self + (o)))
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x27DB20 - 9 words: target shares the 5-store and branches case0 first
+// DRAFT: GAME 0x27DB20 - 8-9 words: target branches case0 first and fills li 5 in delay slots; tried switch/if/goto forms and all 3-store orders
 extern "C" void func_0027DB20(char *self, int k)
 {
     switch (k) {

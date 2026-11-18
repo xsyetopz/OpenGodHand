@@ -2,9 +2,7 @@
 
 
 
-// DRAFT: GAME 0x15A590
-// diff: FP mul/reg order only (16 words); formula and calls identical
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x15A590
 extern "C" float func_003A19F8(float);
 extern "C" float func_003A18F0(float);
 class cVec;
@@ -26,12 +24,11 @@ void Quaternion::SetEulerXYZ(const cVec &v)
     float cy = func_003A18F0(ay);
     float sz = func_003A19F8(az);
     float cz = func_003A18F0(az);
-    q[2] = cx * cy * sz - sx * sy * cz;
     q[0] = sx * cy * cz - cx * sy * sz;
     q[1] = cx * cz * sy + sx * sz * cy;
+    q[2] = cx * cy * sz - sx * sy * cz;
     q[3] = cx * cz * cy + sx * sz * sy;
 }
-#endif
 
 // FUNCTION: GAME 0x1632E8
 extern "C" int func_001FA710(char *);

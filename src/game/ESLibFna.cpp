@@ -220,42 +220,6 @@ extern "C" int func_002E12D8(signed char c)
     return c;
 }
 
-// 0x2E1348: near-miss, 20 words differ (136 vs 144 bytes). Store scheduling and the
-// branch layout differ; the original keeps the alloc result in $a2 across the test.
-#ifdef NONMATCHING
-extern "C" void func_002E1348()
-{
-    D_0061B280.b9 = 8;
-    D_0061B280.sA = 0;
-    D_0061B280.b8 = 8;
-    void *p = _MemoryAlloc(0x1000, 0x40, D_00754200);
-    D_0061B280.p14 = p;
-    if (!(D_00747A34 & 0x4000))
-        func_001FFD00(D_00580D40, D_0044E030);
-    else
-        func_001FFD00(D_00580D40, D_0044E040);
-}
-#endif
-
-// 0x2E9BA0 NEAR-MISS: 13 words differ (field copy scheduling)
-#ifdef NONMATCHING
-extern "C" int func_002E9BA0(EsObjA *self)
-{
-    EsSrcA *s = self->src;
-    self->flags &= ~0x1000000;
-    float v = s->f144 * 0.01f;
-    self->f2B0 = v;
-    self->f2B4 = v;
-    self->f2BC = s->f150 * 0.1f;
-    self->f2C8 = s->f13C * 1000.0f;
-    self->f2D0 = s->f140;
-    self->b2CC = s->b16C;
-    self->b2CE = s->b170 + 1;
-    D_0061B644 = 0;
-    return 1;
-}
-#endif
-
 // FUNCTION: GAME 0x2EFCA8
 extern "C" int func_002EFCA8(EsObjB *self, EsParamB *p)
 {

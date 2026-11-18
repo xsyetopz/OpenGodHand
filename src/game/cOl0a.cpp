@@ -183,28 +183,6 @@ extern "C" void func_0017EC40(sOlObj *s, void *a)
     func_001B6F38(s, a);
 }
 
-#ifdef NONMATCHING
-struct sOlHdr {
-    int _pad[3];
-    int m_off;
-};
-struct sOlRsrc {
-    char _pad0[0x304];
-    sOlHdr *m_hdr;
-};
-
-// 0x17EC98: matches except the register holding m_hdr (original v1, compiled v0 in the
-// lw 0x304 / lw 0xC / addu sequence before effDataRegist).
-extern "C" int func_0017EC98(sOlRsrc *s)
-{
-    func_001B6FB8(s);
-    sOlHdr *h = s->m_hdr;
-    EspSys.effDataRegist((eEffDataType)0x27D, (char *)h + h->m_off);
-    SetEffect((eEffDataType)0x27D, (eEffId)1, (cObj *)s, 0, -1, (eEffId)-1);
-    return 1;
-}
-#endif
-
 // FUNCTION: GAME 0x1704E8
 extern "C" void *func_001704E8() { if (D_007857E8 == 0) { func_001C3BE8(); func_0031EEA8(&D_007857E8, D_004205C8, D_00785798); } return &D_007857E8; }
 // FUNCTION: GAME 0x170778

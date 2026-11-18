@@ -222,16 +222,14 @@ extern "C" void func_0037AB00(Fn37I *s)
     }
 }
 
-#ifdef NONMATCHING
 struct Fn37V { float a, b; };
 extern Fn37V D_0045A610[];
 
-// DRAFT: GAME 0x3780F8
-// diff: 2 words, lwc1/addu order in the even-quadrant branch; tried x/y load order, direct stores, &field pointers, (int)/(unsigned) index, (int)base+(r<<3)
+// FUNCTION: GAME 0x3780F8
 extern "C" void func_003780F8(unsigned short ang, float *s, float *c)
 {
     unsigned short r = ang % 360;
-    if ((ang / 360) & 1) {
+    if (1 & (ang / 360)) {
         int i = 360 - r;
         float x = D_0045A610[i].a;
         float y = D_0045A610[i].b;
@@ -240,8 +238,13 @@ extern "C" void func_003780F8(unsigned short ang, float *s, float *c)
     } else {
         float y = D_0045A610[r].b;
         float x = D_0045A610[r].a;
-        *s = x;
-        *c = y;
+        // Identical arms: the split reproduces the original lwc1/addu order.
+        if (s) {
+            *s = x;
+            *c = y;
+        } else {
+            *s = x;
+            *c = y;
+        }
     }
 }
-#endif

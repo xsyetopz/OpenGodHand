@@ -123,9 +123,7 @@ extern "C" void func_001B0078(char *self)
     setMeshColorFromLayer__7cOmBaseUifff(self, 0, 1.0f, g, g);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1B54E8
-// diff: 6 words (tried: unsigned f (8), cached ushort t (25), ternary d (29)); original loads the short test and the odd-bit test into v0 with a likely branch (bnel/lhu in the delay slot), mine uses bnez with lhu into v1
+// FUNCTION: GAME 0x1B54E8
 extern "C" void func_001B54E8(char *self)
 {
     long f = *(unsigned *)(self + 0x600);
@@ -136,7 +134,7 @@ extern "C" void func_001B54E8(char *self)
             *(int *)(self + 0x600) &= ~0x10;
         } else {
             float d = 0.10471975803375244f;
-            if (*(unsigned short *)(self + 0x644) & 1)
+            if (*(unsigned short *)(self + 0x644) % 2)
                 d = -d;
             char *s = SlotNo(self, 0);
             *(float *)(s + 0x104) += d;
@@ -144,4 +142,3 @@ extern "C" void func_001B54E8(char *self)
         }
     }
 }
-#endif

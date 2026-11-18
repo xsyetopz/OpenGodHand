@@ -193,9 +193,8 @@ extern "C" int func_001FC4D0(int **self, unsigned int idx)
     if (w < 4) {
         unsigned int m = 1u << (idx & 31);
         unsigned int v = t[0xB98 / 4 + w];
-        if (v & m)
-            return 1;
-        return 0;
+        unsigned int r = v & m;
+        return r != 0;
     }
     return 0;
 }

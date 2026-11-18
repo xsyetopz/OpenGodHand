@@ -8,7 +8,7 @@ public:
 };
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x195B30 - 12 words: target duplicates the store tails per case
+// DRAFT: GAME 0x195B30 - 12 words: target duplicates the store tails per case; tried goto/dup tails, k!=0&&k==1, store orders (14-15 words)
 void cOm1f::setStart()
 {
     int k = *(int *)((char *)this + 0x600);

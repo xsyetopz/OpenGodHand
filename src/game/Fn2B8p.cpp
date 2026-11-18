@@ -216,23 +216,18 @@ extern "C" int func_002B3BE0(char *self)
     return 1;
 }
 
-// DRAFT: GAME 0x2B4FE8
-// diff: 9 words, loop exit layout and which pointer is loaded vs returned
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2B4FE8
 extern "C" char *func_002B4FE8(char *self, int id)
 {
-    char *q = self + 0x1C;
-    char *p = q;
+    char *p = self + 0x1C;
+    char *q = p;
     int n = 0;
     do {
-        if (*(int *)q == id) return p;
-        n++;
-        q += 8;
-        p += 8;
+        if (*(int *)p != id) { n++; q += 8; p += 8; continue; }
+        return q;
     } while (n < 0x40);
     return 0;
 }
-#endif
 
 extern "C" void func_002BB2D8();
 

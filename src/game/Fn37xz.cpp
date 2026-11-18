@@ -141,7 +141,6 @@ extern "C" void func_0037CA98(void)
     }
 }
 
-#ifdef NONMATCHING
 struct Fn37Slot50 {
     unsigned short m_0;
     char _p2[0x4E];
@@ -149,24 +148,24 @@ struct Fn37Slot50 {
 extern Fn37Slot50 D_0076B9C0[];
 extern Fn37Slot50 D_0076CF20[];
 
-// DRAFT: GAME 0x37D2D8
-// diff: 10 words, same as 0x37D170.
+// FUNCTION: GAME 0x37D2D8
 extern "C" Fn37Slot50 *func_0037D2D8(void)
 {
-    Fn37Slot50 *p = D_0076CF20;
-    Fn37Slot50 *e = D_0076CF20 + 0x33;
+    int p = (int)D_0076CF20;
+    int e = p + 0xFF0;
     do {
-        if (p->m_0 == 0)
-            return p;
-    } while (p++, (int)p < (int)e);
+        if (*(unsigned short *)p != 0) { p += 0x50; continue; }
+        return (Fn37Slot50 *)p;
+    } while (p < e);
     return 0;
 }
 
+#ifdef NONMATCHING
 extern int D_0076A7AC;
 extern void (*const D_003F2810[])(int);
 
 // DRAFT: GAME 0x37D298
-// diff: 8 words, index load vs table address order.
+// diff: 8 words, idx/table reg order (a1/v1/v0); tried int/unsigned idx temp, fnptr temp, ptr-to-table temp, non-const table, int-arith index (none)
 extern "C" void func_0037D298(char a)
 {
     D_003F2810[D_0076A7AC](a);

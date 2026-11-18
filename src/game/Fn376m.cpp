@@ -219,15 +219,13 @@ extern "C" void func_003762D8(Fn376Obj *d, Fn376Src *s)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3767B0
-// diff: a0 vs v1 register allocation and beql/beqz layout
+// FUNCTION: GAME 0x3767B0
 extern "C" void func_003767B0(Fn376Obj *p)
 {
     unsigned short a = p->m_0;
     if (a & 0x100) {
-        p->m_0 = a & 0xFEFF;
         if (p->m_18 == p->m_1A) {
+            p->m_0 = a & 0xFEFF;
             if (p->m_18 == 0)
                 func_00376AE0(p, 0);
         } else {
@@ -236,4 +234,3 @@ extern "C" void func_003767B0(Fn376Obj *p)
         }
     }
 }
-#endif

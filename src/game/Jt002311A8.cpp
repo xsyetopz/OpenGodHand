@@ -21,7 +21,7 @@ struct Ej {
 };
 
 // DRAFT: GAME 0x2311A8
-// diff: 12 words; the original loads the offset pair into v1/a0 then adds into a1/a2, and increments m_2F6 via v1
+// diff: 12 words; the original loads the offset pair into v1/a0 then adds into a1/a2, and increments m_2F6 via v1; tried inline/x-y swap/unsigned/char* sums/inc forms (12-15 words)
 #ifdef NONMATCHING
 extern "C" void func_002311A8(Ej *self)
 {

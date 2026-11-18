@@ -45,33 +45,6 @@ extern "C" void func_002E8168(EsObjF *self, float step)
     }
 }
 
-// 0x2E2800 NEAR-MISS: ~20 words differ; original reloads flags after the byte store and shares the epilogue
-#ifdef NONMATCHING
-extern "C" void func_002E2800(EsObjG *self)
-{
-    func_002FBED0(self);
-    if (!(*(unsigned char *)&self->flags & 1)) {
-        switch ((unsigned int)self->i2C4) {
-        case 0:
-            func_002E2C50(self);
-            break;
-        case 1:
-            func_002E2D40(self);
-            break;
-        case 2:
-            func_002E2E00(self);
-            break;
-        default:
-            func_002FBE50(self);
-            break;
-        }
-    } else if (self->flags & 4) {
-        self->b24C = self->b2D5 ? self->b2D5 : 30;
-        self->flags &= ~4;
-    }
-}
-#endif
-
 // FUNCTION: GAME 0x2EA9F0
 extern "C" void func_002EA9F0(EsObjJ *self)
 {
@@ -87,31 +60,6 @@ extern "C" void func_002EA9F0(EsObjJ *self)
         self->f2BC += 2.0f;
     func_002FBED0(self);
 }
-
-// 0x2EA908 NEAR-MISS: 4 words differ; register choice $a2 vs $v1 for s->b18F
-#ifdef NONMATCHING
-extern "C" int func_002EA908(EsObjK *self)
-{
-    self->i2B8 = 0;
-    self->i2BC = 0;
-    EsSrcK *s = self->src;
-    self->f2C0 = s->f13C * 0.1f;
-    self->f2C4 = s->f140 * 0.1f;
-    self->i2C8 = s->b18C + 2;
-    self->f2B0 = (float)s->b18D * 0.1f + 1.0f;
-    self->f2B4 = (float)s->b18E * 0.1f + 1.0f;
-    unsigned int k = s->b18F;
-    self->i2CC = k;
-    if (k >= 4) {
-        func_002D9F68(self, D_0044E808);
-        self->i2CC = 0;
-        return 0;
-    }
-    if (k != 0 && self->i2C8 == 2)
-        self->i2C8 = 3;
-    return 1;
-}
-#endif
 
 // FUNCTION: GAME 0x2E8318
 extern "C" void func_002E8318(EsObjL *self)

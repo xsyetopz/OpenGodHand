@@ -143,7 +143,7 @@ extern "C" void func_0031CB80(short *pts, int c, unsigned z)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x31C7E0 (12 words differ: scheduling of a2/v1 loads before the V4 stores)
+// DRAFT: GAME 0x31C7E0 (10 words differ: second vtable load should be a2 and scheduled before the V4 setup; tried separate vt2 local, fn-ptr local, V4 store orders, v decl before calls)
 struct V4 { float x, y, z, w; };
 struct VE { short d; short i; void (*f)(char *, const void *); };
 void setPlayerPos(const cVec &pos, float f)
@@ -151,13 +151,13 @@ void setPlayerPos(const cVec &pos, float f)
     char *p = Getplayer__Fv();
     VE *vt = *(VE **)(p + 0x214);
     vt[14].f(p + vt[14].d, &pos);
-    vt = *(VE **)(p + 0x214);
+    VE *vt2 = *(VE **)(p + 0x214);
     V4 v;
     v.x = 0.0f;
     v.y = f;
     v.z = 0.0f;
     v.w = 1.0f;
-    vt[15].f(p + vt[15].d, &v);
+    vt2[15].f(p + vt2[15].d, &v);
     *(float *)(p + 0x30) = pos.x;
     *(float *)(p + 0x34) = pos.y;
     *(float *)(p + 0x38) = pos.z;

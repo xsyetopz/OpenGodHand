@@ -5,6 +5,7 @@ extern "C" void func_00150418(void *);
 extern "C" void func_001504B0(void *, void *);
 extern "C" void func_001505A8(void *, void *);
 extern "C" void func_001523F8(int a, unsigned int b);
+extern "C" int func_00151630(char *);
 
 // FUNCTION: GAME 0x150078
 extern "C" void func_00150078()
@@ -37,25 +38,6 @@ struct sSlot {
 };
 extern sSlot D_00747BA0[256];
 
-// 0x150D78: loop is correct, but the original shares the `(short)i` return block after the `return -1` exit; 12 words differ in layout.
-#ifdef NONMATCHING
-extern "C" short func_00150D78(void *self, int key)
-{
-    if (!key)
-        return 0;
-    int *p = &D_00747BA0[0].m_key;
-    int i = 0;
-    int n = 0x100;
-    do {
-        if (*p == key)
-            return (short)i;
-        p = (int *)((char *)p + 0xB0);
-        i++;
-    } while (--n);
-    return -1;
-}
-#endif
-
 extern int D_00460D30;
 extern const char D_0041ECB8[];
 extern "C" void func_0031EEC8(void *, const char *);
@@ -68,30 +50,10 @@ extern "C" int *func_00150638()
     return &D_00460D30;
 }
 
-// 0x151630: gcc emits `movz` for the final 3/2 select where the original branches, and reorders the early `return 2`.
-#ifdef NONMATCHING
-extern "C" int func_00151630(const char *p)
-{
-    int r = 2;
-    if (p[0] == 'T') {
-        if (p[3] == '3')
-            return p[5] == 6;
-        if (p[3] == '2')
-            return 0;
-        if (p[1] == 'M')
-            r = 3;
-    }
-    return r;
-}
-#else
-extern "C" int func_00151630(const char *p);
-#endif
-
 // FUNCTION: GAME 0x1522C0
 extern "C" char *func_001522C0(void *self, char *p, unsigned char idx)
 {
-    if (func_00151630(p) == 3)
-        {
+    if (func_00151630(p) == 3) {
         char *q = p + idx * 4;
         return (char *)*(int *)(q + 0x10) + (int)p;
     }

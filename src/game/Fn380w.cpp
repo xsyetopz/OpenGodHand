@@ -11,9 +11,7 @@ int func_00329438(int, int, int);
 int func_0032D340(int, int, int, int);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x387430
-// diff: 1 word, or operand order (a1,v0 vs v0,a1); ~12 forms tried (|, +, ^, v|=, temp, int/unsigned); compiles under default game compiler
+// FUNCTION: GAME 0x387430
 struct Fn38S { unsigned short h0; char _2[0x9E]; };
 extern Fn38S D_0076E910[];
 extern "C" int func_003779D0(short);
@@ -26,10 +24,9 @@ extern "C" int func_00387430(short a)
     if (h) {
         v = (h & 2) ? 6 : 2;
         if (h & 4) v |= 8;
-        v = (h & 0x10) | v;
+        v = v - (0 - (h & 0x10));
         if (h & 0x8000) v |= 0x20;
         return v;
     }
     return 0;
 }
-#endif

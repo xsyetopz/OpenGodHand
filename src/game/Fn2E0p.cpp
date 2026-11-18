@@ -158,19 +158,20 @@ extern "C" void func_002F6BB8(char *self)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2FB998 - 13 words, prologue pointer register order
+// FUNCTION: GAME 0x2FB998
 extern "C" void EspAllKill__Fv()
 {
+    unsigned *a = D_0071B7C0;
+    unsigned *b = D_0071B840;
+    unsigned *c = D_0071B8C0;
     char *p = D_0061B7C0;
-    for (unsigned i = 0; i < 0x400; i++, p += 0x400) {
+    for (int i = 0; i < 0x400; i++, p += 0x400) {
         unsigned bit = 0x80000000u >> (i & 0x1F);
-        unsigned w = i >> 5;
-        if ((D_0071B7C0[w] & bit) && !(D_0071B840[w] & bit) && !(D_0071B8C0[w] & bit))
+        unsigned w = (unsigned)i >> 5;
+        if ((a[w] & bit) && !(b[w] & bit) && !(c[w] & bit))
             func_002FBE50(p);
     }
 }
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2FAA88 - 25 words, loop/register layout

@@ -268,26 +268,22 @@ extern char D_0044BAF8[];
 extern "C" void func_002BAC88(char *);
 extern "C" void func_002BB040(char *);
 
-// DRAFT: GAME 0x2B8990
-// diff: 14 words, original keeps 3 for the store (v1) apart from the counter (s2) and allocates -1 before the pointer
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2B8990
 extern "C" char *func_002B8990(char *self)
 {
-    int n = 3;
-    int e = -1;
-    char *a = self + 0x14;
     *(int *)self = 3;
+    char *a = self + 0x14;
     char *p = a;
     *(char **)(self + 8) = D_0044BAF8;
     *(char *)(self + 0xD) = 0;
+    int n = 3;
     do {
         func_002BAC88(p);
         n--;
         p += 8;
-    } while (n != e);
+    } while (n != -1);
     func_002BB040(a);
     func_002BB040(self + 0x14);
     *(unsigned *)self |= 3;
     return self;
 }
-#endif

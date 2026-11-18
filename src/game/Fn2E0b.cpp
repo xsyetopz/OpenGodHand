@@ -3,7 +3,7 @@
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2E7E10
-// diff: 12 words; float load/store order of the t vector (z loaded first, w stored before z in original) and 2nd-branch copy load order.
+// diff: 12 words; float load/store order of the t vector (z loaded first, w stored before z in original) and 2nd-branch copy load order; tried all 6 store permutations, cVec operator=, local temps (11-19 words).
 struct cMatrix { float m[16]; };
 extern char World_light_work[];
 extern "C" void sceVu0ApplyMatrix(float *, float *, float *);

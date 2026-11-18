@@ -4,7 +4,6 @@ extern "C" void func_00306AA8(int *);
 extern "C" void func_003028E8(void *);
 extern "C" void func_002FB7B0(int);
 extern "C" void func_00300C00(int, int);
-extern "C" void func_002F7110(void *);
 extern "C" int func_003069A8(char *, unsigned, char **);
 extern "C" int func_00306A08(char *, unsigned, char **);
 extern "C" void func_003128B0(void *);
@@ -173,7 +172,3 @@ extern "C" W30 *func_0030FB20(int, W30 *w) {
     return 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x300060 (8 words off with -O2 -G0: original copies a0 to v0 and tests v0)
-extern "C" void func_00300060(void *a) { if (a) func_002F7110(a); }
-#endif

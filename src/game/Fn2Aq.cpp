@@ -41,7 +41,7 @@ extern "C" int func_002A9860(OffTab *self, int off)
     return self->m_14 - self->m_4;
 }
 
-// DRAFT: GAME 0x2ABD30 - 11 words differ: original computes slti+andi before the branch; ours folds it
+// DRAFT: GAME 0x2ABD30 - 11 words differ: original computes slti+andi before the branch; ours folds it; tried uchar/bool temps, inline bool/uchar fn, early return, int flag temp (11-15)
 #ifdef NONMATCHING
 extern "C" void func_002ABD30(int, char *o)
 {
@@ -57,21 +57,20 @@ extern "C" void func_002ABD30(int, char *o)
 }
 #endif
 
-// DRAFT: GAME 0x2ABD78 - 11 words differ: original computes slti+andi before the branch; ours folds it
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2ABD78
+static inline unsigned char Lt2(int v) { return v < 2; }
 extern "C" void func_002ABD78(int, char *o)
 {
     char *c = *(char **)(o + 0x1C);
     short n = *(short *)(c + 0x278);
     *(short *)(o + 0xA8) = 0;
     if (c[0x64] == 0) {
-        if ((unsigned char)(n < 2))
+        if (Lt2(n) & 1)
             *(int *)(o + 0x2C) |= 0x400;
         else
             *(int *)(o + 0x2C) &= ~0x400;
     }
 }
-#endif
 
 struct LsNode { char _p[8]; LsNode *m_8; char _q[0x20]; unsigned char m_2C; };
 struct LsHold { char _p[0x10]; LsNode *m_10; };

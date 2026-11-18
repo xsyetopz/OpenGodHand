@@ -180,31 +180,18 @@ extern "C" int func_002F53A8(char *self)
 #endif
 
 #ifdef NONMATCHING
-// diff: original returns a0 copied into v0 before the null test and the call result is discarded (3 probes: void, return self, return callee).
-extern "C" void *func_002E3480(void *);
-extern "C" void *func_002E81D8(void *);
-#define WRAP(NAME, CALLEE) \
-extern "C" void *NAME(void *self) \
-{ \
-    if (self) \
-        return CALLEE(self); \
-    return self; \
-}
-
-#endif
-
-#ifdef NONMATCHING
 // DRAFT: GAME 0x2FEBE8
-// diff: 7 words; original hoists lhu 0x224 above the mode==1 test.
+// diff: 7 words; reg alloc only (original cur in v0, const 1 in v1; ours cur in v1); tried cur as int/ushort local, reordered branches, hoisted b
 extern "C" void func_002FEBE8(char *self, unsigned short a, int mode)
 {
     unsigned short *p = (unsigned short *)(self + 0x22C);
-    if (*p == 0) {
+    int cur = *p;
+    if (cur == 0) {
         *p = a;
         return;
     }
     int b = *(unsigned short *)(self + 0x224);
-    if (mode == 1 || (mode == 0 && (int)(*p - b) < a))
+    if (mode == 1 || (mode == 0 && cur - b < a))
         *p = a + b;
 }
 #endif

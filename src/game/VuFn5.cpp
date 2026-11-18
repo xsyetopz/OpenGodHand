@@ -215,14 +215,15 @@ float Turn_dest_dir(float, float, float);
 extern "C" void sceVu0ApplyMatrix(float *, float *, float *);
 
 // DRAFT: GAME 0x249770
-// diff: 9 words, scheduling only (lw/lui/addiu order before the first lqc2, a2 copy vs sw zero order near sceVu0ApplyMatrix)
+// diff: 6 words (lui/lw/addiu order vs rel ctor sdc2 before first lqc2; a2 copy vs sw zero near sceVu0ApplyMatrix); tried pp/bb hoists, res store orders, r alias
 extern "C" void func_00249770(VObj *self, float ang)
 {
     cMatrix m;
     V4 res;
     float tmp[4] __attribute__((aligned(16)));
+    float *pp = self->pos;
     V4 rel;
-    M_Sub(rel.v, self->pos, D_005850B0);
+    M_Sub(rel.v, pp, D_005850B0);
     M_Copy(tmp, rel.v);
     res.v[0] = tmp[0];
     res.v[1] = tmp[1];

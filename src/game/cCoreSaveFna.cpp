@@ -147,41 +147,6 @@ extern "C" void func_001FBD00(SaveSelf *self, unsigned char v)
         AT(unsigned char, 0x8A) = v;
 }
 
-#ifdef NONMATCHING
-// 0x1FC100: reloads m_save for second store, store order 0xAE then 0xAF; compiled CSEs it
-extern "C" void func_001FC100(SaveSelf *self, unsigned char v)
-{
-    char *s = self->m_save;
-    if (s) {
-        AT(unsigned char, 0xAE) = v;
-        AT(unsigned char, 0xAF) = v;
-    }
-}
-#endif
-
-#ifdef NONMATCHING
-// 0x1FC170: andi of a2 emitted (original does not mask v, and masks index into a0)
-extern "C" void func_001FC170(SaveSelf *self, unsigned char i, unsigned char v)
-{
-    char *s = self->m_save;
-    if (s && i < 10)
-        AT(unsigned char, 0x98 + i) = v;
-}
-#endif
-
-#ifdef NONMATCHING
-// 0x1FC198: tail return 0x1F merged into one block, addu operand order
-extern "C" unsigned char func_001FC198(SaveSelf *self, unsigned char i)
-{
-    char *s = self->m_save;
-    if (!s)
-        return 0x1F;
-    if (i < 10)
-        return AT(unsigned char, 0x98 + i);
-    return 0x1F;
-}
-#endif
-
 // FUNCTION: GAME 0x1FC338
 extern "C" void func_001FC338(SaveSelf *self, int b)
 {
@@ -189,17 +154,6 @@ extern "C" void func_001FC338(SaveSelf *self, int b)
     if (s)
         AT(unsigned int, 0xB90) |= 1 << b;
 }
-
-#ifdef NONMATCHING
-// 0x1FC360: movz selection; compiled uses sltu
-extern "C" int func_001FC360(SaveSelf *self, int b)
-{
-    char *s = self->m_save;
-    if (!s)
-        return 0;
-    return (AT(unsigned int, 0xB90) & (1 << b)) != 0;
-}
-#endif
 
 // FUNCTION: GAME 0x1F9C58
 extern "C" void func_001F9C58(SaveSelf *self)

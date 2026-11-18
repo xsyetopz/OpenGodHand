@@ -4,20 +4,17 @@ struct BgmEnt { unsigned short id; int v[5]; };
 extern BgmEnt D_003C3138[];
 extern "C" void SetBgmState__4cSnd9eBgmState(void *, int);
 
-// DRAFT: GAME 0x2D0AC0 - 8 words differ: gcc if-converts the search to movz; original uses beql and copies the table base into v1
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2D0AC0
 extern "C" void SetBgmTbl__FUs9eBgmReqNo9eBgmState(unsigned short id, int val, int state)
 {
     BgmEnt *found = 0;
-    BgmEnt *p = D_003C3138;
-    do {
-        if (p->id == id)
-            found = p;
-        p++;
-    } while (p < D_003C3138 + 44);
+    for (unsigned i = 0; i < 44; i++)
+        if (D_003C3138[i].id == id)
+            found = &D_003C3138[i];
     if (found) {
         SetBgmState__4cSnd9eBgmState(Snd, state);
         switch (state) {
+        default:
         case 0:
             found->v[0] = val;
             break;
@@ -36,4 +33,3 @@ extern "C" void SetBgmTbl__FUs9eBgmReqNo9eBgmState(unsigned short id, int val, i
         }
     }
 }
-#endif

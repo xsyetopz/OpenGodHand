@@ -29,30 +29,24 @@ extern "C" void SetNumber__12CustomIDWorki(void *, int);
 extern "C" void SetOffsetPosX__12CustomIDWorki(void *, int);
 
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1D9CA0
-// diff: 2 words, sb 0x3024 / sb 0x3025 store order swapped; source order, uchar r and a temp zero all schedule the same way
-// also tried: swapped stores, uchar temp, p[0]/p[1], halfword store, if/else, int callees
+// FUNCTION: GAME 0x1D9CA0
 extern "C" void func_001D9CA0(char *self)
 {
     int v = func_001DCDA8();
     *(int *)(self + 0x3048) = v;
-    int r;
     if (v < 8) {
         func_001DE858(self, *(unsigned char *)(self + 0x3048));
         if (*(int *)(self + 0x3048) < 8) {
             SetBgmState__4cSnd9eBgmState(Snd, 2);
-            r = 9;
-            goto done;
+            self[0x3025] = 0;
+            self[0x3024] = 9;
+            return;
         }
     }
     BgmEventStart__4cSnd9eBgmReqNoii(Snd, 0x28, 0, 0);
-    r = 10;
-done:
-    self[0x3024] = r;
     self[0x3025] = 0;
+    self[0x3024] = 10;
 }
-#endif
 
 // FUNCTION: GAME 0x001C2408
 extern "C" void func_001C2408(char *self, int n)
@@ -92,16 +86,15 @@ extern "C" void func_001C6C30(char *self, V3 *p, float a, float b, float c)
     func_001C7310(self);
 }
 
-// DRAFT: GAME 0x1DCE68 (saved-reg assignment and order differ: orig keeps hi in s2, lo in s3)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x1DCE68
 extern "C" unsigned func_001DCE68(void *, int lo, int hi)
 {
     unsigned t = WorldTime;
     int g = getGold__9cCoreSave(CoreSave);
-    unsigned r = t + irand__Fv() % 100 + g;
-    return r % (hi - (lo - 1)) + lo;
+    unsigned r = t + g / 100 + irand__Fv();
+    int d = lo - 1;
+    return r % (hi - d) + lo;
 }
-#endif
 
 // FUNCTION: GAME 0x001CB828
 extern "C" void func_001CB828(char *self)
@@ -137,7 +130,7 @@ extern "C" void func_001CB990(char *self)
     }
 }
 
-// DRAFT: GAME 0x1DBE18 (9 words: original uses lwu flag test, count-up loop)
+// DRAFT: GAME 0x1DBE18 (9 words: original keeps count-up slti loop and lwu flag test; gcc reverses the counter to bgez; tried (unsigned long)&1UL cast, long i, pointer/do-while forms)
 #ifdef NONMATCHING
 extern "C" void func_001DBE18(char *self, int *out)
 {

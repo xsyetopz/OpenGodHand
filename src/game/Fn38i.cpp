@@ -150,20 +150,17 @@ extern "C" void func_00385308(unsigned char *o, Fn38U *p, unsigned char c)
     }
 }
 
-#ifdef NONMATCHING
 extern "C" void func_003823E0(void *, void *, int);
 
-// DRAFT: GAME 0x3822D0
-// diff: 8 words; join computes offset in v1 and adds later (original reloads lbu per branch, addu at join)
+// FUNCTION: GAME 0x3822D0
 extern "C" void func_003822D0(unsigned char *o, Fn38U *p, unsigned char c)
 {
     unsigned char *t = o + 0x318;
-    int k;
+    short *h;
     if (c)
-        k = t[2] * 2 + 0x22;
+        h = (short *)(t + (t[2] * 2 + 0x22));
     else
-        k = t[2] * 2 + 0x18;
-    short *h = (short *)(t + k);
+        h = (short *)(t + (t[2] * 2 + 0x18));
     if (p->m_38 & 0x8000) {
         if (*h == -0x80)
             *h = 15;
@@ -183,22 +180,18 @@ extern "C" void func_003822D0(unsigned char *o, Fn38U *p, unsigned char c)
         func_003823E0(o, t, c);
     }
 }
-#endif
 
-#ifdef NONMATCHING
 extern "C" void func_00383C70(void *, void *, int);
 
-// DRAFT: GAME 0x383B60
-// diff: 8 words; join computes offset in v1 and adds later (original reloads lbu per branch, addu at join)
+// FUNCTION: GAME 0x383B60
 extern "C" void func_00383B60(unsigned char *o, Fn38U *p, unsigned char c)
 {
     unsigned char *t = o + 0x370;
-    int k;
+    short *h;
     if (c)
-        k = t[4] * 2 + 0x26;
+        h = (short *)(t + (t[4] * 2 + 0x26));
     else
-        k = t[4] * 2 + 0x1C;
-    short *h = (short *)(t + k);
+        h = (short *)(t + (t[4] * 2 + 0x1C));
     if (p->m_38 & 0x8000) {
         if (*h == -0x80)
             *h = 15;
@@ -218,7 +211,6 @@ extern "C" void func_00383B60(unsigned char *o, Fn38U *p, unsigned char c)
         func_00383C70(o, t, c);
     }
 }
-#endif
 
 extern "C" void *memset(void *, int, unsigned);
 struct Fn38E70 { short a, id; char p[0x6C]; };

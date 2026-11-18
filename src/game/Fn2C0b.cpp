@@ -115,10 +115,9 @@ struct PolyInfo {
     int z;
     float one;
 };
-extern "C" void Gp_draw_poly4__FPA3_CfUiUiPC7GP_INFO7eOtTypeUi(float *, unsigned, unsigned, PolyInfo *, int, unsigned);
+extern "C" long Gp_draw_poly4__FPA3_CfUiUiPC7GP_INFO7eOtTypeUi(float *, unsigned, unsigned, PolyInfo *, int, unsigned);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2C7850 - 2 words: with `long k = 0x32001;` hoisted the lui/ori order matches, but the n move (t1=a2) and the 0x20 addiu stay swapped; copying n/ot to locals did not change it
+// FUNCTION: GAME 0x2C7850
 extern "C" void func_002C7850(void *unused, int ot, unsigned n)
 {
     PolyInfo info;
@@ -143,7 +142,6 @@ extern "C" void func_002C7850(void *unused, int ot, unsigned n)
     info.z = 0;
     Gp_draw_poly4__FPA3_CfUiUiPC7GP_INFO7eOtTypeUi(info.v, 0x80808080, 1, &info, ot, n);
 }
-#endif
 
 // FUNCTION: GAME 0x2CBD10
 extern "C" int func_002CBD10(char *self, short a, short b, int key, short lo, short hi, int skip)

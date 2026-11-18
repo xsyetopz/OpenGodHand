@@ -203,22 +203,14 @@ extern "C" SceRoom *func_002C5028(int a, unsigned short id)
     return 0;
 }
 
-// near-miss: 8 differing words, 56 vs 64 bytes; original has two separate return-0 blocks
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2C9060
+// FUNCTION: GAME 0x2C9060
 extern "C" char *func_002C9060(int *self, unsigned idx)
 {
     char *items = (char *)self[0];
     unsigned n;
-    if (!items || !(n = self[3])) {
-        return 0;
-    }
-    if (idx < n) {
-        return items + idx * 0x24;
-    }
-    return 0;
+    if (!items || !(n = self[3])) return 0;
+    return idx < n ? items + idx * 0x24 : 0;
 }
-#endif
 
 // FUNCTION: GAME 0x2CD740
 extern "C" void func_002CD740(char *self)
@@ -259,15 +251,14 @@ extern "C" void func_002C3000(int a, unsigned *p, int n)
 }
 #endif
 
-// near-miss: 11 differing words, 68 vs 64 bytes; original rebuilds the %hi in $a0 on both paths, mine uses $v0 and a longer constant
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2B4D68
+extern int D_747A84 __asm__("D_00747A84");
+
+// FUNCTION: GAME 0x2B4D68
 extern "C" void Stop__6cMovieUi()
 {
     int r = func_002B4F98();
     if (r) {
         func_002D42E0(r);
     }
-    D_00747A84[0] &= ~0x2000u;
+    D_747A84 &= ~0x2000;
 }
-#endif

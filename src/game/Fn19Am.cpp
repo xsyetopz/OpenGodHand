@@ -56,7 +56,7 @@ extern "C" int NAME(char *self) \
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x19A0B8
-// diff: 12 words, tail store order and v0/v1 assignment (self+0x620 vs -1)
+// diff: 12 words, tail store order and v0/v1 assignment (self+0x620 vs -1); tried pp/m hoisting, 1-move/swap store-order neighbours (best 10 words with e4,f0,e8 head, not applied)
 FN19A_SPH(func_0019A0B8, 3.59999990f, 3.5f, 3.59999990f, 7, 7)
 
 // DRAFT: GAME 0x19A328
@@ -65,7 +65,7 @@ FN19A_SPH(func_0019A328, 2.79999995f, 2.79999995f, 2.79999995f, 7, 7)
 
 // DRAFT: GAME 0x19A590
 // diff: 16 words, same tail diff
-FN19A_SPH(func_0019A590, 2.79999995f, 3.59999990f, 3.59999990f, 7, 7)
+FN19A_SPH(func_0019A590, 3.59999990f, 2.79999995f, 2.79999995f, 7, 7)
 
 // DRAFT: GAME 0x19A808
 // diff: 17 words, same tail diff

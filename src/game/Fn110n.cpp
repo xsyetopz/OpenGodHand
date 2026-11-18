@@ -47,14 +47,14 @@ extern "C" void func_00111010(char *self)
         int a, b;
         if (B(0x2F7)) {
             t = *(char **)(self + 0x304);
-            a = (int)(t + *(int *)(t + 0x4BC));
-            b = (int)(t + *(int *)(t + 0x4C0));
+            a = *(int *)(t + 0x4BC) + (int)t;
+            b = *(int *)(t + 0x4C0) + (int)t;
             func_0010A408(self, 0x32, 0x26, 0x1D, 0, 0x123);
             func_0010A420(self, 0x32, 0x26, 0x1D, 0, 0x123);
         } else {
             t = *(char **)(self + 0x304);
-            a = (int)(t + *(int *)(t + 0x494));
-            b = (int)(t + *(int *)(t + 0x498));
+            a = *(int *)(t + 0x494) + (int)t;
+            b = *(int *)(t + 0x498) + (int)t;
             func_0010A408(self, 0x32, 0x25, 0x1D, 0, 0x123);
             func_0010A420(self, 0x32, 0x25, 0x1D, 0, 0x123);
         }

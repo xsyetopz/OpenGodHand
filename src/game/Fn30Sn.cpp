@@ -5,7 +5,7 @@
 extern "C" int *func_00307840(register int *p) { *p = 0; return p; }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x307878 (11 words off: original schedules the shifts through different temporaries)
+// DRAFT: GAME 0x307878 (11 words off: original has mask&word operand order plus andi 0xFF/daddu before the shared exit; tried operand swap, unsigned char casts/locals, int local: 11-24 words)
 extern "C" unsigned char func_00307878(register unsigned *a, register unsigned i) {
     return (a[i >> 5] & (0x80000000u >> (i & 0x1F))) != 0;
 }

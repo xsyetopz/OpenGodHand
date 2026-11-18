@@ -133,7 +133,7 @@ extern "C" void func_0013BC28(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x13D200
-// diff: clamp tail; compiled re-extends the stored halfword (andi/sll/sra) instead of reloading lh/lhu from memory.
+// diff: 11 words; tail lacks reload (andi/sll/sra, movz vs beql); tried volatile store (16->11), early returns, pointer local, volatile loads (worse).
 extern "C" void func_0013D200(char *self)
 {
     if (Sys.a != 0x20 && ((unsigned char *)self)[0x93] == 0) {
@@ -144,7 +144,7 @@ extern "C" void func_0013D200(char *self)
             h = *(unsigned short *)(self + 0x90) - 1;
         else
             h = *(unsigned short *)(self + 0x90) + 1;
-        *(unsigned short *)(self + 0x90) = h;
+        *(volatile unsigned short *)(self + 0x90) = h;
         short t = *(short *)(self + 0x90);
         unsigned short x = *(unsigned short *)(self + 0x90);
         if (t < 0)

@@ -24,22 +24,6 @@ void cSceAtUnit::SetDisable(unsigned char)
         func_002C0E60(this);
 }
 
-#ifdef NONMATCHING
-// 0x2C0D18 NEAR-MISS: 14 words: store scheduling/register allocation of a1..t0 (s1..s4) differs; offset-order source made it worse
-void cSceAtUnit::AtInit(eSceAt_id id, eAreaHitType hit, eAreaTrgType trg, eActType act)
-{
-    memset(this, 0, 0x9C);
-    m_type = id;
-    m_unk3B = trg;
-    _pad38[0] = hit;
-    m_unk3A = act;
-    m_unk36 = 0xFFFF;
-    m_flags = 3;
-    _pad38[1] = 8;
-    m_unk54 = 0x31;
-}
-#endif
-
 // FUNCTION: GAME 0x2C0E78
 void cSceAtUnit::getCenterPos(cVec &out)
 {

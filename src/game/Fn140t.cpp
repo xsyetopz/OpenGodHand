@@ -21,20 +21,18 @@ extern "C" void func_00148200(float *m, float a, float b)
     m[8] = a;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x14E778 - 4 words off: prologue move order (a0 to s4 before a1 to s2); int callee, while loop, self copy, b=a local, unsigned a tried
 struct O;
-extern "C" int func_0014B638(void);
-extern "C" O *func_0014B6F8(O *, int);
+extern "C" int getMeshNum__C6cModel(void *);
+extern "C" O *getMeshPtr__6cModeli(void *, int);
 extern "C" void func_00155D60(O *, int, int);
-extern "C" void func_0014E778(O *self, int a)
+// FUNCTION: GAME 0x14E778
+extern "C" void func_0014E778(void *self, int a)
 {
-    int n = func_0014B638();
+    int n = getMeshNum__C6cModel(self);
     int i;
     for (i = 0; i < n; i++) {
-        O *o = func_0014B6F8(self, i);
+        O *o = getMeshPtr__6cModeli(self, i);
         func_00155D60(o, a, 0);
         func_00155D60(o, a, 1);
     }
 }
-#endif

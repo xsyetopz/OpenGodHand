@@ -140,7 +140,7 @@ extern "C" void func_00114AC0(char *self)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1156D8 - 9 words: case 2 vec copy has dest/src pointers in swapped v0/v1
+// DRAFT: GAME 0x1156D8 - 9 words: case 2 vec copy has d/src in swapped v0/v1; tried decl order d/src, d!=src vs src!=d, inline exprs, temps (none)
 extern "C" void func_001156D8(char *self)
 {
     *(float *)(self + 0x54C) = 5.0f;
@@ -164,8 +164,8 @@ extern "C" void func_001156D8(char *self)
         ((cObjBase *)self)->addNullSpeed(1.0f);
         break;
     case 2: {
-        float *src = (float *)(self + 0x660);
         float *d = *(float **)(self + 0xF0);
+        float *src = (float *)(self + 0x660);
         if (src != d) {
             d[0] = src[0]; d[1] = src[1]; d[2] = src[2];
         }

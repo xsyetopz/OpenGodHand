@@ -36,18 +36,20 @@ extern "C" void func_001B8448(cOmBase *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1B8720
-// original stores b to the stack before the branch and tests it with beqz; compiled schedules sw after daddu v1 and uses bnel
+// 4 words off: if(b==0) w=0; else w=...; then if(w==0) gives the layout, but sw precedes bnel (original beqz + sw in delay slot) and the arms are swapped; tried ?:, if/else orders, sink placements
 extern "C" int func_001B8720(char *self)
 {
     volatile int sink;
     unsigned char b = *(unsigned char *)(self + 0x2B4);
     sink = b;
-    char *w = 0;
-    if (b)
+    char *w;
+    if (b == 0)
+        w = 0;
+    else
         w = **(char ***)(self + 0x278);
-    if (w)
-        return *(int *)(w + 0xF0);
-    return *(int *)(self + 0xF0);
+    if (w == 0)
+        return *(int *)(self + 0xF0);
+    return *(int *)(w + 0xF0);
 }
 #endif
 

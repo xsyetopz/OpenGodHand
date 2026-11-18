@@ -179,16 +179,13 @@ public:
 };
 extern "C" cVCall120 *GetJacket__Fv();
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x12C7D0 - 5 words: w|8 / w&-9 land in v1/v0 swapped vs original (v0 holds value, -9 in v1); vtable calls match
+// FUNCTION: GAME 0x12C7D0
 extern "C" void func_0012C7D0(char *self, int f)
 {
     if (f == 1) *(unsigned *)(self + 0x250) |= 0x8000;
     else *(unsigned *)(self + 0x250) &= ~0x8000u;
-    int w = *(int *)(self + 0x5A0);
-    if (f == 1) w |= 8;
-    else w &= ~8;
-    *(int *)(self + 0x5A0) = w;
+    if (f == 1) *(int *)(self + 0x5A0) |= 8;
+    else *(int *)(self + 0x5A0) &= ~8;
     if (GetJacket__Fv()) GetJacket__Fv()->v11(f);
     cVCall120 *o = *(cVCall120 **)(self + 0x698);
     if (o) o->v11(f);
@@ -197,7 +194,6 @@ extern "C" void func_0012C7D0(char *self, int f)
     o = *(cVCall120 **)(self + 0x6A8);
     if (o) o->v11(f);
 }
-#endif
 
 extern "C" int func_002C2490(void *, void *, void *);
 extern char g_SceAt[];

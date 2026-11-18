@@ -63,25 +63,19 @@ public:
     void drawInit();
 };
 
-// near-miss: 11 differing words; store order differs (original: 0x8, 0x30, 0x2C, 0x28, 0x24..0xC, with constants loaded as 5, 6, 0xFFFF)
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2C54E8
+// FUNCTION: GAME 0x2C54E8
 void cScrSpriteDraw::drawInit()
 {
     float *f = (float *)this;
+    int a = 5;
+    int b = 6;
+    unsigned short c = 0xFFFF;
+    *(unsigned short *)((char *)this + 0x30) = c;
+    *(int *)((char *)this + 0x2C) = a;
+    *(int *)((char *)this + 0x28) = b;
+    f[9] = 1.0f; f[8] = 1.0f; f[7] = 1.0f; f[6] = 1.0f; f[5] = 1.0f; f[4] = 1.0f; f[3] = 1.0f;
     f[2] = 1.0f;
-    *(unsigned short *)((char *)this + 0x30) = 0xFFFF;
-    *(int *)((char *)this + 0x2C) = 5;
-    *(int *)((char *)this + 0x28) = 6;
-    f[9] = 1.0f;
-    f[8] = 1.0f;
-    f[7] = 1.0f;
-    f[6] = 1.0f;
-    f[5] = 1.0f;
-    f[4] = 1.0f;
-    f[3] = 1.0f;
 }
-#endif
 
 extern int D_005FEE1C;
 

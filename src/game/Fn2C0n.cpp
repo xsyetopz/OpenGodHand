@@ -131,9 +131,7 @@ struct Sort2C {
     signed char m_14[1];
 };
 
-// DRAFT: GAME 0x2C9950
-// diff: 14 words, register allocation only (a0/v1 vs v0/a0 in compare; a3/t0 swapped in backward pass)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2C9950
 void func_002C9950(Sort2C *self)
 {
     if (self->m_0 == 0 || self->m_10 == 0)
@@ -145,7 +143,9 @@ void func_002C9950(Sort2C *self)
         while (i < self->m_10 - 1) {
             signed char a = self->m_14[i];
             signed char b = self->m_14[i + 1];
-            if (self->m_0[b].m_14 < self->m_0[a].m_14) {
+            short sa = self->m_0[a].m_14;
+            short sb = self->m_0[b].m_14;
+            if (sb < sa) {
                 self->m_14[i] = self->m_14[i + 1];
                 self->m_14[i + 1] = a;
                 swapped = 1;
@@ -154,18 +154,18 @@ void func_002C9950(Sort2C *self)
         }
         if (swapped) {
             while (i >= 2) {
-                unsigned j = i - 1;
                 signed char a = self->m_14[i];
-                signed char b = self->m_14[j];
-                if (self->m_0[a].m_14 < self->m_0[b].m_14) {
-                    self->m_14[i] = self->m_14[j];
-                    self->m_14[j] = a;
+                signed char b = self->m_14[i - 1];
+                short sa = self->m_0[a].m_14;
+                short sb = self->m_0[b].m_14;
+                if (sa < sb) {
+                    self->m_14[i] = self->m_14[i - 1];
+                    self->m_14[i - 1] = a;
                     swapped = 1;
                 }
-                i = j;
+                i--;
             }
         }
     } while (swapped);
 }
-#endif
 }

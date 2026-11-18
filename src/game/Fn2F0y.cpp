@@ -3,16 +3,7 @@
 extern int D_00753D88;
 extern int D_00747A18;
 extern char Snd[];
-extern "C" void func_002F7CD8(void *);
 extern "C" void func_002CA690(void *);
-
-// DRAFT: GAME 0x300088
-// diff: 8 words; original copies a0 into v0 and tests v0 (daddu v0,a0,zero; beqz v0), mine tests a0 directly; tried int cast, local copy, int*, early return, base-class upcast, p?p+0:0 (no change); also // diff: 8 words; original copies a0 into v0 and tests v0 (daddu v0,a0,zero; beqz v0), mine tests a0 directly; tried int cast, local copy, int*, early return, base-class upcast, p?p+0:0 (no change)// diff: 8 words; original copies a0 into v0 and tests v0 (daddu v0,a0,zero; beqz v0), mine tests a0 directly; tried int cast, local copy, int*, early return, base-class upcast, p?p+0:0 (no change) form, return p / return int variants, char* copy
-extern "C" void func_00300088(void *p)
-{
-    if (p)
-        func_002F7CD8(p);
-}
 
 struct Slot {
     char pad[8];
@@ -21,7 +12,7 @@ struct Slot {
 };
 
 // DRAFT: GAME 0x306F88
-// diff: 14 words; original keeps the constant 1 in a1 before the loop and enters the body with no first range test, mine tests used with beql and builds 1 inside the loop
+// diff: 14 words (tried for/while/continue/break forms, uchar k, decl order: 14-16); original keeps the constant 1 in a1 before the loop and enters the body with no first range test, mine tests used with beql and builds 1 inside the loop
 extern "C" Slot *func_00306F88(Slot *p)
 {
     Slot *end = p + 32;

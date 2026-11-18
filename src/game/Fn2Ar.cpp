@@ -159,7 +159,7 @@ extern "C" int release__7cIDBase(int *self)
 
 extern char D_005CB300[];
 
-// DRAFT: GAME 0x2AA410 - 9 words differ: loop counter and entry pointer land in swapped registers (a2/a3)
+// DRAFT: GAME 0x2AA410 - 9 words differ: i/e land in a2/a3 swapped; decl-order x increment-order permutations, while-loop (7 words), indexed forms tried
 #ifdef NONMATCHING
 extern "C" char *getIDWork__7cIDBasei(int *self, int id)
 {
@@ -254,30 +254,33 @@ extern char *Message;
 extern "C" unsigned short *getMessageAddr__C8cMessageUs(char *, unsigned short);
 extern "C" int getCodeSize__11cMessCommonUs(unsigned short);
 
-// DRAFT: GAME 0x2AF380 - 12 words differ: original uses beql with i++ in the delay slot for the non-flag path; compiled branches over it
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2AF380
 extern "C" int func_002AF380(unsigned short n)
 {
     int i = 0;
     unsigned short *p = getMessageAddr__C8cMessageUs(Message, n);
-    unsigned w;
-    while ((w = *p) >> 15 ? (w & 0xFF00) != 0x8000 : (i++, 1))
+    while (1) {
+        unsigned w = *p;
+        if (w >> 15) {
+            if ((w & 0xFF00) == 0x8000)
+                break;
+        } else {
+            i++;
+        }
         p += getCodeSize__11cMessCommonUs(*p);
+    }
     return i;
 }
-#endif
 
 extern char D_0044AF70[];
 
-// DRAFT: GAME 0x2ACCF8 - 13 words differ: gcc merges the two self+id*8 adds, original keeps two
+// DRAFT: GAME 0x2ACCF8 - 12 words: gcc merges the two self+id*8 adds, original keeps two (v1 temp, s2+=s0 after call 2); tried id<<3 forms, int casts, self+=, p[1]
 #ifdef NONMATCHING
 extern "C" void setIDData__10cIDManager7eIdDataPUi(char *self, int id, unsigned *data)
 {
     int a = SearchData__FPUiPCcUi(data, D_0044AF70, 0);
-    id <<= 3;
-    *(int *)(self + id) = a;
+    *(int *)(self + (id << 3)) = a;
     int b = SearchData__FPUiPCcUi(data, D_0044AF70, 1);
-    self += id;
-    *(int *)(self + 4) = b;
+    *(int *)(self + (id << 3) + 4) = b;
 }
 #endif

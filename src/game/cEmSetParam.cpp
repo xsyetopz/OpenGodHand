@@ -42,6 +42,7 @@ int cEmSetParam::setEm(unsigned char idx)
 extern cVec ZeroVec;
 
 #ifdef NONMATCHING
+// DRAFT: GAME 0x295510
 // 0x295510: instruction scheduling differs (original defers all 4 swc1 until after the third mul; stores interleave here); 23 words
 cVec16 cEmSetParam::getSetDataPos(unsigned int idx) return r
 {
@@ -111,19 +112,3 @@ void cEmSetParam::stopEmSet1Time()
 {
     m_stop1Time = 1;
 }
-
-#ifdef NONMATCHING
-// 0x295380: only diff is cvt.w.s dest ($f2/$f1 instead of the original's reused $f0)
-void cEmSetParam::updateSetDataPos(unsigned int idx, const cVec &pos)
-{
-    sEmSetData *d = func_002BEF60(&g_RoomSave, idx);
-    if (d) {
-        short x = (short)(pos.x * 20.0f);
-        d->m_pos[0] = x;
-        short y = (short)(pos.y * 20.0f);
-        d->m_pos[1] = y;
-        short z = (short)(pos.z * 20.0f);
-        d->m_pos[2] = z;
-    }
-}
-#endif

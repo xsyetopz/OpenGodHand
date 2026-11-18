@@ -58,8 +58,7 @@ void cCollisionSolidManage::CreateSphere(cGameObj *obj, const cMatrix &m, const 
         func_00134520(s, m, v, r);
 }
 
-// DRAFT: GAME 0x1332D0 - 18 words: original loads each char with lb and shifts it with dsllv directly; mine adds a dsra32 sign-extend and re-loads the loop test with lbu
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x1332D0
 class cCollisionScroll {
 public:
     void SetCollEnable(const char *name, bool on);
@@ -69,12 +68,15 @@ extern "C" void func_001331B8(cCollisionScroll *, long, bool);
 void cCollisionScroll::SetCollEnable(const char *name, bool on)
 {
     long key = 0;
-    const signed char *q = (const signed char *)name;
-    for (int i = 0; i < 8 && *q; i++, q++)
-        key |= (long)*q << (i * 8);
+    int i = 0;
+    if (*name)
+        do {
+            key |= (long)*name << (i * 8);
+            name++;
+            i++;
+        } while (i < 8 && *name);
     func_001331B8(this, key, on);
 }
-#endif
 
 extern unsigned D_00747A84;
 
@@ -100,7 +102,7 @@ extern "C" void trans__7cIDBase(void *self);
 extern char *CoreSave;
 #endif
 
-// DRAFT: GAME 0x133330 - 7 words: original sets t3 after the beqz and uses addu t3,v1 / (x<<4)+tbl operand order; mine swaps the two addu operands and hoists the t3 init
+// DRAFT: GAME 0x133330 - 4 words: only t3=0 init placement differs (orig after t1/lui, mine before beqz); addu operands fixed via off + (int)m_ent and (x<<4) + (int)m_tbl + 0xD; decl orders and hoisted mask no change
 #ifdef NONMATCHING
 class cCollisionScroll2 {
 public:
@@ -120,11 +122,11 @@ void cCollisionScroll2::SetLayerCollEnable(unsigned char layer, bool on)
 {
     if (!m_h)
         return;
-    unsigned off = 0;
     unsigned i = 0;
+    unsigned off = 0;
     for (; i < m_h->count; i++, off += 0x14) {
-        char *e = off + m_ent;
-        if (*(unsigned char *)((*(unsigned short *)(e + 0xC) << 4) + m_tbl + 0xD) == layer) {
+        char *e = (char *)(off + (int)m_ent);
+        if (*(unsigned char *)((*(unsigned short *)(e + 0xC) << 4) + (int)m_tbl + 0xD) == layer) {
             if (on)
                 *(unsigned *)(e + 0x10) &= ~2u;
             else

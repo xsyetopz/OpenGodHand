@@ -181,6 +181,7 @@ void func_0022A258(char *self)
     }
 }
 
+// DRAFT: GAME 0x23A950
 // 0x23A950: frame 0x40 vs 0x50 and branch layout differ; the original keeps constant 1 in s1 across the irand call (nested switch/if-chain forms tried)
 #ifdef NONMATCHING
 void func_0023A950(char *self)

@@ -74,19 +74,6 @@ extern "C" int *func_001F6CE0(int *self)
     return self;
 }
 
-#ifdef NONMATCHING
-// 0x1F6CF8: compiler hoists the last store (m_12) to the front; original stores in source order
-extern "C" void func_001F6CF8(ZeroBlk *self)
-{
-    self->m_0 = 0;
-    self->m_8 = 0;
-    self->m_C = 0;
-    self->m_E = 0;
-    self->m_10 = 0;
-    self->m_12 = 0;
-}
-#endif
-
 // FUNCTION: GAME 0x1F6FA0
 extern "C" int func_001F6FA0()
 {

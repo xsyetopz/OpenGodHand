@@ -43,7 +43,7 @@ extern "C" void func_002E0B78(int a, int b, int c, int d, int e, int f, int g, c
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2E0DE8
-// diff (14 words): ap = next_arg(fmt) - 0x20 placed before vsprintf now gives sp+0xB0; remaining: original checks a separate constant-8 copy before div and swaps s3/s4 (DISPLAY_W hi vs divisor)
+// diff (14 words): ap = next_arg(fmt) - 0x20 placed before vsprintf now gives sp+0xB0; tried cw decl orders, inline div helper (72 words); remaining: original checks a separate constant-8 copy before div and swaps s3/s4 (DISPLAY_W hi vs divisor)
 typedef void *va_list;
 #define va_start(AP, L) ((AP) = (va_list)__builtin_next_arg(L))
 extern "C" int vsprintf(char *, const char *, va_list);

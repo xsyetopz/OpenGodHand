@@ -145,7 +145,7 @@ extern "C" void func_001BF7D8(char *self)
     }
 
 // DRAFT: GAME 0x191B98
-// diff: 12 words; the 0x54A store is scheduled last and the tail constants take other registers (raw casts and ordered locals tried)
+// diff: 12 words (local-decl permutations 11-12, plain constants 15); the 0x54A store is scheduled last and the tail constants take other registers (raw casts and ordered locals tried)
 extern "C" int func_00191B98(char *self)
 {
     FN180_HEAD(4.3358001708984375f, 0.9010000228881836f, 0.17759999632835388f)
@@ -172,37 +172,46 @@ extern "C" int func_00191B98(char *self)
 extern "C" int func_00187838(char *self)
 {
     FN180_HEAD(2.0f, 2.0f, 1.60000002f)
+    int k1 = 1;
+    int pp = (int)(self + 0x620);
+    int eight = 8;
+    int s11 = 0x11;
+    int s89 = 0x89;
     *(int *)(self + 0x5E8) = 0;
     *(int *)(self + 0x5E4) = 0;
     *(int *)(self + 0x5F0) = 0;
-    *(short *)(self + 0x54A) = 1;
-    *(char **)(self + 0x608) = self + 0x620;
-    *(unsigned char *)(self + 0x60C) = 8;
-    *(int *)(self + 0x5EC) = 0x11;
-    *(short *)(self + 0x5F6) = 0x89;
-    *(short *)(self + 0x548) = 1;
+    *(int *)(self + 0x608) = pp;
+    *(unsigned char *)(self + 0x60C) = eight;
+    *(int *)(self + 0x5EC) = s11;
+    *(short *)(self + 0x5F6) = s89;
+    *(short *)(self + 0x548) = k1;
     *(short *)(self + 0x5F4) = -1;
+    *(short *)(self + 0x54A) = k1;
     func_001C28A0(self);
     return 1;
 }
 
 // DRAFT: GAME 0x182690
-// diff: 15 words; same tail register choice and store order
+// diff: 11 words; tail constants take other regs and 0x54A store lands last; tried named temps (k1,pp,eight,seven,m1) in all 24 orders of the first four, best 11
 extern "C" int func_00182690(char *self)
 {
     FN180_HEAD(3.240000009536743f, 1.0f, 1.0f)
     FN180_GIVE
     int k1 = 1;
+    int eight = 8;
+    int pp = (int)(self + 0x620);
+    int seven = 7;
+    int m1 = -1;
     *(int *)(self + 0x5E8) = 0;
     *(int *)(self + 0x5E4) = 0;
     *(int *)(self + 0x5F0) = 0;
     *(short *)(self + 0x5F6) = 0;
     *(short *)(self + 0x54A) = k1;
-    *(char **)(self + 0x608) = self + 0x620;
-    *(unsigned char *)(self + 0x60C) = 8;
-    *(int *)(self + 0x5EC) = 7;
+    *(int *)(self + 0x608) = pp;
+    *(unsigned char *)(self + 0x60C) = eight;
+    *(int *)(self + 0x5EC) = seven;
     *(short *)(self + 0x548) = k1;
-    *(short *)(self + 0x5F4) = -1;
+    *(short *)(self + 0x5F4) = m1;
     func_001C28A0(self);
     return 1;
 }

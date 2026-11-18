@@ -164,7 +164,7 @@ extern "C" short func_00306ED8(Tbl306 *t, int i)
 extern "C" unsigned int func_0030F348();
 
 // DRAFT: GAME 0x30F518
-// 9 words differ: original loads the 2^-31 constant after the cvt.s.w, ours before the mtc1
+// 9 words differ: original loads 2^-31 after cvt.s.w (mtc1 f4, cvt f1, no nop), ours before mtc1; ~12 expression/temp/order forms tried
 extern "C" float func_0030F518()
 {
     float r = (float)(int)(func_0030F348() >> 1);

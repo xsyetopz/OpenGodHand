@@ -33,7 +33,7 @@ extern "C" void func_001EC8A8(char *self)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1F6AF8 - 12 words: second loop keeps shared exit; reg roles v1/a1 swapped
+// DRAFT: GAME 0x1F6AF8 - 12 words: second loop keeps shared exit; reg roles v1/a1 swapped; tried n local, while, pointer increment (12-14 words)
 extern "C" void func_001F6AF8(int *self)
 {
     int i;

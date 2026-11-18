@@ -61,11 +61,25 @@ full build still reproduces `SLUS_215.03` byte for byte.
    (`linkgen.py`) runs before the link and masks relocated fields, so the
    final sha1 is the authority. A callee already matched under its real name
    must be declared under that name, or the gate reports `refs func_...`.
-   Check whether an address is taken with `tools/claimed.py 0xADDR`; drafts
-   under `#ifdef NONMATCHING` are marked `// DRAFT: GAME 0x...`, not
-   `FUNCTION`, so they claim nothing.
+   Check whether an address is taken with `tools/claimed.py 0xADDR`: it prints
+   the owning source, `draft FILE` for an address held only by a
+   `// DRAFT: GAME 0x...` under `#ifdef NONMATCHING` (not linked, but improved
+   in place rather than rewritten elsewhere), or `free`. Without arguments it
+   lists duplicate claims and every game `#ifdef NONMATCHING` block with no
+   DRAFT tag in it or in the comment lines just above it; an untagged draft
+   hides its address and gets duplicated. The gate commits only when this
+   output is empty.
 5. Integration: `.venv/bin/python tools/configure.py && ninja` must end with
    `build/SLUS_215.03: OK`.
+
+Names for unnamed units also come from the 2006-06-20 preview disc. Its
+SLPM_665.50, extracted to `original/SLUS-21503-prototype-2006-06-20/extracted/`
+(ignored by git), has the same SNR2 layout as retail plus debug prints that
+retail compiled out. `tools/protomap.py` prints `SYM` lines for preview-only
+SNR2 names found verbatim in retail and `DBG` lines for debug-print names
+located by masked-opcode voting (`func_00305858` is
+`effDataManager::dataRelease`). A `DBG` hit names the unit containing the call
+site, so it is a hint to confirm against the asm, not a signature.
 
 A draft that differs only in register allocation or scheduling is searched
 mechanically with decomp-permuter, cloned into `tools/ext/decomp-permuter`:
@@ -134,6 +148,13 @@ These source shapes reproduce patterns this compiler emits only one way:
 - A derived constructor `if (p) { base(p); p->vt = X; } return p;` builds
   the vtable in `v1` only when `base` is declared returning `void *`; a `void`
   declaration frees `v0` and the vtable lands there.
+- The EE ABI passes eight integer arguments in `a0`-`a3` and `t0`-`t3`, so m2c's
+  "read from unset register $t0" marks a fifth argument, not a broken unit.
+- Unsolved: a range test `slti lo; xori 1; beqz; daddu r,0` then `slti hi; daddu r,v0` and
+  `andi r,0xFF; bnez` (0x2D74B8, cOl2b::setOpenFix). Inline `inRange` helpers (bool or
+  `unsigned char`, by value or `const int &`, compared `== 1`/`!= 0`), `||` chains, and
+  `-O1`, `-fno-thread-jumps`, `-fno-cse-follow-jumps`, `-fno-gcse`, `-fno-rerun-cse-after-loop`
+  and `-fno-expensive-optimizations` all fold the `xori` into the branch.
 - `andi; xori; beqz` on a flag comes from `unsigned char t = f ^ 1; if ((t & 1) == 0)`.
 - Lazy singletons: `if (!G) { ctor(); func_0031EEA8(&G, name, dtor); } return &G;`,
   where `name` is the rodata string extern.

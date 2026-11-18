@@ -39,30 +39,30 @@ extern "C" void func_003182D8(void *p, int f)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x306FF8
-// 15 words differ: loop tail is rotated in the original (bnel back to the top); store order in the insert-before branch
+// 2 words differ: original loop-back is `bnel; daddu a2,v0` in the delay slot, ours `bnez; movn a2,v0,v0`; tried do-while with nx, `while (nx && (c = nx))`, ternary, for(;;)/continue, goto exits
 extern "C" void func_00306FF8(char *self, LNode *n)
 {
     LNode *c = (LNode *)(self + 0x4200);
     if (c) {
-        for (;;) {
+        LNode *nx;
+        do {
             if (n->key < c->key) {
-                n->next = c;
                 LNode *pv = c->prev;
+                n->next = c;
                 n->prev = pv;
                 pv->next = n;
                 c->prev = n;
-                break;
+                goto out;
             }
-            if (c->next) {
-                c = c->next;
-                continue;
-            }
-            c->next = n;
-            n->prev = c;
-            n->next = 0;
-            break;
-        }
+            nx = c->next;
+            if (nx)
+                c = nx;
+        } while (nx);
+        c->next = n;
+        n->prev = c;
+        n->next = 0;
     }
+out:
     func_00307060(self);
 }
 #endif

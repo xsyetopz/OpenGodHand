@@ -17,8 +17,7 @@ extern char Sys[];
 #define H(o) (*(short *)(self + (o)))
 #define UH(o) (*(unsigned short *)(self + (o)))
 
-// DRAFT: GAME 0x236190 - 9 words differ: 0x1D lives in v1/a3 instead of a2/v1 around the SetActive call in the m_568 <= 0 path
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x236190
 extern "C" void func_00236190(char *self)
 {
     char *pl = (char *)Getplayer__Fv();
@@ -72,13 +71,12 @@ extern "C" void func_00236190(char *self)
         addNullSpeed__8cObjBasef(self, 1.0f);
         if (UH(0x3AC) & 0x10) {
             if (H(0x568) <= 0) {
-                int k = 0x1D;
-                B(0x2F5) = k;
-                B(0x2F7)++;
                 B(0x2F6) = 0;
                 B(0x2F4) = 1;
+                B(0x2F5) = 0x1D;
+                B(0x2F7)++;
                 SetActive__21cCollisionSolidManageP8cGameObjb(g_CollSolidManage, self, 0);
-                func_00129718(pl, self, k);
+                func_00129718(pl, self, 0x1D);
             }
             func_002DB770();
             H(0x56C) = 0;
@@ -88,4 +86,3 @@ extern "C" void func_00236190(char *self)
         break;
     }
 }
-#endif

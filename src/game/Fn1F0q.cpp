@@ -49,7 +49,7 @@ extern "C" void func_001F7820(char *self, int *key)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1FE1E0 - 13 words: end/p registers and loop entry order differ
+// DRAFT: GAME 0x1FE1E0 - 13 words: p in v1 vs a0, 0xAC00 ori hoisted; tried end/p order, for loop, inline bound
 extern "C" unsigned char *func_001FE1E0(unsigned char *self)
 {
     unsigned char *end = self + 0x3C00;

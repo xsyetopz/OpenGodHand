@@ -184,8 +184,7 @@ extern "C" void func_00113228(char *self)
     }
 }
 
-// DRAFT: GAME 0x1134C8 (14 words: original keeps o and the result of func_0027A128 both in s0; gcc uses v0/a0)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x1134C8
 extern "C" void func_001134C8(char *self)
 {
     *(float *)(self + 0x54C) = 30.0f;
@@ -218,15 +217,16 @@ extern "C" void func_001134C8(char *self)
             B(0x2F4) = 0; B(0x2F5) = 0; B(0x2F6) = 0; B(0x2F7) = 0;
         }
         if (*(unsigned short *)(self + 0x3AC) & 0x200) {
-            char *o = *(char **)(self + 0x640);
-            if (o) {
-                if (!strcmp(D_0041C208, *(const char **)(o + 0x4AC))) {
+            char *q = *(char **)(self + 0x640);
+            char *o;
+            if (q) {
+                o = q;
+                if (!strcmp(D_0041C208, *(const char **)(o + 0x4AC)))
                     o = (char *)func_0027A128(*(void **)(self + 0x640));
-                    B2(o, 0x2F4) = 1;
-                    B2(o, 0x2F5) = 6;
-                    B2(o, 0x2F7) = 0;
-                    B2(o, 0x2F6) = 0;
-                }
+                B2(o, 0x2F4) = 1;
+                B2(o, 0x2F5) = 6;
+                B2(o, 0x2F6) = 0;
+                B2(o, 0x2F7) = 0;
             }
         }
         ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
@@ -242,4 +242,3 @@ extern "C" void func_001134C8(char *self)
         *(float *)(self + 0x674) = 0.05f;
     }
 }
-#endif

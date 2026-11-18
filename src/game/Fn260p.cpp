@@ -201,11 +201,10 @@ extern "C" void SetDamageCollRadius__11cDamageUnitif(void *, int, float);
 extern "C" void SetDamageCollActive__11cDamageUnitb(void *, int);
 extern "C" void SetDmgGiveHitVec__11cDamageGiveRC4cVec(void *, void *);
 
-// DRAFT: GAME 0x262980 - 8 words: 0x260 constant in v0 vs v1 and 0x49 scheduled after the arms
+// DRAFT: GAME 0x262980 - 11 words: 0x49 emitted inside each arm (orig: before beq), tail sh scheduled after ld ra, lui a1 order; tried hoisted k/c locals, store swap, ZeroVec temp
 #ifdef NONMATCHING
 extern "C" void func_00262980(char *self)
 {
-    short k = 0x49;
     float r;
     char *d;
     if (*(int *)(self + 0x564) != 0x260) {
@@ -215,7 +214,7 @@ extern "C" void func_00262980(char *self)
         d = *(char **)(self + 0x680);
         r = 3.0f;
     }
-    *(short *)(d + 0x46) = k;
+    *(short *)(d + 0x46) = 0x49;
     SetDamageCollRadius__11cDamageUnitif(*(void **)(self + 0x680), *(int *)(self + 0x684), r);
     *(int *)(*(char **)(self + 0x680) + 0x4C) = 0;
     SetDamageCollActive__11cDamageUnitb(*(void **)(self + 0x680), 1);

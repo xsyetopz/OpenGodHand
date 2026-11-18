@@ -65,7 +65,7 @@ extern "C" int func_00373F38(void *o)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x374508
-// diff: 8 words; s0/s1 swapped (o in s0, r in s1 vs original o in s1, r in s0); 10 source forms tried; also void* copy, int callee, cast, if-return, long r (none fix)
+// diff: 8 words; s0/s1 swapped (o in s0, r in s1 vs original o in s1, r in s0); 15 forms tried incl. int** param, pre-cast local, extra param (none fix)
 extern "C" int func_00374508(void *o)
 {
     int r = func_00374360(o);

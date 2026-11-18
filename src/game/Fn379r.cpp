@@ -41,7 +41,6 @@ extern "C" int func_003748A8(int *p)
     }
 }
 
-#ifdef NONMATCHING
 struct Fn379G2 {
     unsigned short m_0;
     char _p2[0x12];
@@ -51,23 +50,18 @@ struct Fn379G2 {
 typedef void (*Fn379Fp)(Fn379G2 *);
 extern Fn379G2 D_0076E910[];
 extern Fn379Fp D_003F21A8[];
-// DRAFT: GAME 0x3774A8
-// diff: 3 words; original fills the beql slot with the pointer step and
-// the jalr slot with the a0 move; ours hoists the move and leaves a nop.
-// tried: direct call, pre-increment, ++e < end (4 words), continue form (19)
+// FUNCTION: GAME 0x3774A8
 extern "C" void func_003774A8(void)
 {
-    Fn379G2 *e = D_0076E910;
-    Fn379G2 *end = e + 2;
+    int i = 0;
     do {
+        Fn379G2 *e = &D_0076E910[i];
         if (e->m_0) {
-            Fn379Fp f = D_003F21A8[e->m_14];
-            f(e);
+            D_003F21A8[e->m_14](e);
         }
-        e++;
-    } while ((int)e < (int)end);
+        i++;
+    } while (i < 2);
 }
-#endif
 
 struct Fn379H1 {
     int m_0;

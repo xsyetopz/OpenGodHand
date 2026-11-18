@@ -134,7 +134,7 @@ extern "C" int AddDamageCollCylinder__11cDamageUnitRC7cMatrixRC4cVecT2ff(void *,
     }
 
 // DRAFT: GAME 0x170050
-// Diff: body matches through the call; 12 words differ in the tail (constant register choice and store scheduling after AddDamageCollCylinder)
+// Diff: 11 words in the tail: original materializes 1, &0x620, 8, -1 in that order (mine a2=1,v0=-1,v1=8); store-order permutations tried (11-13)
 FN170_INIT(func_00170050)
 
 // DRAFT: GAME 0x170338

@@ -39,15 +39,6 @@ extern "C" void func_002B5C00()
     func_002B5028(1, 0xFFFF);
 }
 
-// 0x2B48A0 near-miss: only the scheduling of `lui v0` vs `daddu a1,a0` differs
-// (original moves a0 to a1 first); same shape as 0x2B48C8, which matches.
-#ifdef NONMATCHING
-extern "C" void func_002B48A0(int a, int b)
-{
-    func_002B5AF8(&Movie, a, b);
-}
-#endif
-
 // FUNCTION: GAME 0x2B48C8
 extern "C" void func_002B48C8(int a, int b)
 {

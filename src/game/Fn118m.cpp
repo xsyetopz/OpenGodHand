@@ -122,7 +122,7 @@ extern "C" void func_0011AAA0(char *self)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x11B3E8 - 12 words differ: scheduling of &c (addiu a1,sp,0x10), d zero-store and the second null-check delay slot
+// DRAFT: GAME 0x11B3E8 - 7 words: &c addiu/lw a0/lw v1 order around the d zero-store; Qv110 *pc=&c after t store (7, kept), before t (61), at decl (61), after d (7), pd pointer (9)
 float capVu0Atan2(float, float);
 
 extern "C" void func_0011B3E8(char *self)
@@ -144,10 +144,11 @@ extern "C" void func_0011B3E8(char *self)
         if (o && (o = *(char **)(o + 0x34))) {
             Qv110 t, c, d;
             __asm__ volatile("sqc2 $vf0,%0" : "=m"(t));
+            Qv110 *pc = &c;
             __asm__ volatile("sqc2 $vf0,%0" : "=m"(d));
             __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "=m"(d) : "r"(*(void **)(o + 0xF0)), "r"(*(void **)(self + 0xF0)));
             __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(c) : "r"(d.v));
-            if (&t != &c) { t.v[0] = c.v[0]; t.v[1] = c.v[1]; t.v[2] = c.v[2]; }
+            if (&t != pc) { t.v[0] = c.v[0]; t.v[1] = c.v[1]; t.v[2] = c.v[2]; }
             *(float *)(self + 0x104) = capVu0Atan2(t.v[0], t.v[2]);
         }
         *(int *)(self + 0x15B0) = 0x1E;

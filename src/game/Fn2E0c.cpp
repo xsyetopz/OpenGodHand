@@ -2,15 +2,15 @@
 extern char D_0061B644;
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2E9BA0 (13 words off: f0/f1 swapped in every float temp (store order now matches); 5 probes)
+// DRAFT: GAME 0x2E9BA0 (11 words off: f0/f1 swapped in every float temp, original 0.01 const in f1; tried operand order, const temps, hoisting u, a-temp)
 extern "C" int func_002E9BA0(char *self)
 {
     *(unsigned *)(self + 0x11C) &= 0xFEFFFFFF;
     char *o = *(char **)(self + 0x110);
-    float t = 0.01f * *(float *)(o + 0x144);
+    float t = *(float *)(o + 0x144) * 0.01f; float u = *(float *)(o + 0x150) * 0.1f;
     *(float *)(self + 0x2B4) = t;
     *(float *)(self + 0x2B0) = t;
-    *(float *)(self + 0x2BC) = *(float *)(o + 0x150) * 0.1f;
+    *(float *)(self + 0x2BC) = u;
     *(float *)(self + 0x2C8) = *(float *)(o + 0x13C) * 1000.0f;
     *(float *)(self + 0x2D0) = *(float *)(o + 0x140);
     *(unsigned char *)(self + 0x2CC) = *(unsigned char *)(o + 0x16C);

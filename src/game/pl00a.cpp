@@ -26,20 +26,6 @@ void pl00::DiscardWeapon()
     }
 }
 
-#ifdef NONMATCHING
-// 0x12BAB8: switch form is 5 words off: original returns via slti/beqz+bltz range check back to a shared 'return 0'
-int pl00::CkSubScreen()
-{
-    if (m_modeA)
-        return 0;
-    switch (m_modeB) {
-    case 0: case 1: case 2: case 3:
-        return 1;
-    }
-    return 0;
-}
-#endif
-
 // FUNCTION: GAME 0x12BF50
 int pl00::ckAtkActBtnEnable()
 {
@@ -255,36 +241,3 @@ extern "C" unsigned long func_0012CEF0(pl00 *self)
     unsigned long v = ((unsigned char *)&self->m_unk15F4)[0];
     return v >> 7;
 }
-
-#ifdef NONMATCHING
-// 0x12C758: 21 words differ; original tests m_unk698 with beql into the m_unk6A0 test and an explicit 'return 0' branch, mine uses bnez
-extern "C" int func_0012C758(pl00 *self)
-{
-    if (D_00747A50 != 0x608)
-        return 0;
-    if (self->m_unk698)
-        return 0;
-    else if (!self->m_unk6A0) {
-        if (func_002C2568(&g_SceAt, self->m_pos, 0) == 1) {
-            func_002DBE98();
-            return 1;
-        }
-    }
-    return 0;
-}
-#endif
-
-#ifdef NONMATCHING
-// 0x124FD8: original keeps both range tests as unfolded slti pairs (a2 bool temps); gcc folds them to addiu+sltiu here
-extern "C" int func_00124FD8(pl00 *self, cEm00 *em)
-{
-    int v = em->m_unk2FE;
-    bool a = v >= 0x200 && v < 0x300;
-    if (!a)
-        return 0;
-    bool b = v >= 0x2A0 && v < 0x300;
-    if (b)
-        return 0;
-    return em->ckDown() != 0;
-}
-#endif

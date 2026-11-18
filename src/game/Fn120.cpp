@@ -16,16 +16,15 @@ extern "C" void func_001268B0(char *self, int v)
     }
 }
 
-// DRAFT: GAME 0x12C4F0 - movn/xor shape differs: original loads 1 into v0 in the beq delay slot and ends with movn v0,zero,v1; mine emits sltiu or bne/movn into a0 (8-12 words)
+// DRAFT: GAME 0x12C4F0 - 3 words: tail uses bne+daddu vs original xor+movn v0,zero,v1; kept int r=1 nested-if return 0 form; tried ||, ternaries, xor forms, ==, early returns (8-14)
 #ifdef NONMATCHING
 extern "C" int func_0012C4F0(char *self)
 {
     long m = *(long *)(self + 0x2F0) & 0xFFFF00000000L;
     int r = 1;
-    if (m != 0x60100000000L) {
+    if (m != 0x60100000000L)
         if (m != 0x50100000000L)
-            r = 0;
-    }
+            return 0;
     return r;
 }
 #endif
@@ -128,10 +127,13 @@ extern "C" int func_00124FD8(pl00 *self, cEm00 *em)
 }
 #endif
 
-// DRAFT: GAME 0x123908 - 11 words: original has a 0x20 frame with s0 = &CamManager and a call to isCk_CamClass; mine is a plain 0x10 frame
+// DRAFT: GAME 0x123908 - 4 words: __asm__ volatile use of p gives the 0x20 frame and s0, but original does lui v0 / addiu s0,v0 (lui into v0 first, sq after); tried p-> vs CamManager., register p, memory clobber, null check
 #ifdef NONMATCHING
 extern "C" int func_00123908()
 {
-    return CamManager.isCk_CamClass(1);
+    cCamManager *p = &CamManager;
+    int r = p->isCk_CamClass(1);
+    __asm__ volatile("" : : "r"(p));
+    return r;
 }
 #endif
