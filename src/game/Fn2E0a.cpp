@@ -223,6 +223,8 @@ extern "C" int func_002E63C0(char *self)
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2E8038
 // diff: 43 words; original has 2 nops before each div.s (as in 0x2EA798) and branches bnez i / add.s, ours inverts the test.
+extern "C" float func_003A1C78(float);
+extern float D_0061B5C0[];
 extern "C" void func_002E8038(void *s_, float k)
 {
     char *self = (char *)s_;

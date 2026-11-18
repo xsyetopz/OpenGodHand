@@ -7,7 +7,7 @@ extern "C" void func_002F7CD8(void *);
 extern "C" void func_002CA690(void *);
 
 // DRAFT: GAME 0x300088
-// diff: 8 words; original copies a0 into v0 and tests v0 (daddu v0,a0,zero; beqz v0), mine tests a0 directly; tried int cast, local copy, int*, early return, base-class upcast, p?p+0:0 (no change)
+// diff: 8 words; original copies a0 into v0 and tests v0 (daddu v0,a0,zero; beqz v0), mine tests a0 directly; tried int cast, local copy, int*, early return, base-class upcast, p?p+0:0 (no change); also // diff: 8 words; original copies a0 into v0 and tests v0 (daddu v0,a0,zero; beqz v0), mine tests a0 directly; tried int cast, local copy, int*, early return, base-class upcast, p?p+0:0 (no change)// diff: 8 words; original copies a0 into v0 and tests v0 (daddu v0,a0,zero; beqz v0), mine tests a0 directly; tried int cast, local copy, int*, early return, base-class upcast, p?p+0:0 (no change) form, return p / return int variants, char* copy
 extern "C" void func_00300088(void *p)
 {
     if (p)
@@ -36,7 +36,7 @@ extern "C" Slot *func_00306F88(Slot *p)
 }
 
 // DRAFT: GAME 0x30D190
-// diff: 6 words; the counter and flag loads take other registers (original: lui a1/a0, lw v0/v1; mine lui v0, lw a0/v1)
+// diff: 6 words; the counter and flag loads take other registers (original: lui a1/a0, lw v0/v1; mine lui v0, lw a0/v1) Also tried: single-expression forms, load/store reorders, no asm (18 words).
 extern "C" int func_0030D190()
 {
     int c = D_00753D88;

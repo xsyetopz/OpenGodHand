@@ -48,7 +48,7 @@ extern "C" void func_002A9BF0(float *self)
     func_002A9B50(self);
 }
 
-extern "C" void * func_00309000(char *);
+extern "C" void func_00309000(char *);
 extern char D_005CB3B0[];
 
 // DRAFT: GAME 0x2AD1B0 - 17 words differ: original adds 0x744 to the lui/addiu base instead of folding it into the relocation

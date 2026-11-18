@@ -114,7 +114,7 @@ extern "C" void func_001BD1A0(ObjH *a0)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x138648
-// diff: 6 words; ApplyMatrix arg setup order and the &d pointer / ctor scheduling differ
+// diff: 6 words (v200 temp, m180/v200 locals, byte-offset casts all stay 6); 2nd ApplyMatrix: original sets a2 first, ours a1/a0 then a2 in the jal slot; ApplyMatrix arg setup order and the &d pointer / ctor scheduling differ
 extern "C" void func_0030A8C8(void *, float *, float *, float *);
 struct ObjJ { char p0[0x140]; float m140[4]; char p1[0x180-0x150]; float m180[16]; char pm[0x200-0x1C0]; float v200[4]; float v210[3]; char p2[0x240-0x21C]; float v240[3]; };
 extern "C" void func_00138648(ObjJ *self)

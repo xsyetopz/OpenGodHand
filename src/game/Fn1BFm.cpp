@@ -21,7 +21,7 @@ extern "C" void func_001BFCE8(void *o)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x001B80B0
+// DRAFT: GAME 0x1B80B0
 // diff: 18 words: original keeps a0 (no a2 copy), stores before frame; 8 B larger
 extern "C" int func_001B80B0(char *self, int v)
 {

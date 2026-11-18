@@ -121,20 +121,17 @@ extern "C" void func_001E9028(char *self, float a, float b)
 #undef V
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1E8DF0 - 2 words: pointer init scheduled before the branch
+// FUNCTION: GAME 0x1E8DF0 (indexed copy keeps the pointer init after the loop test)
 extern "C" void func_001E8DF0(char *self, int *a, int *b, int n)
 {
     n &= 0xFFFF;
     if (a && b && (unsigned)n < 0x16) {
         *(unsigned short *)(self + 0xB4) = n;
         *(int **)self = a;
-        int *d;
-        for (n = 0, d = (int *)(self + 0x54); n < *(unsigned short *)(self + 0xB4); n++)
-            *d++ = *b++;
+        for (n = 0; n < *(unsigned short *)(self + 0xB4); n++)
+            ((int *)(self + 0x54))[n] = b[n];
     }
 }
-#endif
 
 extern "C" void func_001E7470(char *, int, int);
 extern "C" void func_001E7538(char *, int, int);

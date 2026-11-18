@@ -30,8 +30,8 @@ extern "C" void SetOffsetPosX__12CustomIDWorki(void *, int);
 
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x001D9CA0
-// diff: 2 words, sb 0x3024 / sb 0x3025 store order swapped
+// DRAFT: GAME 0x1D9CA0
+// diff: 2 words, sb 0x3024 / sb 0x3025 store order swapped; source order, uchar r and a temp zero all schedule the same way
 extern "C" void func_001D9CA0(char *self)
 {
     int v = func_001DCDA8();
@@ -91,7 +91,7 @@ extern "C" void func_001C6C30(char *self, V3 *p, float a, float b, float c)
     func_001C7310(self);
 }
 
-// DRAFT: GAME 0x001DCE68 (saved-reg assignment and order differ: orig keeps hi in s2, lo in s3)
+// DRAFT: GAME 0x1DCE68 (saved-reg assignment and order differ: orig keeps hi in s2, lo in s3)
 #ifdef NONMATCHING
 extern "C" unsigned func_001DCE68(void *, int lo, int hi)
 {
@@ -136,7 +136,7 @@ extern "C" void func_001CB990(char *self)
     }
 }
 
-// DRAFT: GAME 0x001DBE18 (9 words: original uses lwu flag test, count-up loop)
+// DRAFT: GAME 0x1DBE18 (9 words: original uses lwu flag test, count-up loop)
 #ifdef NONMATCHING
 extern "C" void func_001DBE18(char *self, int *out)
 {

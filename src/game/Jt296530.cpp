@@ -13,12 +13,12 @@ struct Ev {
     int flags;
 };
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x296530 (1 insn off: sra v0,v1,3 where original has dsrl)
+// FUNCTION: GAME 0x296530
 extern "C" void func_00296530(Ev *self)
 {
     int f = self->flags;
-    unsigned long b = ((unsigned long)(long)f >> 3) & 1;
+    unsigned long u = f; // separate unsigned long copy gives dsrl instead of sra
+    unsigned long b = (u >> 3) & 1;
     if (!b) {
         if (f & 1) {
             switch (self->state) {
@@ -41,4 +41,3 @@ extern "C" void func_00296530(Ev *self)
     } else
         func_00296DD8(self);
 }
-#endif

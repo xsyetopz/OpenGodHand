@@ -6,6 +6,7 @@ extern "C" void func_001B6FB8(void *self);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1B8030
+// diff: Slice 14: 25 range-test forms (&&, bool/char/short temps, ?:, if/else, goto, switch ranges, inline helper, -O1) give movn, sltiu or two separate branches; none gives slti/xori joined through a1+andi.
 // original branches on v<0x3C0 with a0 temp (bnez + daddu a0,v0); compiled uses beqz and returns in v0 directly
 extern "C" unsigned long func_001B8030(char *self)
 {

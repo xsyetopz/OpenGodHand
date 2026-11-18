@@ -6,7 +6,7 @@ extern "C" void func_001B6E90(void *);
 extern "C" int moveMotion__FP8cObjBase(void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x001CA1F8
+// DRAFT: GAME 0x1CA1F8
 // diff: 6 differing words (60 vs 60 bytes)
 extern "C" void func_001CA1F8(char *self)
 {
@@ -20,7 +20,7 @@ extern "C" void func_001CA1F8(char *self)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x001C2328
+// DRAFT: GAME 0x1C2328
 // diff: 16 differing words (76 vs 68 bytes)
 extern "C" int func_001C2328(char *self)
 {
@@ -69,7 +69,7 @@ extern "C" void func_001CD7A8(char *self)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x001C3C58
+// DRAFT: GAME 0x1C3C58
 // diff: 22 differing words (92 vs 96 bytes)
 extern "C" int func_001C3C58(int *out, int *a)
 {
@@ -88,7 +88,7 @@ extern "C" int func_001C3C58(int *out, int *a)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x001DBEB0
+// DRAFT: GAME 0x1DBEB0
 // diff: 16 differing words (104 vs 104 bytes)
 extern "C" void func_001DBEB0(char *self)
 {

@@ -1,13 +1,12 @@
 // Mid-size units in 0x1E0000-0x200000.
 #include "game/cSceAtUnit.h"
 
-#ifdef NONMATCHING
 class cDataHolder {
 public:
     void systemInit();
 };
 
-// DRAFT: GAME 0x1FF028 - 3 words: loop setup insns (a1,v0,a2) emitted in different order
+// FUNCTION: GAME 0x1FF028
 void cDataHolder::systemInit()
 {
     int *s = (int *)this;
@@ -25,12 +24,11 @@ void cDataHolder::systemInit()
     s[0x54 / 4] = 0xFFFF;
     s[6] = 0;
     s[0x58 / 4] = 0xFFFF;
-    q = s + 0x48 / 4;
-    for (i = 9; i >= 0; i--)
-        *q-- = -1;
+    int m = -1;
+    for (i = 9, q = s + 0x48 / 4; i >= 0; i--, q--) // hoisted m and comma increment order the setup insns
+        *q = m;
     s[5] = 0;
 }
-#endif
 
 // FUNCTION: GAME 0x1FF710
 extern "C" int func_001FF710(char *self, int v)

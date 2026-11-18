@@ -123,7 +123,7 @@ extern "C" void func_00102938(char *self)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x10B780 - 1 word, case 2 stores v1 instead of const-2 register v0
+// DRAFT: GAME 0x10B780 - 1 word, case 2 stores v1 instead of const-2 register v0; tried st local, goto, (int)/volatile/signed switch operand
 extern "C" void func_0010B780(char *self)
 {
     *(float *)(self + 0x54C) = 5.0f;

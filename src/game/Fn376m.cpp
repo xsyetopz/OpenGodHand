@@ -74,7 +74,7 @@ extern char D_0076A9C0[], D_0076B1C0[];
 extern "C" void sceSifInitRpc(int);
 extern "C" void func_00377BC8(void);
 extern "C" void func_00375860(void);
-extern "C" void func_003758E8(int);
+extern "C" int func_003758E8(int);
 
 
 // FUNCTION: GAME 0x376E38
@@ -91,9 +91,8 @@ extern "C" void func_00376E38(void)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x375318
-// diff: 2 words, the stores to +4 and +8 swap places (v1/v0 order); swapping the source lines costs 4 words.
+// FUNCTION: GAME 0x375318
+// func_003758E8 is declared int-returning (its definition returns int); a void declaration swaps the v0/v1 order of the +4/+8 stores.
 extern "C" void func_00375318(void)
 {
     Fn38Sif *s = &D_0076A880;
@@ -106,6 +105,7 @@ extern "C" void func_00375318(void)
     func_003758E8(1);
 }
 
+#ifdef NONMATCHING
 struct Fn38Obj {
     int m_0;
     char _p4[8];
@@ -133,7 +133,7 @@ struct Fn376Ent {
     char _p9[0x37];
 };
 extern Fn376Ent D_0076F050[];
-extern "C" void func_00376080(Fn376Ent *);
+extern "C" int func_00376080(Fn376Ent *);
 
 // FUNCTION: GAME 0x376008
 extern "C" void func_00376008(void)

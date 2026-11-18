@@ -10,7 +10,7 @@ struct Sv {
     }
 };
 float capVu0LengthSq(const float *);
-extern "C" void sceVu0ApplyMatrix(float *, const float *, const float *);
+extern "C" void sceVu0ApplyMatrix(float *, float *, float *);
 
 struct cVec { float x, y, z; };
 class cNode { public: void setLocalTranslation(const cVec &); };

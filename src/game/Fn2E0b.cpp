@@ -5,6 +5,7 @@
 // DRAFT: GAME 0x2E7E10
 // diff: 12 words; float load/store order of the t vector (z loaded first, w stored before z in original) and 2nd-branch copy load order.
 struct cMatrix { float m[16]; };
+extern char World_light_work[];
 extern "C" void sceVu0ApplyMatrix(float *, float *, float *);
 extern "C" float Adjust_theta__Ff(float);
 extern "C" void MtxInitRotVec__FR7cMatrixRC4cVecUc(cMatrix &, const cVec &, unsigned char);

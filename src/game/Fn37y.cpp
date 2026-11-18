@@ -94,7 +94,7 @@ void func_003794D0(void *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x37B768
-// diff: 5 words; address temp lands in v0 not a1 (idx*32+0x16C kept apart via empty asm barrier; without it gcc folds 0x16C into sh, 10 words)
+// diff: 5 words (only the temp register: a1 in original, v0 in ours; int/pointer/char* arithmetic forms give 10); address temp lands in v0 not a1 (idx*32+0x16C kept apart via empty asm barrier; without it gcc folds 0x16C into sh, 10 words)
 extern "C" void func_0037B768(char *o)
 {
     int off = o[0x27] * 32 + 0x16C;

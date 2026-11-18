@@ -128,7 +128,7 @@ extern ObjVecQ *volatile objbaseArray;
 extern "C" int func_001B8030(ObjQ *);
 
 // DRAFT: GAME 0x2DDDF8
-// diff: 37 words, range test (v>=0x300 ? v<0x500 : 0) compiles to movn form, not slti/xori/andi; same idiom as unmatched 0x1B8030
+// diff: 37 words (30 without volatile; callee test must be `== 1` for the xori), range test (v>=0x300 ? v<0x500 : 0) compiles to movn form, not slti/xori/andi; same idiom as unmatched 0x1B8030 Slice 14: 25 range-test forms (&&, bool/char/short temps, ?:, if/else, goto, switch ranges, inline helper, -O1) give movn, sltiu or two separate branches; none gives slti/xori joined through a1+andi.
 #ifdef NONMATCHING
 int getItemNumInRoom()
 {
@@ -142,7 +142,7 @@ int getItemNumInRoom()
         int v = o->m_2fe;
         int in = v >= 0x300 ? v < 0x500 : 0;
         if ((unsigned char)in) {
-            if (!func_001B8030(o))
+            if (func_001B8030(o) == 1)
                 n++;
         }
         p++;

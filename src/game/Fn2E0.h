@@ -25,7 +25,7 @@ extern "C" void NAME(void *self) \
 
 extern "C" void func_002E8038(void *, float);
 extern "C" void func_002E8168(void *, float);
-extern "C" void func_002D9F68(void *, const char *, unsigned);
+extern "C" void func_002D9F68(void *, const char *, ...);
 extern char D_0044E808[];
 
 extern "C" void func_002FBED0(void *);

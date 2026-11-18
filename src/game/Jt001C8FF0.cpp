@@ -1,5 +1,5 @@
 // Jump-table switch unit (own file: its .rodata must be exactly the table).
-extern "C" void func_001B6FB8(char *);
+extern "C" int func_001B6FB8(char *);
 extern "C" void setTexChange__7cOmBaseUi(char *, unsigned);
 
 #ifdef NONMATCHING

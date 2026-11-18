@@ -35,17 +35,13 @@ struct VtBase {
     short pad1;
     void (*fn1)(void *, void *, int);
 };
-extern "C" void func_002A7280(void *, unsigned);
+extern "C" void func_002A7280(void *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2BA1C8 - prologue schedules daddu s0,a0 before sq s1 (2 words)
+// FUNCTION: GAME 0x2BA1C8
+// func_002A7280 takes only self; declaring a second arg changed the prologue schedule
 extern "C" int func_002BA1C8(char *self, int n)
 {
-    char *p = self;
-    int k = n;
-    func_002A7280(self, n);
-    self = p;
-    n = k;
+    func_002A7280(self);
     VtBase *vt = *(VtBase **)(self + 0x18);
     void *v = vt->fn0(self + vt->off0, *(int *)(self + 8) * n);
     *(int *)(self + 4) = n;
@@ -56,7 +52,6 @@ extern "C" int func_002BA1C8(char *self, int n)
     }
     return 1;
 }
-#endif
 
 extern "C" unsigned func_002BEDD8(void *);
 extern "C" char *func_002BEF08(void *, unsigned);

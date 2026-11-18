@@ -96,7 +96,7 @@ extern "C" int func_00295860(char *self)
 
 extern "C" int func_0026ECC0(char *);
 
-// DRAFT: GAME 0x291AC8 - 31 words: original has slti+xori+bnel for the t<0x250 test; >=, ==0, int flag, compound and unsigned-subtract forms all failed
+// DRAFT: GAME 0x291AC8 - 31 words: original has slti+xori+bnel for the t<0x250 test; >=, ==0, int flag, compound and unsigned-subtract forms all failed Slice 14: 25 range-test forms (&&, bool/char/short temps, ?:, if/else, goto, switch ranges, inline helper, -O1) give movn, sltiu or two separate branches; none gives slti/xori joined through a1+andi.
 #ifdef NONMATCHING
 extern "C" int func_00291AC8(char *self, const float *pos, char *skip, float r)
 {
@@ -142,7 +142,7 @@ extern "C" void func_00290028(void *);
 extern "C" unsigned irand__Fv();
 extern volatile char scrArray[];
 
-// DRAFT: GAME 0x290110 - scrArray address is hoisted into s3 across the calls (frame 0x50 vs 0x40), about 30 words shift
+// DRAFT: GAME 0x290110 - scrArray address is hoisted into s3 across the calls (frame 0x50 vs 0x40), about 30 words shift; non-volatile scrArray gave 63 words, same hoist
 #ifdef NONMATCHING
 extern "C" void func_00290110(char *self)
 {
