@@ -17,6 +17,16 @@ full build still reproduces `SLUS_215.03` byte for byte.
   instruction reading that register, as the game does; GNU as omits it, and
   ps2eeas 1.9.x additionally pads a load used across a branch, which the game
   never does. `tools/eecc.py` runs `-c` as `-S` followed by ps2eeas.
+- Short loops: every backward branch in the game spans at least six
+  instructions (target through delay slot), padded with `nop`s before the
+  branch. That is SN's R5900 short-loop workaround; ps2eeas 1.8.19 lacks it,
+  so `tools/shortloop.py` pads the compiler output and eecc.py reassembles.
+  Never write the nops in source.
+- Dead fragments: unreferenced `addiu sp,sp,N; nop` pairs sit between some
+  functions. `tools/splitfuncs.py` gives them their own `frag_<VRAM>` units so
+  the following function starts at its real entry. The old automatic name
+  stays defined at the fragment, because other code takes the entry address
+  as `%lo(func_<fragment> + 8)`.
 - A build-time gate (`tools/linkgen.py`) links an annotated function only when
   its bytes match and every symbol it references exists in the final link;
   otherwise the asm unit stays. `build/linkgen.tsv` lists each annotated
@@ -42,7 +52,11 @@ full build still reproduces `SLUS_215.03` byte for byte.
    definition; configure.py uses it to replace the asm unit.
 4. Compare: `.venv/bin/python tools/fncmp.py src/game/<Class>.cpp 0x<VRAM>`.
    `MATCH` means identical bytes with relocated fields masked. Iterate on the
-   source until it matches; don't change flags per function.
+   source until it matches; don't change flags per function. Because the
+   relocated fields are masked, a reference to the wrong symbol still prints
+   `MATCH` and only fails the final sha1. Every `%hi`/`%lo`/`jal` must name
+   the symbol the asm unit names, and a callee already matched under its real
+   name must be declared under that name, or the gate reports `refs func_...`.
 5. Integration: `.venv/bin/python tools/configure.py && ninja` must end with
    `build/SLUS_215.03: OK`.
 
@@ -66,3 +80,23 @@ full build still reproduces `SLUS_215.03` byte for byte.
   the asm unit's symbol.
 - Functions with no symbol (`func_XXXXXXXX`) are declared `extern "C"` so the
   call links against the asm label.
+
+## Codegen idioms
+
+These source shapes reproduce patterns this compiler emits only one way:
+
+- `long long` is 128-bit (`sq`, 0x20 stride). Use `long` for 64-bit `sd`, and
+  an `unsigned` field for `lwu`.
+- `and; sltu` comes from `unsigned t = x & m; return t != 0;`. Writing
+  `return (x & m) != 0;` gives `sra/andi` instead.
+- A branchy bool masked with `andi 0xFF` comes from an inline helper that
+  returns `unsigned char`, compared with `== 0` or `== 1`.
+- A conditional assignment of two constants becomes `movz`. Where the
+  original branches, an early `return` sometimes avoids it.
+- Store order in source is not always the emitted order: delay-slot filling
+  moves the last store first. When stores mismatch, permute them.
+- `if (p) g(p); return p;` matches only as `int r = a; if (a) r = g(a); return r;`.
+- Lazy singletons: `if (!G) { ctor(); func_0031EEA8(&G, name, dtor); } return &G;`,
+  where `name` is the rodata string extern.
+- Base destructor calls need `extern "C" void _$_7cPlBase(T *);`.
+- Flags tested with `lwu; dsra` need `long f = (unsigned)s->flags; (f >> n) & 1`.
