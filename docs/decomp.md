@@ -143,6 +143,10 @@ These source shapes reproduce patterns this compiler emits only one way:
   the preceding callee with an `int` return (`extern "C" int SetDisable__13cSceAtManagerUs(...)`
   instead of `void`). The unused return value shifts register allocation
   (matched 0x1DFD90, 0x1D4F48, 0x1641B8, 0x17FC58). Check the callee's other call sites in the file.
+- A trailing void call that the original keeps as `jal` with a frame, where
+  gcc emits a sibling `j`, matches with `__asm__ volatile("");` after the
+  call: the barrier ends the tail position. The 2.9 cc1 rejects
+  `-fno-optimize-sibling-calls` (matched 0x3B5A50).
 - Variadic functions: the toolchains ship no `va-mips.h`, and
   `__builtin_next_arg` always yields the frame top (the slot after the last
   register save), whatever parameter it names. The original's `ap` points at

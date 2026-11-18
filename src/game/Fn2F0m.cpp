@@ -211,53 +211,47 @@ extern "C" void func_002F6F48(char *self)
     *(float *)(self + 0x194) = g;
 }
 
+extern "C" float func_0031D168(float, int *);
 extern "C" void func_002B5FC8(char *, float *);
 
-// FUNCTION: GAME 0x2F6E20
-extern "C" void func_002F6E20(char *self)
+// FUNCTION: GAME 0x2F6CF8
+extern "C" int func_002F6CF8(char *self)
 {
+    char *d = *(char **)(self + 0x110);
+    *(float *)(self + 0x2B8) = __builtin_fabsf(*(float *)(d + 0x13C));
+    *(float *)(self + 0x2BC) = __builtin_fabsf(*(float *)(d + 0x140));
+    *(int *)(self + 0x2B4) = *(int *)(self + 0x220);
+    int a = *(unsigned char *)(d + 0x18C);
+    *(int *)(self + 0x2B0) = a;
     float pos[4] __attribute__((aligned(16)));
-    float d[4] __attribute__((aligned(16)));
     float w[4] __attribute__((aligned(16)));
     __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(float (*)[4])pos));
-    float *c = (float *)(pCamWork + 0x210);
-    if (pos != c) {
-        pos[0] = c[0];
-        pos[1] = c[1];
-        pos[2] = c[2];
+    if (a) {
+        float *c = (float *)(pCamWork + 0x200);
+        if (pos != c) {
+            pos[0] = c[0];
+            pos[1] = c[1];
+            pos[2] = c[2];
+        }
+    } else {
+        float *c = (float *)(pCamWork + 0x210);
+        if (pos != c) {
+            pos[0] = c[0];
+            pos[1] = c[1];
+            pos[2] = c[2];
+        }
     }
-    func_002B6160(d, self);
-    {
-        float p = pos[0];
-        float r = *(float *)(self + 0x2B8);
-        float lo = p - r;
-        float hi = p + r;
-        if (d[0] < lo)
-            d[0] = hi;
-        else if (hi < d[0])
-            d[0] = lo;
-    }
-    {
-        float p = pos[1];
-        float r = *(float *)(self + 0x2B8);
-        float lo = p - r;
-        float hi = p + r;
-        if (d[1] < lo)
-            d[1] = hi;
-        else if (hi < d[1])
-            d[1] = lo;
-    }
-    {
-        float p = pos[2];
-        float r = *(float *)(self + 0x2B8);
-        float lo = p - r;
-        float hi = p + r;
-        if (d[2] < lo)
-            d[2] = hi;
-        else if (hi < d[2])
-            d[2] = lo;
-    }
-    __asm__ volatile("lqc2 $vf4,%1\n\tsqc2 $vf4,%0" : "=m"(*(float (*)[4])w) : "m"(*(float (*)[4])d));
+    int *s = (int *)(self + 0x2B4);
+    float rx = *(float *)(self + 0x2B8);
+    float x = func_0031D168(-rx, s);
+    float ry = *(float *)(self + 0x2B8);
+    float y = func_0031D168(-ry, s);
+    float rz = *(float *)(self + 0x2B8);
+    float z = func_0031D168(-rz, s);
+    pos[0] = pos[0] + x;
+    pos[1] = pos[1] + y;
+    pos[2] = pos[2] + z;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(float (*)[4])w) : "r"(pos));
     func_002B5FC8(self, w);
-    func_002FBED0(self);
+    return 1;
 }
