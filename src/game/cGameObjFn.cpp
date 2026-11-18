@@ -166,7 +166,7 @@ extern int D_00747A0C;
 extern char g_HeatSys[];
 extern char D_0044AEF8[];
 extern void func_002A58D8(char *, u32);
-extern void func_002A98A8(void *);
+void *func_002A98A8(int *self);
 extern void func_0030F5A0();
 extern void func_002B16F0(void *);
 extern void *getTexAddr(void *, int, u32) __asm__("getTexAddr__10cIDManager7eIdDataUi");
@@ -241,7 +241,7 @@ void func_002A9790(int *self)
 void func_002A9D30(int a, int b)
 {
     if (b == 0xFFFF && a)
-        func_002A98A8(g_HeatSys);
+        func_002A98A8((int *)g_HeatSys);
 }
 
 // FUNCTION: GAME 0x2AED40
@@ -329,6 +329,9 @@ int func_002A96C0(int a, int b, int c)
 }
 #endif
 
+// FUNCTION: GAME 0x2A98A8
+void *func_002A98A8(int *self) { self[0] = 0; self[6] = (int)&D_0044AEF8; self[1] = 0; self[3] = 0; self[2] = 0; self[5] = 0; *(char *)(self + 4) = 0; return self; }
+
 // FUNCTION: GAME 0x2A98D8
 void func_002A98D8(char *self, int f)
 {
@@ -346,4 +349,46 @@ void func_002AE970() { func_002AE940((void *)1, 0xFFFF); }
 // FUNCTION: GAME 0x2AF6E0
 void func_002AF6E0(int *p, int on) { if (on) *p |= 2; else *p &= -3; }
 
+extern char Mc;
+void func_002AE3D0(void *);
+// FUNCTION: GAME 0x2AD288
+void func_002AD288(int *self, int f) { self[4] = 0; self[5] = 0; if (f & 1) func_0030F5A0(); }
+// FUNCTION: GAME 0x2AE940
+void func_002AE940(void *a, int b) { if (b == 0xFFFF && a) func_002AE3D0(&Mc); }
+// FUNCTION: GAME 0x2A4FA0
+void func_002A4FA0(char *self)
+{
+    char *b = self + 0x28000;
+    int v = *(int *)(b + 0x2054);
+    *(int *)(b + 0x205C) = 5;
+    v = (v + 15) & 0xFFFFFFF0u;
+    *(int *)(b + 0x2054) = v;
+    *(int *)(b + 0x2050) = v;
+}
+// FUNCTION: GAME 0x2A9648
+char *func_002A9648(void *, char *p, unsigned n)
+{
+    char *h = p - 0x20;
+    n += 0x20;
+    if (*(unsigned *)(h + 0x10) >= n) {
+        unsigned r = *(unsigned *)(h + 0x10) - n;
+        *(unsigned *)(h + 0x10) = n;
+        *(unsigned *)(h + 0xC) += r;
+        return p;
+    }
+    return 0;
+}
+#ifdef NONMATCHING
+// 3 words differ: original hoists `addiu a1,1` above the slti
+// DRAFT: GAME 0x2AF348
+int func_002AF348(int a)
+{
+    int n = 1;
+    if (a >= 10) {
+        int v = 10;
+        do { v *= 10; n++; } while (a >= v);
+    }
+    return n;
+}
+#endif
 }

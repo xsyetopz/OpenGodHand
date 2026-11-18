@@ -120,3 +120,131 @@ extern "C" void func_002D4FC0(void *a, int b)
         }
     }
 }
+
+extern "C" void *func_002FBCC8(void *);
+extern const char D_00428928[], D_00428C20[], D_004292F0[], D_00429DD8[];
+extern const char D_004282F0[], D_0044E238[], D_0044F308[], D_0044F598[], D_0044E538[];
+extern char D_005686D0[];
+
+// FUNCTION: GAME 0x1B6710
+extern "C" char *func_001B6710(char *p)
+{
+    void *t = func_001B6E90(p);
+    *(const void **)(p + 0x214) = D_00428928;
+    __asm__ volatile("sqc2 $vf0,0x600(%0)\n\tsqc2 $vf0,0x610(%0)" : : "r"(p) : "memory");
+    __asm__ volatile("" : : "r"(t));
+    *(int *)(p + 0x620) = 0;
+    *(int *)(p + 0x624) = 0;
+    return p;
+}
+
+// FUNCTION: GAME 0x1B87A8
+extern "C" char *func_001B87A8(char *p)
+{
+    void *t = func_001B6E90(p);
+    *(const void **)(p + 0x214) = D_00428C20;
+    __asm__ volatile("sqc2 $vf0,0x600(%0)\n\tsqc2 $vf0,0x610(%0)" : : "r"(p) : "memory");
+    __asm__ volatile("" : : "r"(t));
+    p[0x630] = 0;
+    *(int *)(p + 0x620) = 0;
+    return p;
+}
+
+// FUNCTION: GAME 0x1BBEB8
+extern "C" char *func_001BBEB8(char *p)
+{
+    void *t = func_001B6E90(p);
+    *(const void **)(p + 0x214) = D_004292F0;
+    __asm__ volatile("sqc2 $vf0,0x610(%0)" : : "r"(p) : "memory");
+    __asm__ volatile("" : : "r"(t));
+    *(int *)(p + 0x620) = 0;
+    *(int *)(p + 0x634) = 0;
+    *(short *)(p + 0x630) = 0;
+    *(int *)(p + 0x644) = 0;
+    return p;
+}
+
+// FUNCTION: GAME 0x1C7D98
+extern "C" char *func_001C7D98(char *p)
+{
+    void *t = func_001B6E90(p);
+    *(const void **)(p + 0x214) = D_00429DD8;
+    __asm__ volatile("sqc2 $vf0,0x610(%0)\n\tsqc2 $vf0,0x630(%0)" : : "r"(p) : "memory");
+    __asm__ volatile("" : : "r"(t));
+    *(int *)(p + 0x5B0) |= 8;
+    return p;
+}
+
+// FUNCTION: GAME 0x2FFAD0
+extern "C" char *func_002FFAD0(char *p)
+{
+    if (p) {
+        void *t = (void *)func_002FBCC8(p);
+        *(const void **)(p + 0xF0) = D_0044E238;
+        __asm__ volatile("" : : "r"(t));
+        __asm__ volatile("sqc2 $vf0,0x2B0(%0)" : : "r"(p) : "memory");
+    }
+    return p;
+}
+
+// FUNCTION: GAME 0x2FFF10
+extern "C" char *func_002FFF10(char *p)
+{
+    if (p) {
+        void *t = (void *)func_002FBCC8(p);
+        *(const void **)(p + 0xF0) = D_0044F308;
+        __asm__ volatile("" : : "r"(t));
+        __asm__ volatile("sqc2 $vf0,0x2D0(%0)" : : "r"(p) : "memory");
+    }
+    return p;
+}
+
+// FUNCTION: GAME 0x2FFFE0
+extern "C" char *func_002FFFE0(char *p)
+{
+    if (p) {
+        void *t = (void *)func_002FBCC8(p);
+        *(const void **)(p + 0xF0) = D_0044F598;
+        __asm__ volatile("" : : "r"(t));
+        __asm__ volatile("sqc2 $vf0,0x2B0(%0)" : : "r"(p) : "memory");
+    }
+    return p;
+}
+
+// FUNCTION: GAME 0x2FFB38
+extern "C" char *func_002FFB38(char *p)
+{
+    if (p) {
+        void *t = (void *)func_002FBCC8(p);
+        *(const void **)(p + 0xF0) = D_0044E538;
+        __asm__ volatile("" : : "r"(t));
+        __asm__ volatile("sqc2 $vf0,0x2C0(%0)" : : "r"(p) : "memory");
+        *(int *)(p + 0x2B0) = 0;
+    }
+    return p;
+}
+
+// FUNCTION: GAME 0x1B0CE8
+extern "C" char *func_001B0CE8(char *p)
+{
+    void *t = func_001B6E90(p);
+    *(const void **)(p + 0x214) = D_004282F0;
+    __asm__ volatile("sqc2 $vf0,0x610(%0)\n\tsqc2 $vf0,0x620(%0)\n\tsqc2 $vf0,0x640(%0)\n\tsqc2 $vf0,0x650(%0)" : : "r"(p) : "memory");
+    __asm__ volatile("" : : "r"(t));
+    return p;
+}
+
+// FUNCTION: GAME 0x1FC758
+extern "C" void func_001FC758(void *a, int b)
+{
+    if (b == 0xFFFF && a) {
+        char *s = D_005686D0;
+        __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(char (*)[16])(s + 0x190)));
+        char *q = s + 0x28A;
+        for (int i = 0x7F; i != -1; i--) {
+            q[4] = 0;
+            q += 0x10;
+        }
+        *(int *)(s + 0xB8C) = 0;
+    }
+}

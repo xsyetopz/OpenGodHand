@@ -77,3 +77,45 @@ extern "C" void func_0028EA30(void) {}
 
 // FUNCTION: GAME 0x28FE48
 extern "C" void func_0028FE48(void) {}
+
+extern "C" void func_00283C70(int, int);
+extern "C" void func_00284548(int, int);
+extern "C" void func_0028FF80(int, int);
+extern "C" void func_00104010(char *, char *, char *);
+
+// FUNCTION: GAME 0x283EA8
+extern "C" void func_00283EA8(void) { func_00283C70(1, 0xFFFF); }
+
+// FUNCTION: GAME 0x284A08
+extern "C" void func_00284A08(void) { func_00284548(1, 0xFFFF); }
+
+// FUNCTION: GAME 0x28FFE0
+extern "C" void func_0028FFE0(void) { func_0028FF80(1, 0xFFFF); }
+
+// FUNCTION: GAME 0x2844A0
+extern "C" void func_002844A0(char *self) { func_00104010(self, self + 0x2130, self + 0x5B0); }
+
+class cGameObj;
+struct cCollSolidFwd {
+    void ReleaseUnit(cGameObj *) __asm__("ReleaseUnit__21cCollisionSolidManageP8cGameObj");
+};
+extern cCollSolidFwd g_CollSolidManage;
+
+// FUNCTION: GAME 0x277540
+extern "C" void func_00277540(cGameObj *o) { g_CollSolidManage.ReleaseUnit(o); }
+
+// FUNCTION: GAME 0x27E088
+extern "C" void func_0027E088(cGameObj *o) { g_CollSolidManage.ReleaseUnit(o); }
+
+// FUNCTION: GAME 0x281940
+extern "C" void func_00281940(cGameObj *o) { g_CollSolidManage.ReleaseUnit(o); }
+
+// FUNCTION: GAME 0x289E10
+extern "C" void func_00289E10(cGameObj *o) { g_CollSolidManage.ReleaseUnit(o); }
+
+// FUNCTION: GAME 0x2896B0
+extern "C" void func_002896B0(unsigned char *self)
+{
+    if (self[0x2F4] == 0 && self[0x2F5] == 8)
+        self[0x2F6] = 2;
+}

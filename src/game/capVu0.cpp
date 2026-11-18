@@ -170,3 +170,16 @@ float capVu0Atan2(float y, float x)
         : "=f"(r) : "f"(y), "f"(x) : "$f1", "$f2", "$8", "$9", "$2", "memory");
     return r;
 }
+
+// VU math units without a known name.
+// FUNCTION: GAME 0x30A4D0
+extern "C" void func_0030A4D0(float *d, const float *a, const float *b) { vu0_MulVector(d, a, b); }
+
+// FUNCTION: GAME 0x30A570
+extern "C" void func_0030A570(float *d, const float *a) { vu0_FtoI4(d, a); }
+
+// FUNCTION: GAME 0x30ABA0
+extern "C" void func_0030ABA0(float *d, const float *a, float s) { vu0_ScaleXYZ(d, a, s); }
+
+// FUNCTION: GAME 0x133948
+extern "C" void func_00133948(void *, float *lo, float *hi) { vu0_MinMax(lo, hi); }

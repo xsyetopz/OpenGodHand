@@ -112,4 +112,74 @@ void *func_002FFFB8(void *p)
         r = func_002F61C8(p);
     return r;
 }
+
+void func_002D4FC0(int, unsigned);
+void func_002D9B70(int, unsigned);
+void func_002D9E98(int, unsigned);
+void func_002D9458(char *, char *);
+void func_002D5918(char *);
+void func_002D5990(char *);
+
+// FUNCTION: GAME 0x2D5000
+void func_002D5000() { func_002D4FC0(1, 0xFFFF); }
+
+// FUNCTION: GAME 0x2D9BA0
+void func_002D9BA0() { func_002D9B70(1, 0xFFFF); }
+
+// FUNCTION: GAME 0x2D9F08
+void func_002D9F08() { func_002D9E98(1, 0xFFFF); }
+
+// FUNCTION: GAME 0x2D98A0
+void func_002D98A0(char *p) { func_002D9458(p, p + 0xE8A0); }
+
+// FUNCTION: GAME 0x2D5768
+void func_002D5768(int *p, int a, short b, int c)
+{
+    p[2] = a;
+    p[1] = -1;
+    *(short *)((char *)p + 0x1C) = b;
+    p[0] = c;
+    *(short *)((char *)p + 0xC) = 0;
+    p[4] = 0;
+}
+
+// FUNCTION: GAME 0x2D5890
+void func_002D5890(char *p, int a)
+{
+    *(int *)(p + 0x14) = a;
+    *(short *)(p + 0x1E) = 0;
+    func_002D5918(p);
+}
+
+// FUNCTION: GAME 0x2D5958
+void func_002D5958(char *p, int a)
+{
+    *(int *)(p + 0x14) = a;
+    *(short *)(p + 0x1E) = 0;
+    func_002D5990(p);
+}
+
+// FUNCTION: GAME 0x2D6578
+void func_002D6578(char *p, int a)
+{
+    char *t = *(char **)(p + 4);
+    if (t)
+        *(float *)(t + 0x68) = (float)a;
+}
+
+// FUNCTION: GAME 0x2D65A0
+void func_002D65A0(char *p, int a)
+{
+    char *t = *(char **)(p + 4);
+    if (t)
+        *(float *)(t + 0x6C) = (float)a;
+}
+
+// FUNCTION: GAME 0x2D65D0
+void func_002D65D0(char *p, float *out)
+{
+    char *t = *(char **)(p + 4);
+    if (t && out)
+        *out = *(float *)(t + 0x6C);
+}
 }

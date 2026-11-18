@@ -104,7 +104,7 @@ extern "C" void func_001ACB50(F618 *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1B8030
-// diff: original branches (result in a0); gcc folds the range test into movn
+// diff: original branches (result in a0); gcc folds to movn (ternary, inline helper) or addu/sltu (&&); retries failed
 extern "C" int func_001B8030(H2FE *self)
 {
     int h = self->m_h;

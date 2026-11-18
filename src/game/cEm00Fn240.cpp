@@ -477,3 +477,56 @@ extern "C" void func_0024AA68(char *self)
     }
 }
 #endif
+
+struct cCamMgr247 {
+    void setPartsCamera(unsigned char) __asm__("setPartsCamera__11cCamManagerUc");
+};
+struct cPartsCam247 {
+    void SetParts(void *, void *, void *, void *) __asm__("SetParts__12cPartsCameraP6cPartsN21");
+};
+struct pl00Fwd247 {
+    void clearMotionCam(unsigned, unsigned) __asm__("clearMotionCam__4pl00UiUi");
+};
+extern cCamMgr247 CamManager;
+extern "C" void func_001D0778(void *);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x247588
+// diff: 81 words; original keeps self in s1, player in s2, CamManager in s0 (ours: 0x50 frame, self in s0)
+extern "C" void func_00247588(char *self)
+{
+    pl00Fwd247 *pl = (pl00Fwd247 *)Getplayer();
+    *(unsigned *)(self + 0x16D0) |= 0x30000;
+    *(float *)(self + 0x54C) = 3.0f;
+    *(unsigned *)(self + 0x250) |= 0x10000;
+    switch (B(0x2F6)) {
+    case 0: {
+        unsigned short r = func_00276468(self);
+        char *o = *(char **)(self + 0x304);
+        func_002A8578(self, *(int *)(o + 0x2FB4) + (int)o, *(int *)(o + 0x2FB8) + (int)o, 0, 0.0f, r, 0);
+        func_001D0778(*(void **)(self + 0x708));
+        B(0x2F6)++;
+        cCamMgr247 *cm = &CamManager;
+        cm->setPartsCamera(0);
+        {
+            unsigned char t = B(0x2B4);
+            void *a = 0, *b = 0;
+            if (t > 0x1B)
+                a = *(void **)(*(char **)(self + 0x278) + 0x6C);
+            t = B(0x2B4);
+            if (t > 0x1C)
+                b = *(void **)(*(char **)(self + 0x278) + 0x70);
+            ((cPartsCam247 *)((char *)cm + 0x920))->SetParts(self, a, b, 0);
+        }
+    }
+    case 1:
+        if (moveMotion((cObjBase *)self)) {
+            pl->clearMotionCam(0, 1);
+            func_002705D8(self);
+        } else {
+            ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+            ((cObjBase *)self)->addNullSpeed(1.0f);
+        }
+    }
+}
+#endif

@@ -97,3 +97,71 @@ extern "C" long func_00151368(char *p, int i)
     return *(long *)(p + 0x3DC88 + (D_007476B0 & 1) * 8 + i * 16);
 }
 #endif
+
+// FUNCTION: GAME 0x140C58
+extern "C" int func_00140C58(char *self)
+{
+    int *p = (int *)(self + 0x22F4);
+    for (int i = 0; i < 0x11; i++) {
+        if (*p == 0)
+            return i;
+        p = (int *)((char *)p + 0xC);
+    }
+    return -1;
+}
+
+// FUNCTION: GAME 0x15FD68
+extern "C" int func_0015FD68(char *self)
+{
+    int *p = (int *)(self + 4);
+    for (int i = 0; i < 9; i++) {
+        if (*p == 0)
+            return i;
+        p = (int *)((char *)p + 8);
+    }
+    return -1;
+}
+
+#define MODE60_A(ADDR)                                       \
+    extern "C" int func_00##ADDR(char *self)                 \
+    {                                                        \
+        unsigned char t = self[0x64];                        \
+        if (t == 0) {                                        \
+            *(int *)(self + 0x60) = 10;                      \
+            return 10;                                       \
+        }                                                    \
+        if (t == 1) {                                        \
+            *(int *)(self + 0x60) = -1;                      \
+            return -1;                                       \
+        }                                                    \
+        return -1;                                           \
+    }
+
+// FUNCTION: GAME 0x161B30
+MODE60_A(161B30)
+// FUNCTION: GAME 0x162720
+MODE60_A(162720)
+
+// FUNCTION: GAME 0x16EDE0
+extern "C" int func_0016EDE0(char *self)
+{
+    unsigned char t = self[0x64];
+    if (t == 0) {
+        *(int *)(self + 0x60) = -1;
+        return -1;
+    }
+    if (t == 1) {
+        *(int *)(self + 0x60) = 10;
+        return 10;
+    }
+    return 10;
+}
+
+// FUNCTION: GAME 0x15FEE0
+extern "C" void func_0015FEE0(char *self)
+{
+    int *q = (int *)(self + 0xF08);
+    for (int i = 8; i >= 0; i--)
+        *q-- = -1;
+    self[0xF15] = 0;
+}
