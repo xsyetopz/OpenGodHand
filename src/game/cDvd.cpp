@@ -653,19 +653,16 @@ struct DvdJump {
 // FUNCTION: GAME 0x2004C8
 bool cDoor::getJumpData(unsigned char idx, unsigned char b, unsigned char c, bool flag, unsigned char d)
 {
-    int r = 0;
     unsigned int *t = SearchData(Sys.m_5AC, D_0042C768, 0);
+    int r = 0;
     if (t && idx < *t) {
-        r = 1;
         DvdJump *e = (DvdJump *)((char *)t + 4 + idx * 0x14);
         if (flag == 1) {
             m_14 = e->m_8;
         } else {
-            unsigned short v = 0xFFFF;
-            if ((short)e->m_8 != Sys.m_5B0)
-                v = e->m_8;
-            m_14 = v;
+            m_14 = ((short)e->m_8 == Sys.m_5B0) ? 0xFFFF : e->m_8;
         }
+        r = 1;
         m_jp[0] = e->x * 0.01f;
         m_jp[1] = e->y * 0.01f;
         m_jp[2] = e->z * 0.01f;
@@ -676,4 +673,41 @@ bool cDoor::getJumpData(unsigned char idx, unsigned char b, unsigned char c, boo
         m_3A = d;
     }
     return r;
+}
+
+class cHeap;
+void *_MemoryAlloc(unsigned int, unsigned int, cHeap &);
+extern "C" void func_00201228(void *, void *);
+
+// FUNCTION: GAME 0x200DF8
+extern "C" int func_00200DF8(DvdMgr *self, char *name, void **out, cHeap *heap, int id, unsigned int *sizeOut, int a7, int a6)
+{
+    *out = 0;
+    int *req = (int *)func_002017A8(self);
+    if (!req)
+        return 0;
+    req[2] = func_001FF9C0(D_00580D40, name, &req[0x78 / 4], &req[0xC / 4]);
+    req[0x74 / 4] = (unsigned int)(req[0x78 / 4] + 0x7FF) >> 11;
+    req[0x7C / 4] = (int)heap;
+    if (req[2] < 0)
+        return 0;
+    req[0] = 1;
+    if (id == 0)
+        req[1] = func_00201788((DvdCnt *)self);
+    else
+        req[1] = id;
+    req[0x6C / 4] = a6;
+    req[0x70 / 4] = a7;
+    req[0x80 / 4] = 0;
+    req[0x80 / 4] = (int)_MemoryAlloc(req[0x74 / 4] << 11, 0x80, *heap);
+    if (req[0x80 / 4] == 0) {
+        func_00201228(self, req);
+        return 0;
+    }
+    if (sizeOut)
+        *sizeOut = req[0x74 / 4] << 11;
+    *out = (void *)req[0x80 / 4];
+    if (self->m_cur == 0)
+        func_00201290(self);
+    return req[1];
 }

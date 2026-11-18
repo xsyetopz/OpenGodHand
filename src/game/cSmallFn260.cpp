@@ -128,8 +128,9 @@ extern "C" void func_0028BEA8(void *);
 extern const char D_00447E68[];
 extern const char D_004483A8[];
 extern const char D_0044A408[];
-extern "C" void updateSetDataFlag__11cEmSetParamUiUi(void *, unsigned, unsigned, unsigned) ;
-struct cEmSetFwd { char x; };
+struct cEmSetFwd {
+    void updateSetDataFlag(unsigned, unsigned) __asm__("updateSetDataFlag__11cEmSetParamUiUi");
+};
 extern cEmSetFwd g_EmSet;
 
 // FUNCTION: GAME 0x27F170
@@ -150,16 +151,90 @@ extern "C" void func_00281470(Fn260State *s, unsigned char mode)
     switch (mode) {
     case 0:
     default:
-        s->m_d = 0;
-        s->m_b = 0xF;
         s->m_a = 0;
+        s->m_b = 0xF;
         s->m_c = 0;
+        s->m_d = 0;
         break;
     case 1:
-        s->m_d = 0;
-        s->m_a = 0;
-        s->m_c = 2;
         s->m_b = 0xF;
+        s->m_c = 2;
+        s->m_a = 0;
+        s->m_d = 0;
         break;
     }
+}
+
+// FUNCTION: GAME 0x283378
+extern "C" void func_00283378(Fn260State *s, unsigned char mode)
+{
+    switch (mode) {
+    case 0:
+    default:
+        s->m_a = 0;
+        s->m_b = 0xC;
+        s->m_c = 0;
+        s->m_d = 0;
+        break;
+    case 1:
+        s->m_b = 0xC;
+        s->m_c = 2;
+        s->m_a = 0;
+        s->m_d = 0;
+        break;
+    }
+}
+
+// FUNCTION: GAME 0x279D40
+extern "C" void func_00279D40(char *self, int x)
+{
+    *(const void **)(self + 0x214) = D_00447E68;
+    func_00279E70(self);
+    func_0028EB88(self, x);
+}
+
+// FUNCTION: GAME 0x27DE18
+extern "C" void func_0027DE18(char *self, int x)
+{
+    *(const void **)(self + 0x214) = D_004483A8;
+    func_0027E088((cGameObj *)self);
+    func_0028EB88(self, x);
+}
+
+// FUNCTION: GAME 0x28B148
+extern "C" void func_0028B148(char *self, int x)
+{
+    *(const void **)(self + 0x214) = D_0044A408;
+    func_0028BEA8(self);
+    func_0028EB88(self, x);
+}
+
+// FUNCTION: GAME 0x27BB30
+extern "C" void func_0027BB30(char *self)
+{
+    g_CollSolidManage.ReleaseUnit((cGameObj *)self);
+    if (*(void **)(self + 0x15B0)) {
+        dieCommon__7cOmBase(*(void **)(self + 0x15B0));
+        *(void **)(self + 0x15B0) = 0;
+    }
+}
+
+// FUNCTION: GAME 0x285678
+extern "C" void func_00285678(char *self)
+{
+    g_CollSolidManage.ReleaseUnit((cGameObj *)self);
+    if (*(void **)(self + 0x15EC)) {
+        dieCommon__7cOmBase(*(void **)(self + 0x15EC));
+        *(void **)(self + 0x15EC) = 0;
+    }
+}
+
+// FUNCTION: GAME 0x2736F8
+extern "C" void func_002736F8(char *self)
+{
+    unsigned f = *(unsigned *)(self + 0x1644);
+    f &= 0xEFFFFFFF;
+    f &= 0xFFFF7FFF;
+    *(unsigned *)(self + 0x1644) = f;
+    g_EmSet.updateSetDataFlag(*(unsigned short *)(self + 0x640), f);
 }

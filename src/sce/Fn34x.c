@@ -45,11 +45,6 @@ void func_00342A08(char *p)
 }
 #endif
 
-extern char D_003FC9B4[];
-extern int D_003EC450;
-extern int D_003EC454;
-extern int D_003EC458;
-void func_003224F8(char *);
 void func_0033B658(char *);
 void func_0033B670();
 void func_0033B790(char *);
@@ -57,25 +52,6 @@ void func_003428A0(char *, int, int, int);
 void func_00342910(char *);
 void func_00348870(char *);
 void func_00324950(char *);
-
-// FUNCTION: GAME 0x3BAFD0
-void func_003BAFD0()
-{
-    func_003224F8(D_003FC9B4);
-}
-
-// FUNCTION: GAME 0x340438
-void func_00340438(int a, int b)
-{
-    D_003EC454 = a;
-    D_003EC458 = b;
-}
-
-// FUNCTION: GAME 0x340520
-void func_00340520(char *p)
-{
-    D_003EC450 -= 1;
-}
 
 // FUNCTION: GAME 0x3403C8
 void func_003403C8(char *p)

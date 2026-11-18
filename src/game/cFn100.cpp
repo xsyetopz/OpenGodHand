@@ -460,3 +460,22 @@ extern "C" void func_0013F558(char *self, char *o)
     }
 }
 #endif
+
+extern char *CoreSave;
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x13DAE0
+// diff: 2 words; original's third test is a plain beqz to the shared epilogue, compiled emits beql with a duplicated epilogue.
+extern "C" void func_0013DAE0(char *self)
+{
+    unsigned f = D_00747A84;
+    if ((f & 0x8000000) == 0) {
+        if (f & 0x2000000)
+            return;
+        if (*(unsigned *)(CoreSave + 0x14) & 0x4000000) {
+            trans__7cIDBase(self + 0xD0);
+            trans__7cIDBase(self);
+        }
+    }
+}
+#endif

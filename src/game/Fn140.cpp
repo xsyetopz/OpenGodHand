@@ -191,3 +191,100 @@ extern "C" void func_00164EF8(char *self)
     self[0x5C] = 0;
     self[0x5D] = 0;
 }
+
+extern "C" void *memcpy(void *, const void *, unsigned);
+extern "C" void trans__7cIDBase(void *self);
+extern "C" int func_00150538(void *p);
+extern int D_00747A34;
+
+// FUNCTION: GAME 0x145160
+extern "C" void func_00145160(char *self, const void *src)
+{
+    memcpy(self + 0x3B4, src, *(short *)(self + 0x3B2) * 2);
+    *(int *)(self + 0x90) |= 0x40000000;
+}
+
+// FUNCTION: GAME 0x147460
+extern "C" void func_00147460(char *self)
+{
+    if (*(int *)(self + 0xB0)) {
+        signed char c = self[0xB8];
+        if (c < 5) {
+            if (c > 0)
+                trans__7cIDBase(self);
+        }
+    }
+}
+
+// FUNCTION: GAME 0x1500C0
+extern "C" int func_001500C0()
+{
+    if (D_00747A34 & 0x20000)
+        return 0;
+    return func_00150538(D_00466470);
+}
+
+#define VEC4_OP(ADDR, OP)                                    \
+    extern "C" void func_00##ADDR(float *d, float *a, float *b) \
+    {                                                        \
+        d[0] = a[0] OP b[0];                                 \
+        d[1] = a[1] OP b[1];                                 \
+        d[2] = a[2] OP b[2];                                 \
+        d[3] = 1.0f;                                         \
+    }
+
+// FUNCTION: GAME 0x150738
+VEC4_OP(150738, +)
+// FUNCTION: GAME 0x150778
+VEC4_OP(150778, -)
+// FUNCTION: GAME 0x1507B8
+VEC4_OP(1507B8, *)
+
+class cMatrix {
+public:
+    float m[16] __attribute__((aligned(16)));
+};
+class Quaternion;
+void MtxInitRotQuaternion(cMatrix &, const Quaternion &);
+void MtxMultiply(cMatrix &, const cMatrix &, const cMatrix &);
+
+// FUNCTION: GAME 0x147BB0
+extern "C" void func_00147BB0(cMatrix &dst, const cMatrix &src, const Quaternion &q)
+{
+    cMatrix m;
+    MtxInitRotQuaternion(m, q);
+    MtxMultiply(dst, src, m);
+}
+
+extern char D_00506E10[];
+
+// FUNCTION: GAME 0x15B0F0
+extern "C" char *func_0015B0F0(int n)
+{
+    char *cur = D_00566E10;
+    char *nw = cur + n;
+    if (D_00506E10 + (D_007476B0 & 1) * 0x60000 < nw)
+        return 0;
+    D_00566E10 = nw;
+    return cur;
+}
+
+// FUNCTION: GAME 0x146E20
+extern "C" void func_00146E20(char *self)
+{
+    signed char t = self[0x79];
+    if (t != 0 && t != 6) {
+        if (*(unsigned short *)(self + 0xF8) == 0)
+            trans__7cIDBase(self);
+        else
+            trans__7cIDBase(self + 0xA0);
+    }
+}
+
+extern void *func_SetEffect(int, int, void *, void *, int, unsigned) __asm__("SetEffect__F12eEffDataType6eEffIdP4cObjP12tagEFF_PARAMiT2");
+
+// FUNCTION: GAME 0x16FE68
+extern "C" void func_0016FE68(void *self)
+{
+    func_SetEffect(1, 3, self, 0, -1, 0xFFFFFFFF);
+}
