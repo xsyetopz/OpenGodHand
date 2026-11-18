@@ -169,6 +169,14 @@ function tested. Leaf functions of 8-20 bytes compile
 identically under every package and do not identify the compiler; framed
 functions do. `syscall` stubs are hand-written and stay in asm.
 
+The iostream code at 0x3875A8 onward is GNU libio from the gcc-2.95 branch,
+compiled as C++ by `ee-gcc2.9-991111`. `src/sce/libio/` holds that upstream
+source (GPL header kept) with trimmed headers that reproduce the original
+layout: `_G_off_t` is `long`, `_G_USING_THUNKS` is off (8-byte vtable jump
+entries), and `ios` is a virtual base. Its units carry their mangled names in
+`config/symbols.sndata.txt`; `config/aliases.ld` maps the libio-internal
+callees still in asm and the old `func_` names used by C callers.
+
 Sources for that region are C files in `src/sce/`. A source selects its
 compiler with leading comment lines (within its first four lines), which
 configure.py and fncmp.py both read:
