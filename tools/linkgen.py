@@ -40,7 +40,7 @@ ROOT = configure.ROOT
 
 def matches(obj: Path, vram: int, sym: str, span: int, raw: bytes) -> bool:
     try:
-        got, relocs = fncmp.compiled(obj, sym)
+        got, relocs, _names = fncmp.compiled(obj, sym)
     except SystemExit:
         return False
     off = vram + fncmp.TEXT_OFF

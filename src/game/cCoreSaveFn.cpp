@@ -68,16 +68,14 @@ extern "C" int func_001FA858(SaveSelf *self)
     return AT(int, 0x24);
 }
 
-#ifdef NONMATCHING
-// 0x1FAD38: addu operand order (a1,v1 vs v1,a1)
+// FUNCTION: GAME 0x1FAD38
 extern "C" unsigned char func_001FAD38(SaveSelf *self, int i)
 {
     char *s = self->m_save;
     if (!s)
         return 0;
-    return *(unsigned char *)(s + 0x134 + i);
+    return *(unsigned char *)(i + s + 0x134);
 }
-#endif
 
 // FUNCTION: GAME 0x1FAE28
 extern "C" void func_001FAE28(SaveSelf *self, unsigned char v)
@@ -145,16 +143,15 @@ extern "C" int func_001FA8E0(SaveSelf *self)
     return 999998 < AT(int, 0x20);
 }
 
-#ifdef NONMATCHING
-// 0x1FA838: addu operand order
+// FUNCTION: GAME 0x1FA838
 extern "C" int func_001FA838(SaveSelf *self, int i)
 {
     char *s = self->m_save;
     if (!s)
         return 0;
-    return *(int *)(s + i * 4 + 0x28);
+    int o = i * 4;
+    return *(int *)(s + o + 0x28);
 }
-#endif
 
 // FUNCTION: GAME 0x1FBD00
 extern "C" void func_001FBD00(SaveSelf *self, unsigned char v)

@@ -51,12 +51,17 @@ full build still reproduces `SLUS_215.03` byte for byte.
    `src/game/<Class>.h`. Put `// FUNCTION: GAME 0x<VRAM>` on the line above each
    definition; configure.py uses it to replace the asm unit.
 4. Compare: `.venv/bin/python tools/fncmp.py src/game/<Class>.cpp 0x<VRAM>`.
-   `MATCH` means identical bytes with relocated fields masked. Iterate on the
-   source until it matches; don't change flags per function. Because the
-   relocated fields are masked, a reference to the wrong symbol still prints
-   `MATCH` and only fails the final sha1. Every `%hi`/`%lo`/`jal` must name
-   the symbol the asm unit names, and a callee already matched under its real
-   name must be declared under that name, or the gate reports `refs func_...`.
+   `MATCH` means identical bytes outside relocated fields, and each relocated
+   field (`jal`, `%hi`, `%lo`) resolves to the original address under the
+   symbol table of the last full build (`build/SLUS_215.03.elf`); a wrong
+   symbol prints `sym (0xVAL) is not the original target`. Iterate on the
+   source until it matches; don't change flags per function. The build gate
+   (`linkgen.py`) runs before the link and masks relocated fields, so the
+   final sha1 is the authority. A callee already matched under its real name
+   must be declared under that name, or the gate reports `refs func_...`.
+   Check whether an address is taken with `tools/claimed.py 0xADDR`; drafts
+   under `#ifdef NONMATCHING` are marked `// DRAFT: GAME 0x...`, not
+   `FUNCTION`, so they claim nothing.
 5. Integration: `.venv/bin/python tools/configure.py && ninja` must end with
    `build/SLUS_215.03: OK`.
 

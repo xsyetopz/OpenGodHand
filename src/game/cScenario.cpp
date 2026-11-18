@@ -222,7 +222,7 @@ extern "C" void func_002BFC80(sSaveManager *);
 // (hoisted before the branch, sltiu in the func_002BFC80 delay slot) and branches on s0 differently;
 // 50 words differ, mostly scheduling.
 #ifdef NONMATCHING
-// FUNCTION: GAME 0x2C4868
+// DRAFT: GAME 0x2C4868
 void cScenario::endExtraGame()
 {
     if (m_jumpPending == 1) {
@@ -288,7 +288,7 @@ struct sObjView {
 // 0x2C4440 near-miss: 9 words differ; the original loads the vtable (lw a2,0x214) before the rot stores and
 // reuses it for both reads, mine reloads it after the stores into a different register.
 #ifdef NONMATCHING
-// FUNCTION: GAME 0x2C4440
+// DRAFT: GAME 0x2C4440
 void cScenario::moveObjPos(cGameObj *obj, float x, float y, float z, float ang)
 {
     sObjView *o = (sObjView *)obj;
@@ -339,7 +339,7 @@ extern "C" void func_002C4E18(cScenario *);
 // compile to lw/dsll32/dsra32/xori/beqz where the original has lwu/dsra/andi/bnez, the first-block branch
 // layout differs, and `g_Sce` is reloaded after the endMess call instead of in its delay slot.
 #ifdef NONMATCHING
-// FUNCTION: GAME 0x2C3678
+// DRAFT: GAME 0x2C3678
 void cScenario::move()
 {
     if (Sys.m_mode != 0x20 && Getplayer__Fv()) {

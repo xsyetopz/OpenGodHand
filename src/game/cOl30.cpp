@@ -37,7 +37,7 @@ public:
 
 #ifdef NONMATCHING
 // 0x182FF8 near-miss: frame 0xB0 vs 0x100 (original keeps inRange temp on stack and has 9 saved regs), pad loops compile differently, 548 vs 584 bytes
-// FUNCTION: GAME 0x182FF8
+// DRAFT: GAME 0x182FF8
 void cOl30::SetInitialPosition(const cVec &pos, const cVec &rot)
 {
     *m_pos = pos;

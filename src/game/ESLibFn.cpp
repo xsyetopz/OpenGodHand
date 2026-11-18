@@ -698,3 +698,56 @@ extern "C" void func_002E8318(EsObjL *self)
     func_002E83D8(10, 0x3A00, 0x3900, 1, 0);
     func_002E8EE8(self, 4, 9, 1);
 }
+
+// ---- 0x2F0000 range ----
+// FUNCTION: GAME 0x2F0058
+extern "C" void func_002F0058() {}
+// FUNCTION: GAME 0x2F1750
+extern "C" void func_002F1750() {}
+// FUNCTION: GAME 0x2F4230
+extern "C" void func_002F4230() {}
+// FUNCTION: GAME 0x2F4B28
+extern "C" void func_002F4B28() {}
+
+// FUNCTION: GAME 0x2F00B8
+VT_SET(2F00B8, D_0044EAB8, func_002FBE28)
+// FUNCTION: GAME 0x2F11C8
+VT_SET(2F11C8, D_0044EB70, func_002FBE28)
+// FUNCTION: GAME 0x2F1B18
+VT_SET(2F1B18, D_0044EC68, func_002FBE28)
+// FUNCTION: GAME 0x2F2FF8
+VT_SET(2F2FF8, D_0044EF08, func_002FBE28)
+// FUNCTION: GAME 0x2F3E18
+VT_SET(2F3E18, D_0044EFA0, func_002FBE28)
+// FUNCTION: GAME 0x2F3E40
+VT_SET(2F3E40, D_0044F078, func_002FBE28)
+
+#define VT_NEW(addr, vtsym)                                 \
+    extern "C" EsObj *func_00##addr(EsObj *self)            \
+    {                                                       \
+        if (self) {                                         \
+            func_002FBCC8(self);                            \
+            self->vt = vtsym;                               \
+        }                                                   \
+        return self;                                        \
+    }
+// FUNCTION: GAME 0x2F4DA0
+VT_SET(2F4DA0, D_0044F270, func_002FBE28)
+// FUNCTION: GAME 0x2F5328
+VT_SET(2F5328, D_0044F308, func_002FBE28)
+// FUNCTION: GAME 0x2F5560
+VT_SET(2F5560, D_0044F3A0, func_002FBE28)
+// FUNCTION: GAME 0x2F6CD0
+VT_SET(2F6CD0, D_0044F598, func_002FBE28)
+// FUNCTION: GAME 0x2F70E8
+VT_SET(2F70E8, D_0044F630, func_002FBE28)
+// FUNCTION: GAME 0x2F6230
+VT_SET(2F6230, D_0044F4F8, CALL1_EBC50)
+// FUNCTION: GAME 0x2F7178
+VT_SET(2F7178, D_0044F6D8, CALL1_EBC50)
+// FUNCTION: GAME 0x2FFCC8
+VT_NEW(2FFCC8, D_0044EAB8)
+// FUNCTION: GAME 0x2FFD08
+VT_NEW(2FFD08, D_0044EB70)
+// FUNCTION: GAME 0x2FFD48
+VT_NEW(2FFD48, D_0044EC68)

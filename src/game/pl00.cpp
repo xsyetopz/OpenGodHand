@@ -1,4 +1,5 @@
 #include "game/pl00.h"
+#include "game/cMessage.h"
 
 extern "C" void func_001CF8B0(void *p);
 extern "C" int func_0010B698(pl00 *p);
@@ -275,16 +276,20 @@ extern "C" int func_0012CED8(pl00 *self)
     return 0;
 }
 
-#ifdef NONMATCHING
-// 0x12CEF0: emits srl; original uses dsrl (64-bit return/shift; long long shift is unsupported by this gcc)
-extern "C" int func_0012CEF0(pl00 *self)
+// FUNCTION: GAME 0x12CEF0
+extern "C" unsigned long func_0012CEF0(pl00 *self)
 {
-    return ((unsigned char *)&self->m_unk15F4)[0] >> 7;
+    unsigned long v = ((unsigned char *)&self->m_unk15F4)[0];
+    return v >> 7;
 }
-#endif
 
 extern const unsigned short D_00747A50;
-class cSceAtManager;
+class cSceAtManager {
+public:
+    char _pad[0x68];
+    void *m_unk68;
+    void *m_unk6C;
+};
 extern cSceAtManager g_SceAt;
 extern "C" int func_002C2568(cSceAtManager *m, cVec *p, int a);
 extern "C" void func_002DBE98();
@@ -580,3 +585,239 @@ extern "C" void func_00100508(cDtorObj *self)
     self->m_vptr = D_0041B6A0;
     _$_8cObjBase(self);
 }
+
+extern int D_005FEAC0;
+
+// FUNCTION: GAME 0x2C23E0
+extern "C" int func_002C23E0(int a)
+{
+    D_005FEAC0 = a;
+    return 0;
+}
+
+// FUNCTION: GAME 0x2C3040
+extern "C" void func_002C3040(int, unsigned *a1, unsigned *a2)
+{
+    *a2 = *a1;
+    *a1 = (unsigned)a2 | 0x80000000;
+}
+
+// FUNCTION: GAME 0x2C23F8
+extern "C" int func_002C23F8(char *a)
+{
+    g_SceAt.m_unk68 = a + 0x5C;
+    g_SceAt.m_unk6C = a + 0x7C;
+    return 0;
+}
+
+extern "C" void func_002AE740(int);
+extern "C" void func_002AE7F0(int);
+
+// FUNCTION: GAME 0x2C09E8
+extern "C" void func_002C09E8()
+{
+    func_002AE740(2);
+}
+
+// FUNCTION: GAME 0x2C0A08
+extern "C" void func_002C0A08()
+{
+    func_002AE7F0(2);
+}
+
+extern "C" void func_002D56A8(char *);
+extern "C" void func_002D50E8(char *, int, int, int);
+extern "C" void func_002D51F0(char *);
+struct cSubS {
+    char _pad[0x14];
+    char m_unk14;
+};
+
+// FUNCTION: GAME 0x2C32C0
+extern "C" void func_002C32C0(cSubS *s)
+{
+    func_002D56A8((char *)s + 0x1C);
+    s->m_unk14 = 0;
+}
+
+// FUNCTION: GAME 0x2C3280
+extern "C" void func_002C3280(cSubS *s)
+{
+    char *p = (char *)s + 0x1C;
+    func_002D50E8(p, 0x10, 0x1800, 0x30);
+    func_002D51F0(p);
+}
+
+struct cBitSet {
+    char _pad[0x68];
+    unsigned *m_unk68;
+};
+
+// FUNCTION: GAME 0x2C3190
+extern "C" int func_002C3190(cBitSet *b, unsigned char n)
+{
+    int r = 1;
+    unsigned *p = b->m_unk68;
+    if (p) {
+        if (p[n >> 5] & (0x80000000u >> (n & 31)))
+            r = 0;
+    }
+    return r;
+}
+
+struct cMsgHolder {
+    char _pad[0x112];
+    unsigned short m_unk112;
+};
+extern cMessage *Message;
+
+// FUNCTION: GAME 0x2C4350
+extern "C" int func_002C4350(cMsgHolder *m)
+{
+    if (m->m_unk112 == 0xFFFF)
+        return 0;
+    return Message->ckMessage(m->m_unk112);
+}
+
+struct sIdPair {
+    short m_id0;
+    short m_id1;
+    int m_unk4;
+};
+
+// FUNCTION: GAME 0x2CC4A0
+extern "C" void func_002CC4A0(sIdPair *a)
+{
+    a->m_unk4 = 0;
+    a->m_id1 = -1;
+    a->m_id0 = -1;
+}
+
+struct sTblBase {
+    char _pad[0x34];
+    char *m_unk34;
+};
+
+// FUNCTION: GAME 0x2CC4C8
+extern "C" char *func_002CC4C8(sTblBase *b, int i)
+{
+    return b->m_unk34 + i * 0x50;
+}
+
+struct sFlagWord {
+    int m_unk0;
+    int m_unk4;
+    int _pad8[3];
+    int m_unk14;
+};
+
+// FUNCTION: GAME 0x2CDA38
+extern "C" int func_002CDA38(sFlagWord *c)
+{
+    return c->m_unk14 != 0;
+}
+
+// FUNCTION: GAME 0x2CFC98
+extern "C" void func_002CFC98(sFlagWord *c)
+{
+    if (c->m_unk0)
+        c->m_unk0 = 3;
+}
+
+// FUNCTION: GAME 0x2CFD38
+extern "C" int func_002CFD38(sFlagWord *c, int m)
+{
+    return (c->m_unk4 & m) == m;
+}
+
+struct sHasPtrC {
+    char _pad[0xC];
+    void *m_unkC;
+};
+extern "C" void func_002CD7C8(void *);
+extern "C" void func_002CD890(void *);
+
+// FUNCTION: GAME 0x2CFE28
+extern "C" void func_002CFE28(sHasPtrC *d)
+{
+    func_002CD7C8(d->m_unkC);
+}
+
+// FUNCTION: GAME 0x2CFE48
+extern "C" void func_002CFE48(sHasPtrC *d)
+{
+    func_002CD890(d->m_unkC);
+}
+
+extern "C" int func_00375128(int);
+struct sHasShort2C {
+    char _pad[0x2C];
+    short m_unk2C;
+};
+
+// FUNCTION: GAME 0x2CF868
+extern "C" int func_002CF868(sHasShort2C *e)
+{
+    return func_00375128(e->m_unk2C) == 0;
+}
+
+extern "C" void func_00325DC0(int);
+
+// FUNCTION: GAME 0x2CA690
+extern "C" void func_002CA690()
+{
+    func_00325DC0(0);
+}
+
+struct sSndNode {
+    char _pad[0x84];
+    sSndNode *m_unk84;
+    sSndNode *m_unk88;
+};
+struct sSndList {
+    char _pad[0x18];
+    sSndNode *m_unk18;
+};
+extern sSndList Snd;
+
+#ifdef NONMATCHING
+// 0x2CC5C0: 4 words differ; original uses bnel with the m84 store in the delay slot, mine uses bnez plus nop
+extern "C" void func_002CC5C0(sSndNode *n)
+{
+    n->m_unk88 = Snd.m_unk18;
+    if (!Snd.m_unk18) {
+        Snd.m_unk18 = n;
+        return;
+    }
+    Snd.m_unk18->m_unk84 = n;
+}
+#endif
+
+struct sClr {
+    char m0;
+    char m1;
+    int m4;
+    int m8;
+    int mC;
+    int m10;
+    int m14;
+    int m18;
+    int m1C;
+    int m20;
+};
+
+#ifdef NONMATCHING
+// 0x2CFF30: 8 words differ; mine hoists the m18 store above m20 and the byte stores
+extern "C" sClr *func_002CFF30(sClr *f)
+{
+    f->m20 = -1;
+    f->m0 = 0;
+    f->m1 = 0;
+    f->m4 = 0;
+    f->mC = 0;
+    f->m10 = 0;
+    f->m14 = 0;
+    f->m18 = -1;
+    return f;
+}
+#endif

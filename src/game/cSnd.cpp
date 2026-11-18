@@ -180,7 +180,7 @@ void cSnd::DieDemoStart()
 // 0x2CB418 near-miss (200 vs 208 bytes): original keeps param id in $s0 and a
 // copy in $s3 (set before the call, movn after); compiled merges them and uses
 // slti/movz, different saved-register assignment.
-// FUNCTION: GAME 0x2CB418
+// DRAFT: GAME 0x2CB418
 int cSnd::EmSeCheck(eObjId id)
 {
     int want = id;
@@ -218,7 +218,7 @@ int cSnd::BgmEvStart(eBgmPt a, eBgmReqNo b, int c)
 // 0x2D1610 near-miss (336 vs 340 bytes): saved-register assignment of the loop
 // constants differs (orig mask=$s4,1=$s3,2=$s2; compiled mask=$s3) and the
 // original has one extra nop before the loop head.
-// FUNCTION: GAME 0x2D1610
+// DRAFT: GAME 0x2D1610
 void cSnd::BgmEventStart(eBgmReqNo r, int a, int b)
 {
     sBgmNode *p = (sBgmNode *)func_002D22B0(this, 0, r);
@@ -377,7 +377,7 @@ void cSnd::BgmHitBeSet(bool b, unsigned short id)
 // D_00747A84 & 0x80000 separately (lui/and/bnel twice); compiled merges them
 // into a single mask 0x20080000 and reloads D at different points. Remaining
 // diff is that one reshuffled region plus the shifted branch offsets.
-// FUNCTION: GAME 0x2D0938
+// DRAFT: GAME 0x2D0938
 void cSnd::BgmControl()
 {
     for (sBgmNode *n = m_bgmList; n; n = n->m_next)

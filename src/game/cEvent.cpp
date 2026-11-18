@@ -60,7 +60,7 @@ extern "C" void func_00297B40(void *, void *)
 }
 
 // FUNCTION: GAME 0x297B60
-extern "C" void func_00297B60()
+extern "C" void func_00297B60(void *, void *)
 {
     func_0(D_Ev297AA8);
 }
@@ -319,12 +319,12 @@ struct EvObj {
     unsigned short m_kind;
 };
 
-extern char D_Ev586AF0[];
+extern char Event[];
 extern char CoreSave[]; // 0x569B70
-extern char D_Ev44A9B0[];
-extern char D_Ev44A9B8[];
-extern char D_Ev44A9D0[];
-extern char D_Ev44A9D8[];
+extern char D_0044A9B0[];
+extern char D_0044A9B8[];
+extern char D_0044A9D0[];
+extern char D_0044A9D8[];
 extern "C" int getCostumeNo__9cCoreSave(char *);
 extern "C" void setMeshDisplay__6cModelPCcb(EvObj *, char *, int);
 extern "C" void displayScrollLayer__FUib(int, int);
@@ -341,7 +341,7 @@ extern "C" void func_00298000(int a, int b)
 {
     if (b == 0xFFFF) {
         if (a) {
-            __asm__ volatile("sqc2 $vf0,32(%0)" : : "r"(D_Ev586AF0) : "memory");
+            __asm__ volatile("sqc2 $vf0,32(%0)" : : "r"(Event) : "memory");
         }
     }
 }
@@ -369,7 +369,7 @@ extern "C" void func_00298088(EvObj *self)
 // FUNCTION: GAME 0x2980E8
 extern "C" void func_002980E8()
 {
-    func_00297B40(D_Ev586AF0, (void *)func_00298110);
+    func_00297B40(Event, (void *)func_00298110);
 }
 
 // FUNCTION: GAME 0x298110
@@ -379,13 +379,13 @@ extern "C" void func_00298110(EvObj *self, int, int n)
         switch (self->m_kind) {
         case 1541:
             if (n >= 16) {
-                setMeshDisplay__6cModelPCcb(self, D_Ev44A9B0, 0);
-                setMeshDisplay__6cModelPCcb(self, D_Ev44A9B8, 1);
+                setMeshDisplay__6cModelPCcb(self, D_0044A9B0, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044A9B8, 1);
             }
             break;
         case 1543:
             if (n >= 16) {
-                setMeshDisplay__6cModelPCcb(self, D_Ev44A9B0, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044A9B0, 0);
             }
             break;
         }
@@ -395,7 +395,7 @@ extern "C" void func_00298110(EvObj *self, int, int n)
 // FUNCTION: GAME 0x2981B0
 extern "C" void func_002981B0()
 {
-    func_00297B40(D_Ev586AF0, (void *)func_002981D8);
+    func_00297B40(Event, (void *)func_002981D8);
 }
 
 // FUNCTION: GAME 0x2981D8
@@ -405,13 +405,13 @@ extern "C" void func_002981D8(EvObj *self, int, int n)
         switch (self->m_kind) {
         case 1541:
             if (n >= 18) {
-                setMeshDisplay__6cModelPCcb(self, D_Ev44A9D0, 0);
-                setMeshDisplay__6cModelPCcb(self, D_Ev44A9D8, 1);
+                setMeshDisplay__6cModelPCcb(self, D_0044A9D0, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044A9D8, 1);
             }
             break;
         case 1543:
             if (n >= 18) {
-                setMeshDisplay__6cModelPCcb(self, D_Ev44A9D0, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044A9D0, 0);
             }
             break;
         }
@@ -421,7 +421,7 @@ extern "C" void func_002981D8(EvObj *self, int, int n)
 // FUNCTION: GAME 0x298278
 extern "C" void func_00298278()
 {
-    func_00297B40(D_Ev586AF0, (void *)func_002982A0);
+    func_00297B40(Event, (void *)func_002982A0);
 }
 
 // FUNCTION: GAME 0x2982A0
@@ -441,7 +441,7 @@ extern "C" void func_002982A0(EvObj *self)
 // FUNCTION: GAME 0x298310
 extern "C" void func_00298310()
 {
-    func_00297B20(D_Ev586AF0, (void *)func_00298338);
+    func_00297B20(Event, (void *)func_00298338);
 }
 
 // FUNCTION: GAME 0x298338
@@ -458,7 +458,7 @@ extern "C" void func_00298338(int a, float f)
 // FUNCTION: GAME 0x298388
 extern "C" void func_00298388()
 {
-    char *d = D_Ev586AF0;
+    char *d = Event;
     func_00297B20(d, (void *)func_002983D0);
     func_00297B40(d, (void *)func_00298460);
 }
@@ -515,13 +515,13 @@ extern "C" void func_002987F8();
 extern "C" void func_002988A8();
 extern "C" void func_00298A78();
 extern "C" void func_00298C18(int);
-extern "C" void func_00298EF8();
+extern "C" void func_00298EF8(EvObj *, unsigned char);
 extern "C" void func_002991D8();
 
 // FUNCTION: GAME 0x2987B0
 extern "C" void func_002987B0()
 {
-    char *d = D_Ev586AF0;
+    char *d = Event;
     func_00297B20(d, (void *)func_002987F8);
     func_00297B40(d, (void *)func_002988A8);
 }
@@ -529,13 +529,13 @@ extern "C" void func_002987B0()
 // FUNCTION: GAME 0x298A50
 extern "C" void func_00298A50()
 {
-    func_00297B40(D_Ev586AF0, (void *)func_00298A78);
+    func_00297B40(Event, (void *)func_00298A78);
 }
 
 // FUNCTION: GAME 0x298BF0
 extern "C" void func_00298BF0()
 {
-    func_00297B20(D_Ev586AF0, (void *)func_00298C18);
+    func_00297B20(Event, (void *)func_00298C18);
 }
 
 // FUNCTION: GAME 0x298C18
@@ -551,13 +551,13 @@ extern "C" void func_00298C18(int a)
 // FUNCTION: GAME 0x298ED0
 extern "C" void func_00298ED0()
 {
-    func_00297B40(D_Ev586AF0, (void *)func_00298EF8);
+    func_00297B40(Event, (void *)func_00298EF8);
 }
 
 // FUNCTION: GAME 0x2991B0
 extern "C" void func_002991B0()
 {
-    func_00297B40(D_Ev586AF0, (void *)func_002991D8);
+    func_00297B40(Event, (void *)func_002991D8);
 }
 
 // FUNCTION: GAME 0x299860
@@ -627,3 +627,142 @@ extern "C" void func_00299908(EvBuf *self)
     p->start->lo = p->cnt | ((long)p->tag << 15) | (1L << 60);
     p->start->hi = p->x8;
 }
+
+extern "C" void func_00297C80(int *, int);
+
+// FUNCTION: GAME 0x298060
+extern "C" void func_00298060()
+{
+    func_00297B40(Event, (void *)func_00298088);
+}
+
+struct EvCfgEnt {
+    int m_0;
+    int m_4;
+    int m_8;
+};
+
+extern EvCfgEnt D_003C0550[];
+
+class cEventConfig {
+public:
+    void setEventNo(int n);
+    EvCfgEnt *m_ent;
+    int m_val;
+};
+
+// FUNCTION: GAME 0x299320
+void cEventConfig::setEventNo(int n)
+{
+    EvCfgEnt *e = &D_003C0550[n];
+    m_ent = e;
+    m_val = e->m_4;
+}
+
+class classCFILTER_TAG {
+public:
+    void initialize();
+};
+
+// FUNCTION: GAME 0x299368
+void classCFILTER_TAG::initialize()
+{
+    char *b = (char *)this;
+    *(unsigned *)(b + 0x10000) = ((unsigned)this | 0x20000000) + 0x10;
+    *(unsigned *)(b + 0x14080) = ((unsigned)(b + 0x10080) | 0x20000000) + 0x10;
+}
+
+extern unsigned char D_003C0548[3];
+extern unsigned char D_003C0549;
+extern unsigned char D_003C054A;
+extern "C" void func_00298DB8();
+
+// FUNCTION: GAME 0x298D78
+void SetEv61HumanAlive(bool a, bool b, bool c)
+{
+    D_003C0548[0] = a;
+    D_003C0548[1] = b;
+    D_003C0548[2] = c;
+    func_00297C80((int *)Event, (int)func_00298DB8);
+}
+
+extern char D_0044ABE0[];
+extern char objbaseArray[];
+extern "C" EvObj *SearchOM__13cObjBaseArrayUl(char *, unsigned long);
+extern "C" void func_00298CF0();
+
+// near-miss: 34 differing words; the original keeps s and i in separate regs (a2/a3) and hoists lui/addiu of objbaseArray into t0 before the loop; mine swaps a2/a3 and is 4 bytes longer
+#ifdef NONMATCHING
+// DRAFT: GAME 0x298C58
+extern "C" void func_00298C58()
+{
+    char *s = D_0044ABE0;
+    unsigned long key = 0;
+    int i = 0;
+    if (*s) {
+        do {
+            key |= (long)*s << (i * 8);
+            i++;
+            s++;
+        } while (i < 8 && *s);
+    }
+    EvObj *o = SearchOM__13cObjBaseArrayUl(objbaseArray, key);
+    if (o) {
+        o->m_flags |= 2;
+    }
+    func_00297B60(Event, (void *)func_00298CF0);
+}
+#endif
+
+// near-miss: 31 differing words; same key-building loop issue as 0x298C58
+#ifdef NONMATCHING
+// DRAFT: GAME 0x298CF0
+extern "C" void func_00298CF0()
+{
+    char *s = D_0044ABE0;
+    unsigned long key = 0;
+    int i = 0;
+    if (*s) {
+        do {
+            key |= (long)*s << (i * 8);
+            i++;
+            s++;
+        } while (i < 8 && *s);
+    }
+    EvObj *o = SearchOM__13cObjBaseArrayUl(objbaseArray, key);
+    if (o) {
+        o->m_flags &= ~2;
+    }
+}
+#endif
+
+
+// near-miss: 33 differing words; original loads into v1 with no hoisted lui; mine hoists lui v0 and is 8 bytes longer
+#ifdef NONMATCHING
+// DRAFT: GAME 0x298EF8
+extern "C" void func_00298EF8(EvObj *self, unsigned char idx)
+{
+    unsigned char v;
+    if (!self)
+        return;
+    switch (self->m_kind) {
+    case 0x2A2:
+        v = D_003C0548[0];
+        break;
+    case 0x2A3:
+        v = D_003C0549;
+        break;
+    case 0x2A6:
+        v = D_003C054A;
+        break;
+    case 0x3DA:
+        v = D_003C0548[idx];
+        break;
+    default:
+        return;
+    }
+    if (!v) {
+        self->m_flags |= 0x8002;
+    }
+}
+#endif

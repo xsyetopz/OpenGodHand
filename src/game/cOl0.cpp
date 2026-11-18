@@ -509,3 +509,495 @@ extern "C" sOlObj *func_0017EA98(sOlObj *s) { func_001BD580(s); s->m_vt = D_0042
 extern "C" sOlObj *func_0017EC08(sOlObj *s) { func_001B6E90(s); s->m_vt = D_00422240; return s; }
 // FUNCTION: GAME 0x17EE40
 extern "C" sOlObj *func_0017EE40(sOlObj *s) { func_001B6E90(s); s->m_vt = D_00422308; return s; }
+
+// Round 7: field accessors, cOmBase::dieCommon forwarders and vtable-reset destructors.
+class cOmBase {
+public:
+    void dieCommon();
+};
+
+struct sOlFlags {
+    char _pad0[0x764];
+    unsigned char m_b764;
+    unsigned char m_b765;
+};
+
+// FUNCTION: GAME 0x17F6B0
+extern "C" void func_0017F6B0(sOlFlags *s)
+{
+    s->m_b765 = 0;
+    s->m_b764 = 0;
+}
+
+// FUNCTION: GAME 0x1717A0
+extern "C" void func_001717A0(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x173198
+extern "C" void func_00173198(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x1741E8
+extern "C" void func_001741E8(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+extern const char D_004213C0[];
+extern const char D_004214A8[];
+extern const char D_00421658[];
+
+// FUNCTION: GAME 0x178340
+extern "C" void func_00178340(sOlObj *s, void *a)
+{
+    s->m_vt = D_004213C0;
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x1785F0
+extern "C" void func_001785F0(sOlObj *s, void *a)
+{
+    s->m_vt = D_004214A8;
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x178AF8
+extern "C" void func_00178AF8(sOlObj *s, void *a)
+{
+    s->m_vt = D_00421658;
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x178848
+extern "C" void func_00178848(sOlObj *s, void *a)
+{
+    s->m_vt = D_00421590;
+    func_001B6F38(s, a);
+}
+
+// FUNCTION: GAME 0x17C4E0
+extern "C" void func_0017C4E0(sOlObj *s)
+{
+    s->m_vt = D_00421C80;
+    func_001BD650(s);
+}
+
+struct sOlDmgSlot {
+    char _pad0[0x600];
+    void *m_dmg;
+};
+
+// FUNCTION: GAME 0x178870
+extern "C" int func_00178870(sOlDmgSlot *s)
+{
+    func_001B6FB8(s);
+    s->m_dmg = 0;
+    return 1;
+}
+
+// Round 8: remaining dieCommon forwarders and vtable-reset destructors.
+extern "C" {
+void func_001BBF00(void *self, void *a);
+}
+
+// FUNCTION: GAME 0x174FB0
+extern "C" void func_00174FB0(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x176738
+extern "C" void func_00176738(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x177DC0
+extern "C" void func_00177DC0(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x1789F8
+extern "C" void func_001789F8(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x179798
+extern "C" void func_00179798(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17A508
+extern "C" void func_0017A508(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17B548
+extern "C" void func_0017B548(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17C008
+extern "C" void func_0017C008(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17CE18
+extern "C" void func_0017CE18(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17DB40
+extern "C" void func_0017DB40(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17E658
+extern "C" void func_0017E658(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17EDD0
+extern "C" void func_0017EDD0(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17F1D0
+extern "C" void func_0017F1D0(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17F990
+extern "C" void func_0017F990(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+// FUNCTION: GAME 0x17FD80
+extern "C" void func_0017FD80(cOmBase *s)
+{
+    s->dieCommon();
+}
+
+extern const char D_00421E38[];
+// FUNCTION: GAME 0x17D460
+extern "C" void func_0017D460(sOlObj *s, void *a)
+{
+    s->m_vt = D_00421E38;
+    func_001BBF00(s, a);
+}
+
+extern const char D_004220B0[];
+// FUNCTION: GAME 0x17E8B0
+extern "C" void func_0017E8B0(sOlObj *s, void *a)
+{
+    s->m_vt = D_004220B0;
+    func_001BBF00(s, a);
+}
+
+extern const char D_004223D0[];
+// FUNCTION: GAME 0x17F2F8
+extern "C" void func_0017F2F8(sOlObj *s, void *a)
+{
+    s->m_vt = D_004223D0;
+    func_001BBF00(s, a);
+}
+
+extern const char D_00421FE8[];
+// FUNCTION: GAME 0x17E1C0
+extern "C" void func_0017E1C0(sOlObj *s, void *a)
+{
+    s->m_vt = D_00421FE8;
+    func_001B6F38(s, a);
+}
+
+extern const char D_00422308[];
+// FUNCTION: GAME 0x17EE78
+extern "C" void func_0017EE78(sOlObj *s, void *a)
+{
+    s->m_vt = D_00422308;
+    func_001B6F38(s, a);
+}
+
+extern const char D_00422498[];
+// FUNCTION: GAME 0x17F5A8
+extern "C" void func_0017F5A8(sOlObj *s, void *a)
+{
+    s->m_vt = D_00422498;
+    func_001B6F38(s, a);
+}
+
+extern const char D_00422560[];
+// FUNCTION: GAME 0x17FC30
+extern "C" void func_0017FC30(sOlObj *s, void *a)
+{
+    s->m_vt = D_00422560;
+    func_001B6F38(s, a);
+}
+
+extern const char D_00422178[];
+// FUNCTION: GAME 0x17EAD0
+extern "C" void func_0017EAD0(sOlObj *s)
+{
+    s->m_vt = D_00422178;
+    func_001BD650(s);
+}
+
+// 0x180000-0x18FFFF: forwarders, singleton accessors, vtable resets and destructors.
+extern "C" {
+extern const char D_004226A8[];
+extern const char D_00422858[];
+extern const char D_00422928[];
+extern const char D_00422B30[];
+extern const char D_00422B48[];
+extern const char D_00422C18[];
+extern const char D_00422F90[];
+extern const char D_00423078[];
+extern const char D_00423148[];
+extern const char D_00423230[];
+extern const char D_00423400[];
+extern const char D_004234E8[];
+extern const char D_00423700[];
+extern const char D_004237E8[];
+extern const char D_004238D8[];
+extern const char D_004239C8[];
+extern const char D_00423AB8[];
+extern const char D_00423B88[];
+extern const char D_00423C70[];
+extern const char D_00423D40[];
+extern int D_00785A98;
+void func_001C7DE0(void *self, void *a);
+}
+
+struct sOlDmg60C {
+    char _pad0[0x214];
+    const void *m_vt;
+    char _pad218[0x60C - 0x218];
+    void *m_dmg;
+};
+struct sOlDmg650 {
+    char _pad0[0x214];
+    const void *m_vt;
+    char _pad218[0x650 - 0x218];
+    void *m_dmg;
+};
+struct sOlDmg600 {
+    char _pad0[0x214];
+    const void *m_vt;
+    char _pad218[0x600 - 0x218];
+    void *m_dmg;
+};
+
+// FUNCTION: GAME 0x1809B0
+extern "C" void func_001809B0(sOlDmg60C *s, void *a)
+{
+    s->m_vt = D_004226A8;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001B6F38(s, a);
+}
+
+// FUNCTION: GAME 0x1818C0
+extern "C" void func_001818C0(sOlDmg650 *s, void *a)
+{
+    s->m_vt = D_00422858;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C7DE0(s, a);
+}
+
+// FUNCTION: GAME 0x182668
+extern "C" void func_00182668(sOlObj *s, void *a)
+{
+    s->m_vt = D_00422928;
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x1832F0
+extern "C" void *func_001832F0()
+{
+    if (D_00785A98 == 0) {
+        func_001B8058();
+        func_0031EEA8(&D_00785A98, D_00422B30, D_00785878);
+    }
+    return &D_00785A98;
+}
+
+// FUNCTION: GAME 0x183380
+extern "C" void func_00183380(sOlDmg600 *s, void *a)
+{
+    s->m_vt = D_00422B48;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001BFB00(s, a);
+}
+
+// FUNCTION: GAME 0x183628
+extern "C" void func_00183628(sOlObj *s, void *a)
+{
+    s->m_vt = D_00422C18;
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x1867C0
+extern "C" void func_001867C0(sOlObj *s, void *a)
+{
+    s->m_vt = D_00422F90;
+    func_001BBF00(s, a);
+}
+
+// FUNCTION: GAME 0x186A20
+extern "C" void func_00186A20(sOlDmg650 *s, void *a)
+{
+    s->m_vt = D_00423078;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C7DE0(s, a);
+}
+
+// FUNCTION: GAME 0x1877D8
+extern "C" void func_001877D8(sOlDmg600 *s, void *a)
+{
+    s->m_vt = D_00423148;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x187A50
+extern "C" void func_00187A50(sOlObj *s, void *a)
+{
+    s->m_vt = D_00423230;
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x188AF0
+extern "C" void func_00188AF0(sOlDmg600 *s, void *a)
+{
+    s->m_vt = D_00423400;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x188D80
+extern "C" void func_00188D80(sOlDmg600 *s, void *a)
+{
+    s->m_vt = D_004234E8;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x18A620
+extern "C" void func_0018A620(sOlDmg600 *s, void *a)
+{
+    s->m_vt = D_00423700;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001B6F38(s, a);
+}
+
+// FUNCTION: GAME 0x18B318
+extern "C" void func_0018B318(sOlDmg650 *s, void *a)
+{
+    s->m_vt = D_004237E8;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C7DE0(s, a);
+}
+
+// FUNCTION: GAME 0x18C120
+extern "C" void func_0018C120(sOlDmg650 *s, void *a)
+{
+    s->m_vt = D_004238D8;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C7DE0(s, a);
+}
+
+// FUNCTION: GAME 0x18CF28
+extern "C" void func_0018CF28(sOlDmg650 *s, void *a)
+{
+    s->m_vt = D_004239C8;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C7DE0(s, a);
+}
+
+// FUNCTION: GAME 0x18DCE0
+extern "C" void func_0018DCE0(sOlDmg650 *s, void *a)
+{
+    s->m_vt = D_00423AB8;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C7DE0(s, a);
+}
+
+// FUNCTION: GAME 0x18EA98
+extern "C" void func_0018EA98(sOlDmg600 *s, void *a)
+{
+    s->m_vt = D_00423B88;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001C2820(s, a);
+}
+
+// FUNCTION: GAME 0x18ECD0
+extern "C" void func_0018ECD0(sOlDmg600 *s, void *a)
+{
+    s->m_vt = D_00423C70;
+    if (s->m_dmg) {
+        func_001FE278(&g_DmgManage, s->m_dmg);
+        s->m_dmg = 0;
+    }
+    func_001BFB00(s, a);
+}
+
+// FUNCTION: GAME 0x18EF30
+extern "C" void func_0018EF30(sOlObj *s, void *a)
+{
+    s->m_vt = D_00423D40;
+    func_001BBF00(s, a);
+}
