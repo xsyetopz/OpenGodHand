@@ -145,3 +145,44 @@ void func_0031CA88(short *pts, short n, int c, unsigned z)
     } while (--k);
     Draw_Line_sc__FPA3_fUiUib((float (*)[3])buf, n - 1, func_0031CA58(c), 1);
 }
+
+// FUNCTION: GAME 0x31D0C0
+float func_0031D0C0(int *s)
+{
+    int x = *s * 0x19660D + 0x3C6EF35F;
+    int u;
+    *s = x;
+    u = (x & 0x7FFFFF) | 0x3F800000;
+    return *(float *)&u - 1.0f;
+}
+
+// FUNCTION: GAME 0x31D108
+float func_0031D108(int *s)
+{
+    int x = *s * 0x19660D + 0x3C6EF35F;
+    int u;
+    *s = x;
+    u = (x & 0x7FFFFF) | 0x3F800000;
+    return (*(float *)&u + *(float *)&u - 2.0f) - 1.0f;
+}
+
+extern struct { char p[0x600]; unsigned char n; } Sys;
+
+// FUNCTION: GAME 0x31D2B8
+void func_0031D2B8(int a, int b)
+{
+    D_007558A8[Sys.n].a = a;
+    D_007558A8[Sys.n].b = b;
+    Sys.n++;
+}
+
+extern void func_0030F2B0(unsigned);
+extern int D_00747B10, D_00747B14;
+
+// FUNCTION: GAME 0x31CEB8
+void func_0031CEB8(void)
+{
+    D_00747B10 = 0x3124;
+    D_00747B14 = 0x66B;
+    func_0030F2B0(0xD8A9523D);
+}

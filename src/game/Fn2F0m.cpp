@@ -96,46 +96,36 @@ extern "C" void func_00304830(char *self)
     func_002B6230(self, a);
 }
 
-extern "C" unsigned irand__Fv();
-
-// FUNCTION: GAME 0x2F4EB8
-extern "C" int func_002F4EB8(char *self, char *src)
+// FUNCTION: GAME 0x302E48
+extern "C" void func_00302E48(char *self)
 {
-    char *d = *(char **)(self + 0x110);
-    int s = (signed char)d[0x18D];
-    *(short *)(self + 0x2BC) = (signed char)d[0x18C];
-    unsigned m = s;
-    if (s) {
-        *(short *)(self + 0x2BC) -= irand__Fv() % m;
-        if (*(short *)(self + 0x2BC) <= 0)
-            *(short *)(self + 0x2BC) = 0;
-    }
-    char *d1 = *(char **)(self + 0x110);
-    d = d1;
-    *(unsigned char *)(self + 0x2BE) = d[0x18E];
-    *(float *)(self + 0x2B4) = (float)(signed char)d[0x18F] * 0.025f;
-    *(float *)(self + 0x2B8) = (float)(signed char)d[0x190] * 0.5f;
-    *(unsigned char *)(self + 0x2E0) = d[0x197];
-    if (*(int *)(src + 0x50)) {
-        *(int *)(self + 0x2C0) = *(int *)(src + 0x50);
-        float *dst = (float *)(self + 0x2D0);
-        float *v = (float *)(src + 0x60);
-        *(unsigned char *)(self + 0x2BF) = *(unsigned char *)(src + 0x4E);
-        if (dst != v) {
-            dst[0] = v[0];
-            dst[1] = v[1];
-            dst[2] = v[2];
-        }
+    float a[4] __attribute__((aligned(16)));
+    float b[4] __attribute__((aligned(16)));
+    func_002B62F8(a, self);
+    char *o = *(char **)(self + 0x100);
+    float t;
+    int n = *(int *)(o + 0x1A0);
+    if (n) {
+        t = (*(float *)(self + 0x180) - (float)*(short *)(self + 0x186)) / (float)n;
+        o = *(char **)(self + 0x100);
     } else {
-        int p = *(int *)(self + 0x114);
-        if (p && (signed char)d[0xBE] >= 0) {
-            *(int *)(self + 0x2C0) = p;
-            *(unsigned char *)(self + 0x2BF) = d[0xBE];
-        }
-        char *e = *(char **)(self + 0x110);
-        *(float *)(self + 0x2D0) = *(float *)(e + 0x13C);
-        *(float *)(self + 0x2D4) = *(float *)(e + 0x140);
-        *(float *)(self + 0x2D8) = *(float *)(e + 0x144);
+        t = 0.0f;
     }
-    return 1;
+    if (*(float *)(o + 0x1C0) <= t) {
+        *(float *)(self + 0x128) = *(float *)(self + 0x128) * *(float *)(o + 0x1C4);
+        *(float *)(self + 0x12C) = *(float *)(self + 0x12C) * *(float *)(o + 0x1C8);
+        *(float *)(self + 0x130) = *(float *)(self + 0x130) * *(float *)(o + 0x1CC);
+        Adjust_theta_vec__FPf(a);
+    }
+    o = *(char **)(self + 0x100);
+    if (*(float *)(o + 0x1B0) <= t) {
+        b[0] = *(float *)(self + 0x128);
+        b[1] = *(float *)(self + 0x12C);
+        b[2] = *(float *)(self + 0x130);
+        float *v = b;
+        v[3] = 1.0f;
+        capVu0AddVectorXYZ__FPfPCfT1(a, a, v);
+        Adjust_theta_vec__FPf(a);
+    }
+    func_002B6230(self, a);
 }

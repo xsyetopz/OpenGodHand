@@ -158,14 +158,4 @@ void func_0031DA48(void)
         f();
     }
 }
-
-// DRAFT: GAME 0x31CEB8 (14 words differ: 2.9 turns the final call into a tail jump; the original keeps jal plus sd/ld $ra)
-extern void func_0030F2B0(unsigned);
-extern int D_00747B10, D_00747B14;
-void func_0031CEB8(void)
-{
-    D_00747B10 = 0x3124;
-    D_00747B14 = 0x66B;
-    func_0030F2B0(0xD8A9523D);
-}
 #endif

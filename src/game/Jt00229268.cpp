@@ -42,15 +42,16 @@ extern "C" void func_00229268(Ef *self)
 {
     self->m_186A = 2;
     self->m_16D4 |= 0x400;
-    func_00262A10(self);
     switch (self->m_2F6) {
     case 0: {
         self->m_1864 = 0;
         unsigned t = func_00276468(self) & 0xFFFF;
         func_002609A8(self, 0, 0x10, 0x4C, -1, 0);
         char *p = self->m_304;
-        func_002A8578(self, *(int *)(p + 0x1E7C) + (int)p, *(int *)(p + 0x1E80) + (int)p, 10, t, 0, 0.0f);
+        int o1 = *(int *)(p + 0x1E7C);
+        int o2 = *(int *)(p + 0x1E80);
         self->m_5F0 = 15;
+        func_002A8578(self, o1 + (int)p, o2 + (int)p, 10, t, 0, 0.0f);
         switch (getGameLevel__9cCoreSave(CoreSave)) {
         case 1:
         default:
