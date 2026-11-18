@@ -23,6 +23,7 @@ extern "C" void func_002BB160(char *, int, int, char *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2B9DF0
+// 3 words differ: vtable constant lui/addiu in v0 (orig v1); tried temp local, &D_ extern form, q reassign, store order, int-returning callee
 extern "C" char *func_002B9DF0(char *self, int a, int b, int c, float f)
 {
     char *p = func_002BA300(self, 0);

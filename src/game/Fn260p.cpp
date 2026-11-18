@@ -128,27 +128,25 @@ extern "C" void func_00270C78(char *self)
 extern unsigned short D_00747A50;
 extern char g_EmManage[];
 
-// DRAFT: GAME 0x274F50 - only branch offsets differ: original puts the first return 0 before the success body (9 words)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x274F50
 extern "C" int func_00274F50(char *self)
 {
-    if ((*(int *)(self + 0x564) ^ 0x21C) == 0 && D_00747A50 == 0x403 && !(0.0f < *(float *)(self + 0x1748))) {
-        char *g = g_EmManage;
-        char *a = *(char **)(g + 0x56C);
-        if (a && *(short *)(a + 0x54A) > 0) {
-            char *b = *(char **)(g + 0x568);
-            if (b && *(short *)(b + 0x54A) > 0) {
-                self[0x2F7] = 0;
-                self[0x2F5] = 0x7A;
-                self[0x2F4] = 0;
-                self[0x2F6] = 0;
-                return 1;
-            }
-        }
-    }
-    return 0;
+    if ((*(int *)(self + 0x564) ^ 0x21C) != 0) return 0;
+    if (D_00747A50 != 0x403) return 0;
+    if (0.0f < *(float *)(self + 0x1748)) return 0;
+    char *g = g_EmManage;
+    char *a = *(char **)(g + 0x56C);
+    if (!a) return 0;
+    if (*(short *)(a + 0x54A) <= 0) return 0;
+    char *b = *(char **)(g + 0x568);
+    if (!b) return 0;
+    if (*(short *)(b + 0x54A) <= 0) return 0;
+    self[0x2F4] = 0;
+    self[0x2F5] = 0x7A;
+    self[0x2F6] = 0;
+    self[0x2F7] = 0;
+    return 1;
 }
-#endif
 
 // DRAFT: GAME 0x26A338 - state test layout differs (original: ==0x223, <0x223, <0x277, <0x275 chain; about 15 words)
 #ifdef NONMATCHING

@@ -80,7 +80,7 @@ extern "C" void func_00300E30(char *self, int a)
 extern "C" int func_00306A48(int *, unsigned, int *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x306AF0 (19 words off: original copies self to a2 and has separate return-1 sites; early-copy, flat returns, base ptr, old local did not help; (int)self casts, d-base slot, nested-if with d hoisted: 21-28 words)
+// DRAFT: GAME 0x306AF0 (19 words off: original copies self to a2 and has separate return-1 sites; early-copy, flat returns, base ptr, old local did not help; (int)self casts, d-base slot, nested-if with d hoisted: 21-28 words; d=(int*)self hoisted + d+0x40+idx slot 21, early-return chain 41, nested if 23)
 extern "C" int func_00306AF0(char *self, int idx, int *hdr)
 {
     if (hdr[0] == 0x444D45 && idx < 0x4E2) {

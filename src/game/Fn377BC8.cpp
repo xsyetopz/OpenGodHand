@@ -28,14 +28,13 @@ extern char D_0076A880[];
 extern char D_0076A9C0[];
 extern char D_0076B1C0[];
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x377BC8
+// FUNCTION: GAME 0x377BC8
 extern "C" void func_00377BC8()
 {
     memset(&D_0076A790, 0, 0xC4);
     memcpy(&D_0076A790.ver, &D_0045A600, 14);
-    D_0076A790.m1C = 1;
     D_0076A790.mA8 = 0xFFFFFFFFu;
+    D_0076A790.m1C = 1;
     D_0076A790.m20 = 0xD37;
     func_00377CB8();
     memset(D_0076A880, 0, 0x104);
@@ -47,4 +46,3 @@ extern "C" void func_00377BC8()
     func_00377ED0();
     func_00378540();
 }
-#endif

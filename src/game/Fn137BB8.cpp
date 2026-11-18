@@ -1,42 +1,42 @@
 extern "C" {
-unsigned char HitCheck__C5cAreaRC4cVec(void *, void *);
-unsigned char HitCheck__C5cAreaRC4cVecf(void *, void *, float);
+int HitCheck__C5cAreaRC4cVec(void *, void *);
+int HitCheck__C5cAreaRC4cVecf(void *, void *, float);
 }
 
+struct Area137 { char _0[0x30]; float f30; char _34[10]; unsigned char b3E; char _3F[0x2D]; };
 struct AreaSet137 {
-    char *areas;
+    Area137 *areas;
     char _4[8];
     unsigned count;
     char _10[0x20];
-    char *cur;
+    Area137 *cur;
 };
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x137BB8
+// 28 words: code identical except s-register allocation (orig found=s1,s=s2,best=s3,pos=s4,off=s5,i=s6); tried decl order, char* offset vs Area* index, int-returning HitCheck (fixes andi)
 extern "C" int func_00137BB8(AreaSet137 *s, void *pos)
 {
     if (s->areas == 0)
         return 0;
     unsigned char best = 0xFF;
     unsigned i = 0;
-    char *found = 0;
+    Area137 *found = 0;
     if (s->count != 0) {
-        int off = 0;
         do {
-            char *a = s->areas + off;
-            unsigned char hit;
+            Area137 *a = &s->areas[i];
+            int hit;
             if (a == s->cur)
-                hit = HitCheck__C5cAreaRC4cVecf(a, pos, *(float *)(a + 0x30));
+                hit = HitCheck__C5cAreaRC4cVecf(a, pos, a->f30);
             else
                 hit = HitCheck__C5cAreaRC4cVec(a, pos);
-            if (hit) {
-                if ((unsigned char)a[0x3E] < best) {
+            if ((unsigned char)hit) {
+                if (a->b3E < best) {
                     found = a;
-                    best = a[0x3E];
+                    best = a->b3E;
                 }
             }
             i++;
-            off += 0x6C;
         } while (i < s->count);
     }
     if (found != 0) {

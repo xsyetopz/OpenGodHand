@@ -163,7 +163,7 @@ static inline void markTask(int id)
 }
 
 // DRAFT: GAME 0x28E7C8
-// diff: register numbering (s0/s1 swapped) and id copied to a0 before bltz
+// diff: 19 words, s0/s1 swapped and id copied to a0 before bltz (orig keeps id in v0, reloads g_Sce into a0); tried inline helper vs local id, early return, temp ptr, operand-order variants: all 19-21
 extern "C" void func_0028E7C8(void *self)
 {
     startSoftEvent__9cScenario14eSoftEventType(g_Sce, 2);

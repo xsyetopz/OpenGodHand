@@ -56,13 +56,12 @@ extern "C" int func_002BA1C8(char *self, int n)
 extern "C" unsigned func_002BEDD8(void *);
 extern "C" char *func_002BEF08(void *, unsigned);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2BF078 - loop-back uses bnez+b instead of bnel with delay-slot arg setup (19 words)
+// FUNCTION: GAME 0x2BF078
 extern "C" int clearEmDeadFlag__9cRoomSaveUi(void *self, unsigned id)
 {
     unsigned i;
-    for (i = 0; i < func_002BEDD8(self);) {
-        char *r = func_002BEF08(self, i++);
+    for (i = 0; i < func_002BEDD8(self); i++) {
+        char *r = func_002BEF08(self, i);
         if (r && (unsigned char)r[0x13] == id) {
             r[0x14] = 0;
             return 1;
@@ -70,7 +69,6 @@ extern "C" int clearEmDeadFlag__9cRoomSaveUi(void *self, unsigned id)
     }
     return 0;
 }
-#endif
 
 extern "C" char *getUnit__13cSceAtManagerUi(void *, unsigned);
 extern "C" int func_002C0ED0(void *, int);

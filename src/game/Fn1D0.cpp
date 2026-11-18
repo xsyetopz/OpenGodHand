@@ -39,24 +39,25 @@ extern "C" void func_001DFD90(char *self)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1DF7D0 - gcc emits movz/other layout; orig: const in a1, movn a1,v0,f (19 words)
+// DRAFT: GAME 0x1DF7D0 - 13 words: gotos give the branch layout; orig copies f to v1, const in a1, movn a1,v0,v1; mine movz v0,v1,a1 (tried r/f reuse, ternary, !=0)
 extern "C" void func_001DF7D0(char *self, int f)
 {
     int x = D_00747A0C;
-    int a;
+    int c = f;
     int b;
-    if (x == 0 || x < 0 || x >= 7) {
-        a = 0x12;
-        b = -0x61;
-    } else {
-        a = 0x19;
-        b = -0x4F;
-    }
-    int r = a;
-    if (f) {
-        r = b;
-    }
-    SetLocalPosX__12CustomIDWorki(self + 0x440, r);
+    if (x == 0) goto lo;
+    if (x < 0) goto lo;
+    if (x < 7) goto mid;
+lo:
+    f = 0x12;
+    b = -0x61;
+    goto join;
+mid:
+    f = 0x19;
+    b = -0x4F;
+join:
+    if (c) f = b;
+    SetLocalPosX__12CustomIDWorki(self + 0x440, f);
 }
 #endif
 

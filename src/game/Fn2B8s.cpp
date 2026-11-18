@@ -214,14 +214,11 @@ extern "C" unsigned func_002BEDD8(char *);
 extern "C" unsigned char *func_002BEF08(char *, unsigned);
 
 // diff: loop is rotated differently (bnel with delay-slot arg setup in original)
-// DRAFT: GAME 0x2BEFE8
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2BEFE8
 extern "C" int setEmDeadFlag__9cRoomSaveUi(char *self, unsigned id)
 {
-    unsigned i = 0;
-    while (i < func_002BEDD8(self)) {
+    for (unsigned i = 0; i < func_002BEDD8(self); i++) {
         unsigned char *e = func_002BEF08(self, i);
-        i++;
         if (e && e[0x13] == id) {
             e[0x14] = 1;
             return 1;
@@ -229,8 +226,6 @@ extern "C" int setEmDeadFlag__9cRoomSaveUi(char *self, unsigned id)
     }
     return 0;
 }
-
-#endif
 
 // FUNCTION: GAME 0x2BEF60
 extern "C" unsigned char *func_002BEF60(char *self, unsigned id)
