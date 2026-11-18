@@ -1,132 +1,261 @@
-// Small free functions in 0x2F0000-0x30A2AF.
+// Unnamed units in 0x2F0000-0x2FFFFF: small constructors and helpers.
+struct espWork;
+extern "C" void *func_002B5E50();
+extern "C" void func_002B5CF0(void *, void *);
+extern "C" void *func_002B5C20(void *, int, int);
+extern "C" void *func_002FBCC8(void *);
+extern "C" void PushEsp__FP7espWork(espWork *);
+extern char D_0044FB60[], D_0044E090[];
 
-extern "C" {
-
-struct S2F_A { char _p0[4]; int m_04; int m_08; int m_0C; int m_10[1]; };
-struct S2F_Obj420 { char _p0[0x420]; float m_420; int m_424; };
-struct S2F_Obj400 { int m_400pad; };
-
-extern char D_00450080[];
-extern char D_0044FCF8[];
-struct S2F_E { int m_0; int m_4; int m_8; int m_C; };
-void func_0030F5A0(char *a);
-void func_002FB7B0(int a);
-void func_00300C00(int a, int b);
-void func_003028E8(char *a);
-
-int func_003069A8(void *a, unsigned b, void **c);
-int func_002F7110(int a);
-int func_002F7CD8(int a);
-int func_002FBCC8(int a);
-int func_002E3480(int a);
-int func_002E81D8(int a);
-int func_002FBE88(int a, int b, int c, int d);
-int func_00306AA8(int a, int b, int c, int d);
-
-// FUNCTION: GAME 0x003069E8
-int func_003069E8(char *a, int b, int *c, int *d) {
-    *c = (int)(a + *(int *)(a + 4));
-    *d = (int)(a + *(int *)(a + 8));
-    return 1;
+// FUNCTION: GAME 0x2FBE50
+extern "C" void func_002FBE50(void *self)
+{
+    func_002B5CF0(self, func_002B5E50());
+    PushEsp__FP7espWork((espWork *)self);
 }
 
-// FUNCTION: GAME 0x00306A48
-int func_00306A48(char *a, unsigned b, int *c) {
-    *c = 0;
-    if (b >= *(unsigned *)(a + 4))
-        return 0;
-    int *t = (int *)(a + 0x10);
-    int o = t[b];
-    if (o == 0)
-        return 0;
-    *c = (int)(a + o);
-    return 1;
+// FUNCTION: GAME 0x2FBD98
+extern "C" void *func_002FBD98(void *self)
+{
+    func_002B5C20(self, 0, 0);
+    *(char **)((char *)self + 0xF0) = D_0044FB60;
+    return self;
 }
 
-// FUNCTION: GAME 0x00306A08
-int func_00306A08(char *a, unsigned b, void **c) {
-    *c = 0;
-    char *p = a + *(int *)(a + 0xC);
-    if (b >= *(unsigned *)(p + 4))
-        return 0;
-    return func_003069A8(p, b, c);
+// FUNCTION: GAME 0x2FFA90
+extern "C" void *func_002FFA90(void *self)
+{
+    if (self) {
+        func_002FBCC8(self);
+        *(char **)((char *)self + 0xF0) = D_0044E090;
+    }
+    return self;
 }
 
-// FUNCTION: GAME 0x00306A88
-int func_00306A88(int a, int b, int c, int d) { return func_00306AA8(a, b, c, d); }
+extern "C" void func_002FBE28(void *, int);
+extern void ReleaseObj__FP4cObj(void *);
+extern char D_0044EE38[], D_0044F4F8[], D_0044F6D8[], D_0044F448[];
+#define CTOR(NAME, VT) \
+extern "C" void *NAME(char *self) \
+{ \
+    func_002FBCC8(self); \
+    *(void **)(self + 0x2B0) = 0; \
+    *(float *)(self + 0x2D4) = 1.0f; \
+    *(char **)(self + 0xF0) = VT; \
+    *(void **)(self + 0x2B4) = 0; \
+    *(void **)(self + 0x2B8) = 0; \
+    *(void **)(self + 0x2BC) = 0; \
+    *(void **)(self + 0x2C0) = 0; \
+    *(void **)(self + 0x2C4) = 0; \
+    *(void **)(self + 0x2C8) = 0; \
+    *(void **)(self + 0x2D8) = 0; \
+    *(void **)(self + 0x2DC) = 0; \
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv *)(self + 0x2F0))); \
+    return self; \
+}
+struct Qv { float f[4]; };
 
-// FUNCTION: GAME 0x003052E8
-int func_003052E8(int a, int b, int c, int d) { return func_002FBE88(a, b, c, d); }
-
-// FUNCTION: GAME 0x00305A18
-char *func_00305A18(char *a) {
-    *(char **)(a + 0x424) = D_00450080;
-    *(float *)(a + 0x420) = 1.0f;
-    return a;
+// FUNCTION: GAME 0x2F27E8
+extern "C" void func_002F27E8(char *self, int a)
+{
+    *(char **)(self + 0xF0) = D_0044EE38;
+    char *o = *(char **)(self + 0x2B0);
+    if (o) {
+        *(unsigned *)(o + 0x250) |= 2;
+        ReleaseObj__FP4cObj(*(void **)(self + 0x2B0));
+    }
+    func_002FBE28(self, a);
 }
 
-// FUNCTION: GAME 0x00305BC0
-void func_00305BC0(unsigned *a) {
-    a[0x414 / 4] = 0;
-    a[0x400 / 4] = 0;
-    a[0x404 / 4] = 0;
-    a[0x408 / 4] = 0xFFFFFFFFu;
-    a[0x40C / 4] = 0xFFFFFFFFu;
+// FUNCTION: GAME 0x2F61C8
+CTOR(func_002F61C8, D_0044F4F8)
+
+// FUNCTION: GAME 0x2F7110
+CTOR(func_002F7110, D_0044F6D8)
+
+
+// FUNCTION: GAME 0x2F56C0
+extern "C" void *func_002F56C0(char *self)
+{
+    func_002FBCC8(self);
+    *(void **)(self + 0x2B0) = 0;
+    *(float *)(self + 0x2D4) = 1.0f;
+    *(char **)(self + 0xF0) = D_0044F448;
+    *(void **)(self + 0x2B4) = 0;
+    *(void **)(self + 0x2B8) = 0;
+    *(void **)(self + 0x2BC) = 0;
+    *(void **)(self + 0x2C0) = 0;
+    *(void **)(self + 0x2C4) = 0;
+    *(void **)(self + 0x2C8) = 0;
+    *(void **)(self + 0x2D8) = 0;
+    *(void **)(self + 0x2DC) = 0;
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv *)(self + 0x300)));
+    *(void **)(self + 0x2F0) = 0;
+    return self;
 }
 
-// FUNCTION: GAME 0x00300060
-int func_00300060(int a) { int r = a; if (a) r = func_002F7110(a); return r; }
+struct cVec { float x, y, z, w; };
+extern "C" void func_002B6160(cVec *, void *);
 
-// FUNCTION: GAME 0x00300088
-int func_00300088(int a) { int r = a; if (a) r = func_002F7CD8(a); return r; }
-
-// FUNCTION: GAME 0x002FFA68
-int func_002FFA68(int a) { int r = a; if (a) r = func_002FBCC8(a); return r; }
-
-// FUNCTION: GAME 0x002FFB10
-int func_002FFB10(int a) { int r = a; if (a) r = func_002E3480(a); return r; }
-
-// FUNCTION: GAME 0x002FFBD0
-int func_002FFBD0(int a) { int r = a; if (a) r = func_002E81D8(a); return r; }
-
-// FUNCTION: GAME 0x003057A0
-void func_003057A0(S2F_E *e) {
-    for (unsigned i = 0; i < 0x40; i++) {
-        e->m_0 = 5;
-        e->m_4 = 0;
-        e->m_8 = 0;
-        e->m_C = 0;
-        e++;
+// FUNCTION: GAME 0x2F2758
+extern "C" void func_002F2758(char *self)
+{
+    char *a = *(char **)(self + 0x2B0);
+    if (a && *(char **)(self + 0x114)) {
+        if (*(unsigned *)(*(char **)(self + 0x114) + 0x250) & 2)
+            *(unsigned *)(a + 0x250) |= 2;
+        else
+            *(unsigned *)(a + 0x250) &= ~2u;
+        if (*(unsigned *)(*(char **)(self + 0x114) + 0x250) & 0x8000)
+            *(unsigned *)(*(char **)(self + 0x2B0) + 0x250) |= 0x8000;
+        else
+            *(unsigned *)(*(char **)(self + 0x2B0) + 0x250) &= ~0x8000u;
     }
 }
 
-// FUNCTION: GAME 0x003058D8
-S2F_E *func_003058D8(S2F_E *e, int k) {
-    for (unsigned i = 0; i < 0x40; i++) {
-        if (e->m_0 == k)
-            return e;
-        e++;
+static inline void cpv2(cVec *d, const cVec *q)
+{
+    if (d != q) {
+        d->x = q->x;
+        d->y = q->y;
+        d->z = q->z;
     }
+}
+
+// FUNCTION: GAME 0x2F6B40
+extern "C" int func_002F6B40(char *self)
+{
+    cVec p;
+    func_002B6160(&p, self);
+    cpv2((cVec *)(self + 0x2B0), &p);
+    *(float *)(self + 0x2C0) = (float)*(unsigned char *)(*(char **)(self + 0x110) + 0x18C) * 0.01f;
+    return 1;
+}
+
+// FUNCTION: GAME 0x2F9D30
+extern "C" int func_002F9D30(char *self)
+{
+    float v = *(float *)(*(char **)(self + 0x110) + 0x13C);
+    if (v == 0.0f)
+        *(float *)(self + 0x2B0) = 30.0f;
+    else
+        *(float *)(self + 0x2B0) = v;
+    v = *(float *)(*(char **)(self + 0x110) + 0x148);
+    if (v == 0.0f)
+        *(float *)(self + 0x2B8) = 3.0f;
+    else
+        *(float *)(self + 0x2B8) = v;
+    char *o = *(char **)(self + 0x110);
+    if (*(float *)(o + 0x14C) == 0.0f)
+        *(float *)(self + 0x2BC) = 40.0f;
+    else
+        *(float *)(self + 0x2BC) = *(float *)(o + 0x148);
+    *(int *)(self + 0x2B4) = *(signed char *)(*(char **)(self + 0x110) + 0x18C);
+    return 1;
+}
+
+#ifdef NONMATCHING
+static inline int slotAt(char *p, int i)
+{
+    int n = *(unsigned char *)(p + 0x2B4);
+    int *pn = &n;
+    (void)pn;
+    if (i >= 0 && i < n)
+        return (*(int **)(p + 0x278))[i];
     return 0;
 }
 
-// FUNCTION: GAME 0x00305A38
-void func_00305A38(char *a, int b) {
-    *(char **)(a + 0x424) = D_00450080;
-    if (b & 1)
-        func_0030F5A0(a);
+// DRAFT: GAME 0x2F53A8 (~27 words off: reg alloc / spill order)
+extern "C" int func_002F53A8(char *self)
+{
+    char *h = *(char **)(self + 0x110);
+    char *p = *(char **)(self + 0x114);
+    *(int *)(self + 0x2B0) = *(signed char *)(h + 0x18C);
+    if (!p)
+        return 0;
+    if (!slotAt(p, *(signed char *)(h + 0xBE)))
+        return 0;
+    return slotAt(*(char **)(self + 0x114), *(int *)(self + 0x2B0)) != 0;
+}
+#endif
+
+#ifdef NONMATCHING
+// diff: original returns a0 copied into v0 before the null test and the call result is discarded (3 probes: void, return self, return callee).
+extern "C" void *func_002E3480(void *);
+extern "C" void *func_002E81D8(void *);
+#define WRAP(NAME, CALLEE) \
+extern "C" void *NAME(void *self) \
+{ \
+    if (self) \
+        return CALLEE(self); \
+    return self; \
 }
 
-// FUNCTION: GAME 0x00306140
-void func_00306140(void) {
-    func_002FB7B0(0x20);
-    func_00300C00(0x20, 1);
-}
+// DRAFT: GAME 0x2FFA68
+WRAP(func_002FFA68, func_002FBCC8)
 
-// FUNCTION: GAME 0x00304F58
-void func_00304F58(char *a) {
-    *(char **)(a + 0xF0) = D_0044FCF8;
-    func_003028E8(a);
-}
+// DRAFT: GAME 0x2FFB10
+WRAP(func_002FFB10, func_002E3480)
 
+// DRAFT: GAME 0x2FFBD0
+WRAP(func_002FFBD0, func_002E81D8)
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2FEBE8
+// diff: 7 words; original hoists lhu 0x224 above the mode==1 test.
+extern "C" void func_002FEBE8(char *self, unsigned short a, int mode)
+{
+    unsigned short *p = (unsigned short *)(self + 0x22C);
+    if (*p == 0) {
+        *p = a;
+        return;
+    }
+    int b = *(unsigned short *)(self + 0x224);
+    if (mode == 1 || (mode == 0 && (int)(*p - b) < a))
+        *p = a + b;
 }
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2FEB18
+// diff: 2 words; the |/|| int result gets a dsll32/dsra32 sign-extension the original lacks (3 probes).
+extern "C" void func_002FEB18(char *self)
+{
+    long f = *(int *)(self + 0x11C);
+    if (!(f & 0x800000)) {
+        char *o = *(char **)(self + 0x114);
+        if (!o || !(*(unsigned *)(o + 0x250) & 2) || (int)(((unsigned long)f >> 7) & 1)) {
+            char *vt = *(char **)(self + 0xF0);
+            ((void (*)(char *))*(int *)(vt + 0x84))(self + *(short *)(vt + 0x80));
+        }
+    }
+}
+#endif
+
+#ifdef NONMATCHING
+static inline unsigned char isEsp(int id)
+{
+    if (id < 0x500)
+        return 0;
+    return id < 0x600;
+}
+struct ObjVec { int pad; char **b; char **e; };
+extern ObjVec *objArray;
+
+// DRAFT: GAME 0x2FA470
+// diff: ~10 words; original keeps the range test in a3 (slti/bnez/daddu pattern) and reloads objArray via t1; ours uses movn or a different phi (3 probes).
+extern "C" void func_002FA470(int on)
+{
+    for (char **i = objArray->b; i != objArray->e; i++) {
+        char *o = *i;
+        int id = *(unsigned short *)(o + 0x2FE);
+        if (isEsp(id)) {
+            if (on)
+                *(unsigned *)(o + 0x250) |= 0x8000;
+            else
+                *(unsigned *)(o + 0x250) &= 0xFFFF7FFF;
+        }
+    }
+}
+#endif

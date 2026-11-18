@@ -145,3 +145,75 @@ extern "C" void func_0037CE20(void)
     }
 }
 #endif
+
+extern "C" void *memset(void *, int, unsigned);
+
+// FUNCTION: GAME 0x374D98
+extern "C" void func_00374D98(short a, short b, short *p)
+{
+    memset(p, 0, 0x30);
+    p[1] = b;
+    p[0] = a;
+    ((unsigned short *)p)[7] = 0x8000;
+}
+
+// FUNCTION: GAME 0x386F38
+extern "C" void func_00386F38(short a, short b, short *p)
+{
+    memset(p, 0, 0x60);
+    p[1] = b;
+    p[0] = a;
+    ((unsigned short *)p)[7] = 0x8000;
+}
+
+struct Fn38Hd { int m_00; };
+extern "C" int func_00373A50(void *);
+extern "C" int func_0032DCD0(int, int);
+
+// FUNCTION: GAME 0x373B30
+extern "C" int func_00373B30(char *o)
+{
+    if (func_00373A50(o) == 0)
+        return 0;
+    return *(int *)(o + 0x58);
+}
+
+// FUNCTION: GAME 0x374170
+extern "C" int func_00374170(Fn38Hd *o)
+{
+    if (o->m_00 == 0)
+        return 0;
+    return func_00329F98(o->m_00);
+}
+
+// FUNCTION: GAME 0x374928
+extern "C" int func_00374928(Fn38Hd *o)
+{
+    if (o->m_00 == 0)
+        return 0;
+    return ((int (*)(int))func_0032DCD0)(o->m_00);
+}
+
+struct Fn38Sx { unsigned short m_00; short m_02; int m_04; char _p08[0xA]; short m_12; };
+// FUNCTION: GAME 0x3761D0
+extern "C" void func_003761D0(char *o)
+{
+    Fn38Sx *p = (Fn38Sx *)(o + 0x40);
+    int i;
+    for (i = 0; i < 8; i++) {
+        p->m_02 = i;
+        p->m_00 = 0;
+        p->m_04 = 0;
+        p->m_12 = 0;
+        p++;
+    }
+}
+
+struct Fn38Cp { char b[16]; } __attribute__((packed));
+extern Fn38Cp D_0076A7B8;
+
+// FUNCTION: GAME 0x375600
+extern "C" void SdeSystemVolGet(Fn38Cp *d)
+{
+    *d = D_0076A7B8;
+}

@@ -42,6 +42,7 @@ public:
     void SetOffsetPosY(int);
     void SetOffsetPosXY(int, int);
     void SetScaleAnimNormal(float, float, unsigned short);
+    void SetScaleAnimSin(float, float, unsigned short);
     void ResetScaleAnim();
     void SetMoveOffsetPosX(int, int, unsigned short);
     void SetMoveOffsetPosXSin(int, unsigned short);

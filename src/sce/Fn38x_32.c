@@ -49,15 +49,3 @@ void func_0038A5A8(int a, char b)
 {
     func_003885B0(a, b);
 }
-
-// FUNCTION: GAME 0x38B460
-void func_0038B460(int a, char b)
-{
-    func_0038CD18(a, b);
-}
-
-// FUNCTION: GAME 0x38BA68
-void func_0038BA68(int a, char b)
-{
-    func_0038E138(a, b);
-}

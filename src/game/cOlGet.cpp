@@ -292,14 +292,3 @@ extern "C" void *func_0018EE58()
     }
     return &D_00785BB8;
 }
-
-// FUNCTION: GAME 0x18F0C0
-extern "C" void *func_0018F0C0()
-{
-    if (D_00785BC8 == 0) {
-        func_001BD528();
-        func_0031EEA8(&D_00785BC8, D_00423DF0, D_007859B8);
-    }
-    return &D_00785BC8;
-}
-

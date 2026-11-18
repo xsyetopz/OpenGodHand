@@ -122,4 +122,10 @@ public:
     sSaveData *m_save;
 };
 
+extern unsigned int D_00747A34;
+extern unsigned int D_00747A3C;
+extern unsigned int D_00747A38;
+extern unsigned int D_00747A2C;
+extern int D_003BF160[5];
+
 #endif

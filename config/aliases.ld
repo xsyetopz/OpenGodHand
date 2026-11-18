@@ -19,21 +19,45 @@ func_003885B0 = __ls__7ostreamc;
 func_00388A00 = __ls__7ostreami;
 
 /* Callees of src/sce/libio/iostream.cc under the names libio gives them. */
-_IO_getc = func_0038EAE0;
-_IO_putc = func_0038EB28;
-_IO_seekoff = func_0038E3F0;
-_IO_seekpos = func_0038E490;
-_IO_sgetn = func_0038C9E8;
-__underflow = func_0038C5B8;
-close__7filebuf = func_0038F020;
 do_osfx__7ostream = func_00389548;
-ignore__9streambufi = func_0038B168;
 read_int__FR7istreamRUxRi = func_00387CD8;
 scan__7istreamPCce = func_0038ADC8;
 skip_ws__FP9streambuf = func_003875A8;
-sputbackc__9streambufc = func_0038B460;
 write_int__FR7ostreamUxi = func_00388660;
 _vt$3ios = 0x0045D340;
 _vt$7istream$3ios = 0x0045D168;
 _vt$7ostream$3ios = 0x0045D178;
 _vt$8iostream$3ios = 0x0045D158;
+
+/* Compiled C callers of units that src/sce/libio now names (streambuf, genops, filebuf, fileops, io*). */
+func_0038B0B0 = __overflow__FP9streambufi;
+func_0038B168 = ignore__9streambufi;
+func_0038BA10 = sputc__9streambufi;
+func_0038C9E8 = _IO_sgetn;
+func_0038CD18 = _IO_sputbackc;
+func_0038CFC0 = _IO_init_marker;
+func_0038EAE0 = _IO_getc;
+func_0038EB28 = _IO_putc;
+
+/* Callees of the libio sources above under the names libio gives them. */
+_IO_default_setbuf = func_0038CB28;
+_IO_default_xsputn = func_0038C8B0;
+_IO_do_write = func_00392A80;
+_IO_file_attach = func_00392998;
+_IO_file_doallocate = func_00392CD0;
+_IO_file_fopen = func_00392830;
+_IO_file_overflow = func_00392BA0;
+_IO_file_read = func_00393230;
+_IO_file_sync = func_00392F00;
+_IO_file_underflow = func_00392E48;
+_IO_file_write = func_003932B8;
+_IO_padn = func_0038E138;
+__rtti_si = func_0031EEA8;
+__rtti_user = func_0031EEC8;
+__throw = func_00320E18;
+close = func_003B0388;
+fstat = func_003B0450;
+lseek = func_003B0390;
+sync_with_stdio__3iosi = func_0038AFB0;
+terminate__Fv = func_003211E0;
+__errno = func_003A4FB8;

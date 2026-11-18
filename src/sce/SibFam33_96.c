@@ -114,3 +114,35 @@ void func_00325FD8(void) { if (D_00755C28.fn) D_00755C28.fn(D_00755C28.arg); }
 
 // FUNCTION: GAME 0x33BFE8
 void func_0033BFE8(void) { if (D_007588C8.fn) D_007588C8.fn(D_007588C8.arg); }
+
+// Fourth skeleton group: guarded indirect callbacks on a pointer field, tail wrappers, global getters.
+extern void (*D_003E9D1C)(int);
+extern void (*D_003E9D24)(int);
+extern void (*D_003E9D2C)(int);
+void func_003282D0(int);
+void func_00327FA8(int);
+void func_00357490(int);
+void func_00359800(int);
+int *func_00320360(void);
+int *func_00360D18(void);
+
+// FUNCTION: GAME 0x33C290
+void func_0033C290(int *a) { int p = a[0xC0 / 4]; if (p) D_003E9D1C(p); }
+
+// FUNCTION: GAME 0x33C428
+void func_0033C428(int *a) { int p = a[0xB4 / 4]; if (p) D_003E9D24(p); }
+
+// FUNCTION: GAME 0x33C4E8
+void func_0033C4E8(int *a) { int p = a[0xB4 / 4]; if (p) D_003E9D2C(p); }
+
+// FUNCTION: GAME 0x349B60
+void func_00349B60(int a) { func_003282D0(a); func_00327FA8(a); }
+
+// FUNCTION: GAME 0x357468
+void func_00357468(int a) { func_00357490(a); func_00359800(a); }
+
+// FUNCTION: GAME 0x321268
+int func_00321268(void) { return *func_00320360(); }
+
+// FUNCTION: GAME 0x360D50
+int func_00360D50(void) { return *func_00360D18(); }

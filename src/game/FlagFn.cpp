@@ -164,3 +164,72 @@ extern "C" void func_002C33D8(char *self)
         self[0x14] = 0;
     }
 }
+
+extern char Fade[];
+extern "C" void start__9classFADEUiUiUiUiUiUi(void *, unsigned, unsigned, unsigned, unsigned, unsigned, unsigned);
+
+// FUNCTION: GAME 0x296738
+extern "C" void func_00296738(void)
+{
+    if (*(int *)D_00747A2C >= 0) {
+        unsigned long f = D_00586B34;
+        unsigned long a = (f >> 1) & 1;
+        if (a) {
+            return;
+        }
+        unsigned long b = (f >> 2) & 1;
+        if (b) {
+            return;
+        }
+        unsigned long c = (f >> 3) & 1;
+        if (c) {
+            return;
+        }
+        start__9classFADEUiUiUiUiUiUi(Fade, 0, 10, 0, 0, 0xFF000000, 15);
+    }
+}
+
+extern void *NowLoading;
+extern "C" void func_00297128(void *);
+extern "C" int func_00297AA8(void *);
+extern "C" void Set_bg_mode__FUiUcUcUc(unsigned, unsigned char, unsigned char, unsigned char);
+extern "C" void executeTask__11cNowLoading(void *);
+extern "C" void startReleaseObj__6cEvent(void *);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x297038 - 47 words differ: flag tests give beqz+nop where the original has bnel; case layout differs
+extern "C" void func_00297038(char *self)
+{
+    int fl = *(int *)(self + 8);
+    unsigned long f = fl;
+    unsigned long b = (f >> 7) & 1;
+    if (b && (fl & 0x100)) {
+        goto body;
+    }
+    func_00297128(self);
+    return;
+body:
+    switch (self[5]) {
+    case 0: {
+        unsigned long g = D_00586B34;
+        unsigned long h = (g >> 6) & 1;
+        if (!h) {
+            start__9classFADEUiUiUiUiUiUi(Fade, 0, 8, 0, 0xFF000000, 0xFF000000, 0);
+            Set_bg_mode__FUiUcUcUc(1, 0, 0, 0);
+            executeTask__11cNowLoading(NowLoading);
+        }
+        startReleaseObj__6cEvent(self);
+        self[5] = (unsigned char)self[5] + 1;
+        break;
+    }
+    case 8:
+        if (func_00297AA8(self)) {
+            func_00297128(self);
+        }
+        break;
+    default:
+        self[5] = (unsigned char)self[5] + 1;
+        break;
+    }
+}
+#endif

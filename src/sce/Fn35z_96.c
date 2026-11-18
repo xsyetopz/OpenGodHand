@@ -106,3 +106,164 @@ int func_0034C2D0(char *a, int b, int *c, int d)
     return 0;
 }
 #endif
+
+int func_003417F0();
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x341900 gcc hoists the 3 sh stores above the sw stores (original: sw first, sw 0x34 in bgezl delay slot); 22 words
+int func_00341900(char *a, int b, int c)
+{
+    short r[4];
+    int *w = (int *)a;
+    short *h = (short *)a;
+    h[1] = 1;
+    if (func_003417F0(b, c, r, a + 0xC, a + 0xD, a + 0xF, a + 0xE, a + 0x14, a + 0x18, a + 0x10, r + 2) < 0)
+        return 0;
+    w[0x34 / 4] = 0;
+    w[0x30 / 4] = 0;
+    w[0x2C / 4] = 0;
+    w[0x28 / 4] = 0;
+    w[0x20 / 4] = 0;
+    h[0x1C / 2] = 0;
+    h[0x26 / 2] = 0;
+    h[0x24 / 2] = 0;
+    w[0x50 / 4] = a[0xE];
+    w[0x54 / 4] = a[0xF];
+    h[0x9C / 2] = (unsigned short)r[2];
+    w[0x5C / 4] = w[0x3C / 4];
+    h[0x98 / 2] = 4;
+    w[0x58 / 4] = *(int *)(a + 0x10);
+    w[0x60 / 4] = w[0x40 / 4];
+    w[0x64 / 4] = w[0x44 / 4];
+    w[0x8C / 4] = 0;
+    w[0x88 / 4] = 0;
+    return r[0];
+}
+#endif
+
+int func_003500E8();
+void func_0034D3E8();
+void func_00350040();
+int func_00350048();
+
+// FUNCTION: GAME 0x34FF98
+int func_0034FF98(char *a)
+{
+    int *s0 = (int *)func_003500E8(a);
+    int *s2;
+    char *s3;
+    int r;
+    if (!s0)
+        return 0;
+    if (!s0[0])
+        return 0;
+    s2 = *(int **)(a + 0x1F7C);
+    func_0034D3E8(a);
+    func_00350040(a);
+    s3 = a + 0xD30;
+    r = func_00350048(a, s2, s0);
+    if (r)
+        return r;
+    s2[0x2C / 4] = s0[0x28 / 4];
+    *(long long *)(s3 + 0x150) = *(long long *)((char *)s0 + 0x18);
+    s2[0x30 / 4] = s0[0x2C / 4];
+    *(long long *)((char *)s2 + 0x10) = *(long long *)((char *)s0 + 0x20);
+    return r;
+}
+
+void *memcpy(void *, const void *, unsigned int);
+void func_00354430();
+void func_003542B8();
+
+// FUNCTION: GAME 0x354210
+void func_00354210(char *a, int *b, int c)
+{
+    int buf[3];
+    char *s2 = *(char **)(a + 0x1FC0);
+    if ((unsigned)(b[0x74 / 4] - 1) < 2)
+        func_00354430(s2 + 0x1094, b[0x54 / 4]);
+    func_003542B8(c, buf, buf + 1, buf + 2);
+    if (buf[0] == 3) {
+        memcpy(*(void **)b[0x54 / 4], (void *)buf[1], buf[2]);
+        ((int *)b[0x54 / 4])[1] = buf[2];
+    } else
+        func_00354430(b[0x54 / 4], s2 + 0x1094);
+}
+
+int func_0035EA88();
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x35F5F0 gcc CSEs d+e*16 into one reg; original keeps d (s1) and e*16 (s0) separate and adds twice
+void func_0035F5F0(int *a, int *b, int c, char *d, int e)
+{
+    int off = e * 16;
+    int v;
+    *(int *)(d + off + 4) = c;
+    *(int *)(d + off + 8) = b[0x44 / 4];
+    if (func_0035EA88(a, b[0x44 / 4]) == 1)
+        *(int *)(d + off + 12) = b[0x48 / 4] / 2;
+    else
+        *(int *)(d + off + 12) = b[0x48 / 4];
+    v = a[2];
+    if (!v)
+        v = b[0x44 / 4];
+    *(int *)(d + off + 16) = v;
+}
+#endif
+
+int func_00348968();
+void func_00348C78();
+void func_00348498();
+void func_003483F8();
+void func_003482C8();
+
+// FUNCTION: GAME 0x348870
+void func_00348870(int *a)
+{
+    int s1, s3;
+    int **s2;
+    if (func_00348968(a) == 1) {
+        s1 = a[0x1C / 4];
+        s3 = a[1];
+        s2 = (int **)a[0x14 / 4];
+        if (s1) {
+            func_00348C78();
+            func_00348498(a);
+            a[0] = 0;
+            func_003483F8(s3, s1);
+            ((void (*)(int **))(*s2)[3])(s2);
+            a[0x1C / 4] = 0;
+            func_003482C8(s3);
+        }
+    }
+}
+
+extern char D_00459748[];
+void func_0039AA38();
+void func_00355C88();
+void func_00356648();
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3566E8 v0/v1 swap and bnel vs bnez: constant 1 return kept in v0 by the original (5 words)
+int func_003566E8(int a, int b, char *c)
+{
+    char *base = *(char **)(c + 0x1FC0);
+    int r = 1;
+    int *s1 = (int *)(base + 0x1128);
+    int *s0 = (int *)(base + 0x1198);
+    if (s1[0x18 / 4] == 1) {
+        func_0039AA38(base + 0x1150);
+        return r;
+    }
+    func_00355C88(s0);
+    if (s1[0x14 / 4]) {
+        if (!s0[0x10 / 4]) {
+            s1[0x18 / 4] = 1;
+            func_00356648(s0, D_00459748, 0x10);
+            s0[0x14 / 4] = s0[0x18 / 4];
+            func_00355C88(s0);
+        }
+    }
+    return r;
+}
+#endif

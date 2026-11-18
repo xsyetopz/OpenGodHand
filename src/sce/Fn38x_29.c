@@ -30,20 +30,6 @@ int func_0039AE78(struct Obj39 *o)
     return 1;
 }
 
-// FUNCTION: GAME 0x38B530
-int func_0038B530(void)
-{
-    *func_003A4FB8() = 5;
-    return -1;
-}
-
-// FUNCTION: GAME 0x38B578
-void *func_0038B578(void *p)
-{
-    func_0038CFC0(p);
-    return p;
-}
-
 #ifdef NONMATCHING
 // DRAFT: GAME 0x38B0B0
 // diff: 5 words, register allocation of the vtable slot ($v0 vs $a1) and the adjust ($a2 vs $v1)
@@ -58,26 +44,6 @@ void func_0038B0B0(char *o)
     vt->fn(o + vt->adj);
 }
 #endif
-
-// FUNCTION: GAME 0x38C3F0
-void func_0038C3F0(char *o)
-{
-    struct VT {
-        char pad[0x14];
-        void (*fn)(char *);
-    } *vt = *(struct VT **)(o + 0x50);
-    vt->fn(o);
-}
-
-// FUNCTION: GAME 0x38C9E8
-void func_0038C9E8(char *o)
-{
-    struct VT {
-        char pad[0x3C];
-        void (*fn)(char *);
-    } *vt = *(struct VT **)(o + 0x50);
-    vt->fn(o);
-}
 
 int func_00399910(void);
 

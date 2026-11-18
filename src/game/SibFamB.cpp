@@ -133,26 +133,6 @@ void *func_002CDA08(void *self)
     return self;
 }
 
-// FUNCTION: GAME 0x38BB48
-struct SFB_F { int f; };
-void func_0038BB48(SFB_F *self, int on)
-{
-
-    if (on)
-        self->f |= 0x200;
-    else
-        self->f &= ~0x200;
-}
-
-// FUNCTION: GAME 0x38BB70
-void func_0038BB70(SFB_F *self, int on)
-{
-
-    if (on)
-        self->f |= 2;
-    else
-        self->f &= ~2;
-}
 }
 
 class cFnZb;

@@ -289,13 +289,3 @@ void func_00346B78(int a)
     else
         func_00359EC0(0, 0x3D, a);
 }
-
-// FUNCTION: GAME 0x3489B0
-void func_003489B0(void)
-{
-    func_0033BE80();
-    D_00760D80 = 0;
-    D_00760D84 = 0;
-    D_00760D88 = 0;
-    D_00760D8C = 0;
-}
