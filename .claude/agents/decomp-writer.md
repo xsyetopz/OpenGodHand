@@ -27,7 +27,8 @@ You turn free asm units of God Hand into C++ for SN ProDG ee-gcc 2.95.3-136 (`-O
 
 ## Finishing
 
-- MATCH: `// FUNCTION: GAME 0xADDR` on the line above the definition.
+- While in progress, a function sits under `#ifdef NONMATCHING` tagged `// DRAFT: GAME 0xADDR`; `fncmp.py` compiles drafts. The gate snapshots the working tree at any moment, and a `FUNCTION` tag on unfinished code blocks every commit.
+- MATCH: `// FUNCTION: GAME 0xADDR` on the line above the definition, written only after `fncmp.py -q` exits 0.
 - No match within the budget: the function goes under `#ifdef NONMATCHING` tagged `// DRAFT: GAME 0xADDR` with a one-line note: differing words, what differs, variants tried. The saved form is the closest one found, and its count comes from a final `fncmp.py` run on the file as saved.
 - `.venv/bin/python tools/claimed.py` prints nothing, and every other function in an edited file still reports MATCH.
 - No commits, no edits under `tools/`. Tool bugs and permission denials go into the report unworked-around.

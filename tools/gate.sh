@@ -37,6 +37,10 @@ while true; do
       C=$(git commit-tree "$T" -p "$P" -m snapshot)
       cd "$G"
       git checkout -q -f --detach "$C" && git clean -fdq -- src include config
+      # The linker reads splat's generated undefined-symbol lists, which live only in the main build/.
+      mkdir -p build && for f in undefined_funcs_auto.txt undefined_syms_auto.txt; do
+        [ -e "$R/build/$f" ] && cp "$R/build/$f" "build/$f"
+      done
       if ! .venv/bin/python tools/configure.py > "$L" 2>&1; then echo "configure failed $(date +%T): $(tail -1 "$L")"; sleep 90; continue; fi
       if ninja -j8 > "$L" 2>&1 && grep -q "SLUS_215.03: OK" "$L" && [ -z "$(awk -F'\t' '$2=="differ"' build/linkgen.tsv)" ] && [ -z "$(.venv/bin/python tools/claimed.py 2>&1)" ]; then
         n=$(grep -o "linkgen: [0-9]* compiled" "$L")

@@ -1,4 +1,7 @@
-"""List free asm units: neither claimed by a FUNCTION tag nor held as a DRAFT.
+"""List free game-code asm units: neither claimed by a FUNCTION tag nor held as a DRAFT.
+
+Units that objdiff_config.region() places outside the Game category (SDK, CRI,
+libc) are never listed, since only game code is decompiled.
 
 Usage: census.py [--all] 0xLO 0xHI [MINSZ MAXSZ]
 
@@ -14,6 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import claimed  # noqa: E402
+import objdiff_config  # noqa: E402
 
 
 def is_real(addr):
@@ -39,7 +43,10 @@ def main(argv):
     )
     dropped = 0
     taken = set(claimed.claims()) | set(claimed.drafts())
+    listed = objdiff_config.game_units()
     for a, b in zip(names, names[1:]):
+        if objdiff_config.region(a, listed) != "game":
+            continue
         if lo <= a < hi and a not in taken and mn <= b - a <= mx:
             if show_all or is_real(a):
                 print(f"0x{a:06X} {b - a}")

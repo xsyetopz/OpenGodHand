@@ -22,6 +22,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import configure  # noqa: E402
 import claimed as claimed_mod  # noqa: E402
+import objdiff_config  # noqa: E402
 
 
 def skeleton(path):
@@ -52,6 +53,8 @@ def main():
     claimed = {x for al in configure.read_sources().values() for x in al}
     # Drafted units belong to decomp-worker, so they are neither free nor anchors.
     drafted = set(claimed_mod.drafts())
+    # SDK, CRI and libc units stay asm or come from upstream, so only Game units are free.
+    listed = objdiff_config.game_units()
     groups = collections.defaultdict(list)
     for addr, size, name in configure.read_units():
         if name.startswith("frag_") or size < 0x20:
@@ -63,7 +66,8 @@ def main():
     rows = []
     for key, units in groups.items():
         anchors = [x for x in units if x in matched or x in claimed]
-        free = [x for x in units if x not in matched and x not in claimed and x not in drafted]
+        free = [x for x in units if x not in matched and x not in claimed and x not in drafted
+                and objdiff_config.region(x, listed) == "game"]
         if anchors and free and len(key) > a.min_len:
             rows.append((len(free), len(key), min(anchors), sorted(free)))
     rows.sort(reverse=True)
