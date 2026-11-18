@@ -1,3 +1,11 @@
+extern unsigned long Sys[];
+extern char Snd[];
+extern "C" void SetBgmState__4cSnd9eBgmState(char *, int);
+extern "C" void func_001DEF48(char *, int);
+extern "C" void func_001DF048(char *, int);
+extern "C" void func_001DEFC8(char *, int);
+extern "C" void func_001DF0F0(char *, int);
+extern "C" void SeCall__4cSnd6eSeBlksssUii(char *, int, int, int, int, int, int);
 extern "C" void func_001DE7C8(char *, int);
 extern "C" void func_001DE088(char *, int);
 extern "C" void func_001DE170(char *, int);
@@ -54,6 +62,60 @@ extern "C" void func_001DA4E8(char *self)
             *(unsigned char *)(self + 0x3025) = 0;
             *(unsigned char *)(self + 0x3024) = 0xD;
         }
+        break;
+    }
+}
+
+// FUNCTION: GAME 0x1DA910
+extern "C" void func_001DA910(char *self)
+{
+    switch (*(unsigned char *)(self + 0x3025)) {
+    case 0: {
+        char *s;
+        SetBgmState__4cSnd9eBgmState(Snd, 3);
+        s = self + 0x25B0;
+        *(unsigned char *)(self + 0x3044) = 1;
+        *(int *)(self + 0x3040) = 0;
+        func_001DEF48(s, 1);
+        func_001DF048(s, 1);
+        func_001DEFC8(s, 0);
+        func_001DF0F0(s, 0);
+        *(unsigned char *)(self + 0x3025) += 1;
+        break;
+    }
+    case 1:
+        if (Sys[0x36] & 0xCC0000C000000UL) {
+            char *s = self + 0x25B0;
+            if (*(int *)(self + 0x3040) == 0) {
+                *(int *)(self + 0x3040) = 1;
+                *(unsigned char *)(self + 0x3044) = 0;
+                __asm__ volatile("" : : : "memory");
+                func_001DEF48(s, 0);
+                func_001DF048(s, 0);
+                func_001DEFC8(s, 1);
+                func_001DF0F0(s, 1);
+            } else {
+                *(unsigned char *)(self + 0x3044) = 1;
+                *(int *)(self + 0x3040) = 0;
+                __asm__ volatile("" : : : "memory");
+                func_001DEF48(s, 1);
+                func_001DF048(s, 1);
+                func_001DEFC8(s, 0);
+                func_001DF0F0(s, 0);
+            }
+            SeCall__4cSnd6eSeBlksssUii(Snd, 0, 0x15F, -1, -1, 0, 0);
+        } else if (Sys[0x34] & 0x10000000UL) {
+            char *s;
+            SeCall__4cSnd6eSeBlksssUii(Snd, 0, 0x15E, -1, -1, 0, 0);
+            s = self + 0x25B0;
+            func_001DF048(s, 0);
+            func_001DF0F0(s, 0);
+            *(unsigned char *)(self + 0x3025) += 1;
+        }
+        break;
+    case 2:
+        *(unsigned char *)(self + 0x3025) = 0;
+        *(unsigned char *)(self + 0x3024) = 0xF;
         break;
     }
 }
