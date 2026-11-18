@@ -111,15 +111,16 @@ extern "C" int func_002AF068(unsigned short c)
 
 extern char Sys[];
 
-// DRAFT: GAME 0x2A4ED8 - 18 words differ: original rebuilds the Sys base address (lui/addiu) and keeps it in a2
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2A4ED8
 extern "C" void func_002A4ED8(char *self)
 {
+    char *s = Sys;
     char *b = self + 0x28000;
-    *(int *)(b + 0x2054) = (int)self + ((*(unsigned *)(Sys + 0x210) & 1) * 0x15000 + 0x50);
-    *(int *)(b + 0x2058) = (int)self + ((*(unsigned *)(Sys + 0x210) & 1) * 0x15000 + 0x50) + 0x15000;
+    unsigned t = (*(unsigned *)(s + 0x210) & 1) * 0x15000 + 0x50;
+    *(int *)(b + 0x2054) = (int)self + t;
+    unsigned u = (*(unsigned *)(s + 0x210) & 1) * 0x15000 + 0x50;
+    *(int *)(b + 0x2058) = (int)self + u + 0x15000;
 }
-#endif
 
 // FUNCTION: GAME 0x2A58D8
 // The != && form keeps the two 2-stores as separate branch targets, as the original does.

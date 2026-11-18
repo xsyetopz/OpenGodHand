@@ -102,7 +102,7 @@ float capVu0MagnitudeSqXZ(const float *, const float *);
 float Turn_dest(const float *, float, const float *, float);
 
 // DRAFT: GAME 0x2DB7E0
-// diff: 24 words, original keeps the Turn_dest result in f1 and fabs-selects into f2 with a mov.s in the bc1f slot; ours copies zero into f1
+// diff: 23-24 words, original keeps the Turn_dest result in f1 (mov.s f1,f0) and fabs-selects into f2 with a mov.s in the bc1f delay slot; ours loads zero into f1 and uses bc1tl. Tried if/else, ternary, a=t;if(t<0)a=-t, a=-a, inline ABS, !(a>=k) (all 23-24)
 #ifdef NONMATCHING
 extern "C" int func_002DB7E0(const float *arg)
 {

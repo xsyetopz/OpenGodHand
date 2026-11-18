@@ -225,14 +225,13 @@ extern "C" void func_00262980(char *self)
 
 extern "C" int ReleaseEm__9cEmManageP7cEmBase(void *, void *);
 
-// DRAFT: GAME 0x279838 - 4 words: original loads li 1 once in the beqz delay slot, shared with the case 1 compare (if-chain, case-order and fallthrough switch tried)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x279838
 extern "C" void func_00279838(char *self)
 {
     *(float *)(self + 0x54C) = 3.0f;
     switch ((unsigned char)self[0x2F6]) {
     case 0:
-        self[0x2F6] = 1;
+        self[0x2F6]++;
     case 1:
         break;
     default:
@@ -248,4 +247,3 @@ extern "C" void func_00279838(char *self)
         }
     }
 }
-#endif

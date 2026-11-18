@@ -4,31 +4,23 @@
 extern "C" int *func_003058D8(char *);
 extern "C" void func_003057D0(char *, int, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x305908 (about 14 words off: loop pointer/counter register assignment differs)
+// FUNCTION: GAME 0x305908
 extern "C" int func_00305908(char *self, int a, int b)
 {
     int *v = func_003058D8(self);
     if (v) {
         v[3]++;
     } else {
-        int *q = (int *)self;
-        char *p = self;
-        unsigned i = 0;
-        do {
-            if (*q == 5) {
-                func_003057D0(p, a, b);
+        for (unsigned i = 0; i < 0x40; i++) {
+            if (*(int *)(self + i * 0x10) == 5) {
+                func_003057D0(self + i * 0x10, a, b);
                 return 1;
             }
-            i++;
-            p += 0x10;
-            q += 4;
-        } while (i < 0x40);
+        }
         return 0;
     }
     return 1;
 }
-#endif
 
 extern "C" void func_003009F8(char *, int);
 extern "C" void func_002FBA60(char *, int, int);

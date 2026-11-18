@@ -105,7 +105,6 @@ extern "C" void func_00375318(void)
     func_003758E8(1);
 }
 
-#ifdef NONMATCHING
 struct Fn38Obj {
     int m_0;
     char _p4[8];
@@ -114,17 +113,16 @@ struct Fn38Obj {
 };
 extern "C" void func_0032ABE8(float, int, int, int);
 
-// DRAFT: GAME 0x3741B0
-// diff: original copies the argument into v0 and loads m_0 into a0; mine keeps the argument in a0 (about 10 words).
+// FUNCTION: GAME 0x3741B0
 extern "C" void func_003741B0(Fn38Obj *o, float f)
 {
     if (o->m_0 == 0)
         return;
     if (f == 0.0f)
-        f = 2.0f;
-    func_0032ABE8(f, o->m_0, o->m_10, o->m_C);
+        func_0032ABE8(2.0f, o->m_0, o->m_10, o->m_C);
+    else
+        func_0032ABE8(f, o->m_0, o->m_10, o->m_C);
 }
-#endif
 
 struct Fn376Ent {
     unsigned short m_0;
