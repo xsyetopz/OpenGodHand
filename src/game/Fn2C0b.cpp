@@ -265,7 +265,7 @@ extern "C" void setDoorJump__5cDoor(void *);
 extern "C" void func_002C4DD0(void *, int, int);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2C2078 - 20 words differ; bit test and frame/branch layout
+// DRAFT: GAME 0x2C2078 - 26 words differ; original has beqz on m==0 before m==1 compare (if (m) { if (m == 1) } gives that) but then Door lui/addiu split (s2 hi, s1 full) and 0x40 frame are lost (44 words); tried m!=0&&m==1, switch, goto, m>=1, m<2
 extern "C" int func_002C2078(char *self)
 {
     char *p = self + 0x5C;

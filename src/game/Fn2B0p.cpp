@@ -205,23 +205,19 @@ extern "C" int func_002B3A38(char *self)
 
 extern "C" int func_002AF218(unsigned short *);
 
-// DRAFT: GAME 0x2B45F8
-// diff: 26 words, original keeps the code word in v1 and copies to a0 in a delay slot; ours loads into a0
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2B45F8
 extern "C" int func_002B45F8(char *self, unsigned short *s, unsigned short code)
 {
-    while (!func_002AF218(s)) {
+    for (; !func_002AF218(s); s += getCodeSize__11cMessCommonUs(*s)) {
         unsigned c = *s;
         if (c >> 15) {
             unsigned m = c & 0xFF00;
             if (m == code) return 1;
             if (m == 0x8000) return 0;
         }
-        s += getCodeSize__11cMessCommonUs(c);
     }
     return 0;
 }
-#endif
 
 extern "C" float func_002B0BE0(char *, unsigned short *, float *);
 extern "C" void func_002B04C0(char *, unsigned short *, float *);

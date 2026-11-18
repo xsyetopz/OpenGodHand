@@ -34,22 +34,20 @@ extern "C" void func_0014B918(char *self, char *o)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x14BDB0 - ~30 words differ: original keeps self in a0 until the lh and loads D_00754C80 after it; ours moves self to a2 and hoists the lui
+// FUNCTION: GAME 0x14BDB0
 extern "C" void func_0014BDB0(char *self, char *o)
 {
     int f = D_007476B0 & 1;
-    if (!(*(unsigned *)(o + 0x380) & 1)) {
-        int s = *(int *)(self + 0x2C0);
-        if (s == 10)
-            func_0031A650(D_00754C80, 4, 5, o + f * 0xB0, o + f * 0xB0 + 0xA0);
-        else {
-            int h = *(short *)(self + 0x2AC);
-            func_0031A650(D_00754C80, s, h, o + f * 0xB0, o + f * 0xB0 + 0xA0);
-        }
+    if (*(unsigned *)(o + 0x380) & 1)
+        return;
+    int s = *(int *)(self + 0x2C0);
+    if (s == 10)
+        func_0031A650(D_00754C80, 4, 5, o + f * 0xB0, o + f * 0xB0 + 0xA0);
+    else {
+        int h = *(short *)(self + 0x2AC);
+        func_0031A650(D_00754C80, s, h, o + f * 0xB0, o + f * 0xB0 + 0xA0);
     }
 }
-#endif
 
 // FUNCTION: GAME 0x144C08
 extern "C" void func_00144C08(char *self)

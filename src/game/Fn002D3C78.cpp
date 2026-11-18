@@ -16,6 +16,7 @@ extern "C" void func_00345F48(int, int);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2D3C78
+// 4 differing words: li -1 scheduled before swc1 f48 / lw s2C order after the float join; tried store orders, neg temp, early-return form, t temp
 extern "C" int func_002D3C78(D3C *d, D3S *s)
 {
     d->h1C = s->h4;
@@ -36,11 +37,13 @@ extern "C" int func_002D3C78(D3C *d, D3S *s)
         f = (float)s->s24;
     d->f48 = f;
     d->f44 = f;
+    int t = s->s2C;
     d->m50 = 0;
-    d->m3C = s->s2C;
+    d->m3C = t;
+    int neg = -1;
+    d->m58 = neg;
+    d->m5C = neg;
     d->f4C = 1.0f;
-    d->m5C = -1;
-    d->m58 = -1;
     if (func_002D3D88(d) == 0)
         return 0;
     d->m60 = 0;

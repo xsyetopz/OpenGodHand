@@ -65,34 +65,29 @@ extern "C" int func_003752A0(Fn379A2 *o, short a)
 struct Fn379A3 {
     char _p0[0x10];
     unsigned short m_10;
-    char _p12[0x46];
+    char _p12[0x26];
+    struct {
+        short m_38;
+        short m_3A;
+    } pr[8];
     unsigned m_58;
-};
-struct Fn379Pr {
-    char _p0[0x38];
-    short m_38;
-    short m_3A;
 };
 extern "C" void func_00378070(void *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x377688
-// diff: 24 words; register assignment (original puts the bit in a3, mask word in t0, idx*8 in a2)
+// FUNCTION: GAME 0x377688
 extern "C" void func_00377688(Fn379A3 *o, int idx)
 {
     unsigned bit = 1 << idx;
     unsigned m = o->m_58;
     if (bit & m) {
-        Fn379Pr *q = (Fn379Pr *)((char *)o + idx * 8);
-        if (q->m_38 == q->m_3A) {
+        if (o->pr[idx * 2].m_38 == o->pr[idx * 2].m_3A) {
             o->m_58 = m & ~bit;
         } else {
-            func_00378070((char *)o + idx * 8 + 0x38);
+            func_00378070(&o->pr[idx * 2]);
             o->m_10 |= 1;
         }
     }
 }
-#endif
 
 // FUNCTION: GAME 0x37D1A8
 extern "C" Fn379X *func_0037D1A8(unsigned char a, int id)

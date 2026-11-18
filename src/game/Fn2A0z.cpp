@@ -16,7 +16,6 @@ extern "C" void func_002BF820(int a, int b)
 {
     if (b == 0xFFFF && a) {
         char *o = D_005F38F0;
-        __asm__("" : "+r"(o));
         __7cIDBase(o + 0x20);
     }
 }

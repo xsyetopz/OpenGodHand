@@ -174,7 +174,7 @@ extern "C" void EspAllKill__Fv()
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2FAA88 - 25 words, loop/register layout
+// DRAFT: GAME 0x2FAA88 - best 12 words (not saved here): hoisted a/b/c/p locals as in EspAllKill, int i, `int r = func_002FACA8(i,id); ... return r;`; remaining diff is hoisted-constant lui order (a,p,b,c); declaration-order permutations unfinished
 extern "C" int PullEsp__F6eEspId(int id)
 {
     char *p = D_0061B7C0;

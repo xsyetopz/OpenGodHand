@@ -186,28 +186,29 @@ extern char D_00450D90[];
 extern char D_00450DA8[];
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x31A718 (about 20 words off: original keeps 0xFF in v0 across the printf, store order and loop base differ)
+// DRAFT: GAME 0x31A718 (8 words off: store scheduling of the 0x159/0x15B..0x15D byte stores differs; ff/one temps + p base + tail-store permutations tried)
 extern "C" void func_0031A718(char *self)
 {
     while (!func_00397630(0))
         printf(D_00450D80);
     if (!func_003979E0(0, 0, self))
         printf(D_00450D90);
-    int r = func_003979E0(1, 0, self + 0x380);
-    if (!r)
+    if (!func_003979E0(1, 0, self + 0x380))
         printf(D_00450DA8);
-    unsigned char v = 0xFF;
-    *(unsigned char *)(self + 0x15A) = 0xFF;
-    *(unsigned char *)(self + 0x4B8) = 1;
+    unsigned char ff = 0xFF;
+    unsigned char one = 1;
+    self[0x15A] = ff;
+    self[0x4B8] = one;
     *(short *)(self + 0x148) = 0;
     *(int *)(self + 0x154) = 0;
     *(short *)(self + 0x14A) = 0;
-    *(unsigned char *)(self + 0x158) = 0;
-    *(unsigned char *)(self + 0x159) = 1;
-    *(unsigned char *)(self + 0x15D) = 0xFF;
-    *(unsigned char *)(self + 0x15C) = 0xFF;
-    *(unsigned char *)(self + 0x15B) = 0xFF;
+    self[0x158] = 0;
+    self[0x159] = one;
+    self[0x15C] = ff;
+    self[0x15B] = ff;
+    self[0x15D] = ff;
+    char *p = self + 0x360;
     for (int i = 5; i != -1; i--)
-        self[0x360 + i] = 0;
+        p[i] = 0;
 }
 #endif

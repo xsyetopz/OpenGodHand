@@ -122,7 +122,7 @@ extern "C" int func_00291AC8(char *self, const float *pos, char *skip, float r)
 extern char D_00754C80[];
 extern "C" void func_0031A600(void *, int, int);
 
-// DRAFT: GAME 0x299948 - registers differ: original copies the buffer pointer to a3 and derives q=a3+8 in a2 (28 words differ)
+// DRAFT: GAME 0x299948 - 26 words, 128 vs 132 B: original copies buf to a3 and derives q=a3+8 in a2; tried q pointer, local p copy, static inline helper, store reorder (26-30 words)
 #ifdef NONMATCHING
 extern "C" void func_00299948(char *buf)
 {

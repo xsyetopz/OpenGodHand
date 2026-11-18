@@ -4,8 +4,7 @@ extern char *CoreSave;
 extern char *g_Sce;
 extern "C" unsigned short *func_002C5028(char *, unsigned short);
 
-// DRAFT: GAME 0x2C21A0 (25 words differ: register allocation of id and CoreSave base)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2C21A0
 extern "C" int func_002C21A0(char *self)
 {
     char *s = self + 0x5C;
@@ -30,14 +29,12 @@ extern "C" int func_002C21A0(char *self)
                 int id = *(unsigned short *)(s + 2);
                 if (id < 0x40) {
                     char *b = (char *)CoreSave + 0x14;
-                    __asm__("" : "+r"(b));
                     ((unsigned *)b)[(unsigned)id >> 5] |= 0x80000000u >> (id & 0x1F);
                 }
             } else {
                 int id = *(unsigned short *)(s + 2);
                 if (id < 0x40) {
                     char *b = (char *)CoreSave + 0x14;
-                    __asm__("" : "+r"(b));
                     ((unsigned *)b)[(unsigned)id >> 5] &= ~(0x80000000u >> (id & 0x1F));
                 }
             }
@@ -47,4 +44,3 @@ extern "C" int func_002C21A0(char *self)
     }
     return 0;
 }
-#endif
