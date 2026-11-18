@@ -24,6 +24,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import configure  # noqa: E402
 
 TAG = re.compile(r"^//\s*DIVNOP:\s*(.*?)\s*$")
+# A DRAFT tag ends the previous FUNCTION's scope, so its DIVNOP hint is ignored.
+DRAFT = re.compile(r"^//\s*DRAFT:")
 ENT = re.compile(r"^\s*\.(ent|end)\s+(\S+)")
 DIV = re.compile(r"^\s*div\.s\s")
 
@@ -36,6 +38,8 @@ def spec(src: Path) -> dict[str, list[int]]:
     for line in src.read_text().splitlines():
         if m := configure.ANNOT.match(line):
             addr = int(m.group(1), 16)
+        elif DRAFT.match(line):
+            addr = None
         elif (m := TAG.match(line)) and addr is not None:
             found[names[addr]] = [int(n) for n in m.group(1).split()]
     return found

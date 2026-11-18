@@ -108,8 +108,22 @@ extern "C" void func_001BE740(char *self)
     }
 }
 
-#ifdef NONMATCHING
 extern "C" void setMeshColorFromLayer__7cOmBaseUifff(void *, unsigned, float, float, float);
+
+// FUNCTION: GAME 0x1B0078
+// DIVNOP: 2
+extern "C" void func_001B0078(char *self)
+{
+    float r = (float)*(short *)(self + 0x54A) / (float)*(short *)(self + 0x548);
+    if (SlotNo(self, 1)) {
+        char *s = SlotNo(self, 1);
+        *(float *)(*(char **)(s + 0xD0) + 4) = *(float *)(self + 0x60C) - r * 0.4f;
+    }
+    float g = r * 0.5f + 0.5f;
+    setMeshColorFromLayer__7cOmBaseUifff(self, 0, 1.0f, g, g);
+}
+
+#ifdef NONMATCHING
 // DRAFT: GAME 0x1B54E8
 // diff: 6 words; original loads the short test and the odd-bit test into v0 with a likely branch (bnel/lhu in the delay slot), mine uses bnez with lhu into v1
 extern "C" void func_001B54E8(char *self)
@@ -129,18 +143,5 @@ extern "C" void func_001B54E8(char *self)
             *(unsigned short *)(self + 0x644) -= 1;
         }
     }
-}
-
-// DRAFT: GAME 0x1B0078
-// diff: 40 words; original schedules the slot range test and cvt.s.w before the div.s with nops, mine issues div.s first
-extern "C" void func_001B0078(char *self)
-{
-    float r = (float)*(short *)(self + 0x54A) / (float)*(short *)(self + 0x548);
-    if (SlotNo(self, 1)) {
-        char *s = SlotNo(self, 1);
-        *(float *)(*(char **)(s + 0xD0) + 4) = *(float *)(self + 0x60C) - r * 0.4f;
-    }
-    float g = r * 0.5f + 0.5f;
-    setMeshColorFromLayer__7cOmBaseUifff(self, 0, 1.0f, g, g);
 }
 #endif

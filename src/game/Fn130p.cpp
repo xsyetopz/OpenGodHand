@@ -204,10 +204,11 @@ extern "C" void func_0013ED28(char *self)
 }
 #endif
 
-// DRAFT: GAME 0x13C630 (div.s hazard nops and store order differ after 4 tries)
-#ifdef NONMATCHING
 struct Q4 { float v[4]; } __attribute__((aligned(16)));
 extern "C" void func_002E1468(Q4 *, Q4 *, Q4 *, Q4 *, float, float, float);
+
+// FUNCTION: GAME 0x13C630
+// DIVNOP: 2
 extern "C" void func_0013C630(char *s)
 {
     if (*(unsigned char *)(s + 0x74))
@@ -240,7 +241,6 @@ extern "C" void func_0013C630(char *s)
     *(float *)(s + 0x60) = c.v[0];
     *(float *)(s + 0x64) = c.v[1];
 }
-#endif
 
 // DRAFT: GAME 0x13D400 (register allocation differs after 3 tries)
 #ifdef NONMATCHING
