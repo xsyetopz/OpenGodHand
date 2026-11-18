@@ -111,7 +111,7 @@ async function poll() {
     if (r.status === 200) render(await r.json());
     lastOk = Date.now();
     const st = await (await fetch("status.json", { cache: "no-cache" })).json().catch(() => null);
-    document.getElementById("err").textContent = st && !st.ok ? "last refresh failed: " + st.message : "";
+    document.getElementById("err").textContent = st && !st.ok ? "showing last good data; waiting for tree to settle: " + st.message : "";
   } catch (e) { /* server restarting */ }
   document.getElementById("stale").textContent = doc ? `updated ${new Date(doc.updated * 1000).toLocaleTimeString()}` : "waiting for progress.json";
 }

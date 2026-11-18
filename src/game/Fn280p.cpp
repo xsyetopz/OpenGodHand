@@ -11,29 +11,6 @@ struct Es {
     unsigned char m_15B0;
 };
 
-// DRAFT: GAME 0x282080 - 35 words differ: original selects the 5th arg with movn (t0=0, v1=2, in the switch branch delay slot); ours emits t0=2 plus movz (one word shorter)
-#ifdef NONMATCHING
-extern "C" void func_00282080(Es *self)
-{
-    int mode = self->m_15B0 ? 2 : 0;
-    switch (self->m_2F6) {
-    case 0: {
-        char *o = self->m_304;
-        func_002A8578(self, *(int *)(o + 0x7C) + (int)o, *(int *)(o + 0x80) + (int)o, 5, 0.0f, mode, 0);
-        self->m_2F6++;
-    }
-    case 1:
-        if (func_00157C18(self)) {
-            self->m_2F7 = 0;
-            self->m_2F4 = 0;
-            self->m_2F5 = 0;
-            self->m_2F6 = 0;
-        }
-        break;
-    }
-}
-#endif
-
 class cEsP;
 typedef void (cEsP::*cEsPmf)();
 class cEsP {

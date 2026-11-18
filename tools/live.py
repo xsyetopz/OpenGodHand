@@ -9,7 +9,8 @@ newly matched functions. A watcher thread stats src/**/*.c* and build/src/**/*.o
 build/actual/*.o every INTERVAL seconds; only when an mtime changed it runs
 `tools/configure.py` (to pick up new source files), `ninja report` (which compiles only
 stale sources) and `tools/progress.py --json --no-build`. With no change it does no
-work. The server answers conditional requests, so an unchanged json costs a 304.
+work. A failing refresh (the tree caught mid-edit by a concurrent session) keeps the last
+good progress.json and retries every INTERVAL until it succeeds. The server answers conditional requests, so an unchanged json costs a 304.
 """
 
 from __future__ import annotations
@@ -57,31 +58,53 @@ def snapshot() -> dict[str, float]:
     return snap
 
 
-def refresh() -> None:
+def refresh() -> str | None:
+    """Rebuild progress.json; return None on success, else the reason the tree is unsettled.
+
+    A failed step leaves the previous progress.json in place, so the page keeps the last
+    good treemap."""
     steps = [[sys.executable, "tools/configure.py"], ["ninja", "report"],
              [sys.executable, "tools/progress.py", "--json", "--no-build"]]
-    ok, msg = True, ""
     for cmd in steps:
-        r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+        try:
+            r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+        except OSError as e:
+            return f"{cmd[-1]}: {e}"
         if r.returncode:
             lines = [l for l in (r.stdout + r.stderr).strip().splitlines() if not l.startswith("ninja:")]
-            ok, msg = False, (lines[-1][:300] if lines else "failed")
-            print(f"live: {' '.join(cmd[-2:])} failed: {msg}", flush=True)
-            break
+            return f"{cmd[-1]}: {lines[-1][:300] if lines else 'failed'}"
+    return None
+
+
+def write_status(pending: str | None) -> None:
     BUILD.mkdir(exist_ok=True)
-    (BUILD / "live_status.json").write_text(json.dumps({"ok": ok, "message": msg, "t": time.time()}))
-    if ok:
-        print(f"live: refreshed {time.strftime('%H:%M:%S')}", flush=True)
+    (BUILD / "live_status.json").write_text(json.dumps({"ok": pending is None, "message": pending or "", "t": time.time()}))
 
 
 def watch(interval: float) -> None:
-    last = None
+    """Refresh on change; while a refresh fails, retry every tick until the tree settles.
+
+    The working tree is edited concurrently by decomp sessions, so a refresh can observe a
+    transient state (a source mid-rename that duplicates an address, a half-written file,
+    a concurrent ninja run). Such failures are expected and only delay the update."""
+    last, pending = None, None
     while True:
-        snap = snapshot()
-        if snap != last:
-            last = snap
-            refresh()
-            last = snapshot()  # the refresh itself may rebuild objects
+        try:
+            snap = snapshot()
+            if snap != last or pending is not None:
+                last = snap
+                reason = refresh()
+                last = snapshot()  # the refresh itself may rebuild objects
+                if reason is None:
+                    print(f"live: refreshed {time.strftime('%H:%M:%S')}", flush=True)
+                elif reason != pending:  # log each distinct transient state once
+                    print(f"live: waiting for tree to settle ({reason})", flush=True)
+                if reason != pending or reason is None:
+                    write_status(reason)
+                pending = reason
+        except Exception as e:  # the watcher thread must outlive any single bad tick
+            pending = f"{type(e).__name__}: {e}"
+            print(f"live: tick error ({pending}); retrying", flush=True)
         time.sleep(interval)
 
 

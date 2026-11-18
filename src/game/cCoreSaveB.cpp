@@ -218,20 +218,15 @@ void cCoreSave::setClearStage(unsigned short n)
     }
 }
 
-#ifdef NONMATCHING
-// NONMATCHING 0x1FB868
-// Remaining diff (17 words): original copies v to $a3 right after the null check and clamps in $a3; ours schedules the clamp differently (68 vs 68 bytes).
+// FUNCTION: GAME 0x1FB868
 void cCoreSave::setComboMax(unsigned int i, int v)
 {
-    if (m_save) {
-        if (i < 6) {
-            int c = 0;
-            if (v > -1)
-                c = v;
-            if (c > 6)
-                c = 6;
-            m_save->m_combo[i].m_comboMax = c;
-        }
+    // Clamping v in place keeps it in its argument register, as the original does.
+    if (m_save && i < 6) {
+        if (v < 0)
+            v = 0;
+        if (v > 6)
+            v = 6;
+        m_save->m_combo[i].m_comboMax = v;
     }
 }
-#endif

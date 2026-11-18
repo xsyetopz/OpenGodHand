@@ -167,21 +167,20 @@ int cArea::HitCheck(const cVec &p, float r) const
     return 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1FAA68 - 13 words: conditional-move register allocation
-extern "C" void func_001FAA68(int **self, unsigned int i, int v)
+// FUNCTION: GAME 0x1FAA68
+extern "C" void func_001FAA68(char **self, unsigned int i, int v)
 {
-    int *t = *self;
+    char *t = *self;
     if (t) {
         if (i >= 5)
             i = 0;
-        int a = v < 10 ? v : 9;
-        if (a < 0)
-            a = 0;
-        t[0x70 / 4 + i] = a;
+        if (v >= 10)
+            v = 9;
+        if (v < 0)
+            v = 0;
+        *(int *)(t + (i << 2) + 0x70) = v;
     }
 }
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1FC4D0 - 16 words: bit test folds to srav/andi where target uses sllv/and/sltu
