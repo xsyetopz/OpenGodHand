@@ -6,6 +6,8 @@
 class cOl22 : public cObj {
 public:
     void setOpen();
+    void setOpenFix();
+    void setCloseFix();
     unsigned char isOpen();
 
     char _pad2F8[0x600 - 0x2F8];

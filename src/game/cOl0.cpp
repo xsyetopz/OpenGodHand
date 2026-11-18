@@ -318,3 +318,136 @@ extern "C" int func_0017EC98(sOlRsrc *s)
     return 1;
 }
 #endif
+
+// Generated-shape forwarders, SetEffect wrappers and singleton accessors (same families as above).
+extern "C" {
+extern int D_007857D8; extern const char D_004204E0[]; extern char D_00785798[]; void func_001C3BE8();
+extern int D_007857E8; extern const char D_004205C8[]; extern char D_00785798[]; void func_001C3BE8();
+extern int D_007857F8; extern const char D_00420698[]; extern char D_00785808[]; void func_001C0018();
+extern int D_00785818; extern const char D_00420768[]; extern char D_00785808[]; void func_001C0018();
+extern int D_00785828; extern const char D_00420838[]; extern char D_00785808[]; void func_001C0018();
+extern int D_00785838; extern const char D_00420908[]; extern char D_00785808[]; void func_001C0018();
+extern int D_00785848; extern const char D_004209D0[]; extern char D_00785858[]; void func_001BDE00();
+extern int D_00785888; extern const char D_00420E18[]; extern char D_00785858[]; void func_001BDE00();
+extern int D_00785898; extern const char D_00420FA0[]; extern char D_00785878[]; void func_001B8058();
+extern int D_007858A8; extern const char D_00421098[]; extern char D_007858B8[]; void func_001C8F30();
+extern int D_007858C8; extern const char D_00421188[]; extern char D_007858B8[]; void func_001C8F30();
+extern int D_007858D8; extern const char D_00421288[]; extern char D_00785878[]; void func_001B8058();
+extern int D_007858E8; extern const char D_00421398[]; extern char D_00785878[]; void func_001B8058();
+extern int D_007858F8; extern const char D_00421490[]; extern char D_00785798[]; void func_001C3BE8();
+extern int D_00785908; extern const char D_00421578[]; extern char D_00785798[]; void func_001C3BE8();
+extern int D_00785918; extern const char D_00421640[]; extern char D_00785878[]; void func_001B8058();
+extern int D_00785928; extern const char D_00421728[]; extern char D_00785798[]; void func_001C3BE8();
+extern int D_00785938; extern const char D_00421810[]; extern char D_00785798[]; void func_001C3BE8();
+extern int D_00785948; extern const char D_00421900[]; extern char D_007858B8[]; void func_001C8F30();
+extern int D_00785958; extern const char D_004219F0[]; extern char D_007858B8[]; void func_001C8F30();
+extern int D_00785968; extern const char D_00421AB8[]; extern char D_00785878[]; void func_001B8058();
+extern int D_00785988; extern const char D_00421D30[]; extern char D_00785858[]; void func_001BDE00();
+extern int D_00785998; extern const char D_00421E20[]; extern char D_007858B8[]; void func_001C8F30();
+extern int D_007859A8; extern const char D_00421EE8[]; extern char D_007859B8[]; void func_001BD528();
+extern int D_007859C8; extern const char D_00421FD0[]; extern char D_00785878[]; void func_001B8058();
+extern int D_007859D8; extern const char D_00422098[]; extern char D_00785878[]; void func_001B8058();
+extern int D_007859E8; extern const char D_00422160[]; extern char D_007859B8[]; void func_001BD528();
+extern int D_007859F8; extern const char D_00422228[]; extern char D_00785858[]; void func_001BDE00();
+extern int D_00785A08; extern const char D_004222F0[]; extern char D_00785878[]; void func_001B8058();
+extern int D_00785A18; extern const char D_004223B8[]; extern char D_00785878[]; void func_001B8058();
+extern int D_00785A28; extern const char D_00422480[]; extern char D_007859B8[]; void func_001BD528();
+extern int D_00785A38; extern const char D_00422548[]; extern char D_00785878[]; void func_001B8058();
+void func_001B6FB8();
+void func_001BC0A0();
+void func_001BD6B0();
+void func_001BFB80();
+}
+
+// FUNCTION: GAME 0x1704E8
+extern "C" void *func_001704E8() { if (D_007857E8 == 0) { func_001C3BE8(); func_0031EEA8(&D_007857E8, D_004205C8, D_00785798); } return &D_007857E8; }
+// FUNCTION: GAME 0x170778
+extern "C" void *func_00170778() { if (D_007857F8 == 0) { func_001C0018(); func_0031EEA8(&D_007857F8, D_00420698, D_00785808); } return &D_007857F8; }
+// FUNCTION: GAME 0x170A08
+extern "C" void *func_00170A08() { if (D_00785818 == 0) { func_001C0018(); func_0031EEA8(&D_00785818, D_00420768, D_00785808); } return &D_00785818; }
+// FUNCTION: GAME 0x170C98
+extern "C" void *func_00170C98() { if (D_00785828 == 0) { func_001C0018(); func_0031EEA8(&D_00785828, D_00420838, D_00785808); } return &D_00785828; }
+// FUNCTION: GAME 0x170EB0
+extern "C" void *func_00170EB0() { if (D_00785838 == 0) { func_001C0018(); func_0031EEA8(&D_00785838, D_00420908, D_00785808); } return &D_00785838; }
+// FUNCTION: GAME 0x171C40
+extern "C" void *func_00171C40() { if (D_00785888 == 0) { func_001BDE00(); func_0031EEA8(&D_00785888, D_00420E18, D_00785858); } return &D_00785888; }
+// FUNCTION: GAME 0x1739A0
+extern "C" void *func_001739A0() { if (D_00785898 == 0) { func_001B8058(); func_0031EEA8(&D_00785898, D_00420FA0, D_00785878); } return &D_00785898; }
+// FUNCTION: GAME 0x174758
+extern "C" void *func_00174758() { if (D_007858A8 == 0) { func_001C8F30(); func_0031EEA8(&D_007858A8, D_00421098, D_007858B8); } return &D_007858A8; }
+// FUNCTION: GAME 0x175558
+extern "C" void *func_00175558() { if (D_007858C8 == 0) { func_001C8F30(); func_0031EEA8(&D_007858C8, D_00421188, D_007858B8); } return &D_007858C8; }
+// FUNCTION: GAME 0x176BE0
+extern "C" void *func_00176BE0() { if (D_007858D8 == 0) { func_001B8058(); func_0031EEA8(&D_007858D8, D_00421288, D_00785878); } return &D_007858D8; }
+// FUNCTION: GAME 0x178268
+extern "C" void *func_00178268() { if (D_007858E8 == 0) { func_001B8058(); func_0031EEA8(&D_007858E8, D_00421398, D_00785878); } return &D_007858E8; }
+// FUNCTION: GAME 0x178518
+extern "C" void *func_00178518() { if (D_007858F8 == 0) { func_001C3BE8(); func_0031EEA8(&D_007858F8, D_00421490, D_00785798); } return &D_007858F8; }
+// FUNCTION: GAME 0x1787C0
+extern "C" void *func_001787C0() { if (D_00785908 == 0) { func_001C3BE8(); func_0031EEA8(&D_00785908, D_00421578, D_00785798); } return &D_00785908; }
+// FUNCTION: GAME 0x178A18
+extern "C" void *func_00178A18() { if (D_00785918 == 0) { func_001B8058(); func_0031EEA8(&D_00785918, D_00421640, D_00785878); } return &D_00785918; }
+// FUNCTION: GAME 0x178CE0
+extern "C" void *func_00178CE0() { if (D_00785928 == 0) { func_001C3BE8(); func_0031EEA8(&D_00785928, D_00421728, D_00785798); } return &D_00785928; }
+// FUNCTION: GAME 0x178F78
+extern "C" void *func_00178F78() { if (D_00785938 == 0) { func_001C3BE8(); func_0031EEA8(&D_00785938, D_00421810, D_00785798); } return &D_00785938; }
+// FUNCTION: GAME 0x179D08
+extern "C" void *func_00179D08() { if (D_00785948 == 0) { func_001C8F30(); func_0031EEA8(&D_00785948, D_00421900, D_007858B8); } return &D_00785948; }
+// FUNCTION: GAME 0x17AA88
+extern "C" void *func_0017AA88() { if (D_00785958 == 0) { func_001C8F30(); func_0031EEA8(&D_00785958, D_004219F0, D_007858B8); } return &D_00785958; }
+// FUNCTION: GAME 0x17B820
+extern "C" void *func_0017B820() { if (D_00785968 == 0) { func_001B8058(); func_0031EEA8(&D_00785968, D_00421AB8, D_00785878); } return &D_00785968; }
+// FUNCTION: GAME 0x17C5D0
+extern "C" void *func_0017C5D0() { if (D_00785988 == 0) { func_001BDE00(); func_0031EEA8(&D_00785988, D_00421D30, D_00785858); } return &D_00785988; }
+// FUNCTION: GAME 0x17D388
+extern "C" void *func_0017D388() { if (D_00785998 == 0) { func_001C8F30(); func_0031EEA8(&D_00785998, D_00421E20, D_007858B8); } return &D_00785998; }
+// FUNCTION: GAME 0x17D580
+extern "C" void *func_0017D580() { if (D_007859A8 == 0) { func_001BD528(); func_0031EEA8(&D_007859A8, D_00421EE8, D_007859B8); } return &D_007859A8; }
+// FUNCTION: GAME 0x17E0A8
+extern "C" void *func_0017E0A8() { if (D_007859C8 == 0) { func_001B8058(); func_0031EEA8(&D_007859C8, D_00421FD0, D_00785878); } return &D_007859C8; }
+// FUNCTION: GAME 0x17E7D8
+extern "C" void *func_0017E7D8() { if (D_007859D8 == 0) { func_001B8058(); func_0031EEA8(&D_007859D8, D_00422098, D_00785878); } return &D_007859D8; }
+// FUNCTION: GAME 0x17EA48
+extern "C" void *func_0017EA48() { if (D_007859E8 == 0) { func_001BD528(); func_0031EEA8(&D_007859E8, D_00422160, D_007859B8); } return &D_007859E8; }
+// FUNCTION: GAME 0x17EBB8
+extern "C" void *func_0017EBB8() { if (D_007859F8 == 0) { func_001BDE00(); func_0031EEA8(&D_007859F8, D_00422228, D_00785858); } return &D_007859F8; }
+// FUNCTION: GAME 0x17EDF0
+extern "C" void *func_0017EDF0() { if (D_00785A08 == 0) { func_001B8058(); func_0031EEA8(&D_00785A08, D_004222F0, D_00785878); } return &D_00785A08; }
+// FUNCTION: GAME 0x17F220
+extern "C" void *func_0017F220() { if (D_00785A18 == 0) { func_001B8058(); func_0031EEA8(&D_00785A18, D_004223B8, D_00785878); } return &D_00785A18; }
+// FUNCTION: GAME 0x17F490
+extern "C" void *func_0017F490() { if (D_00785A28 == 0) { func_001BD528(); func_0031EEA8(&D_00785A28, D_00422480, D_007859B8); } return &D_00785A28; }
+// FUNCTION: GAME 0x17FAF8
+extern "C" void *func_0017FAF8() { if (D_00785A38 == 0) { func_001B8058(); func_0031EEA8(&D_00785A38, D_00422548, D_00785878); } return &D_00785A38; }
+// FUNCTION: GAME 0x170418
+extern "C" void func_00170418() { func_001C29D0(); }
+// FUNCTION: GAME 0x1706E0
+extern "C" void func_001706E0() { func_001BFB80(); }
+// FUNCTION: GAME 0x170970
+extern "C" void func_00170970() { func_001BFB80(); }
+// FUNCTION: GAME 0x170C00
+extern "C" void func_00170C00() { func_001BFB80(); }
+// FUNCTION: GAME 0x170E90
+extern "C" void func_00170E90() { func_001BFB80(); }
+// FUNCTION: GAME 0x171000
+extern "C" void func_00171000() { func_001BD6B0(); }
+// FUNCTION: GAME 0x171C20
+extern "C" void func_00171C20() { func_001BD6B0(); }
+// FUNCTION: GAME 0x1784F8
+extern "C" void func_001784F8() { func_001C29D0(); }
+// FUNCTION: GAME 0x1787A0
+extern "C" void func_001787A0() { func_001C29D0(); }
+// FUNCTION: GAME 0x178CC0
+extern "C" void func_00178CC0() { func_001C29D0(); }
+// FUNCTION: GAME 0x178F58
+extern "C" void func_00178F58() { func_001C29D0(); }
+// FUNCTION: GAME 0x17C5B0
+extern "C" void func_0017C5B0() { func_001BD6B0(); }
+// FUNCTION: GAME 0x17D560
+extern "C" void func_0017D560() { func_001BC0A0(); }
+// FUNCTION: GAME 0x17EA28
+extern "C" void func_0017EA28() { func_001BC0A0(); }
+// FUNCTION: GAME 0x17EB98
+extern "C" void func_0017EB98() { func_001BD6B0(); }
+// FUNCTION: GAME 0x17F470
+extern "C" void func_0017F470() { func_001BC0A0(); }

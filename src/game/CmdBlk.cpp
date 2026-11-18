@@ -228,3 +228,33 @@ extern "C" void func_001D07B0(CmdBlk *self)
     self->m_f6 = 0;
     self->m_f7 = 0;
 }
+
+struct FltBlk {
+    char _pad[0x66C];
+    float m_f66C;
+};
+
+// FUNCTION: GAME 0x1D0AD0
+extern "C" void func_001D0AD0(FltBlk *self)
+{
+    self->m_f66C = 450.0f;
+}
+
+// FUNCTION: GAME 0x1D0AE0
+extern "C" int func_001D0AE0(FltBlk *self)
+{
+    return self->m_f66C > 0.0f;
+}
+
+struct TwoWord {
+    int m_a;
+    int m_b;
+};
+
+// FUNCTION: GAME 0x1D0C78
+extern "C" TwoWord *func_001D0C78(TwoWord *self)
+{
+    self->m_a = 0;
+    self->m_b = 2;
+    return self;
+}

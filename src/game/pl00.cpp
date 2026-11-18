@@ -16,6 +16,7 @@ public:
 class cCamManager : public cPlCamera {
 public:
     void setPlCamera(unsigned char v);
+    int isCk_CamClass(unsigned int a);
 };
 extern cCamManager CamManager;
 
@@ -281,3 +282,254 @@ extern "C" int func_0012CEF0(pl00 *self)
     return ((unsigned char *)&self->m_unk15F4)[0] >> 7;
 }
 #endif
+
+extern const unsigned short D_00747A50;
+class cSceAtManager;
+extern cSceAtManager g_SceAt;
+extern "C" int func_002C2568(cSceAtManager *m, cVec *p, int a);
+extern "C" void func_002DBE98();
+
+#ifdef NONMATCHING
+// 0x12C758: 21 words differ; original tests m_unk698 with beql into the m_unk6A0 test and an explicit 'return 0' branch, mine uses bnez
+extern "C" int func_0012C758(pl00 *self)
+{
+    if (D_00747A50 != 0x608)
+        return 0;
+    if (self->m_unk698)
+        return 0;
+    else if (!self->m_unk6A0) {
+        if (func_002C2568(&g_SceAt, self->m_pos, 0) == 1) {
+            func_002DBE98();
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif
+
+class cEm00 {
+public:
+    int ckDown();
+    char _pad[0x2FE];
+    unsigned short m_unk2FE;
+};
+
+#ifdef NONMATCHING
+// 0x124FD8: original keeps both range tests as unfolded slti pairs (a2 bool temps); gcc folds them to addiu+sltiu here
+extern "C" int func_00124FD8(pl00 *self, cEm00 *em)
+{
+    int v = em->m_unk2FE;
+    bool a = v >= 0x200 && v < 0x300;
+    if (!a)
+        return 0;
+    bool b = v >= 0x2A0 && v < 0x300;
+    if (b)
+        return 0;
+    return em->ckDown() != 0;
+}
+#endif
+
+// FUNCTION: GAME 0x12C748
+extern "C" int func_0012C748(pl00 *self)
+{
+    if (self->m_unk5FC)
+        return 1;
+    return 0;
+}
+
+extern "C" void func_00100FB8(int a, int b);
+
+// FUNCTION: GAME 0x101E98
+extern "C" void func_00101E98()
+{
+    func_00100FB8(1, 0xFFFF);
+}
+
+class cActionButtonUnit {
+public:
+    void setOk();
+};
+
+// FUNCTION: GAME 0x1267F8
+extern "C" void func_001267F8(pl00 *self)
+{
+    if (self->m_unk165C)
+        ((cActionButtonUnit *)self->m_unk165C)->setOk();
+}
+
+class cOmWeapon {
+public:
+    void setFall();
+};
+
+// FUNCTION: GAME 0x12AC28
+extern "C" void func_0012AC28(pl00 *self)
+{
+    if (self->m_unk698) {
+        ((cOmWeapon *)self->m_unk698)->setFall();
+        self->m_unk698 = 0;
+    }
+}
+
+#ifdef NONMATCHING
+// 0x1268F0: original has a nop between sltiu and the loop bnez; compiled bnez follows sltiu directly
+extern "C" void func_001268F0(pl00 *self)
+{
+    for (unsigned i = 0; i < 5; i++)
+        self->m_unk1644[i] = 0;
+}
+#endif
+
+enum eEffDataType { EFF_DATA_0 = 0 };
+enum eEffId { EFF_61 = 0x61, EFF_79 = 0x79 };
+enum eEspEraseMode { ESP_ERASE_2 = 2 };
+void KillEffect(eEffDataType type, eEffId id, eEspEraseMode mode);
+
+struct cEffObj {
+    char _pad[0x564];
+    int m_unk564;
+};
+
+// FUNCTION: GAME 0x12CC00
+extern "C" void func_0012CC00(pl00 *self)
+{
+    if (self->m_unk644 && !(self->m_unk15F4 & 0x800000)) {
+        if (self->m_unk644->m_unk564 == 0x26A)
+            KillEffect(EFF_DATA_0, EFF_79, ESP_ERASE_2);
+        KillEffect(EFF_DATA_0, EFF_61, ESP_ERASE_2);
+        self->m_unk644 = 0;
+    }
+}
+
+struct cFlagObj {
+    char _pad[0x2F0];
+    unsigned int m_flags;
+};
+
+// FUNCTION: GAME 0x12CE60
+extern "C" void func_0012CE60(pl00 *self, const cVec &v)
+{
+    *self->m_pos = v;
+    self->m_unk490 = v;
+    self->m_unkB0.x = v.x;
+    self->m_unkB0.y = v.y;
+    self->m_unkB0.z = v.z;
+    if (self->m_unk68C)
+        self->m_unk68C->m_flags |= 1;
+}
+
+struct cVTab {
+    char _pad[0x68];
+    short m_delta;
+    short m_pad;
+    const cVec *(*m_fn)(void *);
+};
+struct cVObj {
+    char _pad[0x214];
+    cVTab *m_vtab;
+};
+class cGameObj {
+public:
+    void SetTgtTurn(const cVec &v, float a);
+};
+
+// FUNCTION: GAME 0x124E68
+extern "C" void func_00124E68(pl00 *self, float a)
+{
+    cVObj *o = self->m_unk640;
+    if (o)
+        ((cGameObj *)self)->SetTgtTurn(*o->m_vtab->m_fn((char *)o + o->m_vtab->m_delta), a);
+}
+
+struct cHolder {
+    struct pl00 *m_first;
+};
+
+static inline pl00 *getHolderObj(pl00 *self, const unsigned int &i)
+{
+    if (i)
+        return self->m_unk278->m_first;
+    return 0;
+}
+
+#ifdef NONMATCHING
+// 0x12CA60: original spills the index byte to 0(sp) (sp frame 0x10, address-taken temp in an inlined helper); mine has no frame
+extern "C" int func_0012CA60(pl00 *self)
+{
+    if (self->m_unk15F4 & 0x200000)
+        return 1;
+    unsigned int idx = self->m_unk2B4;
+    pl00 *o = getHolderObj(self, idx);
+    if (!o)
+        return 0;
+    if (o->m_pos->y < self->m_pos->y + 0.8f)
+        return 1;
+    return 0;
+}
+#endif
+
+// FUNCTION: GAME 0x10A408
+extern "C" void func_0010A408(pl00 *self, int a, int b, int c, int d, short e)
+{
+    self->m_unk1660[2] = a;
+    self->m_unk1660[0] = b;
+    self->m_unk1660[4] = c;
+    self->m_unk1660[6] = d;
+    self->m_unk1680[0] = e;
+}
+
+// FUNCTION: GAME 0x10A420
+extern "C" void func_0010A420(pl00 *self, int a, int b, int c, int d, short e)
+{
+    self->m_unk1660[3] = a;
+    self->m_unk1660[1] = b;
+    self->m_unk1660[5] = c;
+    self->m_unk1660[7] = d;
+    self->m_unk1680[1] = e;
+}
+
+struct sD_004615F0 {
+    float x, y, z, w;
+};
+extern sD_004615F0 D_004615F0;
+
+// FUNCTION: GAME 0x107DE0
+extern "C" void func_00107DE0(int a, int b)
+{
+    if (b == 0xFFFF && a) {
+        D_004615F0.x = 0;
+        D_004615F0.w = 1.0f;
+        D_004615F0.z = 0;
+        D_004615F0.y = 0;
+    }
+}
+
+#ifdef NONMATCHING
+// 0x123908: 11 words differ (original has 0x20 frame, s0 = &CamManager, tail call to func_138F88)
+extern "C" int func_00123908()
+{
+    return CamManager.isCk_CamClass(1);
+}
+#endif
+
+class cModel {
+public:
+    int isClip() const;
+};
+extern int D_00747A80;
+
+// FUNCTION: GAME 0x1020F0
+extern "C" int func_001020F0(cModel *self)
+{
+    if (D_00747A80 < 0)
+        return 1;
+    return self->isClip() != 0;
+}
+
+void capVu0Length(const float *p);
+
+// FUNCTION: GAME 0x101E28
+extern "C" void func_00101E28(const float *p)
+{
+    capVu0Length(p);
+}

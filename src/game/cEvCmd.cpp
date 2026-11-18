@@ -20,7 +20,7 @@ struct cEvCmd {
     unsigned char m_e;
     unsigned char m_f;
     int m_10;
-    unsigned int m_flags;
+    int m_flags;
     int m_18;
     int m_1c;
     int m_20;
@@ -30,7 +30,7 @@ struct cEvCmd {
     unsigned char m_2c;
     unsigned char m_2d;
     unsigned short m_2e;
-    unsigned char m_30;
+    signed char m_30;
     unsigned char m_31;
     char _pad32[2];
     int m_34;
@@ -54,12 +54,35 @@ struct cEvCmd {
     float m_9c;
     float m_a0;
     unsigned char m_a4;
-    char _padA5[0xB2 - 0xA5];
+    char _padA5;
+    unsigned short m_a6;
+    unsigned short m_a8;
+    unsigned short m_aa;
+    unsigned short m_ac;
+    unsigned short m_ae;
+    unsigned short m_b0;
     unsigned char m_b2;
     char _padB3;
     int m_b4;
     int m_b8;
 };
+
+extern "C" {
+int func_002B1C80(cEvCmd *self);
+void func_002B1F80(float, float, float, float);
+void func_002B21F0(cEvCmd *self, unsigned short v);
+void func_002B2A88(cEvCmd *self);
+void func_002B22E0(cEvCmd *self, int v);
+void func_002B4528(cEvCmd *self, const char *name);
+void func_002B4428(cEvCmd *self, int a, void *b);
+int func_002B4228(cEvCmd *self);
+void func_002B42F0(cEvCmd *self);
+void func_002B45C8(cEvCmd *self);
+void func_002B45E0(cEvCmd *self, unsigned short v);
+void func_002B45F0(cEvCmd *self);
+int func_002B45F8(cEvCmd *self, cEvCmdData *d, unsigned int m);
+}
+void *SearchCameraData(const char *);
 
 // FUNCTION: GAME 0x2B22E0
 extern "C" void func_002B22E0(cEvCmd *self, int v)
@@ -204,3 +227,181 @@ extern "C" int func_002B2FF8() { return 0; }
 extern "C" int func_002B3000() { return 0; }
 // FUNCTION: GAME 0x2B2580
 extern "C" void func_002B2580() { }
+
+
+// FUNCTION: GAME 0x2B2A30
+extern "C" int func_002B2A30(cEvCmd *self)
+{
+    self->m_70 = 0;
+    self->m_a4 = 0;
+    func_002B2A88(self);
+    return 0;
+}
+
+// FUNCTION: GAME 0x2B2A58
+extern "C" int func_002B2A58(cEvCmd *self)
+{
+    self->m_70 = 1;
+    self->m_a4 = 0;
+    func_002B2A88(self);
+    return 0;
+}
+
+// FUNCTION: GAME 0x2B2B78
+extern "C" int func_002B2B78(cEvCmd *self)
+{
+    self->m_70 = 2;
+    self->m_a4 = 4;
+    self->m_18 = 0;
+    self->m_94 = self->m_data->m_arg;
+    self->m_96 = 0;
+    self->m_3c = 0;
+    return 0;
+}
+
+// FUNCTION: GAME 0x2B2BA8
+extern "C" int func_002B2BA8(cEvCmd *self)
+{
+    self->m_70 = 2;
+    self->m_a4 = 5;
+    self->m_18 = 0;
+    self->m_94 = self->m_data->m_arg;
+    self->m_96 = 0;
+    self->m_3c = 0;
+    return 0;
+}
+
+// FUNCTION: GAME 0x2B2F80
+extern "C" int func_002B2F80(cEvCmd *self)
+{
+    func_002B45E0(self, self->m_data->m_arg);
+    return 0;
+}
+
+// FUNCTION: GAME 0x2B3050
+extern "C" int func_002B3050(cEvCmd *self)
+{
+    func_002B4528(self, (const char *)self->m_data + 2);
+    return 0;
+}
+
+// FUNCTION: GAME 0x2B4528
+extern "C" void func_002B4528(cEvCmd *self, const char *name)
+{
+    func_002B4428(self, 1, SearchCameraData(name));
+}
+
+// FUNCTION: GAME 0x2B41F0
+extern "C" void func_002B41F0(cEvCmd *self)
+{
+    func_002B45F0(self);
+    self->m_10 = 0;
+    self->m_flags &= ~0x10;
+}
+
+// FUNCTION: GAME 0x2B4560
+extern "C" void func_002B4560(cEvCmd *self)
+{
+    if (func_002B4518(self, 1))
+        func_002B4598(self);
+}
+
+// FUNCTION: GAME 0x2B17A8
+extern "C" int func_002B17A8(cEvCmd *self)
+{
+    self->m_aa = 0x1E0;
+    self->m_ac = 0x88;
+    self->m_a6 = 0x100;
+    self->m_ae = 0x100;
+    self->m_a8 = 0x182;
+    self->m_b0 = 0x182;
+    return func_002B1C80(self);
+}
+
+// FUNCTION: GAME 0x2B1BE8
+extern "C" int func_002B1BE8(cEvCmd *self)
+{
+    self->m_aa = 0x1E0;
+    self->m_ac = 0x78;
+    self->m_a6 = 0x100;
+    self->m_ae = 0x100;
+    self->m_a8 = 0x170;
+    self->m_b0 = 0x170;
+    return func_002B1C80(self);
+}
+
+// FUNCTION: GAME 0x2B1C30
+extern "C" int func_002B1C30(cEvCmd *self)
+{
+    self->m_aa = 0x1E0;
+    self->m_ac = 0x78;
+    self->m_a6 = 0x100;
+    self->m_ae = 0x100;
+    self->m_a8 = 0x144;
+    self->m_b0 = 0x144;
+    return func_002B1C80(self);
+}
+
+// FUNCTION: GAME 0x2B2058
+extern "C" void func_002B2058(float a, float b, float c, float d)
+{
+    func_002B1F80(a, b, a + c, b + d);
+}
+
+// FUNCTION: GAME 0x2B43B0
+extern "C" void func_002B43B0(cEvCmd *self)
+{
+    if (func_002B45F8(self, self->m_data, 0xD200))
+        return;
+    if (func_002B45F8(self, self->m_data, 0xD900))
+        return;
+    if (func_002B45F8(self, self->m_data, 0xDA00))
+        return;
+    func_002B4428(self, 0, 0);
+}
+
+// FUNCTION: GAME 0x2B3158
+extern "C" void func_002B3158(cEvCmd *self)
+{
+    self->m_10 = 0;
+    self->m_98 = 0;
+    self->m_flags |= 8;
+    self->m_9c = 0;
+    self->m_a0 = 0;
+    func_002B45C8(self);
+}
+
+// FUNCTION: GAME 0x2B4188
+extern "C" void func_002B4188(cEvCmd *self)
+{
+    switch (self->m_d) {
+    case 0:
+        func_002B41F0(self);
+        self->m_d = self->m_d + 1;
+    case 1:
+        if (func_002B4228(self))
+            func_002B42F0(self);
+    }
+}
+
+// FUNCTION: GAME 0x2B2158
+extern "C" void func_002B2158(cEvCmd *self, unsigned short a, unsigned char b, int c)
+{
+    self->m_flags |= 0x1000;
+    func_002B22E0(self, c);
+    self->m_2c = b;
+    self->m_1c = 0;
+    self->m_2d = 0;
+    self->m_b2 = 0;
+    self->m_2e = 0;
+    self->m_44 = 0;
+    self->m_4c = 0;
+    self->m_50 = 0;
+    self->m_20 = -1;
+    self->m_30 = -1;
+    func_002B21F0(self, a);
+    self->m_c = 0;
+    self->m_d = 0;
+    self->m_e = 0;
+    self->m_f = 0;
+}
