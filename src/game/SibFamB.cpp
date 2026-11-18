@@ -134,9 +134,10 @@ void *func_002CDA08(void *self)
 }
 
 // FUNCTION: GAME 0x38BB48
-struct SFB_F { unsigned f; };
+struct SFB_F { int f; };
 void func_0038BB48(SFB_F *self, int on)
 {
+
     if (on)
         self->f |= 0x200;
     else
@@ -146,9 +147,81 @@ void func_0038BB48(SFB_F *self, int on)
 // FUNCTION: GAME 0x38BB70
 void func_0038BB70(SFB_F *self, int on)
 {
+
     if (on)
         self->f |= 2;
     else
         self->f &= ~2;
+}
+}
+
+class cFnZb;
+typedef void (cFnZb::*cFnZbPmf)();
+class cFnZb {
+public:
+    virtual void v();
+    char pad[0x2F4];
+    unsigned char type;
+    unsigned char type2;
+};
+extern "C" {
+extern char g_CollSolidManage[];
+void ChkHit__21cCollisionSolidManageP8cGameObj(void *mgr, void *obj);
+extern cFnZbPmf D_003BDB98[];
+
+// FUNCTION: GAME 0x1A5470
+void func_001A5470(cFnZb *self)
+{
+    if (func_001B76B0(self)) {
+        (self->*D_003BDB98[self->type])();
+        ChkHit__21cCollisionSolidManageP8cGameObj(g_CollSolidManage, self);
+        func_001B76D8(self);
+    }
+}
+
+// FUNCTION: GAME 0x2BB068
+char *func_002BB068(int *e, int k)
+{
+    for (unsigned i = 0; i < 4; i++) {
+        if (e[0] == k)
+            return (char *)e;
+        e += 2;
+    }
+    return 0;
+}
+
+struct SFB_Em { char _p[0x108]; int m_a; int m_b; };
+void func_002FBE50(SFB_Em *);
+
+// FUNCTION: GAME 0x2FEB80
+void func_002FEB80(SFB_Em *p, int a, int b)
+{
+    if (p->m_a == a && p->m_b == b)
+        func_002FBE50(p);
+}
+
+struct SFB_Sv { char _p[0x400]; };
+// FUNCTION: GAME 0x1FA968
+void func_001FA968(cCoreSave *self, int n)
+{
+    if (self->m_save) {
+        *(int *)((char *)self->m_save + 0x68) += n;
+        if (*(int *)((char *)self->m_save + 0x68) > 9)
+            *(int *)((char *)self->m_save + 0x68) = 9;
+        if (*(int *)((char *)self->m_save + 0x68) < 0)
+            *(int *)((char *)self->m_save + 0x68) = 0;
+    }
+}
+
+// FUNCTION: GAME 0x1FAA18
+void func_001FAA18(cCoreSave *self, int n)
+{
+    if (self->m_save) {
+        *(int *)((char *)self->m_save + 0x6C) += n;
+        if (*(int *)((char *)self->m_save + 0x6C) > 9)
+            *(int *)((char *)self->m_save + 0x6C) = 9;
+        if (*(int *)((char *)self->m_save + 0x6C) < 0)
+            *(int *)((char *)self->m_save + 0x6C) = 0;
+    }
 }
 }

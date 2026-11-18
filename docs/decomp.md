@@ -111,6 +111,11 @@ These source shapes reproduce patterns this compiler emits only one way:
   where `name` is the rodata string extern.
 - Base destructor calls need `extern "C" void _$_7cPlBase(T *);`.
 - Flags tested with `lwu; dsra` need `long f = (unsigned)s->flags; (f >> n) & 1`.
+- Flags tested with `lw; dsrl; andi` on an `int` field or global need both
+  steps in separate unsigned 64-bit locals:
+  `unsigned long f = (unsigned long)p->flags; unsigned long b = (f >> n) & 1; if (b)`.
+  Folding the test into the `if` emits `dsll32; dsra32` and drops the `andi`.
+  For a negated guard, `long x = (f >> 1) & 1; if (!x)` avoids an `xori`.
 - `lbu; ...; sw v,0($sp)` followed by a branch on the register comes from
   passing a widened `unsigned char` member to an inline helper that takes
   `const int &`: `static inline int IsSet(const int &v) { return v != 0; }`
@@ -149,7 +154,9 @@ The libraries come from more than one SCE compiler, all built as C at -O2:
 | 0x328098-0x36F048    | `ee-gcc2.96`        | 10 of 10 sampled framed units    |
 | 0x3875A8-0x393F30    | `ee-gcc2.9-991111`  | 0x389170, 0x389400 match         |
 | 0x3951F8-0x3A4AF0    | `ee-gcc2.9-991111`? | `sd` prologues, untested         |
-| 0x3B0268-end         | `ee-gcc2.9-991111`  | 0x3BAFD0 matches only under 2.9  |
+| 0x3B0268-0x3B9458    | `ee-gcc2.9-991111`  | 0x3B2148, 0x3B6B90 match         |
+| 0x3B9998-0x3BA900    | `ee-gcc2.96`        | fncmp matches pin both edges     |
+| 0x3BA978-end         | `ee-gcc2.9-991111`  | 0x3BAFD0 matches only under 2.9  |
 
 The boundaries follow runs of `sd` versus `sq` prologues; `sq` runs inside the
 library span (0x372CB0-0x387430, 0x393FD8-0x394F20, 0x3A53A8-0x3AF7B8) are
