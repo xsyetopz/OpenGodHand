@@ -218,17 +218,14 @@ extern sSaveManager *g_SaveManager;
 extern unsigned int D_00747A24;
 extern "C" void func_002BFC80(sSaveManager *);
 
-// 0x2C4868 near-miss: all calls and fields right, but original loads g_SaveManager/g_Sce earlier
-// (hoisted before the branch, sltiu in the func_002BFC80 delay slot) and branches on s0 differently;
-// 50 words differ, mostly scheduling.
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2C4868
+// FUNCTION: GAME 0x2C4868
 void cScenario::endExtraGame()
 {
     if (m_jumpPending == 1) {
         m_jumpPending = 0;
         unsigned short room = m_jumpRoom;
-        sVec4 pos = m_jumpPos;
+        sVec4 pos;
+        __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,0(%0)" : : "r"(&pos), "r"(&m_jumpPos) : "memory");
         float ang = m_jumpAng;
         int first = ((pl00 *)Getplayer__Fv())->m_x54A == 0;
         func_002BFC80(g_SaveManager);
@@ -239,7 +236,6 @@ void cScenario::endExtraGame()
         D_00747A24 = (D_00747A24 | 0x1000000) & 0xF7FFFFFF;
     }
 }
-#endif
 
 extern "C" int func_002D5580(cTaskManager *, void *, void *, int);
 extern "C" void func_002C4150(cScenario *, unsigned short, void *, bool, unsigned char, int);
@@ -285,10 +281,7 @@ struct sObjView {
     unsigned short m_kind;
 };
 
-// 0x2C4440 near-miss: 9 words differ; the original loads the vtable (lw a2,0x214) before the rot stores and
-// reuses it for both reads, mine reloads it after the stores into a different register.
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2C4440
+// FUNCTION: GAME 0x2C4440
 void cScenario::moveObjPos(cGameObj *obj, float x, float y, float z, float ang)
 {
     sObjView *o = (sObjView *)obj;
@@ -299,13 +292,15 @@ void cScenario::moveObjPos(cGameObj *obj, float x, float y, float z, float ang)
         pos.z = z;
         pos.w = 1.0f;
         o->m_vt->m_setPos((char *)o + o->m_vt->m_d0, &pos);
+        sObjVT *vt = o->m_vt;
+        void *self = (char *)o + vt->m_d1;
         sVec4 rot;
         sVec4 *r = &rot;
         rot.y = ang;
         rot.x = 0;
         rot.z = 0;
         r->w = 1.0f;
-        o->m_vt->m_setRot((char *)o + o->m_vt->m_d1, r);
+        vt->m_setRot(self, r);
     } else {
         sVec4 pos;
         pos.x = x;
@@ -315,7 +310,6 @@ void cScenario::moveObjPos(cGameObj *obj, float x, float y, float z, float ang)
         setPlayerPos__FRC4cVecf(*(cVec *)&pos, ang);
     }
 }
-#endif
 
 struct sSys {
     char _pad0[0x5B0];
@@ -335,44 +329,53 @@ extern "C" void func_002C14F8(sSceAtDummy *);
 extern "C" void func_002D5358(cTaskManager *);
 extern "C" void func_002C4E18(cScenario *);
 
-// 0x2C3678 near-miss (91 words differ): control flow and calls match the asm, but flag tests on m_flags48
-// compile to lw/dsll32/dsra32/xori/beqz where the original has lwu/dsra/andi/bnez, the first-block branch
-// layout differs, and `g_Sce` is reloaded after the endMess call instead of in its delay slot.
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2C3678
+// FUNCTION: GAME 0x2C3678
 void cScenario::move()
 {
     if (Sys.m_mode != 0x20 && Getplayer__Fv()) {
-        long f = m_flags48;
-        if ((f >> 1) & 1) {
-            if (((pl00 *)Getplayer__Fv())->m_x54A > 0) {
-                m_flags48 &= ~2;
-                Sys.m_flags &= 0xFFEFFFFF;
+        long f = (unsigned)m_flags48;
+        long x = (f >> 1) & 1;
+        if (!x) {
+            if (((pl00 *)Getplayer__Fv())->m_x54A <= 0) {
+                *(int *)&m_flags48 |= 2;
+                g_Sce->endMess();
+                Sys.m_flags |= 0x100000;
             }
-        } else if (((pl00 *)Getplayer__Fv())->m_x54A <= 0) {
-            m_flags48 |= 2;
-            g_Sce->endMess();
-            Sys.m_flags |= 0x100000;
+        } else if (((pl00 *)Getplayer__Fv())->m_x54A > 0) {
+            *(int *)&m_flags48 &= ~2;
+            Sys.m_flags &= 0xFFEFFFFF;
         }
     }
     int *p = &D_00747A2C;
-    if (*p >= 0 && !(p[0x58 / 4] & 0x8000000) && !((unsigned long)(unsigned)p[-2] >> 3 & 1) && !(p[0x4C / 4] & 0x10000) && !(p[1] & 1)) {
-        long f = m_flags48;
-        cTaskManager *tm = &m_task;
-        if ((f >> 1) & 1) {
-            if (m_cb->m_fn)
-                m_cb->m_fn();
-            func_002D5358(tm);
-        } else {
-            func_002C14F8(&g_SceAt);
-            if (m_cb->m_fn)
-                m_cb->m_fn();
-            func_002D5358(tm);
-            func_002C4E18(this);
-        }
+    if (*p < 0)
+        return;
+    if (p[0x58 / 4] & 0x8000000)
+        return;
+    unsigned long u = p[-2];
+    unsigned long b = (u >> 3) & 1;
+    if (b)
+        return;
+    if (p[0x4C / 4] & 0x10000)
+        return;
+    unsigned t = p[1] & 1;
+    if (t)
+        return;
+    cTaskManager *tm = &m_task;
+    long f = (unsigned)m_flags48;
+    long x = (f >> 1) & 1;
+    if (!x) {
+        func_002C14F8(&g_SceAt);
+        if (m_cb->m_fn)
+            m_cb->m_fn();
+        func_002D5358(tm);
+        func_002C4E18(this);
+    } else {
+        void (*fn)() = m_cb->m_fn;
+        if (fn)
+            fn();
+        func_002D5358(tm);
     }
 }
-#endif
 
 // FUNCTION: GAME 0x2C4DD0
 extern "C" void func_002C4DD0(cScenario *self, void *func, void *arg)

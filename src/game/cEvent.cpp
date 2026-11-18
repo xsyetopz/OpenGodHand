@@ -766,3 +766,50 @@ extern "C" void func_00298EF8(EvObj *self, unsigned char idx)
     }
 }
 #endif
+
+extern char D_0044AB60[], D_0044AB68[], D_0044AB70[], D_0044AB78[], D_0044AB80[], D_0044AB88[], D_0044AB90[], D_0044AB98[];
+
+// FUNCTION: GAME 0x2988A8
+extern "C" void func_002988A8(EvObj *self, int, int n)
+{
+    if (self) {
+        switch (self->m_kind) {
+        case 0x600:
+            if (n < 13) {
+                setMeshDisplay__6cModelPCcb(self, D_0044AB60, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB68, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB70, 1);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB78, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB80, 1);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB88, 0);
+            } else {
+                setMeshDisplay__6cModelPCcb(self, D_0044AB60, 1);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB68, 1);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB70, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB78, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB80, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB88, 1);
+            }
+            break;
+        case 0x602:
+            if (n < 13) {
+                setMeshDisplay__6cModelPCcb(self, D_0044AB60, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB70, 1);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB78, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB80, 1);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB88, 0);
+            } else {
+                setMeshDisplay__6cModelPCcb(self, D_0044AB60, 1);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB70, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB78, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB80, 0);
+                setMeshDisplay__6cModelPCcb(self, D_0044AB88, 1);
+            }
+            break;
+        case 0x626:
+            setMeshDisplay__6cModelPCcb(self, D_0044AB90, 0);
+            setMeshDisplay__6cModelPCcb(self, D_0044AB98, 0);
+            break;
+        }
+    }
+}

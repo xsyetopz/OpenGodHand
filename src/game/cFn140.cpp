@@ -133,3 +133,102 @@ void *__4cObj(char *p)
     return p;
 }
 }
+
+struct cFn140Node {
+    char pad[0x144];
+    cFn140Node *next;
+};
+
+extern "C" {
+extern int D_00747A34;
+void *func_00149488(void *a);
+void func_00150100(cFn140Node *n);
+void func_00150638();
+void func_0031EEA8(void *obj, const void *a, const void *b);
+extern int D_007856D8, __ti4cObj, __ti8cObjBase;
+extern const char D_0041EAD8[], D_00460D30[], D_0041EB60[], D_0041EC58[];
+void func_002A9790(void *a);
+
+// FUNCTION: GAME 0x149310
+void *func_00149310()
+{
+    if (D_00747A34 & 0x40000)
+        return 0;
+    return func_00149488(D_00466448);
+}
+
+// FUNCTION: GAME 0x149550
+void func_00149550(int a, int b)
+{
+    if (b == 0xFFFF) {
+        if (a)
+            func_002A9790(D_00466448);
+    }
+}
+
+// FUNCTION: GAME 0x149BE8
+cFn140Node *func_00149BE8(cFn140Node *a, int n)
+{
+    cFn140Node *p = a->next;
+    for (int m = n - 1; m != -1; m--) {
+        p = p->next;
+        if (!p)
+            return 0;
+    }
+    return p;
+}
+
+// FUNCTION: GAME 0x149E60
+void func_00149E60(cFn140Node *a)
+{
+    cFn140Node *p = a->next;
+    while (p) {
+        cFn140Node *n = p->next;
+        func_00150100(p);
+        p = n;
+    }
+    a->next = 0;
+}
+
+// FUNCTION: GAME 0x1491D0
+void func_001491D0(char *a, float *b)
+{
+    char *e = a + (*(unsigned char *)&D_007476B0 & 1) * 0xD0;
+    *(float *)(e + 0x1B0) = b[0];
+    *(float *)(e + 0x1B4) = b[1];
+    *(float *)(e + 0x1C0) = b[4];
+    *(float *)(e + 0x1C4) = b[5];
+    *(float *)(e + 0x1D0) = b[8];
+    *(float *)(e + 0x1D4) = b[9];
+}
+
+// FUNCTION: GAME 0x14E538
+void *func_0014E538()
+{
+    if (D_007856D8 == 0) {
+        func_00150638();
+        func_0031EEA8(&D_007856D8, D_0041EAD8, D_00460D30);
+    }
+    return &D_007856D8;
+}
+
+// FUNCTION: GAME 0x14E8D8
+void *__tf4cObj()
+{
+    if (__ti4cObj == 0) {
+        func_0014E538();
+        func_0031EEA8(&__ti4cObj, D_0041EB60, &D_007856D8);
+    }
+    return &__ti4cObj;
+}
+
+// FUNCTION: GAME 0x14FD20
+void *__tf8cObjBase()
+{
+    if (__ti8cObjBase == 0) {
+        __tf4cObj();
+        func_0031EEA8(&__ti8cObjBase, D_0041EC58, &__ti4cObj);
+    }
+    return &__ti8cObjBase;
+}
+}

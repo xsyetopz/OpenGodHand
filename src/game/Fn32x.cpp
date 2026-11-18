@@ -43,3 +43,37 @@ extern "C" void func_00320270() { abort(); }
 #ifdef NONMATCHING
 extern "C" int func_0032F4D0(char *p, int i) { return *(int *)((i << 4) + p + 0xB4); }
 #endif
+
+struct S30 { char _p[0x30]; int m_30; int m_34; };
+struct SA8 { char _p[0xA8]; int m_a8; };
+struct S01 { char _p0; signed char m_1; };
+struct S44 { char _p[0x44]; char m_44; };
+struct S06 { char _p[6]; short m_6; };
+struct S01b { char _p0; char m_1; };
+
+// FUNCTION: GAME 0x327708
+extern "C" int func_00327708(S30 *s) { return s->m_30; }
+
+// FUNCTION: GAME 0x3279A0
+extern "C" int func_003279A0(SA8 *s) { return s->m_a8; }
+
+// FUNCTION: GAME 0x327718
+extern "C" void func_00327718(S30 *s, int v) { s->m_34 = v; }
+
+// FUNCTION: GAME 0x327968
+extern "C" char *func_00327968(char *s) { return s + 0x58; }
+
+// FUNCTION: GAME 0x326778
+extern "C" int func_00326778(S01 *s) { return s->m_1; }
+
+// FUNCTION: GAME 0x328E18
+extern "C" void func_00328E18(S44 *s, char v) { s->m_44 = v; }
+
+// FUNCTION: GAME 0x320718
+extern "C" int func_00320718(S06 *s) { return s->m_6; }
+
+// FUNCTION: GAME 0x32F4A8
+extern "C" void func_0032F4A8(S01b *s) { s->m_1 = 0; }
+
+// FUNCTION: GAME 0x32D198
+extern "C" int func_0032D198() { return 0; }

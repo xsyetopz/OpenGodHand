@@ -57,3 +57,6 @@ extern "C" int func_00349720(char *p)
 {
     return *(int *)(p + 0x60);
 }
+
+// FUNCTION: GAME 0x34F1F8
+extern "C" int func_0034F1F8() { return 1; }

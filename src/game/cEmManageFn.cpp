@@ -80,4 +80,24 @@ void func_00294AE0(void *a, int b)
 {
     if (b == 0xFFFF && a) func_00290090(&g_EmManage);
 }
+extern char g_EmSet;
+void roomInit__11cEmSetParam(void *);
+void func_00290110(void *);
+void func_00297660(void *);
+// FUNCTION: GAME 0x2962A8
+void *func_002962A8(void *self) { return self; }
+// FUNCTION: GAME 0x290028
+void func_00290028(char *self) { *(int *)(self + 8) = 0; self[0x10] = 0; *(int *)self = 0; *(int *)(self + 0xC) = -1; *(int *)(self + 4) = 0; }
+// FUNCTION: GAME 0x290000
+void *func_00290000(char *self) { *(int *)self = 0; *(int *)(self + 0xC) = -1; *(int *)(self + 4) = 0; *(int *)(self + 8) = 0; self[0x10] = 0; return self; }
+// FUNCTION: GAME 0x290230
+void func_00290230(void *self) { func_00290110(self); }
+// FUNCTION: GAME 0x296350
+void func_00296350(void *self) { func_00297660(self); }
+// FUNCTION: GAME 0x294B18
+void func_00294B18() { func_00294AE0((void *)1, 0xFFFF); }
+// FUNCTION: GAME 0x295928
+void func_00295928(void *a, int b) { if (b == 0xFFFF && a) roomInit__11cEmSetParam(&g_EmSet); }
+// FUNCTION: GAME 0x295958
+void func_00295958() { func_00295928((void *)1, 0xFFFF); }
 }

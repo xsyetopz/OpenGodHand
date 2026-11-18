@@ -1,0 +1,121 @@
+
+// Destructor-chain wrappers: set the vtable, release the owned damage record (if any), then
+// call the base destructor with the delete flag.
+extern char g_DmgManage;
+extern "C" void func_001FE278(void *mgr, void *p);
+extern "C" void func_001B6F38(void *self, int flag);
+extern "C" void func_001C2820(void *self, int flag);
+extern "C" void func_001C7DE0(void *self, int flag);
+extern const char D_00420328[];
+extern const char D_00420410[];
+extern const char D_00420FE0[];
+extern const char D_004210D0[];
+extern const char D_00421848[];
+extern const char D_00421938[];
+extern const char D_00421A08[];
+extern const char D_00421D68[];
+extern const char D_00424040[];
+extern const char D_00424328[];
+#define OM_DMG_DTOR(ADDR, VT, OFF, BASE) \
+    extern "C" void func_00##ADDR(char *self, int flag) \
+    { \
+        *(const void **)(self + 0x214) = VT; \
+        void *d = *(void **)(self + OFF); \
+        if (d) { \
+            func_001FE278(&g_DmgManage, d); \
+            *(void **)(self + OFF) = 0; \
+        } \
+        BASE(self, flag); \
+    }
+
+// FUNCTION: GAME 0x16FD08
+OM_DMG_DTOR(16FD08, D_00420328, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x16FFF0
+OM_DMG_DTOR(16FFF0, D_00420410, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x173A78
+OM_DMG_DTOR(173A78, D_00420FE0, 0x650, func_001C7DE0)
+
+// FUNCTION: GAME 0x174830
+OM_DMG_DTOR(174830, D_004210D0, 0x650, func_001C7DE0)
+
+// FUNCTION: GAME 0x179050
+OM_DMG_DTOR(179050, D_00421848, 0x650, func_001C7DE0)
+
+// FUNCTION: GAME 0x179DE0
+OM_DMG_DTOR(179DE0, D_00421938, 0x650, func_001C7DE0)
+
+// FUNCTION: GAME 0x17AC30
+OM_DMG_DTOR(17AC30, D_00421A08, 0x60C, func_001B6F38)
+
+// FUNCTION: GAME 0x17C6A8
+OM_DMG_DTOR(17C6A8, D_00421D68, 0x650, func_001C7DE0)
+
+// FUNCTION: GAME 0x191B38
+OM_DMG_DTOR(191B38, D_00424040, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x192210
+OM_DMG_DTOR(192210, D_00424328, 0x604, func_001B6F38)
+
+extern "C" void func_001BFB00(void *self, int flag);
+extern const char D_004243F0[];
+extern const char D_004244D8[];
+extern const char D_004245C0[];
+extern const char D_004246A8[];
+extern const char D_00424790[];
+extern const char D_00424878[];
+extern const char D_00424960[];
+extern const char D_00424A48[];
+extern const char D_00424C30[];
+extern const char D_00425000[];
+extern const char D_004250F0[];
+extern const char D_004251C0[];
+extern const char D_00425290[];
+extern const char D_00425378[];
+extern const char D_00425460[];
+
+// FUNCTION: GAME 0x192A38
+OM_DMG_DTOR(192A38, D_004243F0, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x192CC0
+OM_DMG_DTOR(192CC0, D_004244D8, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x192FF0
+OM_DMG_DTOR(192FF0, D_004245C0, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x193278
+OM_DMG_DTOR(193278, D_004246A8, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x1934F0
+OM_DMG_DTOR(1934F0, D_00424790, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x1937A0
+OM_DMG_DTOR(1937A0, D_00424878, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x193A20
+OM_DMG_DTOR(193A20, D_00424960, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x193CA8
+OM_DMG_DTOR(193CA8, D_00424A48, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x195CA8
+OM_DMG_DTOR(195CA8, D_00424C30, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x198CE0
+OM_DMG_DTOR(198CE0, D_00425000, 0x600, func_001BFB00)
+
+// FUNCTION: GAME 0x199040
+OM_DMG_DTOR(199040, D_004250F0, 0x650, func_001C7DE0)
+
+// FUNCTION: GAME 0x199DF8
+OM_DMG_DTOR(199DF8, D_004251C0, 0x600, func_001BFB00)
+
+// FUNCTION: GAME 0x19A058
+OM_DMG_DTOR(19A058, D_00425290, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x19A2C8
+OM_DMG_DTOR(19A2C8, D_00425378, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x19A530
+OM_DMG_DTOR(19A530, D_00425460, 0x600, func_001C2820)

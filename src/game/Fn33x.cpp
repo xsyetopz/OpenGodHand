@@ -52,3 +52,20 @@ extern "C" void func_00335DD8()
 extern "C" void func_00336498()
 {
 }
+
+struct S20 { char _p[0x20]; int m_20; int m_24; };
+struct S0 { int m_0; int m_4; };
+
+// FUNCTION: GAME 0x332378
+extern "C" void func_00332378(S20 *s, int a, int b)
+{
+    s->m_20 = a;
+    s->m_24 = b;
+}
+
+// FUNCTION: GAME 0x330910
+extern "C" void func_00330910(S0 *s)
+{
+    s->m_4 = 0;
+    s->m_0 = 0;
+}

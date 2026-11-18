@@ -308,3 +308,88 @@ extern "C" void func_0012DC88(char *p, int f)
     if (f & 1)
         func_0030F5A0(p);
 }
+extern char D_0041ECA0[];
+
+extern char D_0041D540[];
+
+// FUNCTION: GAME 0x12E640
+extern "C" void func_0012E640(char *p, int f)
+{
+    *(char **)(p + 0x198) = D_0041D540;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+extern char D_0041D8F8[];
+
+// FUNCTION: GAME 0x139878
+extern "C" void func_00139878(char *p, int f)
+{
+    *(char **)(p + 0x35C) = D_0041D8F8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+
+// FUNCTION: GAME 0x150048
+extern "C" void func_00150048(char *p, int f)
+{
+    *(char **)(p + 0x214) = D_0041ECA0;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+extern char D_0042C4D8[];
+
+// FUNCTION: GAME 0x1FCE80
+extern "C" void func_001FCE80(char *p, int f)
+{
+    *(char **)(p + 0x50) = D_0042C4D8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x1FD418
+extern "C" void func_001FD418(char *p, int f)
+{
+    *(char **)(p + 0x50) = D_0042C4D8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x1FE500
+extern "C" void func_001FE500(char *p, int f)
+{
+    *(char **)(p + 0x50) = D_0042C4D8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+extern char D_0044B310[];
+
+// FUNCTION: GAME 0x2B6568
+extern "C" void func_002B6568(char *p, int f)
+{
+    *(char **)(p + 0xF0) = D_0044B310;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x2FBDD8
+extern "C" void func_002FBDD8(char *p, int f)
+{
+    *(char **)(p + 0xF0) = D_0044B310;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+extern char D_0044BAB0[];
+
+// FUNCTION: GAME 0x2B8B20
+extern "C" void func_002B8B20(char *p, int f)
+{
+    *(char **)(p + 0x18) = D_0044BAB0;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+

@@ -782,3 +782,30 @@ extern "C" EsObj *func_002FFD88(EsObjZ *self)
     }
     return self;
 }
+
+// ---- destructor clones: store vptr, then `if (f & 1) delete` ----
+extern "C" void func_0030F5A0(void *);
+
+#define DTOR_CLONE(name, vtsym, off)                        \
+    extern "C" char vtsym[];                                \
+    extern "C" void name(char *p, int f)                    \
+    {                                                       \
+        *(char **)(p + off) = vtsym;                        \
+        if (f & 1)                                          \
+            func_0030F5A0(p);                               \
+    }
+
+// FUNCTION: GAME 0x2D9E30
+DTOR_CLONE(func_002D9E30, D_0044D388, 0)
+// FUNCTION: GAME 0x31F330
+DTOR_CLONE(func_0031F330, D_00451288, 0)
+// FUNCTION: GAME 0x31F3C8
+DTOR_CLONE(func_0031F3C8, D_00451288, 0)
+// FUNCTION: GAME 0x321818
+DTOR_CLONE(func_00321818, D_00451288, 0)
+// FUNCTION: GAME 0x3218B0
+DTOR_CLONE(func_003218B0, D_00451288, 0)
+// FUNCTION: GAME 0x1337E0
+DTOR_CLONE(_$_21cCollisionScrollSolid, D_0041D5A8, 0x5C)
+// FUNCTION: GAME 0x1339C0
+DTOR_CLONE(_$_15cCollisionSolid, D_0041D808, 0x30)
