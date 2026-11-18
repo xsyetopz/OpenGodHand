@@ -126,11 +126,11 @@ extern "C" void free__5cHeapPv(void *, int *n)
     }
 }
 
-// DRAFT: GAME 0x2A4BA0 - 21 words differ: original copies self to a2 and keeps a single return 0 at the tail; compiled returns 0 first
+// DRAFT: GAME 0x2A4BA0 - 16 words differ: original copies self to a2 and c (v0) to v1 (one extra move, 84 vs 80 bytes); tried unsigned short v, inline helper, struct, if-nest, repeated exprs
 #ifdef NONMATCHING
 extern "C" int func_002A4BA0(char *self, int idx)
 {
-    unsigned v = idx & 0xFFFF;
+    unsigned short v = idx;
     if (!v) return 0;
     char *c = self + (v >> 12) * 16;
     unsigned *t = *(unsigned **)(c + 4);

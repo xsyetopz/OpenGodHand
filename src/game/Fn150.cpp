@@ -170,24 +170,21 @@ struct Tab8 {
     unsigned lo, hi;
 };
 extern Tab8 D_004A5D80[];
-// DRAFT: GAME 0x155BE8
-// diff: 25 words; semantics match (64-bit pack of two table words), but scheduling/reg choice differ and compiled is 4 bytes longer (original reuses v0 for 0x10000000 in both paths).
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x155BE8
 extern "C" void func_00155BE8(char **self, int idx, int slot)
 {
-    char *o = self[slot + 0x88];
+    char *o = *(char **)((int)self + (slot << 2) + 0x220);
     if (idx >= 0) {
-        Tab8 *t = &D_004A5D80[idx & 0xFF];
-        unsigned a = t->hi | 0x30000000;
-        unsigned b = t->lo & 0x0FFFFFFF;
-        *(long *)(o + 0x50) = ((long)b << 32) | (long)a;
+        idx &= 0xFF;
+        unsigned a = D_004A5D80[idx].hi | 0x30000000;
+        unsigned b = D_004A5D80[idx].lo & 0x0FFFFFFF;
+        *(long *)(o + 0x50) = ((unsigned long)a) | ((unsigned long)b << 32);
         *(long *)(o + 0x60) = 0x10000000;
     } else {
         *(long *)(o + 0x50) = 0x10000000;
         *(long *)(o + 0x60) = 0x10000000;
     }
 }
-#endif
 
 extern "C" void func_00157568(void *p);
 extern "C" void func_00157C18(void *p);

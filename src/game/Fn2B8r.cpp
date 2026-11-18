@@ -93,23 +93,20 @@ extern "C" int func_002B0EB8(char *self, unsigned short *a)
 extern "C" int func_002BB068(char *, int);
 extern "C" char *func_002BB098(char *);
 
-// DRAFT: GAME 0x2BB0C8
-// diff: 24 words, a/b saved in s1/s2 swapped relative to the original
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2BB0C8
 extern "C" int func_002BB0C8(char *self, int a, int b)
 {
     int *e = (int *)func_002BB068(self, a);
     if (e) {
         e[1] = b;
-        return 1;
+    } else {
+        e = (int *)func_002BB098(self);
+        if (!e) return 0;
+        e[0] = a;
+        e[1] = b;
     }
-    e = (int *)func_002BB098(self);
-    if (!e) return 0;
-    e[1] = b;
-    e[0] = a;
     return 1;
 }
-#endif
 
 extern "C" int func_002AEF90(char *);
 extern "C" int func_002B45F8(char *, int, int);

@@ -8,6 +8,7 @@ extern "C" void func_001F3488(void *, int);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1F27B0
+// 2 words differ: restartAnim delay slot (orig fills with addiu s0,0x980; mine with a0 move); tried reorder of m, temp copy t (worse, 7)
 extern "C" void func_001F27B0(char *self)
 {
     char *a = self + 0x10;

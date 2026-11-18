@@ -74,7 +74,7 @@ extern "C" void func_0014B5D8(char *self, char *o)
     func_00148D30(o, *(int *)(self + 0x2C4));
 }
 
-// DRAFT: GAME 0x14FD98 (loop/range-test codegen differs after 3 tries)
+// DRAFT: GAME 0x14FD98 (23 words off: original keeps range test as branchy bool (slti/slti, andi 0xFF) and copies end to t0; mine uses movn, a3 for end; tried &&-fold, bool var, ternary, uchar, inline fn)
 #ifdef NONMATCHING
 extern "C" char *SearchOM__13cObjBaseArrayUl(char *self, unsigned long key)
 {
@@ -84,7 +84,7 @@ extern "C" char *SearchOM__13cObjBaseArrayUl(char *self, unsigned long key)
     for (; a < e; a++) {
         char *o = *a;
         int v = *(unsigned short *)(o + 0x2FE);
-        bool ok = v >= 0x300 && v < 0x500;
+        bool ok = (v >= 0x300) ? (v < 0x500) : 0;
         if (ok && *(unsigned long *)(o + 0x538) == key)
             return o;
     }

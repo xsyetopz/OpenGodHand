@@ -177,7 +177,8 @@ extern "C" void func_002B33D8(char *self)
 {
     if (*(int *)(self + 0x1C)) {
         unsigned char v = func_002A4C00(Font, **(unsigned short **)(self + 0x8C));
-        unsigned long f = *(unsigned long *)(self + 0x14);
+        int fi = *(int *)(self + 0x14);
+        unsigned long f = fi;
         if ((f >> 1) & 1) {
             if (!((f >> 2) & 1)) {
                 if (!(v & 1)) {

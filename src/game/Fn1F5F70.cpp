@@ -24,8 +24,7 @@ extern "C" void func_001F6A20(sSndObj *);
 extern "C" int func_002D1578(void *, int);
 extern "C" void BgmEventStart__4cSnd9eBgmReqNoii(void *, int, int, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1F5F70
+// FUNCTION: GAME 0x1F5F70
 extern "C" void func_001F5F70(sSndObj *self)
 {
     int o = self->st << 3;
@@ -52,4 +51,3 @@ extern "C" void func_001F5F70(sSndObj *self)
         }
     }
 }
-#endif
