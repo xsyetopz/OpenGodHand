@@ -3,6 +3,8 @@
 
 #include "game/cMessage.h"
 #include "game/cTaskWork.h"
+#include "game/cOmBase.h"
+#include "game/cGameObj.h"
 
 class cVec;
 class cPlCamera {
@@ -21,23 +23,11 @@ public:
 };
 
 
-struct sScenarioTask {
+class cTaskManager {
+public:
+    int execute(void (&fn)(), int n);
     int m_unk0;
     cTaskWork *m_work;
-};
-
-class cOmBase {
-public:
-    char _pad0[0x250];
-    unsigned int m_f250;
-    char _pad254[0x2FE - 0x254];
-    unsigned short m_kind;
-    char _pad300[0x538 - 0x300];
-    long m_id;
-    char _pad540[0x5B0 - 0x540];
-    unsigned int m_flags;
-    char _pad5B4[4];
-    unsigned int m_flags2;
 };
 
 struct sOmVec {
@@ -57,6 +47,8 @@ struct sVec4 {
     float x, y, z, w;
 };
 
+struct sCallback;
+
 class cScenario {
 public:
     void SetRoomExitFunc(void *func, void *arg);
@@ -72,9 +64,13 @@ public:
     int isOmBreak(cOmBase *om);
     int isOmBreak(const char *name);
     int isOmBreak(unsigned short room, const char *name);
+    void move();
     void resetCam();
+    int taskExec(void (&fn)(), int n);
+    int taskExec(void *fn, void *arg, int n);
+    void execUpCut(unsigned short a, const char *name, bool b, unsigned char c, int d);
+    void moveObjPos(cGameObj *obj, float x, float y, float z, float ang);
     void endExtraGame();
-    void setOmSuspend(bool on);
     void endMess();
     void setCam(const char *name);
     void beginRoomJump(unsigned char a, unsigned char b, unsigned int c, unsigned char d);
@@ -87,8 +83,12 @@ public:
     char _pad15;
     unsigned short m_jumpRoom;
     char _pad18[0x1C - 0x18];
-    sScenarioTask m_task;
-    char _pad24[0xEC - 0x24];
+    cTaskManager m_task;
+    char _pad24[0x48 - 0x24];
+    unsigned int m_flags48;
+    char _pad4C[0xD4 - 0x4C];
+    sCallback *m_cb;
+    char _padD8[0xEC - 0xD8];
     void *m_roomExitFunc;
     void *m_roomExitArg;
     char _padF4[0x111 - 0xF4];

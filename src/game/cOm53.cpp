@@ -11,3 +11,14 @@ void cOm53::setDownPos(float y)
 {
     m_downPos = y;
 }
+
+// FUNCTION: GAME 0x1A7F20
+int cOm53::setGetOffEm(unsigned int n)
+{
+    if (!m_unk612)
+        return 0;
+    if (!n)
+        return 0;
+    m_unk615 += n;
+    return 1;
+}

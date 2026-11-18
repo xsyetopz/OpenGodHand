@@ -28,20 +28,18 @@ void CustomIDWork::Initialize(cIDWork *work)
     }
 }
 
-#ifdef NONMATCHING
-// 0x2D6490: 2 words differ. The original compares with `xori $v0,$a1,1; beql $v0,$zero`;
-// the compiler emits `addiu $v0,$zero,1; beql $a1,$v0` for every spelling tried.
+// FUNCTION: GAME 0x2D6490
 void CustomIDWork::SetDisp(bool b)
 {
     cIDWork *w = m_work;
     if (w) {
-        if (b != 1)
+        int d = b ^ 1;
+        if (d != 0)
             w->m_flags |= 0x20000000;
         else
             w->m_flags &= ~0x20000000;
     }
 }
-#endif
 
 // FUNCTION: GAME 0x2D6510
 void CustomIDWork::SetChildNoDisp(bool b)

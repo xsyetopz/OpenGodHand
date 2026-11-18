@@ -96,7 +96,7 @@ int cScenario::isEventStartOk()
 // FUNCTION: GAME 0x2C3E88
 void cScenario::waitEventStartOk()
 {
-    sScenarioTask *t = &m_task;
+    cTaskManager *t = &m_task;
     while (!isEventStartOk())
         t->m_work->sleep(1);
 }
@@ -142,7 +142,7 @@ void cScenario::setOmBreak(const char *name)
 }
 
 extern cObjBaseArray objbaseArray;
-extern "C" int func_002BED08(sRoomSave *, long);
+extern "C" int func_002BED08(sRoomSave *, unsigned long);
 
 // FUNCTION: GAME 0x2C5110
 int cScenario::isOmBreak(cOmBase *om)
@@ -206,28 +206,9 @@ void cScenario::resetCam()
     m_camWait = 0;
 }
 
-// 0x2C5068 near-miss: object-array global is addressed as addiu+reload (not hi + lo-folded loads),
-// isOm test is scheduled differently (original: slti/slti into a2), and m_flags2>>6 uses dsll32/dsrl32
-// instead of lwu+dsra. 38 words differ.
-#ifdef NONMATCHING
-// FUNCTION: GAME 0x2C5068
-void cScenario::setOmSuspend(bool on)
-{
-    for (cOmBase **p = objbaseArray.m_vec->m_begin; p < objbaseArray.m_vec->m_end; p++) {
-        cOmBase *om = *p;
-        int isOm = om->m_kind >= 0x300 && om->m_kind < 0x500;
-        if (isOm) {
-            if (on == 1) {
-                long f = om->m_flags2;
-                if (!((f >> 6) & 1))
-                    om->m_f250 |= 0x8000;
-            } else {
-                om->m_f250 &= 0xFFFF7FFF;
-            }
-        }
-    }
-}
-#endif
+// 0x2C5068 setOmSuspend near-miss: see src/scratch/cScenario/setOmSuspend.cpp (38 words differ: objbaseArray
+// addressed addiu+reload vs lui+lo-folded lw; kind test slti/slti vs addiu/sltiu; flags2>>6 lwu+dsra vs lw+dsll32/dsrl32).
+
 
 extern sSaveManager *g_SaveManager;
 extern unsigned int D_00747A24;
@@ -252,6 +233,140 @@ void cScenario::endExtraGame()
         else
             g_Sce->beginRoomJump(room, *(cVec *)&pos, ang, 0, 0, 1);
         D_00747A24 = (D_00747A24 | 0x1000000) & 0xF7FFFFFF;
+    }
+}
+#endif
+
+extern "C" void func_002C3968(cScenario *, int);
+extern "C" int func_002D5580(cTaskManager *, void *, void *, int);
+extern "C" void func_002C4150(cScenario *, unsigned short, void *, bool, unsigned char, int);
+extern "C" void setPlayerPos__FRC4cVecf(const cVec &, float);
+
+// FUNCTION: GAME 0x2C3890
+int cScenario::taskExec(void (&fn)(), int n)
+{
+    int r = m_task.execute(fn, n);
+    func_002C3968(this, r);
+    return r;
+}
+
+// FUNCTION: GAME 0x2C3920
+int cScenario::taskExec(void *fn, void *arg, int n)
+{
+    int r = func_002D5580(&m_task, fn, arg, n);
+    func_002C3968(this, r);
+    return r;
+}
+
+// FUNCTION: GAME 0x2C40C8
+void cScenario::execUpCut(unsigned short a, const char *name, bool b, unsigned char c, int d)
+{
+    void *cam = name ? SearchCameraData__FPCc(name) : 0;
+    func_002C4150(this, a, cam, b, c, d);
+}
+
+struct sObjVT {
+    char _pad0[0x70];
+    short m_d0;
+    short _pad72;
+    void (*m_setPos)(void *, const sVec4 *);
+    short m_d1;
+    short _pad7A;
+    void (*m_setRot)(void *, const sVec4 *);
+};
+
+struct sObjView {
+    char _pad0[0x214];
+    sObjVT *m_vt;
+    char _pad218[0x2FE - 0x218];
+    unsigned short m_kind;
+};
+
+// 0x2C4440 near-miss: 9 words differ; the original loads the vtable (lw a2,0x214) before the rot stores and
+// reuses it for both reads, mine reloads it after the stores into a different register.
+#ifdef NONMATCHING
+// FUNCTION: GAME 0x2C4440
+void cScenario::moveObjPos(cGameObj *obj, float x, float y, float z, float ang)
+{
+    sObjView *o = (sObjView *)obj;
+    if ((o->m_kind ^ 0x100) != 0) {
+        sVec4 pos;
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
+        pos.w = 1.0f;
+        o->m_vt->m_setPos((char *)o + o->m_vt->m_d0, &pos);
+        sVec4 rot;
+        sVec4 *r = &rot;
+        rot.y = ang;
+        rot.x = 0;
+        rot.z = 0;
+        r->w = 1.0f;
+        o->m_vt->m_setRot((char *)o + o->m_vt->m_d1, r);
+    } else {
+        sVec4 pos;
+        pos.x = x;
+        pos.y = y;
+        pos.z = z;
+        pos.w = 1.0f;
+        setPlayerPos__FRC4cVecf(*(cVec *)&pos, ang);
+    }
+}
+#endif
+
+struct sSys {
+    char _pad0[0x5B0];
+    unsigned short m_mode;
+    char _pad5B2[0x5E0 - 0x5B2];
+    unsigned int m_flags;
+};
+struct sSceAtDummy;
+struct sCallback {
+    char _pad0[0xC];
+    void (*m_fn)();
+};
+extern sSys Sys;
+extern int D_00747A2C;
+extern sSceAtDummy g_SceAt;
+extern "C" void func_002C14F8(sSceAtDummy *);
+extern "C" void func_002D5358(cTaskManager *);
+extern "C" void func_002C4E18(cScenario *);
+
+// 0x2C3678 near-miss (91 words differ): control flow and calls match the asm, but flag tests on m_flags48
+// compile to lw/dsll32/dsra32/xori/beqz where the original has lwu/dsra/andi/bnez, the first-block branch
+// layout differs, and `g_Sce` is reloaded after the endMess call instead of in its delay slot.
+#ifdef NONMATCHING
+// FUNCTION: GAME 0x2C3678
+void cScenario::move()
+{
+    if (Sys.m_mode != 0x20 && Getplayer__Fv()) {
+        long f = m_flags48;
+        if ((f >> 1) & 1) {
+            if (((pl00 *)Getplayer__Fv())->m_x54A > 0) {
+                m_flags48 &= ~2;
+                Sys.m_flags &= 0xFFEFFFFF;
+            }
+        } else if (((pl00 *)Getplayer__Fv())->m_x54A <= 0) {
+            m_flags48 |= 2;
+            g_Sce->endMess();
+            Sys.m_flags |= 0x100000;
+        }
+    }
+    int *p = &D_00747A2C;
+    if (*p >= 0 && !(p[0x58 / 4] & 0x8000000) && !((unsigned long)(unsigned)p[-2] >> 3 & 1) && !(p[0x4C / 4] & 0x10000) && !(p[1] & 1)) {
+        long f = m_flags48;
+        cTaskManager *tm = &m_task;
+        if ((f >> 1) & 1) {
+            if (m_cb->m_fn)
+                m_cb->m_fn();
+            func_002D5358(tm);
+        } else {
+            func_002C14F8(&g_SceAt);
+            if (m_cb->m_fn)
+                m_cb->m_fn();
+            func_002D5358(tm);
+            func_002C4E18(this);
+        }
     }
 }
 #endif

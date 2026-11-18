@@ -151,7 +151,8 @@ int cSceAtManager::SetDisable(unsigned short id)
     return SetDisable(unit);
 }
 
-// FUNCTION: GAME 0x2C2A98
+// 0x2C2A98: 10 words differ (not matched)
+#ifdef NONMATCHING
 int cSceAtManager::isHit(unsigned int id, eScehitType t)
 {
     cSceAtUnit *unit = getUnit(id);
@@ -160,7 +161,10 @@ int cSceAtManager::isHit(unsigned int id, eScehitType t)
     return 0;
 }
 
-// FUNCTION: GAME 0x2C2AE0
+#endif
+
+// 0x2C2AE0: 9 words differ (not matched)
+#ifdef NONMATCHING
 cSceAtUnit *cSceAtManager::getJumpPointAt(unsigned int id)
 {
     for (cSceAtUnit *u = func_002C30C0(this); u; u = func_002C30C8(this)) {
@@ -169,3 +173,4 @@ cSceAtUnit *cSceAtManager::getJumpPointAt(unsigned int id)
     }
     return 0;
 }
+#endif

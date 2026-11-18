@@ -475,7 +475,9 @@ int cCoreSave::ckClearStage(unsigned short n)
         return 0;
     if (D_00747A3C & 0x80000)
         return 1;
-    return (m_save->m_clearStage & (1 << n)) != 0;
+    if (m_save->m_clearStage & (1 << n))
+        return 1;
+    return 0;
 }
 
 #ifdef NONMATCHING

@@ -1,9 +1,7 @@
 #ifndef CEMMANAGE_H
 #define CEMMANAGE_H
 
-// Full cEmManage layout. Do not include together with cEmWrap.h, which holds a
-// minimal cEmManage declaration.
-class cEmBase;
+#include "game/cEmBase.h"
 
 struct cEmNode {
     char _pad0[4];
@@ -16,6 +14,8 @@ struct cEmNode {
 class cEmManage {
 public:
     cEmBase *GetEm(unsigned char id);
+    int ReleaseEm(cEmBase *em);
+    void ReleaseEmAll();
     int ChkActiveEm(cEmBase *em);
     int DarkWorldCk();
     void SetSlotWait(int n);
@@ -41,5 +41,7 @@ public:
     char _pad53E[0x548 - 0x53E];
     float m_speedRate;
 };
+
+extern cEmManage g_EmManage;
 
 #endif

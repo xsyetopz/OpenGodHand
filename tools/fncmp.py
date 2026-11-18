@@ -13,6 +13,7 @@ the differing instructions.
 from __future__ import annotations
 
 import argparse
+import os
 import shlex
 import struct
 import subprocess
@@ -78,13 +79,17 @@ def main() -> int:
 
     size, name = units()[args.addr]
     sym = args.sym or name
-    obj = ROOT / "build/fncmp" / args.src.resolve().relative_to(ROOT).with_suffix(".o")
+    # A per-process object lets several comparisons of one source run at once.
+    obj = ROOT / "build/fncmp" / args.src.resolve().relative_to(ROOT).with_suffix(f".{os.getpid()}.o")
     obj.parent.mkdir(parents=True, exist_ok=True)
     pick = ["--compiler", args.compiler] if args.compiler else []
     cmd = [sys.executable, str(ROOT / "tools/eecc.py"), *pick, *shlex.split(args.flags), "-c", "-o", str(obj), str(args.src)]
     if subprocess.call(cmd, cwd=ROOT):
         return 2
-    got, relocs = compiled(obj, sym)
+    try:
+        got, relocs = compiled(obj, sym)
+    finally:
+        obj.unlink(missing_ok=True)
     raw = ORIG.read_bytes()
     want = raw[args.addr + TEXT_OFF : args.addr + TEXT_OFF + size]
     # Units include trailing alignment nops that belong to no function body.

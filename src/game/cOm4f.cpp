@@ -23,3 +23,9 @@ void cOm4f::setLock(bool on)
 {
     m_lock = on;
 }
+
+// FUNCTION: GAME 0x1A4F30
+void cOm4f::connectDoor(cOm5f *door)
+{
+    m_door = door;
+}

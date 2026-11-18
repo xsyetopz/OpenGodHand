@@ -35,10 +35,7 @@ public:
     char _pad49C[0x5A0 - 0x49C];
     union {
         int m_flags5A0;
-        struct {
-            unsigned long long m_f0 : 1;
-            unsigned long long m_f1 : 1;
-        };
+        unsigned int m_uflags5A0;
     };
 };
 

@@ -7,9 +7,10 @@
 directory and every annotated function as `[vram, object, symbol]`. Each
 annotated function is compared with the original bytes (relocated fields
 masked, as in fncmp.py). A match is placed at its address in place of its asm
-unit. A mismatch keeps the asm unit; its compiled symbol is weakened in a
-`.gated.o` copy of the object so the asm definition wins and calls from the
-same source file still resolve. Every compiled object is linked through its
+unit. A mismatch keeps the asm unit; every compiled function that is not
+placed (mismatched or unannotated) is weakened in a `.gated.o` copy of the
+object so the asm definition wins and calls from the same source file still
+resolve. Every compiled object is linked through its
 `.gated.o` copy.
 
 `build/linkgen.tsv` records `vram  status  symbol` for each annotated function
@@ -90,6 +91,18 @@ def local_refs(obj: Path, sym: str, known: set[str]) -> set[str]:
     return out
 
 
+def text_symbols(obj: Path) -> set[str]:
+    """Global symbols defined in the object's function sections."""
+    with obj.open("rb") as f:
+        elf = ELFFile(f)
+        symtab = elf.get_section_by_name(".symtab")
+        return {
+            s.name for s in symtab.iter_symbols()
+            if s["st_info"]["bind"] == "STB_GLOBAL" and isinstance(s["st_shndx"], int)
+            and elf.get_section(s["st_shndx"]).name.startswith(".text.")
+        }
+
+
 def gated(obj: str) -> str:
     return obj[: -len(".o")] + ".gated.o"
 
@@ -125,14 +138,15 @@ def main() -> int:
             status[v] = "refs " + ",".join(sorted(r for r in refs[v]))
 
     placed: dict[int, tuple[str, str]] = {}
-    weak: dict[str, list[str]] = {o: [] for _v, o, _s in cfg["compiled"]}
     rows = []
     for vram, obj, sym in cfg["compiled"]:
         if status[vram] == "match":
             placed[vram] = (gated(obj), f".text.{sym}")
-        else:
-            weak[obj].append(sym)
         rows.append(f"{vram:08X}\t{status[vram]}\t{sym}\n")
+    # Every function not placed is weakened, annotated or not, so the asm
+    # unit of the same name wins and work in progress cannot clash with it.
+    linked_syms = {sec[len(".text."):] for _o, sec in placed.values()}
+    weak = {o: sorted(text_symbols(ROOT / o) - linked_syms) for o in {o for _v, o, _s in cfg["compiled"]}}
 
     objcopy = os.environ.get("CROSS", "mipsel-linux-gnu-") + "objcopy"
     for obj, syms in weak.items():

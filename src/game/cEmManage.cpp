@@ -1,5 +1,18 @@
 #include "game/cEmManage.h"
 
+class cObj {
+public:
+    char _pad0[0x2FE];
+    unsigned short m_type;
+};
+struct cObjArray {
+    char _pad0[4];
+    cObj **m_begin;
+    cObj **m_end;
+};
+void ReleaseObj(cObj *);
+extern cObjArray *objbaseArray;
+
 extern float D_00741DC0;
 extern float D_00754C48;
 extern const float D_00747A14;
@@ -64,12 +77,6 @@ void cEmManage::SetPlSorry()
     m_plSorry = 2;
 }
 
-class cEmBase {
-public:
-    char _pad0[0x640];
-    unsigned short m_id;
-};
-
 // FUNCTION: GAME 0x290868
 cEmBase *cEmManage::GetEm(unsigned char id)
 {
@@ -97,3 +104,20 @@ int cEmManage::ChkActiveEm(cEmBase *em)
     }
     return 0;
 }
+
+#ifdef NONMATCHING
+// 0x2908C0: 4 words differ: original has a real nop between the jal delay-slot lw and the bnel; ours emits none
+void cEmManage::ReleaseEmAll()
+{
+    for (cEmNode *n = m_list; n;) {
+        cEmBase *em = n->m_em;
+        n = n->m_next;
+        ReleaseEm(em);
+    }
+    for (cObj **p = objbaseArray->m_begin; p != objbaseArray->m_end; p++) {
+        if ((*p)->m_type == 0x364) {
+            ReleaseObj(*p);
+        }
+    }
+}
+#endif

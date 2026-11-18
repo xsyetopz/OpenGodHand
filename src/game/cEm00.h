@@ -3,6 +3,8 @@
 
 #include "game/cVec.h"
 
+enum EM00_GOTO_TYPE { EM00_GOTO_DUMMY };
+
 class cEm00 {
 public:
     int ckDown();
@@ -16,6 +18,7 @@ public:
     void setEm65Separate();
     void setNeckMoveOff();
     void setNeckMoveOn();
+    void setGoto(const cVec &pos, EM00_GOTO_TYPE type, unsigned int start, float f);
     void setSitChair(const cVec &pos, float rot);
 
     char _pad0[0xF0];
@@ -32,15 +35,24 @@ public:
     unsigned short m_unk3AC;
     char _pad3AE[0x490 - 0x3AE];
     cVec m_sitPos;
-    char _pad49C[0x54C - 0x49C];
+    char _pad49C[0x548 - 0x49C];
+    short m_unk548;
+    short m_unk54A;
     float m_unk54C;
     char _pad550[0x564 - 0x550];
     int m_id;
-    char _pad568[0x1644 - 0x568];
+    char _pad568[0x738 - 0x568];
+    void *m_unk738;
+    char _pad73C[0x1644 - 0x73C];
     unsigned int m_unk1644;
     char _pad1648[0x1650 - 0x1648];
     unsigned char m_unk1650;
-    char _pad1651[0x16D0 - 0x1651];
+    char _pad1651[0x16B0 - 0x1651];
+    cVec m_gotoPos;
+    char _pad16BC[4];
+    float m_gotoF;
+    int m_gotoType;
+    char _pad16C8[0x16D0 - 0x16C8];
     unsigned int m_flagsA;
     unsigned int m_flagsB;
     char _pad16D8[0x16EC - 0x16D8];

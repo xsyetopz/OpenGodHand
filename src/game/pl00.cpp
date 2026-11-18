@@ -7,6 +7,17 @@ public:
     int CkPlCatched();
 };
 extern cEmManage g_EmManage;
+extern "C" void func_001269E0(pl00 *p, unsigned int a, int b);
+
+class cPlCamera {
+public:
+    void setCamUpdate(unsigned int a);
+};
+class cCamManager : public cPlCamera {
+public:
+    void setPlCamera(unsigned char v);
+};
+extern cCamManager CamManager;
 
 // FUNCTION: GAME 0x10BD08
 void pl00::SetCannonReflect(unsigned char v)
@@ -35,25 +46,32 @@ void pl00::DiscardWeapon()
 }
 
 #ifdef NONMATCHING
-// 0x12BAB8: original is lbu+slti+bltz range check; compiler folds unsigned char test to sltiu
+// 0x12BAB8: switch form is 5 words off: original returns via slti/beqz+bltz range check back to a shared 'return 0'
 int pl00::CkSubScreen()
 {
     if (m_modeA)
         return 0;
-    int v = *(volatile unsigned char *)&m_modeB;
-    return v < 4 && v >= 0;
-}
-#endif
-
-#ifdef NONMATCHING
-// 0x12BF50: delay slot of jal func_0010B698 is nop; original refills a0 from s0 (daddu)
-int pl00::ckAtkActBtnEnable()
-{
-    if (!m_unk6A0 && m_unk54A > 0 && !func_0010B698(this) && !g_EmManage.CkPlCatched())
-        return ((unsigned char *)&m_unk15F4)[1] & 1;
+    switch (m_modeB) {
+    case 0: case 1: case 2: case 3:
+        return 1;
+    }
     return 0;
 }
 #endif
+
+// FUNCTION: GAME 0x12BF50
+int pl00::ckAtkActBtnEnable()
+{
+    if (m_unk6A0)
+        return 0;
+    if (m_unk54A <= 0)
+        return 0;
+    if (func_0010B698(this))
+        return 0;
+    if (g_EmManage.CkPlCatched())
+        return 0;
+    return ((unsigned char *)&m_unk15F4)[1] & 1;
+}
 
 // FUNCTION: GAME 0x12C0D8
 void pl00::setEventWait()
@@ -69,9 +87,9 @@ void pl00::setJump(float v)
 {
     m_modeA = 0;
     m_modeB = 0x33;
+    m_unk670 = v;
     m_modeC = 0;
     m_modeD = 0;
-    m_unk670 = v;
 }
 
 // FUNCTION: GAME 0x12CD90
@@ -81,9 +99,9 @@ void pl00::setIgnition(const cVec &pos, float v)
         m_unk660 = pos;
     m_modeA = 0;
     m_modeB = 0x34;
+    m_unk670 = v;
     m_modeC = 0;
     m_modeD = 0;
-    m_unk670 = v;
 }
 
 // FUNCTION: GAME 0x12CDD0
@@ -93,4 +111,54 @@ void pl00::setPyramidIn()
     m_modeB = 0x36;
     m_modeC = 0;
     m_modeD = 0;
+}
+
+// FUNCTION: GAME 0x12CE20
+void pl00::lookCliff(const cVec &pos, float v)
+{
+    if (&m_unk660 != &pos)
+        m_unk660 = pos;
+    m_modeA = 0;
+    m_modeB = 0x35;
+    m_unk670 = v;
+    m_modeC = 0;
+    m_modeD = 0;
+}
+
+// FUNCTION: GAME 0x10B980
+void pl00::SubscreenMotSet(unsigned int a)
+{
+    func_001269E0(this, a, 1);
+    m_modeA = 5;
+    m_modeB = 0;
+    m_modeC = 2;
+    m_modeD = 0;
+}
+
+// FUNCTION: GAME 0x10BCC0
+void pl00::CannonGameMode(unsigned int on)
+{
+    if (on) {
+        m_modeA = 6;
+        m_unk54C = 5.0f;
+        m_modeB = 0;
+        m_modeC = 0;
+        m_modeD = 0;
+    } else {
+        reset();
+    }
+}
+
+// FUNCTION: GAME 0x124F60
+void pl00::clearMotionCam(unsigned int a, unsigned int b)
+{
+    if (!(b & 1)) {
+        if (!(m_unk15F4 & 2))
+            return;
+        m_unk15F4 &= ~2;
+    }
+    cPlCamera *c = &CamManager;
+    if (c)
+        c->setCamUpdate(a);
+    CamManager.setPlCamera(0);
 }

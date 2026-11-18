@@ -108,13 +108,18 @@ extern "C" void calcParts__6cModel(cEmBase *);
 extern char D_0044A870[];
 extern cEmManage g_EmManage;
 
-#ifdef NONMATCHING
-// 0x295B38: 5 words differ: original branches bnez a1 to a call block placed last; ours beqz with call inline
+// FUNCTION: GAME 0x295B38
 int cEmWrap::release()
 {
-    return (func_00295978(this) && m_em) ? g_EmManage.ReleaseEm(m_em) : 0;
+    if (func_00295978(this) == 0) {
+        return 0;
+    }
+    cEmBase *e = m_em;
+    if (e != 0) {
+        return g_EmManage.ReleaseEm(e);
+    }
+    return 0;
 }
-#endif
 
 // FUNCTION: GAME 0x2959B0
 void cEmWrap::setPos(const cVec &p)
@@ -125,24 +130,23 @@ void cEmWrap::setPos(const cVec &p)
     }
 }
 
-#ifdef NONMATCHING
-// 0x295A08: 10 words differ: original reloads vtable into a2 right after first call, before lui/mtc1; ours schedules lw v1 later
+// FUNCTION: GAME 0x295A08
 void cEmWrap::setPos(const cVec &p, float f)
 {
     if (func_00295978(this)) {
         cEmBase *em = m_em;
         em->vcall(0x70, &p);
-        cVEnt *vt = em->m_vt;
+        cVEnt *t = em->m_vt + 15;
+        short d = t->delta;
         float v[4];
         v[0] = 0.0f;
         v[1] = f;
         v[2] = 0.0f;
         v[3] = 1.0f;
-        vt[15].fn((char *)em + vt[15].delta, v);
+        t->fn((char *)em + d, v);
         calcParts__6cModel(m_em);
     }
 }
-#endif
 
 // FUNCTION: GAME 0x295C10
 void cEmWrap::setLockOff(bool b)
@@ -174,13 +178,17 @@ void cEmWrap::setScrCollEnable(bool b)
     }
 }
 
-#ifdef NONMATCHING
-// 0x295F28: 12 words differ (88 vs 84 bytes): original puts the func_0026ECC0 call block last, both false paths join one return-0 block
+// FUNCTION: GAME 0x295F28
 int cEmWrap::CkActive()
 {
-    return (func_00295978(this) && strcmp(D_0044A870, m_em->m_name) == 0) ? func_0026ECC0(m_em) : 0;
+    if (func_00295978(this) == 0) {
+        return 0;
+    }
+    if (strcmp(D_0044A870, m_em->m_name) == 0) {
+        return func_0026ECC0(m_em);
+    }
+    return 0;
 }
-#endif
 
 extern "C" void setGoto__5cEm00RC4cVec14EM00_GOTO_TYPEUif(cEmBase *, const cVec *, EM00_GOTO_TYPE, unsigned, float);
 extern "C" int func_0026EA28(cEmBase *);
@@ -212,20 +220,17 @@ void cEmWrap::setGoto(const cVec &p, EM00_GOTO_TYPE t, unsigned u, float f)
     }
 }
 
-#ifdef NONMATCHING
-// 0x296018: 12 words differ (88 vs 84 bytes), same pattern as CkActive
-// FUNCTION-NONMATCH 0x296018
+// FUNCTION: GAME 0x296018
 int cEmWrap::ckGoto()
 {
-    if (func_00295978(this)) {
-        if (strcmp(D_0044A870, m_em->m_name) == 0) {
-            return func_0026EA28(m_em);
-        }
+    if (func_00295978(this) == 0) {
         return 0;
+    }
+    if (strcmp(D_0044A870, m_em->m_name) == 0) {
+        return func_0026EA28(m_em);
     }
     return 0;
 }
-#endif
 
 // FUNCTION: GAME 0x296070
 void cEmWrap::SetKeepPos(const cVec &p)
@@ -277,22 +282,17 @@ void cEmWrap::SetEscPos(const cVec &p)
     }
 }
 
-#ifdef NONMATCHING
-// 0x296230: 13 words differ (116 vs 112 bytes): original loads m_em into v1 in the bnez delay slot and shares one sh store; ours reloads
-// FUNCTION-NONMATCH 0x296230
+// FUNCTION: GAME 0x296230
 void cEmWrap::setAlphaMode(bool b)
 {
     if (func_00295978(this)) {
         if (strcmp(D_0044A870, m_em->m_name) == 0) {
             setAlphaMode__5cEm00b(m_em, b);
-            short t;
-            if (b) {
-                t = 0x258;
+            if (!b) {
+                m_em->m_alphaTimer = 0x1770;
             } else {
-                t = 0x1770;
+                m_em->m_alphaTimer = 0x258;
             }
-            m_em->m_alphaTimer = t;
         }
     }
 }
-#endif

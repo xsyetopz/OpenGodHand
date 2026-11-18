@@ -17,3 +17,21 @@ void cOmItem::setScrCheck(bool on)
     else
         m_itemFlags &= 0xFE;
 }
+
+// 0x1C2558: char -> long shift compiles to lbu+dsll32/dsra32 instead of the original lb+dsllv; loop shape also differs
+#ifdef NONMATCHING
+void cOmItem::setBlockObj(const char *name)
+{
+    long id = 0;
+    int i = 0;
+    while (*name) {
+        long c = *name;
+        id |= c << (i * 8);
+        i++;
+        name++;
+        if (i >= 8)
+            break;
+    }
+    m_blockObj = id;
+}
+#endif

@@ -1,5 +1,7 @@
 #include "game/cEm00.h"
 
+extern "C" void func_001D0408(void *);
+
 // FUNCTION: GAME 0x26F0E0
 int cEm00::ckDown()
 {
@@ -102,4 +104,27 @@ void cEm00::setSitChair(const cVec &pos, float rot)
     m_act1 = 1;
     m_act2 = 0;
     m_act3 = 0;
+}
+
+// FUNCTION: GAME 0x26E988
+void cEm00::setGoto(const cVec &pos, EM00_GOTO_TYPE type, unsigned int start, float f)
+{
+    m_gotoPos = pos;
+    m_gotoF = f;
+    m_gotoType = type;
+    if (start) {
+        m_act0 = 0;
+        m_act1 = 0x13;
+        m_act2 = 0;
+        m_act3 = 0;
+    }
+    if (type == 0xF) {
+        setAlphaMode(false);
+        m_unk548 = 1;
+        m_unk54A = 1;
+    }
+    if (m_unk738) {
+        func_001D0408(m_unk738);
+        m_unk738 = 0;
+    }
 }

@@ -20,3 +20,9 @@ void cOmBase::setScrSollEnable(bool enable)
     cCollScr *c = &g_CollScr;
     func_001331B8(c, id, enable);
 }
+
+// FUNCTION: GAME 0x1B79B0
+void cOmBase::dieCommon()
+{
+    ReleaseObj((cObj *)this);
+}

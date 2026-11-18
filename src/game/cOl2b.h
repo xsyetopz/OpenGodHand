@@ -8,6 +8,9 @@ public:
     void setOpen();
     void setClose();
     void setInit();
+    void setOpenFix();
+    void setCloseFix();
+    void setInitFix();
     int getState();
     unsigned char isActive();
 

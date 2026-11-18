@@ -60,12 +60,15 @@ void cGameObj::SetTgtTurn(const cVec &tgt, float speed)
 
 extern int cModel_isClip(const void *) __asm__("isClip__C6cModel");
 
-// FUNCTION: GAME 0x2A7448
+// 0x2A7448: 3 words differ (original lwu + dsra 1 + bnez; compiled lw + srl + bnel)
+#ifdef NONMATCHING
 bool cGameObj::isClip() const
 {
-    if (m_f0)
+    unsigned int f = m_uflags5A0;
+    if (f & 1)
         return true;
-    if (m_f1)
+    if ((long long)f >> 1 & 1)
         return true;
     return cModel_isClip(this) != 0;
 }
+#endif
