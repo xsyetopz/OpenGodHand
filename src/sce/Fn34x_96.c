@@ -34,28 +34,12 @@ void func_00348D58(char *o)
         *(int *)(o + 4) = 2;
 }
 
-#ifdef NONMATCHING
-extern void func_00335638();
-extern char D_004590D8[];
-extern int func_0035A1C8();
-extern void func_0034FA28();
-extern void func_00345B38();
+extern int func_00345B38();
 extern void func_00345F48();
 extern int func_0034CCE8();
 extern char D_004592D0[];
 
-// DRAFT: GAME 0x347C80
-// diff: orig hoists a1/a2/a3/t0 once before the branch and shares them in both tail calls; ours re-derives them in the else arm (10 words)
-void func_00347C80(char *a, int b, int c, int d)
-{
-    if (func_00346828(a) != 1)
-        func_00348BE0(D_004590D8, b, 0, c, d);
-    else
-        func_00335638(*(int *)(a + 0x48), b, 0, c, d);
-}
-
-// DRAFT: GAME 0x348F68
-// diff: orig loads lb 0x72 into v1 and bnez v1; ours uses v0 (2 words)
+// FUNCTION: GAME 0x348F68
 void func_00348F68(char *o)
 {
     if (func_00359E80(*(int *)(o + 0x3C)) == 3) {
@@ -65,6 +49,22 @@ void func_00348F68(char *o)
         if (o[0x70] == 1 && func_0034CCE8(*(int *)(o + 0x3C)))
             func_00348BE0(D_004592D0);
     }
+}
+
+#ifdef NONMATCHING
+extern void func_00335638();
+extern char D_004590D8[];
+extern int func_0035A1C8();
+extern void func_0034FA28();
+
+// DRAFT: GAME 0x347C80
+// diff: orig hoists a1/a2/a3/t0 once before the branch and shares them in both tail calls; ours re-derives them in the else arm (10 words)
+void func_00347C80(char *a, int b, int c, int d)
+{
+    if (func_00346828(a) != 1)
+        func_00348BE0(D_004590D8, b, 0, c, d);
+    else
+        func_00335638(*(int *)(a + 0x48), b, 0, c, d);
 }
 
 // DRAFT: GAME 0x34EEE0

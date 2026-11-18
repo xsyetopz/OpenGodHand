@@ -142,7 +142,9 @@ def unit_obj(unit_dir: str, vram: int) -> str:
 
 def linker_script(sections, replaced: dict[int, tuple[str, str]]) -> str:
     """`sections` pairs each SECTIONS row with its units; `replaced` maps a unit
-    address to (object path, input section) supplied by compiled code."""
+    address to (object path, input section) supplied by compiled code. A key
+    may be a `.text` function unit or a `.rodata` jump-table unit (linkgen
+    places a matched switch function's own table over the asm unit)."""
     out = ["ENTRY(func_00100008)", "SECTIONS", "{"]
     for (name, base, _end, _src, unit_dir), units in sections:
         noload = " (NOLOAD)" if name in NOLOAD else ""

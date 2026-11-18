@@ -79,8 +79,15 @@ full build still reproduces `SLUS_215.03` byte for byte.
   load of an extern, so reference the original constant instead:
   `extern const float D_0041C2A0;` or, inside a larger unit,
   `extern const float D_0041C280[]; ... D_0041C280[8]`. String literals work
-  the same way (`extern const char D_0044A870[];`). Switch jump tables still
-  need their own `.rodata`; skip those.
+  the same way (`extern const char D_0044A870[];`). Jump tables are linked
+  with their function; see the next item.
+- Jump tables: a `switch` function that matches under fncmp links together
+  with its table. linkgen places the object's `.rodata` over the original
+  `jtbl_` unit (replacing `asm/data/rodata/<addr>.o`) when that section is
+  exactly the table: same size, address-aligned, and every word equals the
+  original target. Extra `.rodata` in the object (strings, floats, a second
+  table) keeps the function gated in asm; split such a function into its own
+  source file. Annotate it `// FUNCTION` as usual (example: 0x122A50).
 - Keep a function in asm (no annotation) until it matches. A non-matching
   attempt worth keeping goes inside `#ifdef NONMATCHING` with a comment naming
   its address and remaining difference, so it neither links nor collides with

@@ -9,24 +9,6 @@ extern "C" int SeCall__4cSnd6eSeBlksR4cObjP4cObjP6cPartsUii(void *, int, int, vo
 extern "C" void func_001851C0(void *, int);
 extern "C" int checkDamage__7cOmBaseP11cDamageTake(void *self, void *dmg);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1889C8 - store/schedule order differs (10 words); source order of stores has no effect
-extern "C" void func_001889C8(char *self)
-{
-    unsigned long f = *(int *)(self + 0x5B0);
-    unsigned long b = (f >> 1) & 1;
-    if (b == 0) {
-        int v = *(int *)(self + 0x5B0);
-        *(unsigned char *)(self + 0x2F5) = 0;
-        *(int *)(self + 0x5B0) = v | 1;
-        *(unsigned char *)(self + 0x2F4) = 2;
-        *(unsigned char *)(self + 0x2F6) = 0;
-        *(unsigned char *)(self + 0x2F7) = 0;
-    }
-}
-
-#endif
-
 // FUNCTION: GAME 0x183510
 extern "C" void func_00183510(void *o)
 {

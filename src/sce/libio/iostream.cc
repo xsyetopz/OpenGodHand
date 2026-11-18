@@ -236,7 +236,7 @@ istream& istream::operator>>(long double& x)
 // operator>>(double&) and (float&) match, but their "%lg"/"%g" literals sit in the
 // object's .rodata, which is not linked yet; Fn38y_29.c carries 0x388380 meanwhile.
 #ifdef NONMATCHING
-// DRAFT: GAME 0x388380
+// 0x388380 (operator>>(double&)) is carried by Fn38y_29.c.
 istream& istream::operator>>(double& x)
 {
     if (ipfx0())

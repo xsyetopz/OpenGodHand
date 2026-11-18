@@ -9,15 +9,6 @@ extern int func_003B00B0();
 extern void func_003B0120();
 extern void func_003B79C0();
 
-// DRAFT: GAME 0x3B6A00
-// diff: original is a bare `j func_003B6990` tail call (16 bytes); 2.9 and 2.96 both emit a framed jal (36 bytes). Siblings 0x3B6A10/0x3B6A20 differ only in the constant (0xB0001010/0xB0001020)
-#ifdef NONMATCHING
-int func_003B6A00(int a)
-{
-    return func_003B6990(0xB0001000, a);
-}
-#endif
-
 // FUNCTION: GAME 0x3B7270
 int func_003B7270(void)
 {

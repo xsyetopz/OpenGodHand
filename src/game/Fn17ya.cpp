@@ -66,47 +66,6 @@ FN17_VEC(func_00170F60, 4.0f, 4.1f, 4.2f)
 // FUNCTION: GAME 0x17EAF8
 FN17_VEC(func_0017EAF8, 5.78f, 5.5f, 5.6f)
 
-#ifdef NONMATCHING
-struct sK1 {
-    char _p0[0xF0];
-    const float *m_f0;
-    char _pf4[0x2F4 - 0xF4];
-    unsigned char m_2f4, m_2f5, m_2f6, m_2f7;
-    char _p2f8[0x490 - 0x2F8];
-    float m_490[4];
-    char _p4a0[0x5B0 - 0x4A0];
-    int m_5b0;
-    char _p5b4[0x5C0 - 0x5B4];
-    cVec m_5c0;
-};
-struct V16Y {
-    float x, y, z, w;
-} __attribute__((aligned(16)));
-
-#define FN17_STOP(NAME)                                                         \
-    extern "C" void NAME(sK1 *s)                                                \
-    {                                                                           \
-        long f = (unsigned)s->m_5b0;                                            \
-        long x = (f >> 1) & 1;                                                  \
-        if (x)                                                                  \
-            return;                                                             \
-        V16Y a;                                                                 \
-        __asm__ volatile("sqc2 $vf0,0(%0)" : : "r"(&a) : "memory");             \
-        __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,0(%0)" : : "r"(&a), "r"(s->m_f0), "r"(s->m_490) : "memory"); \
-        V16Y b = a;                                                             \
-        s->m_5c0 = *(cVec *)&b;                                                 \
-        s->m_5b0 = (s->m_5b0 | 1) & -5;                                         \
-        s->m_2f4 = 2;                                                           \
-        s->m_2f5 = 0;                                                           \
-        s->m_2f6 = 0;                                                           \
-        s->m_2f7 = 0;                                                           \
-    }
-
-// DRAFT: GAME 0x1746B0
-// diff: vsub temp and its copy land in swapped stack slots and store order differs (17 words)
-FN17_STOP(func_001746B0)
-#endif
-
 // FUNCTION: GAME 0x17B568
 extern "C" cVec *func_0017B568(sP1 *s)
 {

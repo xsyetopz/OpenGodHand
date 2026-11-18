@@ -9,14 +9,14 @@ extern const char D_0045FC90[];
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3AE598
-// diff: original has the CHECK_INIT load-delay nop after lw a0,0x54(s0) (404 vs 400 bytes)
+// diff: 3 words; the null-checked CHECK_INIT gives the nop and 404 bytes, but adds a beqz on the reent (v1) before the sw that the original lacks
 int func_003AE598(int c, FILE *fp)
 {
     if (c == EOF)
         return EOF;
     if (!fp->_data)
         fp->_data = _REENT;
-    if (!fp->_data->__sdidinit)
+    if (fp->_data && !fp->_data->__sdidinit)
         __sinit_(fp->_data);
     fp->_flags &= ~__SEOF;
     if ((fp->_flags & __SRD) == 0) {

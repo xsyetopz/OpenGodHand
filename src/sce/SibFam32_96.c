@@ -117,3 +117,7 @@ int func_00338D58(int a) { int r; func_003389F8(); r = func_00338D90(a); func_00
 
 // FUNCTION: GAME 0x33A388
 int func_0033A388(int a) { int r; func_003389F8(); r = func_0033A3C0(a); func_00338A10(); return r; }
+
+int func_00328F68(int);
+// FUNCTION: GAME 0x328F30
+int func_00328F30(int a) { int r; func_00329070(); r = func_00328F68(a); func_00329088(); return r; }

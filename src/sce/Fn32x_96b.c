@@ -49,11 +49,9 @@ int func_00323700(int *a, int b, int c, int d, int e) {
 }
 #endif
 
-// DRAFT: GAME 0x324440
-// diff: 2 words; orig sw v0,0x10 before daddu v1,v0 (ours daddu then sw)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x324440
 int adxf_GetFsizeByte(int *a) {
-    int v;
+    int v, w;
     if (a == 0) {
         func_0033F130(D_00451928);
         return -3;
@@ -62,12 +60,12 @@ int adxf_GetFsizeByte(int *a) {
     if (v > 0x7FFFF7FF) {
         func_00328F70(a[1]);
         if (func_00328098(a[1]) == 4) return -5;
-        v = func_00328D40(a[1]);
-        a[0x10 / 4] = v;
+        w = func_00328D40(a[1]);
+        a[0x10 / 4] = w;
+        v = w;
     }
     return v;
 }
-#endif
 
 // DRAFT: GAME 0x3234D0
 // diff: 12 words; store scheduling (orig keeps 1 in v1, 0x200 stored last; ours hoists sb/0x2C)
@@ -102,7 +100,7 @@ char *adxf_CreateAdxFs(void) {
 // diff: 1 word; dead volatile read of D_003C8138 lands in v0, orig v1
 #ifdef NONMATCHING
 void func_00324C90(void) {
-    int id, t;
+    int t, id;
     if (D_003C80E0 == 0) {
         id = GetThreadId();
         D_003CF9D0 = func_003AFB30(id, D_003C80B0);

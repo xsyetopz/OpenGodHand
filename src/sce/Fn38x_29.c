@@ -30,21 +30,6 @@ int func_0039AE78(struct Obj39 *o)
     return 1;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x38B0B0
-// diff: 5 words, register allocation of the vtable slot ($v0 vs $a1) and the adjust ($a2 vs $v1)
-void func_0038B0B0(char *o)
-{
-    struct VT {
-        char pad[0x10];
-        short adj;
-        short pad2;
-        void (*fn)(char *);
-    } *vt = *(struct VT **)(o + 0x50);
-    vt->fn(o + vt->adj);
-}
-#endif
-
 int func_00399910(void);
 
 // FUNCTION: GAME 0x3999A8

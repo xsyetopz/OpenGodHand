@@ -144,7 +144,6 @@ extern "C" void func_0013DE90(char *self, unsigned f)
 #endif
 
 #include "game/cEm00StateDecls.h"
-#ifdef NONMATCHING
 extern "C" {
 void func_0012AC28(void *);
 void func_0012B928(void *);
@@ -156,7 +155,7 @@ void GetPlMotion__5cEm0015EM00_PLMOT_TYPEff(void *, int, float, float);
 }
 extern char g_EmManage[];
 
-// DRAFT: GAME 0x122A50 - fncmp MATCH (504 B); kept DRAFT because the switch jump table needs its own linked .rodata (linkgen local_refs gates on .rodata)
+// FUNCTION: GAME 0x122A50
 extern "C" void func_00122A50(char *self)
 {
     char *em = *(char **)(self + 0x694);
@@ -208,4 +207,3 @@ extern "C" void func_00122A50(char *self)
         break;
     }
 }
-#endif

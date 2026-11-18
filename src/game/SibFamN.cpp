@@ -192,3 +192,26 @@ extern "C" void func_001C00C8(char *self, int a)
     }
     func_001B6F38(self, a);
 }
+
+extern "C" void func_0031EEA8(void *, const void *, void *);
+
+#define SIB_SINGLETON(NAME, VAR, INIT, NAMESTR, TI)                             \
+    extern int VAR;                                                             \
+    extern const char NAMESTR[];                                                \
+    extern char TI[];                                                           \
+    extern "C" void INIT();                                                     \
+    extern "C" void *NAME()                                                     \
+    {                                                                           \
+        if (VAR == 0) {                                                         \
+            INIT();                                                             \
+            func_0031EEA8(&VAR, NAMESTR, TI);                                   \
+        }                                                                       \
+        return &VAR;                                                            \
+    }
+
+// FUNCTION: GAME 0x190178
+SIB_SINGLETON(func_00190178, D_00785BD8, func_001C8F30, D_00423F00, D_007858B8)
+// FUNCTION: GAME 0x1A6D18
+SIB_SINGLETON(func_001A6D18, D_00785F88, func_001B8058, D_004274B0, D_00785878)
+// FUNCTION: GAME 0x1B5650
+SIB_SINGLETON(func_001B5650, D_007860B8, func_001B8058, D_00428828, D_00785878)

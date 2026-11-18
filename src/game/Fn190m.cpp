@@ -112,3 +112,75 @@ extern "C" void func_001B3548(Mdl190 *self)
     }
 }
 #endif
+
+extern "C" void setParent__5cOm59P8cGameObjiRC4cVecT3(void *, void *, int, const void *, const void *);
+
+// FUNCTION: GAME 0x1AE5B0
+extern "C" void setArm__5cOm5cUiP5cOm59G4cVecT3(char *self, unsigned idx, char *child, const void *a, const void *b)
+{
+    if (child != 0 && idx < 2) {
+        int *t = *(int **)(child + 0xF0);
+        t[0] = 0;
+        t[1] = 0;
+        t[2] = 0;
+        int *c = (int *)(child + 0x100);
+        c[0] = 0;
+        c[1] = 0;
+        c[2] = 0;
+        setParent__5cOm59P8cGameObjiRC4cVecT3(child, self, -1, a, b);
+        *(char **)(self + (idx << 2) + 0x604) = child;
+    }
+}
+
+// FUNCTION: GAME 0x1AA478
+extern "C" void func_001AA478(char *self)
+{
+    int *tp = (int *)(self + 0x9E0);
+    if (*tp != 0) {
+        *tp = *tp - 1;
+        if (*tp != 0) {
+            if (*tp & 1)
+                setMeshColorFromLayer__7cOmBaseUifff(self, 1, 1.0f, 1.0f, 1.0f);
+            else
+                setMeshColorFromLayer__7cOmBaseUifff(self, 1, 1.0f, 0.0f, 0.0f);
+        } else {
+            setMeshColorFromLayer__7cOmBaseUifff(self, 1, 1.0f, 1.0f, 1.0f);
+        }
+    }
+}
+
+extern "C" void func_001B6F38(char *, int);
+extern "C" void func_001FE278(void *, void *);
+extern char g_DmgManage[];
+extern const char D_00426F88[];
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1A2630 - 4 words: s3/s4 swapped (g_DmgManage hi vs d register order)
+extern "C" void func_001A2630(char *self, int d)
+{
+    *(const void **)(self + 0x214) = D_00426F88;
+    int **p = (int **)(self + 0x600);
+    int i;
+    int dd = d;
+    for (i = 1; i >= 0; i--, p++) {
+        if (*p != 0) {
+            func_001FE278(g_DmgManage, *p);
+            *p = 0;
+        }
+    }
+    func_001B6F38(self, dd);
+}
+#endif
+
+struct Tbl6 { int v[6]; };
+extern const Tbl6 D_00427CD8;
+extern "C" int Rnd__Fv();
+
+// FUNCTION: GAME 0x1ABB58
+extern "C" int func_001ABB58(void *self, int idx)
+{
+    Tbl6 t = D_00427CD8;
+    if (idx < 3)
+        return 1;
+    return Rnd__Fv() % t.v[idx] == 0;
+}

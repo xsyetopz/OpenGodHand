@@ -47,20 +47,6 @@ void func_003462D8(void) {
     }
 }
 
-// DRAFT: GAME 0x346078
-// diff: 9 words; orig puts a0=s0 in beq delay slot and the error call first; ours hoists lui/li
-#ifdef NONMATCHING
-void func_00346078(int a, int b, int c) {
-    int r = func_00346828(a);
-    if (r != 1) {
-        func_00348BE0(D_00458110);
-    } else {
-        func_00345D40(a, func_00346AE8());
-        func_00346228(a, b, c);
-    }
-}
-#endif
-
 // FUNCTION: GAME 0x345D58
 void func_00345D58(int *a, int b) {
     if (func_00346828((int)a) != 1) {

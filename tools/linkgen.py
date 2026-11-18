@@ -17,6 +17,10 @@ resolve. Every compiled object is linked through its
 (status `match`, `differ`, or `refs SECTIONS` for a match that relocates
 against a non-function section of its object, which is not linked yet), so a work-in-progress annotation never breaks
 the build and the progress tools can tell which functions are linked.
+
+A switch function whose only data reference is its own `.rodata` jump table
+(see `jump_table`) also places that section at the original `jtbl_` unit's
+address, replacing `asm/data/rodata/<addr>.o`.
 """
 
 from __future__ import annotations
@@ -54,6 +58,46 @@ def matches(obj: Path, vram: int, sym: str, span: int, raw: bytes) -> bool:
         if (g ^ w) & mask:
             return False
     return True
+
+
+def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, tables: list[tuple[int, int]]) -> tuple[int, str] | None:
+    """Return (jtbl unit address, input section) when `sym`'s only data
+    reference is one `.rodata` section that is exactly the jump table of an
+    original `jtbl_` unit.
+
+    The section must be as large as the unit, aligned to its address, and each
+    word (a section-relative offset into `.text.<sym>`) plus `vram` must equal
+    the original table word. Any other `.rodata` content (strings, floats,
+    a second table) makes the section differ in size and returns None, so the
+    function stays gated as before."""
+    with obj.open("rb") as f:
+        elf = ELFFile(f)
+        symtab = elf.get_section_by_name(".symtab")
+        names = set()
+        for rs in elf.iter_sections():
+            if not isinstance(rs, RelocationSection) or elf.get_section(rs["sh_info"]).name != f".text.{sym}":
+                continue
+            for r in rs.iter_relocations():
+                t = symtab.get_symbol(r["r_info_sym"])
+                if isinstance(t["st_shndx"], int):
+                    n = elf.get_section(t["st_shndx"]).name
+                    if t["st_info"]["type"] == "STT_SECTION" and n.startswith(".rodata"):
+                        names.add(n)
+        if len(names) != 1:
+            return None
+        sec = elf.get_section_by_name(names.pop())
+        data = sec.data()
+        for uv, size in tables:
+            if size != len(data) or uv % max(sec["sh_addralign"], 1):
+                continue
+            want = raw[uv + fncmp.TEXT_OFF : uv + fncmp.TEXT_OFF + size]
+            if all(
+                struct.unpack_from("<I", data, i)[0] + vram == struct.unpack_from("<I", want, i)[0]
+                and 0 <= struct.unpack_from("<I", data, i)[0] < span
+                for i in range(0, size, 4)
+            ):
+                return uv, sec.name
+    return None
 
 
 def known_symbols(cfg) -> set[str]:
@@ -119,11 +163,18 @@ def main() -> int:
         spans[vram] = end - vram
 
     known = known_symbols(cfg)
+    tables = [(v, sz) for row, units in sections if row[0] == ".rodata" for v, sz, n in units if n.startswith("jtbl_")]
     status: dict[int, str] = {}
     refs: dict[int, set[str]] = {}
+    jtbl: dict[int, tuple[int, str]] = {}
     for vram, obj, sym in cfg["compiled"]:
         status[vram] = "match" if matches(ROOT / obj, vram, sym, spans[vram], raw) else "differ"
         refs[vram] = local_refs(ROOT / obj, sym, known)
+        if status[vram] == "match" and refs[vram]:
+            jt = jump_table(ROOT / obj, sym, vram, spans[vram], raw, tables)
+            if jt:
+                jtbl[vram] = jt
+                refs[vram].discard(jt[1])
     # A reference to another function section resolves only if that function
     # is linked as well; drop unresolvable matches until none remain.
     while True:
@@ -142,10 +193,12 @@ def main() -> int:
     for vram, obj, sym in cfg["compiled"]:
         if status[vram] == "match":
             placed[vram] = (gated(obj), f".text.{sym}")
+            if vram in jtbl:  # the jump table replaces the asm .rodata unit
+                placed[jtbl[vram][0]] = (gated(obj), jtbl[vram][1])
         rows.append(f"{vram:08X}\t{status[vram]}\t{sym}\n")
     # Every function not placed is weakened, annotated or not, so the asm
     # unit of the same name wins and work in progress cannot clash with it.
-    linked_syms = {sec[len(".text."):] for _o, sec in placed.values()}
+    linked_syms = {sec[len(".text."):] for _o, sec in placed.values() if sec.startswith(".text.")}
     weak = {o: sorted(text_symbols(ROOT / o) - linked_syms) for o in {o for _v, o, _s in cfg["compiled"]}}
 
     objcopy = os.environ.get("CROSS", "mipsel-linux-gnu-") + "objcopy"

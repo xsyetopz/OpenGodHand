@@ -5,8 +5,8 @@ extern int D_003EE2C4[];
 int func_0034DEC8(int);
 int func_0034DD70();
 int func_0035A1C8(int, int);
-void func_00357140(int);
-void func_00358930(int);
+int func_00357140(int);
+int func_00358930(int);
 int func_0034CA98(int, int);
 void func_0034CA68(int, int, int);
 void func_003589C0(int);
@@ -17,19 +17,15 @@ int func_003582C0(void);
 int func_00358328(void);
 int func_00358368(int, int);
 
-// DRAFT: GAME 0x3588B0
-// diff: 3 words; orig materialises 1 in v1 (shared with the ==1 compare), ours in v0 after the call
-#ifdef NONMATCHING
-void func_003588B0(int a) {
-    if (func_0034DEC8(a) != 0) {
-        func_0034DD70(0, 0xFF000132);
-        return;
-    }
-    if (func_0035A1C8(a, 0x2F) == 1) func_00357140(a);
-    else func_00358930(a);
+// FUNCTION: GAME 0x3588B0
+int func_003588B0(int a) {
+    int r;
+    if (func_0034DEC8(a) != 0) return func_0034DD70(0, 0xFF000132);
+    if (func_0035A1C8(a, 0x2F) == 1) r = func_00357140(a);
+    else r = func_00358930(a);
     *(int *)(a + 0x44) = 1;
+    return r;
 }
-#endif
 
 // FUNCTION: GAME 0x358F68
 int func_00358F68(int a) {
