@@ -227,7 +227,7 @@ struct Fn37V { float a, b; };
 extern Fn37V D_0045A610[];
 
 // DRAFT: GAME 0x3780F8
-// diff: 2 words, lwc1/addu order in the even-quadrant branch
+// diff: 2 words, lwc1/addu order in the even-quadrant branch; tried x/y load order, direct stores, &field pointers, (int)/(unsigned) index, (int)base+(r<<3)
 extern "C" void func_003780F8(unsigned short ang, float *s, float *c)
 {
     unsigned short r = ang % 360;

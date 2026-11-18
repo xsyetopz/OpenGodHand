@@ -191,7 +191,7 @@ extern "C" void func_00376EA0(void)
     Fn379C1 *end = D_0076E590 + 0x380 / 0x70;
     do {
         if (e->m_0) {
-            if ((e->m_8 & 0x10) != 0) {
+            if (e->m_8 & 0x10) {
                 func_003772D8(e);
                 e->m_0 = 0;
             } else {

@@ -53,17 +53,16 @@ struct Fn376Pair {
 extern "C" Fn376Slot *func_0037D170(void);
 extern "C" void func_00376CF8(Fn376Pair *, Fn376Slot *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x376588
-// diff: 2 words, sw to +4 and lw of a->m_4 swap
+// FUNCTION: GAME 0x376588
+// b->m_4 is stored before a->m_4 is loaded; duplicated return 0 moves the result move above the epilogue restores
 extern "C" int func_00376588(Fn376Pair *a, Fn376Pair *b)
 {
     Fn376Slot *e = func_0037D170();
     if (e) {
         e->m_0 = 1;
         int x = b->m_4;
-        int y = a->m_4;
         e->m_4 = x;
+        int y = a->m_4;
         e->m_C = 0x10;
         e->m_8 = y;
         e->m_D = 4;
@@ -72,10 +71,10 @@ extern "C" int func_00376588(Fn376Pair *a, Fn376Pair *b)
         e->m_12 = a->m_2;
         e->m_14 = b->m_2;
         func_00376CF8(a, e);
+        return 0;
     }
     return 0;
 }
-#endif
 
 extern "C" short func_003780B0(short, short);
 extern "C" void func_00376D28(void *, int);

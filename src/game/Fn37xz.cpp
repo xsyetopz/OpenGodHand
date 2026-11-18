@@ -117,33 +117,31 @@ extern "C" int func_0037C330(Fn37Sw *p)
     return 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x37D0A8
-// diff: 2 words, the continue path jumps to a shared slti in the delay slot instead of the original's nop plus duplicated slti.
+// FUNCTION: GAME 0x37D0A8
+// The for-loop form duplicates the bound test on the continue path, as the original does.
 extern "C" Fn37Slot20 *func_0037D0A8(int a)
 {
     Fn37Slot20 *p = D_0076C8C0;
-    int i = 0;
-    do {
-        i++;
+    for (int i = 0; i < 0x33; i++, p++)
         if (p->m_0 != 0 && (p->m_5 & 1) == 0 && p->m_14 == a)
             return p;
-    } while (p++, i < 0x33);
     return 0;
 }
 
-// DRAFT: GAME 0x37CA98
-// diff: 2 words, lui/ori -1 constant and li 0x32 swapped.
+// FUNCTION: GAME 0x37CA98
+// The named -1 constant is loaded before the loop counter, as the original orders them.
 extern "C" void func_0037CA98(void)
 {
-    int n = 0x32;
     Fn37Slot20 *p = D_0076C8C0;
+    unsigned k = 0xFFFFFFFF;
+    int n = 0x32;
     for (; n >= 0; n--, p++) {
-        if (p->m_0 != 0 && p->m_C != 0xFFFFFFFF)
+        if (p->m_0 != 0 && p->m_C != k)
             p->m_C++;
     }
 }
 
+#ifdef NONMATCHING
 struct Fn37Slot50 {
     unsigned short m_0;
     char _p2[0x4E];

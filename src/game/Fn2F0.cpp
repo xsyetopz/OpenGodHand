@@ -209,21 +209,19 @@ extern "C" void func_002FEBE8(char *self, unsigned short a, int mode)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2FEB18
-// diff: 2 words; the |/|| int result gets a dsll32/dsra32 sign-extension the original lacks (3 probes).
+// FUNCTION: GAME 0x2FEB18
+// "% 2" on the unsigned long shift avoids the dsll32/dsra32 sign-extension that "& 1" and an int cast produce
 extern "C" void func_002FEB18(char *self)
 {
     long f = *(int *)(self + 0x11C);
     if (!(f & 0x800000)) {
         char *o = *(char **)(self + 0x114);
-        if (!o || !(*(unsigned *)(o + 0x250) & 2) || (int)(((unsigned long)f >> 7) & 1)) {
+        if (!o || !(*(unsigned *)(o + 0x250) & 2) || ((unsigned long)f >> 7) % 2) {
             char *vt = *(char **)(self + 0xF0);
             ((void (*)(char *))*(int *)(vt + 0x84))(self + *(short *)(vt + 0x80));
         }
     }
 }
-#endif
 
 #ifdef NONMATCHING
 static inline unsigned char isEsp(int id)
