@@ -30,10 +30,9 @@ extern "C" unsigned char Rnd__Fv()
 
 struct VT { char p0[8]; short adj3; void (*fn3)(void *, int); char p1[0x38]; short adj9; void (*fn9)(void *); };
 struct cObj { char p0[0x214]; VT *vt; char p1[0x38]; int flags; };
-extern "C" void func_002CBE18(void *, void *);
 extern "C" void func_0031B410(void *, void *);
 extern "C" void free__5cHeapPv(void *, void *);
-extern char Snd[], g_ps2[];
+extern char g_ps2[];
 extern int D_00747A78;
 
 // FUNCTION: GAME 0x312778
@@ -58,13 +57,43 @@ extern "C" void func_0031C928(void *p, void *heap)
         free__5cHeapPv(heap, p);
 }
 
-// FUNCTION: GAME 0x312708
-extern "C" void ReleaseObj__FP4cObj(cObj *o)
+
+extern "C" int func_0014FF00(int, int, int, ...);
+extern int D_007476B0;
+
+static inline int *slot(char *self, int idx) { return (int *)(self + ((D_007476B0 & 1) * 4 + idx * 8) + 0xB00); }
+
+// FUNCTION: GAME 0x31A600
+extern "C" int func_0031A600(char *self, int idx, int a, int b)
+{
+    if (idx < 10)
+        return func_0014FF00(*slot(self, idx), a, b, b);
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x31A650 (2 words differ: a1/a3 arg moves swapped)
+extern "C" int func_0031A650(char *self, int idx, int a, int b, int c)
+{
+    if (idx < 10) {
+        if (!c)
+            c = b;
+        return func_0014FF00(*slot(self, idx), a, b, c);
+    }
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x312708 (18 words differ: original hoists lui 0x8000, o in s0)
+struct RObj { char p0[0x214]; VT *vt; char p1[0x38]; int flags; };
+extern "C" void func_002CBE18(void *, void *);
+extern char Snd[];
+extern "C" void ReleaseObj__FP4cObj(RObj *o)
 {
     if (o && o->flags >= 0) {
-        int f = 0x80000002;
         func_002CBE18(Snd, o);
         o->vt->fn9((char *)o + o->vt->adj9);
+        int f = 0x80000002;
         o->flags |= f;
     }
 }
+#endif

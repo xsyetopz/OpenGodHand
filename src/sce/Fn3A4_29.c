@@ -208,63 +208,12 @@ int func_0039C140(int unused, unsigned int *p)
     return 0;
 }
 
-extern char D_0045E400[];
-extern void func_0039C390(void *, char *);
-#define F(s, o) (*(int *)((char *)(s) + (o)))
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x399D70
-// diff: 2 words (lui/ori constant scheduling)
-void func_00399D70(char *s)
-{
-    R32(0x10002010) = (R32(0x10002010) & 0xFF7FFFFF) | 0x800000;
-    if (F(s, 0x87C) == 0) {
-        F(s, 0x830) = 0x70003600;
-        F(s, 0x5A0) = 0x70000000;
-        F(s, 0x5A4) = 0x70001800;
-        F(s, 0x6E0) = 0x70001B00;
-        F(s, 0x6E4) = 0x70003300;
-        F(s, 0x820) = 0;
-    } else if (F(s, 0x87C) == 1) {
-        F(s, 0x830) = (int)(s + 0xE80);
-        F(s, 0x5A4) = ((int)(s + 0x880) & 0xFFFFFFF) | 0x30000000;
-        F(s, 0x6E4) = ((int)(s + 0xB80) & 0xFFFFFFF) | 0x30000000;
-        F(s, 0x5A0) = 0;
-        F(s, 0x6E0) = 0;
-        F(s, 0x820) = 0;
-    } else
-        func_0039C390(s, D_0045E400);
-}
-#endif
 
 extern int D_003F9840[];
-extern volatile int D_003F86A0v __asm__("D_003F86A0");
 extern char D_003FA1C0[];
-extern volatile int D_003F866C;
 extern int D_003F866Cn __asm__("D_003F866C");
+extern volatile int D_003F866C;
 extern int func_00398EB0(int);
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x399B20
-// diff: 2 words (or/lw order before SignalSema)
-int func_00399B20(void)
-{
-    int r;
-    if (func_00398EB0(0x1E) == 0)
-        return 0;
-    D_003F86A0v = 8;
-    if (sceSifCallRpc(D_003FA1C0, 0x16, 0, 0, 0, D_003F9840, 4, 0, 0) < 0) {
-        SignalSema(D_003F866C);
-        D_003F86A0v = 0;
-        return 0;
-    }
-    D_003F86A0v = 0;
-    r = *(int *)((unsigned)D_003F9840 | 0x20000000);
-    SignalSema(D_003F866Cn);
-    return r;
-}
-#endif
-
 extern int D_0045E3C0[];
 extern int scePrintf(const char *, ...);
 
@@ -286,28 +235,60 @@ int func_00399A68(void)
     return r;
 }
 
-extern char D_0045E610[];
-extern void func_0039AB20(int, int *);
+extern int D_003F9C80;
+extern int D_003FA1E8, D_003FA1EC, D_003FA1F0;
+extern void sceSifWriteBackDCache(void *, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x39C2C8
-// diff: 7 words (arg load vs MMIO store order)
-void func_0039C2C8(char *s)
+// FUNCTION: GAME 0x399BD8
+int func_00399BD8(int a)
 {
-    int t[8], en, h;
-    func_0039C390(s, D_0045E610);
-    t[0] = 2;
-    func_0039AB20(F(s, 0x868), t);
-    h = F(s, 0x868);
-    R32(0x10002010) = 0x40000000;
-    t[0] = 3;
-    func_0039AB20(h, t);
-    en = func_003B63A0();
-    R32(0x1000F590) = R32(0x1000F520) | 0x10000;
-    R32(0x1000B000) = 0;
-    R32(0x1000F590) = R32(0x1000F520) & 0xFFFEFFFF;
-    if (en)
-        func_003B63F0();
-    R32(0x1000B020) = 0;
+    int r;
+    int *p = &D_003F9C80;
+    if (func_00398EB0(0x22) == 0)
+        return 0;
+    D_003F9C80 = a;
+    sceSifWriteBackDCache(p, 4);
+    if (sceSifCallRpc(D_003FA1C0, D_003FA1E8, 0, p, D_003FA1EC, D_003F9840, D_003FA1F0, 0, 0) < 0) {
+        SignalSema(D_003F866Cn);
+        return 0;
+    }
+    r = *(int *)((unsigned)D_003F9840 | 0x20000000);
+    SignalSema(D_003F866Cn);
+    return r;
 }
-#endif
+
+#define F(s, o) (*(int *)((char *)(s) + (o)))
+extern char D_0045E548[], D_0045E568[];
+extern void func_0039C390(void *, char *);
+extern int func_0039D5B8(void *);
+
+// FUNCTION: GAME 0x39ACD8
+int func_0039ACD8(char *s)
+{
+    int st, r;
+    int *q;
+    if (F(s, 0x184) == 3 && F(s, 0x130)) {
+        func_0039C390(s, D_0045E548);
+        F(s, 0x130) = 0;
+    }
+    st = F(s, 0x184);
+    switch (st) {
+    case 3:
+        q = (int *)F(s, 0x1D0);
+        break;
+    case 1:
+        q = (int *)F(s, 0x1E0);
+        break;
+    case 2:
+        q = (int *)F(s, 0x1F0);
+        break;
+    default:
+        q = (int *)F(s, 0x1D0);
+        func_0039C390(s, D_0045E568);
+        break;
+    }
+    r = func_0039D5B8(s);
+    if (r)
+        q[10] = 1;
+    return r;
+}

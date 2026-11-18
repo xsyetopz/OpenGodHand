@@ -123,7 +123,7 @@ extern "C" void func_00200AC0(DvdMgr *self)
 }
 
 #ifdef NONMATCHING
-// NONMATCHING 0x200B20: 2 words differ (compiler emits slti/bnez range check instead of beqz)
+// DRAFT: GAME 0x200B20 - 2 words: gcc emits slti/bnez range check where the target has nop/beqz
 extern "C" void func_00200B20(DvdMgr *self)
 {
     switch (self->m_state) {
@@ -156,27 +156,22 @@ extern "C" void func_00201718(DvdMgr *self)
     }
 }
 
-#ifdef NONMATCHING
-// NONMATCHING 0x201098: 13 words differ (original keeps two pointers a0/v1, slt on pointers; ours schedules the loop differently)
+// FUNCTION: GAME 0x201098
 int cDvd::Check(eDvdId id)
 {
     DvdMgr *self = (DvdMgr *)this;
     if (id == 0)
         return 0;
+    int *end = (int *)&self->m_cnt;
     if (self->m_cur && self->m_cur[1] == id)
         return 2;
-    int *p = &self->m_slot[0].m_used;
-    int *q = &self->m_slot[0].m_id;
-    int end = (int)&self->m_cnt;
+    int *f = &self->m_slot[0].m_used;
+    int *g = &self->m_slot[0].m_id;
     do {
-        int u = *p;
-        p += 0x22;
-        if (!u)
-            break;
-        if (*q == id)
+        if (*f && *g == id)
             return 1;
-        q += 0x22;
-    } while ((int)p < end);
+        f += 0x22;
+        g += 0x22;
+    } while ((int)f < (int)end);
     return 0;
 }
-#endif

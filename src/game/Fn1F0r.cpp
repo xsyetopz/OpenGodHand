@@ -1,6 +1,6 @@
 // Small helpers in 0x1F0000-0x200000, over raw offsets (continued from Fn1F0q.cpp).
 extern "C" void func_001F7228(void *);
-extern "C" void func_001FD988(void *, int);
+extern "C" void func_001FD988(char *, int);
 extern char *Cockpit;
 
 struct F1F38F0Ent {
@@ -111,18 +111,6 @@ extern "C" int func_001FC1C8(char **self, unsigned v)
     return 0;
 }
 
-// FUNCTION: GAME 0x1FC4D0
-extern "C" int func_001FC4D0(char **self, unsigned a1)
-{
-    char *s = *self;
-    if (!s)
-        return 0;
-    unsigned i = a1 >> 5;
-    if (i < 4)
-        return (*(unsigned *)(s + i * 4 + 0xB98) & (1u << (a1 & 0x1F))) != 0;
-    return 0;
-}
-
 extern "C" int func_001FEE00(void *);
 extern "C" int func_001FF238(void *);
 extern "C" void systemInit__11cDataHolder(void *);
@@ -198,4 +186,33 @@ extern "C" void func_001FFE10(short *p)
         *(unsigned short *)p -= 1;
     if (D_00747A84 & 0x2000000)
         func_002000F8(p);
+}
+
+extern "C" int getJumpData__5cDoorUcUcUcbUc(void *, unsigned char, unsigned char, unsigned char, int, unsigned char);
+extern "C" void setDoorJump__5cDoor(void *);
+
+// FUNCTION: GAME 0x1FFE60
+extern "C" void func_001FFE60(void *self, unsigned char a, unsigned char b, unsigned char c, unsigned char d)
+{
+    if (getJumpData__5cDoorUcUcUcbUc(self, a, b, c, 0, d) == 1)
+        setDoorJump__5cDoor(self);
+}
+
+extern "C" void func_001F46E0(void *);
+extern "C" void free__5cHeapPv(void *, void *);
+struct F1F38A0Sys {
+    char *p;
+};
+extern F1F38A0Sys *IDSys;
+
+// FUNCTION: GAME 0x1F38A0
+extern "C" void func_001F38A0(char *self)
+{
+    func_001F46E0(self + 0x60);
+    char *q = IDSys->p;
+    *(int *)(q + 0xAC) = 0;
+    *(int *)(q + 0xA8) = 0;
+    char *m = *(char **)(self + 0x37D8);
+    if (m)
+        free__5cHeapPv(*(void **)(m - 0x20), m);
 }

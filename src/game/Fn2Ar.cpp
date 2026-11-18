@@ -103,13 +103,15 @@ extern "C" void setReleaseActiveHeap__5cGamei(char *self)
 
 extern "C" int isClip__C6cModel(void *);
 
-// DRAFT: GAME 0x2A7448 - 3 words differ: original loads flags with lwu and tests bit 1 via dsra (64-bit value); lw/srl/bnel here
+// DRAFT: GAME 0x2A7448 - 1 word differs: second branch compiles to bnel, original bnez with addiu in the delay slot
 #ifdef NONMATCHING
 extern "C" int isClip__C8cGameObj(char *self)
 {
-    unsigned f = *(unsigned *)(self + 0x5A0);
-    if (f & 1) return 1;
-    if ((f >> 1) & 1) return 1;
+    long l = *(unsigned *)(self + 0x5A0);
+    long a = l & 1;
+    if (a) return 1;
+    long b = (l >> 1) & 1;
+    if (b) return 1;
     return isClip__C6cModel(self) != 0;
 }
 #endif
@@ -126,19 +128,18 @@ extern "C" void free__5cHeapPv(void *, int *n)
     }
 }
 
-// FUNCTION: GAME 0x2A4BA0
+// DRAFT: GAME 0x2A4BA0 - 21 words differ: original copies self to a2 and keeps a single return 0 at the tail; compiled returns 0 first
+#ifdef NONMATCHING
 extern "C" int func_002A4BA0(char *self, int idx)
 {
     unsigned v = idx & 0xFFFF;
-    int r = 0;
-    if (v) {
-        char *c = self + (v >> 12) * 16;
-        unsigned *t = *(unsigned **)(c + 4);
-        unsigned w = t[(v & 0xFFF) + 2];
-        r = (short)(*(unsigned short *)(c + 0xE) - ((w >> 14) & 0x3F));
-    }
-    return r;
+    if (!v) return 0;
+    char *c = self + (v >> 12) * 16;
+    unsigned *t = *(unsigned **)(c + 4);
+    unsigned w = t[(v & 0xFFF) + 2];
+    return (short)(*(unsigned short *)(c + 0xE) - ((w >> 14) & 0x3F));
 }
+#endif
 
 struct sIDSysP { int *p; };
 extern sIDSysP *IDSys;
@@ -160,19 +161,125 @@ extern "C" int release__7cIDBase(int *self)
 
 extern char D_005CB300[];
 
-// FUNCTION: GAME 0x2AA410
+// DRAFT: GAME 0x2AA410 - 9 words differ: loop counter and entry pointer land in swapped registers (a2/a3)
+#ifdef NONMATCHING
 extern "C" char *getIDWork__7cIDBasei(int *self, int id)
 {
     char *p = (char *)self[1];
     if (!p) return D_005CB300;
     int n = self[3];
-    int i = 0;
     char *e = p;
     char *f = e + 0x2C;
-    for (; i < n; i++) {
+    int i;
+    for (i = 0; i < n; i++) {
         if ((*(unsigned *)f & 0x80000000) && *(signed char *)(f - 2) == id) return e;
         e += 0xAC;
         f += 0xAC;
     }
     return D_005CB300;
 }
+#endif
+
+// DRAFT: GAME 0x2AC538 - 34 words differ: gcc peels the i=1 and i=2 iterations of the search loop that the original keeps rolled
+#ifdef NONMATCHING
+extern "C" int func_002AC538(int, int key, int n, char *tbl)
+{
+    key = (short)key;
+    int i = 1;
+    if (!n) return -1;
+    if (*(short *)(tbl + 8) >= key) return -1;
+    if (i < n) {
+        if (*(short *)(tbl + 0x14) >= key) {
+            i = 0;
+        } else {
+            i++;
+            while (i < n) {
+                if (*(short *)(tbl + i * 12 + 8) >= key) { i--; break; }
+                i++;
+            }
+        }
+    }
+    return i;
+}
+#endif
+
+extern "C" void *memset(void *, int, unsigned);
+extern "C" void func_002ACCD8(char *);
+extern "C" void setIDData__10cIDManager7eIdDataPUi(char *, int, unsigned *);
+
+// FUNCTION: GAME 0x2ACC70
+extern "C" void systemInit__10cIDManagerPUi(char *self, unsigned *p)
+{
+    memset(self + 0x100, 0, 0x640);
+    *(int *)(self + 0x18000 + 0x3544) = 0;
+    *(int *)(self + 0x740) = 0;
+    func_002ACCD8(self);
+    setIDData__10cIDManager7eIdDataPUi(self, 1, p);
+}
+
+// FUNCTION: GAME 0x2A9C58
+extern "C" void SetHeatGage__8cHeatSysf(float *self, float v)
+{
+    if (self[0] < v) self[1] = self[0];
+    else self[1] = v;
+    func_002A9B50(self);
+}
+
+extern "C" char *getIDWork__7cIDBasei(int *, int);
+extern "C" void func_002AA598(int *, char *, int);
+extern "C" void func_002AA5F0(int *, char *, int);
+
+// FUNCTION: GAME 0x2AA538
+extern "C" void setDispFamily__7cIDBaseib(int *self, int id, int on)
+{
+    char *w = getIDWork__7cIDBasei(self, id);
+    func_002AA598(self, w, on);
+    func_002AA5F0(self, w, on);
+}
+
+extern "C" void func_002B2348(int *);
+extern "C" int func_002B2318(int *);
+extern "C" void func_002B22E8(int *, int, int, int, int);
+
+// FUNCTION: GAME 0x2AEF10
+extern "C" int func_002AEF10(int *self, int *p)
+{
+    if (!p[1]) self[4] = p[2];
+    func_002B2348(p);
+    int r = func_002B2318(p);
+    func_002B22E8(p, 0, self[5], 0, 0);
+    self[5] = (int)p;
+    return r;
+}
+
+extern char *Message;
+extern "C" unsigned short *getMessageAddr__C8cMessageUs(char *, unsigned short);
+extern "C" int getCodeSize__11cMessCommonUs(unsigned short);
+
+// DRAFT: GAME 0x2AF380 - 12 words differ: original uses beql with i++ in the delay slot for the non-flag path; compiled branches over it
+#ifdef NONMATCHING
+extern "C" int func_002AF380(unsigned short n)
+{
+    int i = 0;
+    unsigned short *p = getMessageAddr__C8cMessageUs(Message, n);
+    unsigned w;
+    while ((w = *p) >> 15 ? (w & 0xFF00) != 0x8000 : (i++, 1))
+        p += getCodeSize__11cMessCommonUs(*p);
+    return i;
+}
+#endif
+
+extern char D_0044AF70[];
+
+// DRAFT: GAME 0x2ACCF8 - 13 words differ: gcc merges the two self+id*8 adds, original keeps two
+#ifdef NONMATCHING
+extern "C" void setIDData__10cIDManager7eIdDataPUi(char *self, int id, unsigned *data)
+{
+    int a = SearchData__FPUiPCcUi(data, D_0044AF70, 0);
+    id <<= 3;
+    *(int *)(self + id) = a;
+    int b = SearchData__FPUiPCcUi(data, D_0044AF70, 1);
+    self += id;
+    *(int *)(self + 4) = b;
+}
+#endif

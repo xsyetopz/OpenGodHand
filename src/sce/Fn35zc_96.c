@@ -89,7 +89,11 @@ int func_0035EB60(int *a, int *b)
 // DRAFT: GAME 0x3581E0 bnez skip target: original returns the nonzero callee result (skips daddu v0); 1 word
 int func_003581E0(char *a)
 {
-    if (func_00358A48(a)) return 0; *(int *)(a + 0x4C) = 6; func_00358FF8(a); return 0;
+    if (func_00358A48(a))
+        return 0;
+    *(int *)(a + 0x4C) = 6;
+    func_00358FF8(a);
+    return 0;
 }
 #endif
 
@@ -123,7 +127,9 @@ void func_0035BB60(long *a, long b)
 // DRAFT: GAME 0x35C1C0 a0+d*0x74 kept in a0 by the original; gcc uses v0; 2 words
 void func_0035C1C0(char *a, int b, int c, int d)
 {
-    char *p = a + b * 0x44; *(int *)(p + c * 4 + 0x1F44) = d; *(int *)(a + d * 0x74 + 0x135C) = b;
+    char *p = a + b * 0x44;
+    *(int *)(p + c * 4 + 0x1F44) = d;
+    *(int *)(a + d * 0x74 + 0x135C) = b;
 }
 #endif
 
@@ -137,8 +143,151 @@ int func_0035A5E0(char *a, int b)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x352258 mult and sd ra are swapped in the prologue; 2 words
-void func_00352258(int a)
+int func_00352258(int a)
 {
-    int r = func_003B7FE0((long)a * 0x55D4A80); __asm__ volatile(""); return r;
+    int r = func_003B7FE0((long)a * 0x55D4A80);
+    // barrier after the call blocks gcc 2.96 from turning it into a tail jump
+    __asm__ volatile("");
+    return r;
 }
 #endif
+
+extern void *memcpy();
+extern int func_00351C00();
+extern int func_0039A8E8();
+extern int func_00366B80();
+extern int D_004598E0;
+extern int D_003EE2F4;
+extern char D_00766C28[];
+
+// FUNCTION: GAME 0x354430
+void func_00354430(int *a, int *b)
+{
+    memcpy((void *)a[0], (void *)b[0], b[1]);
+    a[1] = b[1];
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x354B98 original splits the three early returns into separate epilogues and keeps the tail j; gcc merges them; 9 words
+void func_00354B98(int a, int b)
+{
+    if (b < -3)
+        return;
+    if (b < -1)
+        return;
+    if (b == 0)
+        return;
+    func_0034DD70(a, b);
+}
+#endif
+
+// FUNCTION: GAME 0x3571F8
+void func_003571F8()
+{
+    if (D_004598E0 != 0x5A5A5A5A)
+        func_0034DD70(0, 0xFF000201);
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x351BB8 original compares the call result with 1 via beq and branches; gcc folds to xori/sltiu; 8 words
+int func_00351BB8(int a, int b, int c)
+{
+    if (c == 0x80)
+        return 1;
+    if (b >= 5)
+        return 0;
+    return func_00351C00() == 1;
+}
+#endif
+
+// FUNCTION: GAME 0x356368
+int func_00356368()
+{
+    if (D_003EE2F4) {
+        func_0039A8E8();
+        return func_00366B80(D_00766C28, 0, 0x48);
+    }
+}
+
+extern int func_0035D7B8();
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x35DE38 s0/s1 spill order in the prologue is swapped (sd s1 before sd s0); 2 words
+int func_0035DE38(int *a, int *b)
+{
+    char *p = (char *)a[1] + 0xB0;
+    *b = 0;
+    if (func_0035D7B8(a)) {
+        *b = *(unsigned char *)p;
+        return 1;
+    }
+    return 0;
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x35DE88 s0/s1 spill order in the prologue is swapped (sd s1 before sd s0); 2 words
+int func_0035DE88(int *a, int *b)
+{
+    char *p = (char *)a[1] + 0xB0;
+    *b = 0;
+    if (func_0035D7B8(a)) {
+        *b = *(unsigned char *)(p + 1);
+        return 1;
+    }
+    return 0;
+}
+#endif
+
+// FUNCTION: GAME 0x355408
+char *func_00355408(char *a, char *b)
+{
+    char *s = *(char **)(a + 0x1FC0) + 0x180;
+    char *q = a + 0x16B0;
+    int i;
+    for (i = 0; i < 16; i++) {
+        if (q + 8 == b)
+            return s;
+        q += 0x88;
+        s += 0xF0;
+    }
+    return 0;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x355490 original loads a3=0 and the limit before forming a0+0x16B0; gcc schedules the addiu earlier; 5 words
+char *func_00355490(char *a, char *b)
+{
+    char *t = *(char **)(a + 0x1FC0);
+    int n = *(int *)(t + 0x178);
+    char *s = t + 0x180;
+    char *q = a + 0x16B0;
+    int i;
+    for (i = 0; i < n; i++) {
+        if (s == b)
+            return q;
+        q += 0x88;
+        s += 0xF0;
+    }
+    return 0;
+}
+#endif
+
+// FUNCTION: GAME 0x359DA8
+int func_00359DA8(char *a)
+{
+    char *p = a + 0x1F30; int v; a += *(int *)(p + 0x14) * 0x74; p += *(int *)(a + 0x1360) * 0x44; v = *(int *)(p + 0x20); if (v < 0) return -1; return v;
+}
+
+// FUNCTION: GAME 0x35BD88
+void func_0035BD88(int *a, int b)
+{
+    int i;
+    a[1] = 0;
+    a[0] = 0;
+    a[3] = b;
+    a[4] = 8;
+    for (i = 2; i >= 0; i--)
+        a[5 + i] = 8;
+    a[8] = -1;
+}

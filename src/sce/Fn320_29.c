@@ -67,3 +67,46 @@ void func_003214D0()
         func_003211E0();
     q[5] = 0;
 }
+
+#ifdef NONMATCHING
+extern int *D_00755C18;
+
+// DRAFT: GAME 0x3224D0 (9 words off under 2.9, store order is scheduler-dependent)
+void func_003224D0(int v, int *n)
+{
+    n[3] = v;
+    n[5] = (int)D_00755C18;
+    D_00755C18 = n;
+    n[2] = v;
+    n[1] = 0;
+    n[0] = 0;
+    n[4] = 0;
+}
+#endif
+
+extern struct { char a, b, c, d; short s; } D_00755BC0;
+
+// FUNCTION: GAME 0x31D9F0
+void func_0031D9F0(int a, int b)
+{
+    if (b == 0xFFFF && a) {
+        D_00755BC0.c = 0x14;
+        D_00755BC0.s = 0x3E8;
+    }
+}
+
+extern struct S4408 { char *a, *b; } D_003C4408;
+extern char D_004510D0[], D_004510D8[], D_00451198[];
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x31FB98 (4 words off, lui order of the two address constants)
+struct S4408 *func_0031FB98()
+{
+    struct S4408 *p = &D_003C4408;
+    if (!D_003C4408.a && p) {
+        p->b = D_00451198;
+        D_003C4408.a = D_004510D0;
+    }
+    return &D_003C4408;
+}
+#endif

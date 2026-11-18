@@ -258,20 +258,4 @@ unsigned func_003261A8(int *o, int i)
     int *q = (int *)t[i + 2];
     return (unsigned)func_0033AF70(q[1], 1) >> 1;
 }
-
-typedef struct SceNode { int a, b, c, d, e; struct SceNode *next; } SceNode;
-extern SceNode *D_00755C18;
-
-// DRAFT: GAME 0x3224D0 (9 words off, global list head via addiu instead of lui/lw)
-void func_003224D0(int v, SceNode *n)
-{
-    SceNode *h = D_00755C18;
-    n->d = v;
-    n->next = h;
-    D_00755C18 = n;
-    n->c = v;
-    n->b = 0;
-    n->a = 0;
-    n->e = 0;
-}
 #endif

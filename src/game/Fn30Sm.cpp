@@ -10,6 +10,9 @@ extern "C" int func_00306A08(char *, unsigned, char **);
 extern "C" void func_003128B0(void *);
 extern "C" void func_002A9528(void *);
 extern "C" int func_00303A20(void *);
+extern "C" int func_0030FCC0(void *);
+struct V30 { char pad[8]; short off; short pad2; void (*fn)(void *, int); };
+struct W30 { char pad[0x214]; V30 *vt; };
 extern "C" int func_003AF980(int, void *, int);
 extern "C" void func_003B0740(int);
 extern "C" void func_0030D190(void);
@@ -159,6 +162,15 @@ extern "C" void func_0030D1F8(void) {
 extern "C" void func_0030F5F0(void) {
     func_003128B0(objArray); func_003128B0(scrArray); func_003128B0(D_00754C50); func_003128B0(objbaseArray);
     func_002A9528(D_00754C20); func_002A9528(D_00754C10);
+}
+
+// FUNCTION: GAME 0x30FB20
+extern "C" W30 *func_0030FB20(int, W30 *w) {
+    if (w) {
+        if (func_0030FCC0(w)) return w;
+        w->vt->fn((char *)w + w->vt->off, 3);
+    }
+    return 0;
 }
 
 #ifdef NONMATCHING
