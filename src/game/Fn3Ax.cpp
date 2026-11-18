@@ -289,7 +289,7 @@ extern "C" int func_003ADF50(void *self, int a1)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3A6130
-// diff: original has a nop between lw a0,0x54(s0) and lw v0,0x38(a0); ours has none (4 bytes short)
+// diff: original has a nop between lw a0,0x54(s0) and lw v0,0x38(a0); ours has none (4 bytes short); volatile member, volatile local and temp-after-load variants tried, no change
 extern "C" int func_003A6130(Fq *self)
 {
     if (!self->m_54)

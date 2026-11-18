@@ -275,12 +275,14 @@ extern "C" void func_00376820(Fn38Evt *o)
     o->m_12 = 0;
 }
 
-// FUNCTION: GAME 0x376A90
+#ifdef NONMATCHING
+// DRAFT: GAME 0x376A90
+// diff: 16 words; original compares the pointer against base+0x2A00 (slt), ours keeps an int counter (slti)
 extern "C" Fn38Ev2 *func_00376A90(int key)
 {
     int i;
     Fn38Ev2 *e = D_00770850;
-    for (i = 0; i < 0x2A00 / 0xE0; i++, e++) {
+    for (i = 0; i < 0x30; i++, e++) {
         if (e->m_00 == 0)
             continue;
         if (key == 0)
@@ -290,3 +292,4 @@ extern "C" Fn38Ev2 *func_00376A90(int key)
     }
     return 0;
 }
+#endif

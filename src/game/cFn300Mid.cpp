@@ -141,3 +141,25 @@ extern "C" void *func_00312E88()
     __asm__ volatile("sqc2 $vf0,0x340(%0)" : : "r"(p) : "memory");
     return p;
 }
+
+struct S309028 { char _p0[0x40]; float f40; char _p1[8]; unsigned c4C; char _p2[0x28]; float f78; float f7C; char _p3[0xD]; unsigned char b8D; unsigned short s8E; char _p4[0x10]; unsigned short sA0, sA2, sA4, sA6, sA8; };
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x309028
+// 5 words differ: store scheduling of the float/short stores (original order f40, A4, f7C, f78, A0, A2, A6, A8); ~110 random source orders did not finish
+extern "C" void func_00309028(S309028 *p)
+{
+    memset(p, 0, 0x2E0);
+    p->b8D = 6;
+    p->s8E = 5;
+    p->c4C = 0x80808080;
+    p->f40 = 1.0f;
+    p->f78 = 1.0f;
+    p->f7C = 1.0f;
+    p->sA0 = 0;
+    p->sA2 = 0;
+    p->sA4 = 0;
+    p->sA6 = 0;
+    p->sA8 = 0;
+}
+#endif
