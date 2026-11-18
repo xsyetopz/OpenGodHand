@@ -76,7 +76,7 @@ extern "C" int func_001A8980(char *self)
 }
 
 // DRAFT: GAME 0x1BF7D8
-// diff: 18 words; the original tests the taskExec result in v0 directly and reloads g_Sce in the delay slot
+// diff: 18 words; original keeps i in v0 (bltz v0, mult v0) and loads g_Sce into a0 first; mine copies i to a0; tried E* temp, i*0x58 byte math, goto, long i, int-cast table
 extern "C" void func_001BF7D8(char *self)
 {
     (*(unsigned char *)(self + 0x2F5))++;

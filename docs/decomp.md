@@ -156,6 +156,17 @@ These source shapes reproduce patterns this compiler emits only one way:
   `-O1`, `-fno-thread-jumps`, `-fno-cse-follow-jumps`, `-fno-gcse`, `-fno-rerun-cse-after-loop`
   and `-fno-expensive-optimizations` all fold the `xori` into the branch.
 - `andi; xori; beqz` on a flag comes from `unsigned char t = f ^ 1; if ((t & 1) == 0)`.
+- `slti; andi 0xFF; beqz` comes from `static inline unsigned char Lt2(int v) { return v < 2; }`
+  tested as `if (Lt2(n) & 1)` (matched 0x2ABD78). `sltiu; xori; beqz` comes from
+  `int c = h >= 2; if (c)`.
+- `movz`/`movn` operand order follows `unsigned char v = A; if (!cond) v = B;`; a ternary
+  emits the opposite order.
+- Switch arms that end in the same call cross-jump into one shared tail only when each arm
+  calls the same inline helper; spelled-out calls stay duplicated.
+- Saved-register assignment follows locals: `int d = lo - 1; return r % (hi - d) + lo;`
+  (matched 0x1DCE68). Comparing two shorts loaded into locals first fixes load order.
+- A header array that the original addresses as `lui; lw off` matches through a scalar
+  alias, `extern int D_xxx_n __asm__("D_xxx");`, instead of an indexed element.
 - Lazy singletons: `if (!G) { ctor(); func_0031EEA8(&G, name, dtor); } return &G;`,
   where `name` is the rodata string extern.
 - Base destructor calls need `extern "C" void _$_7cPlBase(T *);`.

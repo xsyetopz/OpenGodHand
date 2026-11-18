@@ -168,7 +168,9 @@ extern "C" void func_0028E7C8(void *self)
 {
     startSoftEvent__9cScenario14eSoftEventType(g_Sce, 2);
     D_00747A84 &= 0xFFFEFFFF;
-    markTask(taskExec__9cScenarioPvT1i(g_Sce, (void *)func_0028E858, self, 1));
+    int id = taskExec__9cScenarioPvT1i(g_Sce, (void *)func_0028E858, self, 1);
+    if (id >= 0)
+        *(unsigned char *)(*(char **)(g_Sce + 0x1C) + id * 0x58 + 0x50) |= 1;
 }
 
 struct Lnk {

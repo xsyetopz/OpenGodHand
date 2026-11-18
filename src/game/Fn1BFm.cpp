@@ -22,7 +22,7 @@ extern "C" void func_001BFCE8(void *o)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1B80B0
-// diff: 18 words: original keeps a0 (no a2 copy), stores before frame; 8 B larger
+// diff: 18 words: original has nop after each store (sw;nop;sw;nop) and keeps a0 (no a2 copy); tried if/early-return/int r forms and volatile stores, none give the nops
 extern "C" int func_001B80B0(char *self, int v)
 {
     *(int *)(self + 0x5E8) = v;

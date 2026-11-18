@@ -181,22 +181,20 @@ extern "C" void func_002B0610(char *self, unsigned short *s, float *w, float *h)
 
 extern "C" void func_002B43B0(char *);
 
-// DRAFT: GAME 0x2B3A38
-// diff: 20 words, register assignment of flags/counter/ptr and mask constants differs
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2B3A38
 extern "C" int func_002B3A38(char *self)
 {
-    func_002AF218(*(unsigned short **)(self + 0x8C));
+    int r = func_002AF218(*(unsigned short **)(self + 0x8C));
     unsigned short *p = *(unsigned short **)(self + 0x8C);
     int a = *(int *)(self + 0x90);
     unsigned n = getCodeSize__11cMessCommonUs(*p);
-    a += n;
-    int c = *(unsigned char *)(self + 0x30);
+    a += r;
     int f = *(int *)(self + 0x14);
-    f &= -3;
-    *(int *)(self + 0x84) = a;
+    int c = *(unsigned char *)(self + 0x30);
     *(int *)(self + 0x68) = a;
+    *(int *)(self + 0x84) = a;
     *(unsigned short **)(self + 0x7C) = *(unsigned short **)(self + 0x8C) + n;
+    f &= -3;
     f &= -5;
     *(char *)(self + 0x30) = c + 1;
     *(int *)(self + 0x14) = f;
@@ -204,7 +202,6 @@ extern "C" int func_002B3A38(char *self)
     func_002B45E8(self);
     return 0;
 }
-#endif
 
 extern "C" int func_002AF218(unsigned short *);
 

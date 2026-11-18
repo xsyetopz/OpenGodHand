@@ -136,7 +136,7 @@ struct V16F { float x, y, z, w; } __attribute__((aligned(16)));
 extern char *pCamWork;
 #define CP(d, s) __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(d) : "r"(&(s)))
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2F6BB8 - 18 words, address-register materialization order
+// DRAFT: GAME 0x2F6BB8 - 18 words, address-register materialization order (original hoists addiu v0,sp,0x10 before the first sdc2; asm-based, not retried)
 extern "C" void func_002F6BB8(char *self)
 {
     V16F c, t, u, v, w;
