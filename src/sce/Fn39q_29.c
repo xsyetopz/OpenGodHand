@@ -63,8 +63,10 @@ int func_0038A0C0(struct Is *s, int need)
 int sputbackc__9streambufc(struct SB *, char);
 int sungetc__9streambuf(struct SB *);
 
+#ifdef NONMATCHING
 // istream::putback(char)
-// FUNCTION: GAME 0x389E30
+// DRAFT: GAME 0x389E30
+// diff: 2 words, original keeps the constant 4 in $a0 (return value already in $v0)
 struct Is *func_00389E30(struct Is *s, char c)
 {
     if (!s->ios->st) {
@@ -74,7 +76,8 @@ struct Is *func_00389E30(struct Is *s, char c)
     return s;
 }
 
-// FUNCTION: GAME 0x389ED8
+// DRAFT: GAME 0x389ED8
+// diff: 2 words, same as 0x389E30
 struct Is *func_00389ED8(struct Is *s, char c)
 {
     if (!s->ios->st) {
@@ -85,10 +88,54 @@ struct Is *func_00389ED8(struct Is *s, char c)
 }
 
 // istream::unget()
-// FUNCTION: GAME 0x389E88
+// DRAFT: GAME 0x389E88
+// diff: 9 words, return copy placed at the tail instead of the bne delay slot; 4 forms tried
 struct Is *func_00389E88(struct Is *s)
 {
     if (!s->ios->st && sungetc__9streambuf(s->ios->sb) == -1)
         s->ios->st = 4;
     return s;
+}
+#endif
+
+extern int D_00786708, D_00786728;
+extern char D_0045D188[], D_0045D1A8[], D_0045D1B0[], D_0045D1D0[];
+void func_0038A7E0(void);
+void func_0038A340(void);
+void func_0031EE80(void *, void *, void *, int);
+
+// FUNCTION: GAME 0x389828
+void *func_00389828(void)
+{
+    if (!D_00786708) {
+        func_0038A7E0();
+        func_0031EE80(&D_00786708, D_0045D188, D_0045D1A8, 1);
+    }
+    return &D_00786708;
+}
+
+// FUNCTION: GAME 0x389980
+void *func_00389980(void)
+{
+    if (!D_00786728) {
+        func_0038A340();
+        func_0031EE80(&D_00786728, D_0045D1B0, D_0045D1D0, 1);
+    }
+    return &D_00786728;
+}
+
+struct Imp { int pad[2]; void *out; void *err; };
+extern struct Imp *_impure_ptr;
+int func_003A6020(void *);
+
+// ostream::osfx()
+// FUNCTION: GAME 0x389548
+int func_00389548(struct Is *s)
+{
+    if (s->ios->fl & 0x2000)
+        func_00389268((struct Ios *)s);
+    if (s->ios->fl & 0x4000) {
+        func_003A6020(_impure_ptr->out);
+        return func_003A6020(_impure_ptr->err);
+    }
 }

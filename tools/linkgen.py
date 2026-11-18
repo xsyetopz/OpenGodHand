@@ -67,10 +67,11 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, tables: li
     reference is one `.rodata` section that is exactly the jump table of an
     original `jtbl_` unit.
 
-    The section must be as large as the unit, aligned to its address, and each
-    word (a section-relative offset into `.text.<sym>`) plus `vram` must equal
-    the original table word. Any other `.rodata` content (strings, floats,
-    a second table) makes the section differ in size and returns None, so the
+    The section must fit the unit, aligned to its address, with only zero
+    padding after it. Each relocated word (a section-relative offset into
+    `.text.<sym>`) plus `vram` must equal the original table word; other words
+    must equal the original bytes. Any other `.rodata` content (strings,
+    floats, a second table) makes the section differ and returns None, so the
     function stays gated as before."""
     with obj.open("rb") as f:
         elf = ELFFile(f)
@@ -89,14 +90,23 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, tables: li
             return None
         sec = elf.get_section_by_name(names.pop())
         data = sec.data()
+        # Only relocated words are table entries; the rest is alignment
+        # padding, which must equal the original bytes as they stand.
+        rel = elf.get_section_by_name(f".rel{sec.name}")
+        entries = {r["r_offset"] for r in rel.iter_relocations()} if rel else set()
         for uv, size in tables:
-            if size != len(data) or uv % max(sec["sh_addralign"], 1):
+            if size < len(data) or uv % max(sec["sh_addralign"], 1):
                 continue
             want = raw[uv + fncmp.TEXT_OFF : uv + fncmp.TEXT_OFF + size]
+            # The unit may end in zero padding up to the next unit; the linker
+            # fills that gap with zeros, so only the section's own words count.
+            if any(want[len(data):]):
+                continue
             if all(
-                struct.unpack_from("<I", data, i)[0] + vram == struct.unpack_from("<I", want, i)[0]
-                and 0 <= struct.unpack_from("<I", data, i)[0] < span
-                for i in range(0, size, 4)
+                (struct.unpack_from("<I", data, i)[0] + vram == struct.unpack_from("<I", want, i)[0]
+                 and 0 <= struct.unpack_from("<I", data, i)[0] < span)
+                if i in entries else data[i : i + 4] == want[i : i + 4]
+                for i in range(0, len(data), 4)
             ):
                 return uv, sec.name
     return None

@@ -41,69 +41,35 @@ extern "C" void func_002E0B78(int a, int b, int c, int d, int e, int f, int g, c
     Moji_size_set__FUcUc(0, 0);
 }
 
-struct cHeap;
-extern "C" void *_MemoryAlloc__FUiUiR5cHeap(unsigned, unsigned, cHeap &);
-extern "C" cHeap D_00754240;
-
-struct Vec4 { int x, y, z; float w; };
-
-// FUNCTION: GAME 0x2EBD10
-extern "C" int func_002EBD10(char *self, int unused, unsigned n)
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2E0DE8
+// diff (15 words): va_start via __builtin_next_arg gives sp+0xD0 where original has sp+0xB0; DISPLAY_W/cw swap s3/s4
+typedef void *va_list;
+#define va_start(AP, L) ((AP) = (va_list)__builtin_next_arg(L))
+extern "C" int vsprintf(char *, const char *, va_list);
+extern "C" int DISPLAY_W, DISPLAY_H;
+extern "C" void func_002E0DE8(int x, int y, int z, const char *fmt, ...)
 {
-    unsigned sz;
-    void *q;
-    int one;
-    if (*(unsigned *)(self + 0x2E0) & 8) {
-        sz = n * 0x60 + 0xF0;
-        void *p = _MemoryAlloc__FUiUiR5cHeap(sz, 16, D_00754240);
-        *(void **)(self + 0x2CC) = p;
-        if (!p)
-            goto fail;
-        p = _MemoryAlloc__FUiUiR5cHeap(sz, 16, D_00754240);
-        *(void **)(self + 0x2D0) = p;
-        if (!p)
-            goto fail;
-    } else {
-        sz = n * 0x40 + 0xF0;
-        void *p = _MemoryAlloc__FUiUiR5cHeap(sz, 16, D_00754240);
-        *(void **)(self + 0x2C4) = p;
-        if (!p)
-            goto fail;
-        p = _MemoryAlloc__FUiUiR5cHeap(sz, 16, D_00754240);
-        *(void **)(self + 0x2C8) = p;
-        if (!p)
-            goto fail;
+    int px = (x << 19) >> 16;
+    int py = (y << 19) >> 16;
+    va_list ap;
+    int n, i, cw = 8;
+    va_start(ap, fmt);
+    if (py < -8)
+        return;
+    if (DISPLAY_H * 2 + 8 < py)
+        return;
+    if (px >= DISPLAY_W)
+        return;
+    n = vsprintf(D_0061B298, fmt, ap);
+    if (n + 1 >= 0x200)
+        *(int *)0x11111111 = 0;
+    if ((DISPLAY_W - px) < n * cw) {
+        i = (DISPLAY_W - px) / cw;
+        if (i < 0)
+            return;
+        D_0061B298[i] = 0;
     }
-    sz = n << 4;
-    q = _MemoryAlloc__FUiUiR5cHeap(sz, 16, D_00754240);
-    *(void **)(self + 0x2BC) = q;
-    if (!q)
-        goto fail;
-    for (unsigned i = 0; i < n; i++) {
-        Vec4 *v = (Vec4 *)*(char **)(self + 0x2BC) + i;
-        v->x = 0;
-        v->y = 0;
-        v->z = 0;
-        v->w = 1.0f;
-    }
-    if (*(unsigned *)(self + 0x2E0) & 4) {
-        void *r = _MemoryAlloc__FUiUiR5cHeap(sz, 16, D_00754240);
-        *(void **)(self + 0x2C0) = r;
-        if (!r)
-            goto fail;
-        for (unsigned i = 0; i < n; i++) {
-            Vec4 *v = (Vec4 *)*(char **)(self + 0x2C0) + i;
-            v->x = 0;
-            v->y = 0;
-            v->z = 0;
-            v->w = 1.0f;
-        }
-    }
-    one = 1;
-    if (((*(unsigned long *)(self + 0x240)) & (0xFFFFUL << 40)) != (0x10100UL << 32) || *(float *)(self + 0x2DC) != 0.0f)
-        *(unsigned *)(self + 0x2E0) |= 1;
-    *(int *)(self + 0x2E4) = one;
-    return 1;
-fail:
-    return 0;
+    func_002E0F18(D_0061B298, px, py, z, 0);
 }
+#endif

@@ -179,3 +179,37 @@ extern "C" void func_0030DA08()
     exit__9cTaskWork(*(void **)(GlobalTask + 4));
 }
 #endif
+
+extern "C" int printf(const char *, ...);
+extern "C" int func_00397630(int);
+extern "C" int func_003979E0(int, int, void *);
+extern char D_00450D80[];
+extern char D_00450D90[];
+extern char D_00450DA8[];
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x31A718 (about 20 words off: original keeps 0xFF in v0 across the printf, store order and loop base differ)
+extern "C" void func_0031A718(char *self)
+{
+    while (!func_00397630(0))
+        printf(D_00450D80);
+    if (!func_003979E0(0, 0, self))
+        printf(D_00450D90);
+    int r = func_003979E0(1, 0, self + 0x380);
+    if (!r)
+        printf(D_00450DA8);
+    unsigned char v = 0xFF;
+    *(unsigned char *)(self + 0x15A) = 0xFF;
+    *(unsigned char *)(self + 0x4B8) = 1;
+    *(short *)(self + 0x148) = 0;
+    *(int *)(self + 0x154) = 0;
+    *(short *)(self + 0x14A) = 0;
+    *(unsigned char *)(self + 0x158) = 0;
+    *(unsigned char *)(self + 0x159) = 1;
+    *(unsigned char *)(self + 0x15D) = 0xFF;
+    *(unsigned char *)(self + 0x15C) = 0xFF;
+    *(unsigned char *)(self + 0x15B) = 0xFF;
+    for (int i = 5; i != -1; i--)
+        self[0x360 + i] = 0;
+}
+#endif

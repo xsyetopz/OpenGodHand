@@ -133,26 +133,4 @@ void func_00321378(int a, int b, int c)
     n->f18 = (int)*q;
     *q = n;
 }
-
-// DRAFT: GAME 0x31D928 (23 words differ: original saves s0 with sq at 0x20 and ra at 0x10)
-extern int D_003C4030[];
-extern int func_0031D778(int, int *);
-
-int func_0031D928(unsigned n)
-{
-    int c = 0x14;
-    int a = func_0031D778(n, &c);
-    if (c != 1) {
-        char *p = (char *)a + n;
-        int i = 1;
-        D_003C4030[((n + 7) >> 3) - 1] = (int)p;
-        for (; c - 1 != i; i++) {
-            char *q = p + n;
-            *(int *)p = (int)q;
-            p = q;
-        }
-        *(int *)p = 0;
-    }
-    return a;
-}
 #endif

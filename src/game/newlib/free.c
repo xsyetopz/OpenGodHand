@@ -12,11 +12,11 @@ struct malloc_chunk {
 
 extern mbinptr D_003FA9D0[];
 extern unsigned long D_003FADD8;
-extern unsigned long D_003FADE0;
+extern unsigned int D_003FADE0;
 
 void lock_(struct _reent *) __asm__("func_003A8048");
 void unlock_(struct _reent *) __asm__("func_003A80A8");
-int trim_(struct _reent *, unsigned long) __asm__("func_003ACD20");
+int trim_(struct _reent *, unsigned int) __asm__("func_003ACD20");
 
 #define av_ D_003FA9D0
 #define trim_threshold D_003FADD8
@@ -80,7 +80,9 @@ int trim_(struct _reent *, unsigned long) __asm__("func_003ACD20");
         P->fd = P->bk = last_remainder;         \
     }
 
-// FUNCTION: GAME 0x3ACA28
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3ACA28
+// diff: 67 words; the trim_threshold ld is hoisted above the set_head store, and binblocks is OR-ed with a 32-bit sllv where the original uses dsllv
 void func_003ACA28(struct _reent *reent_ptr, void *mem)
 {
     mchunkptr p;
@@ -142,3 +144,4 @@ void func_003ACA28(struct _reent *reent_ptr, void *mem)
         frontlink(p, sz, idx, bck, fwd);
     unlock_(reent_ptr);
 }
+#endif
