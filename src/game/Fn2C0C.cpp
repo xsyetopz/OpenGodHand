@@ -35,10 +35,10 @@ struct VtBase {
     short pad1;
     void (*fn1)(void *, void *, int);
 };
-extern "C" void func_002A7280(void *);
+extern "C" int func_002A7280(void *);
 
 // FUNCTION: GAME 0x2BA1C8
-// func_002A7280 takes only self; declaring a second arg changed the prologue schedule
+// func_002A7280 takes only self (Fn2A0w.cpp); a second declared arg changed the prologue schedule
 extern "C" int func_002BA1C8(char *self, int n)
 {
     func_002A7280(self);

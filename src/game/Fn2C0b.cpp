@@ -121,9 +121,11 @@ extern "C" void Gp_draw_poly4__FPA3_CfUiUiPC7GP_INFO7eOtTypeUi(float *, unsigned
 // DRAFT: GAME 0x2C7850 - only the setup order of the 0x20 flag constant differs (4 words)
 extern "C" void func_002C7850(void *unused, int ot, unsigned n)
 {
+    unsigned nn = n;
     PolyInfo info;
+    long k = 0x32001;
     info.flags = 0x20;
-    info.attr = 0x32001;
+    info.attr = k;
     info.v[0] = 0;
     info.v[1] = 0;
     info.v[2] = 0;
@@ -140,7 +142,7 @@ extern "C" void func_002C7850(void *unused, int ot, unsigned n)
     info.h = 448.0f;
     info.one = 1.0f;
     info.z = 0;
-    Gp_draw_poly4__FPA3_CfUiUiPC7GP_INFO7eOtTypeUi(info.v, 0x80808080, 1, &info, ot, n);
+    Gp_draw_poly4__FPA3_CfUiUiPC7GP_INFO7eOtTypeUi(info.v, 0x80808080, 1, &info, ot, nn);
 }
 #endif
 

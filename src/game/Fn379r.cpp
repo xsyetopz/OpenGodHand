@@ -54,6 +54,7 @@ extern Fn379Fp D_003F21A8[];
 // DRAFT: GAME 0x3774A8
 // diff: 3 words; original fills the beql slot with the pointer step and
 // the jalr slot with the a0 move; ours hoists the move and leaves a nop.
+// tried: direct call, pre-increment, ++e < end (4 words), continue form (19)
 extern "C" void func_003774A8(void)
 {
     Fn379G2 *e = D_0076E910;

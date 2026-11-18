@@ -183,18 +183,16 @@ extern "C" void func_001F2990(SelfBlk *self)
     trans__7cIDBase((char *)self + 0x930);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1F6D18
-// store order differs (original 4,8,flags,C,E; compiled hoists last store to front)
+// FUNCTION: GAME 0x1F6D18
+// Source store order is not the emitted order: gcc moves the m_4 store ahead of the flags write.
 extern "C" void SetWarmUpRoom__10CasinoWorkifsUs(WarmRoom *self, int a, float f, short s, unsigned short u)
 {
     self->m_flags |= 1;
-    self->m_4 = a;
     self->m_8 = f;
     self->m_C = s;
     self->m_E = u;
+    self->m_4 = a;
 }
-#endif
 
 // FUNCTION: GAME 0x1F6E68
 extern "C" int func_001F6E68()

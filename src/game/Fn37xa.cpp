@@ -33,11 +33,13 @@ extern "C" int func_00373A68(Fn37Obj *o)
     return t != 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x373B20
-// diff: 3 words; original emits `slt v0, 1, v1` directly, ours slt + xori
-extern "C" int func_00373B20(Fn37Obj *o) { return o->m_58 > 1; }
-#endif
+// FUNCTION: GAME 0x373B20 (if/return form keeps `slt` instead of slti+xori)
+extern "C" int func_00373B20(Fn37Obj *o)
+{
+    if (o->m_58 > 1)
+        return 1;
+    return 0;
+}
 
 // FUNCTION: GAME 0x3754F0
 extern "C" void func_003754F0(Fn37Obj *o) { D_0076B080 = *(int *)((char *)o + 0xA4); }

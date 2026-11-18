@@ -93,9 +93,7 @@ struct DvdSys2 {
     unsigned int m_5E4;
 };
 extern DvdSys2 Sys;
-#ifdef NONMATCHING
-// DRAFT: GAME 0x201C28
-// diff: 1 word (Sys is now the shared DvdSys2 so the draft compiles); tried (unsigned long)/(long long)/UL mask/%2/>>= forms, all emit sra; original tests D_00747A24 bit 3 as `lw; dsrl 3` (64-bit shift), ours emits `srl`/`sra`.
+// FUNCTION: GAME 0x201C28 (unsigned long copy of the flag word gives dsrl instead of sra)
 #include "game/cWorldTime.h"
 class cScenario {
 public:
@@ -132,10 +130,12 @@ extern "C" void func_00201C28(cE3 *self)
         int d = self->m_2 * 0x708 - WorldTime.m_globalTime;
         g_Sce->debugPrint(D_0042C7D0, d);
     }
-    if (((unsigned long)D_00747A24 >> 3) & 1)
+    int g = D_00747A24;
+    unsigned long u = g;
+    unsigned long b = (u >> 3) & 1;
+    if (b)
         self->setEnding(true);
 }
-#endif
 
 extern "C" DvdSlot *func_002017A8(DvdMgr *);
 extern "C" int func_001FF9C0(char *, char *, int *, int *);

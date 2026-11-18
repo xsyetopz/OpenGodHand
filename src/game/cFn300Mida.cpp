@@ -30,8 +30,10 @@ extern "C" void func_003182D8(void *p, int f)
         func_002A9528(D_00754C20);
         objArray = 0;
         func_002C53A8(scrArray);
-        objbaseArray = 0;
-        *(int *)D_00754C50 = 0;
+        int *u = &objbaseArray;
+        int *t = (int *)D_00754C50;
+        *t = 0;
+        *u = 0;
     }
 }
 #endif
