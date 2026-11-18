@@ -6,6 +6,11 @@ extern int func_003509E8();
 extern int func_00350A50();
 extern int func_00356358();
 extern int func_00355C08();
+extern int func_0035C380();
+extern int func_0035A1C8();
+extern int func_0035BC50();
+extern int func_0035AB98();
+extern int func_00366918();
 
 // FUNCTION: GAME 0x350988
 int func_00350988(int a)
@@ -45,4 +50,53 @@ int func_00356928(int *a, int b)
     if (!func_00356358(a, b))
         return b;
     return func_00355C08(a[0x1FC0 / 4] + 0x1198, b);
+}
+
+// FUNCTION: GAME 0x359A30
+int func_00359A30(int a, int *b, int *out)
+{
+    int v;
+    if (func_0035C380(a, 2)) {
+        v = func_0035A1C8(a, 5);
+        if (v == 1) {
+            *out = v;
+            return *b == 0;
+        }
+    }
+    *out = 0;
+    return 0;
+}
+
+// FUNCTION: GAME 0x35A0A0
+int func_0035A0A0(int a, int b, int c)
+{
+    if (b == 6 && c == 1 && !func_0035C380(a, 3))
+        return 0;
+    if (b == 5 && c == 1 && !func_0035C380(a, 2))
+        return 0;
+    return 1;
+}
+
+// FUNCTION: GAME 0x35B9B0
+int func_0035B9B0(char *a)
+{
+    int b[2];
+    int *q = (int *)(a + 0xD30);
+    int s1 = q[0x27C / 4];
+    int s0 = q[0x280 / 4];
+    if (*(int *)(a + 0x950) == 0)
+        return 1;
+    if (s1 == -5)
+        return 0;
+    func_0035AB98(a, b, b + 1);
+    return func_00366918(s1 + s0 * 2000 / 0xEA24, s0, b[0], b[1]) != 0;
+}
+
+typedef struct { char c[0x38]; int w; } S3C;
+
+// FUNCTION: GAME 0x35BBA0
+int func_0035BBA0(S3C *d, S3C *s)
+{
+    *d = *s;
+    return func_0035BC50(s, 0);
 }

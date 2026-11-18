@@ -142,7 +142,6 @@ extern "C" void func_001C91B0(OmF *s, void *a1)
     }
     func_001B6F38(s, a1);
 }
-
 class cFnY;
 typedef void (cFnY::*cFnYPmf)();
 class cFnY {
@@ -182,7 +181,6 @@ extern "C" void func_001C0378(cFnY *self)
         func_001B76D8(self);
     }
 }
-
 class cFnW;
 typedef void (cFnW::*cFnWPmf)();
 class cFnW {
@@ -205,7 +203,6 @@ extern "C" void func_001B5A58(cFnW *self)
         func_001B76D8((cFnY *)self);
     }
 }
-
 class cFnV;
 typedef void (cFnV::*cFnVPmf)();
 class cFnV {
@@ -235,7 +232,6 @@ extern "C" void func_001ADD20(cFnV *self)
     calcParts__6cModel(self);
     calcWorldParts__6cModel(self);
 }
-
 class cFnT;
 typedef void (cFnT::*cFnTPmf)();
 class cFnT {
@@ -275,6 +271,29 @@ extern "C" void func_001ADC38(cFnT *self)
         self->spd = GetSpeedRate__9cEmManage(g_EmManage) * D_00747A14;
         (self->*D_003BDC50[self->type])();
         func_002A87E8((cFnY *)self, 0);
+        func_001B76D8((cFnY *)self);
+    }
+}
+class cFnR;
+typedef void (cFnR::*cFnRPmf)();
+class cFnR {
+public:
+    virtual void v();
+    char pad[0x2F4];
+    unsigned char type;
+    char p2[0x608 - 0x2F5];
+    float t608;
+};
+extern cFnRPmf D_003BDA58[];
+// FUNCTION: GAME 0x17D6B0
+extern "C" void func_0017D6B0(cFnR *self)
+{
+    if (func_001B76B0((cFnY *)self)) {
+        (self->*D_003BDA58[self->type])();
+        float f = self->t608 - GetSpeedRate__9cEmManage(g_EmManage);
+        self->t608 = f;
+        if (f < 0.0f)
+            self->t608 = 0.0f;
         func_001B76D8((cFnY *)self);
     }
 }

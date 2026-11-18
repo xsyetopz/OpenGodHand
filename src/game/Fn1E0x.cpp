@@ -1,3 +1,4 @@
+extern "C" void SetNumber__12CustomIDWorki(void *, int);
 extern "C" void displayScrollLayer__FUib(unsigned, int);
 extern "C" void SetDisp__12CustomIDWorkb(void *, int);
 extern "C" void SetLocalPosY__12CustomIDWorki(void *, int);
@@ -108,5 +109,157 @@ extern "C" void func_001ECE30(char *s, int idx, int on)
             LOOP(0)
         else if (idx != 8)
             SetDisp__12CustomIDWorkb(s + (idx * 0x7C + 0x60), 0);
+    }
+}
+
+// FUNCTION: GAME 0x1E4308
+extern T5 D_0042B8D0;
+extern "C" void func_001E4308(char *s)
+{
+    unsigned v = *(unsigned short *)(s + 0x4AC);
+    if (v & 0x8000) {
+        v++;
+        *(unsigned short *)(s + 0x4AC) = v;
+        if ((v & 0x3FF) >= 8) {
+            T5 t = D_0042B8D0;
+            unsigned short w = (~v & 0x4000) | (v & 0x3800) | 0x8000;
+            unsigned k;
+            *(unsigned short *)(s + 0x4AC) = w;
+            k = (w >> 11) & 7;
+            if (w & 0x4000) {
+                unsigned *p = (unsigned *)(s + 0x400);
+                int i = 0;
+                for (; i < 5; i++)
+                    displayScrollLayer__FUib(*(unsigned *)((char *)p + ((unsigned)t.a[i] << 2)), i == k);
+            } else {
+                unsigned *p = (unsigned *)(s + 0x400);
+                int i = 0;
+                for (; i < 5; i++)
+                    displayScrollLayer__FUib(*(unsigned *)((char *)p + ((unsigned)t.a[i] << 2)), 0);
+            }
+        }
+    }
+}
+
+#undef LOOP
+#define LOOPB(v) { \
+    char *p = s + 0x50; \
+    int i = 9; \
+    for (; i >= 0; i--) { \
+        SetDisp__12CustomIDWorkb(p, v); \
+        p += 0x7C; \
+    } \
+}
+
+// FUNCTION: GAME 0x1E7470
+extern "C" void func_001E7470(char *s, int idx, int on)
+{
+    if (on) {
+        if (idx == 10)
+            LOOPB(1)
+        else
+            SetDisp__12CustomIDWorkb(s + (idx * 0x7C + 0x50), 1);
+    } else {
+        if (idx == 10)
+            LOOPB(0)
+        else
+            SetDisp__12CustomIDWorkb(s + (idx * 0x7C + 0x50), 0);
+    }
+}
+
+#define LOOPE(v) { \
+    char *p = s + 0x580; \
+    int i = 1; \
+    for (; i >= 0; i--) { \
+        SetDisp__12CustomIDWorkb(p, v); \
+        p += 0x7C; \
+    } \
+}
+// FUNCTION: GAME 0x1E7538
+extern "C" void func_001E7538(char *s, int idx, int on)
+{
+    if (on) {
+        if (idx == 2)
+            LOOPE(1)
+        else
+            SetDisp__12CustomIDWorkb(s + (idx * 0x7C + 0x580), 1);
+    } else {
+        if (idx == 2)
+            LOOPE(0)
+        else
+            SetDisp__12CustomIDWorkb(s + (idx * 0x7C + 0x580), 0);
+    }
+}
+#undef LOOPE
+
+#undef LOOPB
+#define LOOPC(v) { \
+    char *p = s + 0x60; \
+    int i = 5; \
+    for (; i >= 0; i--) { \
+        SetDisp__12CustomIDWorkb(p, v); \
+        p += 0x7C; \
+    } \
+}
+
+// FUNCTION: GAME 0x1ED700
+extern "C" void func_001ED700(char *s, int idx, int on)
+{
+    if (on) {
+        if (idx == 6)
+            LOOPC(1)
+        else
+            SetDisp__12CustomIDWorkb(s + (idx * 0x7C + 0x60), 1);
+    } else {
+        if (idx == 6)
+            LOOPC(0)
+        else
+            SetDisp__12CustomIDWorkb(s + (idx * 0x7C + 0x60), 0);
+    }
+}
+
+#undef LOOPC
+#define LOOPD(N, v) { \
+    char *p = s + 0x60; \
+    int i = 0; \
+    for (; i < N; i++) { \
+        if (i) \
+            SetDisp__12CustomIDWorkb(p, v); \
+        p += 0x7C; \
+    } \
+}
+
+// FUNCTION: GAME 0x1EE1C0
+extern "C" void func_001EE1C0(char *s, int idx, int on)
+{
+    if (on) {
+        if (idx == 0x1D)
+            LOOPD(0x1D, 1)
+        else if (idx)
+            SetDisp__12CustomIDWorkb(s + (idx * 0x7C + 0x60), 1);
+    } else {
+        if (idx == 0x1D)
+            LOOPD(0x1D, 0)
+        else if (idx)
+            SetDisp__12CustomIDWorkb(s + (idx * 0x7C + 0x60), 0);
+    }
+}
+
+// FUNCTION: GAME 0x1ED3C0
+extern "C" void func_001ED3C0(char *s, int n)
+{
+    int v = *(int *)(s + 0x162C);
+    if (!(v < n))
+        v = n;
+    SetNumber__12CustomIDWorki(s + 0xFE0, v);
+    if (v <= 0) {
+        func_001ECE30(s, 0x22, 1);
+        func_001ECE30(s, 0x23, 0);
+    } else if (!(n < *(int *)(s + 0x162C))) {
+        func_001ECE30(s, 0x22, 0);
+        func_001ECE30(s, 0x23, 1);
+    } else {
+        func_001ECE30(s, 0x22, 1);
+        func_001ECE30(s, 0x23, 1);
     }
 }

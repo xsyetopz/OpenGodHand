@@ -60,7 +60,8 @@ extern "C" int func_00160F38(char *self)
 
 extern int D_00747A84[];
 
-// FUNCTION: GAME 0x2BF420
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2BF420 - flag-bit load schedule differs
 extern "C" void func_002BF420(char *p)
 {
     if (D_00747A84[1] >= 0) {
@@ -78,6 +79,7 @@ extern "C" void func_002BF420(char *p)
         p[1] = 0;
     }
 }
+#endif
 
 extern int D_00586B34;
 extern unsigned char D_0074748C;

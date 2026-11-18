@@ -87,18 +87,21 @@ public:
 };
 void free__5cHeapPv(void *, void *);
 
-// FUNCTION: GAME 0x1E7368
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1E7368 - 3 words: IDSys load uses v0/v1 swapped
 extern "C" void func_001E7368(char *self)
 {
     ((cIDBase *)(self + 0x530))->release();
     ((cIDBase *)self)->release();
-    int *p = (int *)IDSys->m;
+    sIdSys1E *t = IDSys;
+    int *p = (int *)t->m;
     p[0x23] = 0;
     p[0x22] = 0;
     char *q = *(char **)(self + 0x678);
     if (q)
         free__5cHeapPv(*(void **)(q - 0x20), q);
 }
+#endif
 
 extern "C" void func_001E8F78(float);
 

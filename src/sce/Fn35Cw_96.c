@@ -127,3 +127,41 @@ void func_003600E8(char *a, int b, int *o1, int *o2)
     *o1 = q;
     *o2 = r;
 }
+
+typedef struct { char c[0x1800]; } S18;
+extern S18 D_003F0298;
+extern int D_0045A460;
+extern unsigned char D_0045A470[];
+extern long func_003B7FE0();
+
+// FUNCTION: GAME 0x3665C0
+void func_003665C0(S18 *a)
+{
+    *a = D_003F0298;
+}
+
+// FUNCTION: GAME 0x36BED8
+int func_0036BED8()
+{
+    if (D_0045A460 != 0x5A5A5A5A)
+        return func_00369F20(0, 0xFF03FF02);
+    if (D_0045A470[0] != 4)
+        for (;;) ((void (*)())-1)();
+    return 0;
+}
+
+// FUNCTION: GAME 0x36C990
+long func_0036C990(long a, long b, long c)
+{
+    int s;
+    if (c == 0)
+        return ((a ^ b) >= 0) ? 0x7FFFFFFFFFFFFFFFL : (-0x7FFFFFFFFFFFFFFFL - 1);
+    s = 1;
+    if (a < 0) { s = -1; a = -a; }
+    if (b < 0) { b = -b; s = -s; }
+    if (c < 0) { c = -c; s = -s; }
+    {
+        long r = func_003B7FE0(func_0031DE10(a, b) + c / 2, c);
+        return (s < 0) ? -r : r;
+    }
+}

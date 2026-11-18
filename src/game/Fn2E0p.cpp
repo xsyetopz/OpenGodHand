@@ -114,25 +114,23 @@ extern "C" void SetEventCutEffect__FUi(unsigned id)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2FA240 - 3 words, entry scheduling of v0=0 / srl
+// FUNCTION: GAME 0x2FA240
 extern "C" void *getEventObjPtr__FUi(unsigned a)
 {
     unsigned id = a >> 16;
-    void *r = 0;
-    if (id) {
-        if (id == 0x605) {
-            r = getObjPtr__6cEvent6eObjIdUc(Event, 0x605, a);
-            if (!r) r = getObjPtr__6cEvent6eObjIdUc(Event, 0x600, a);
-        } else if (id == 0x3D6) {
-            r = getObjPtr__6cEvent6eObjIdUc(Event, 0x3D6, a);
-            if (!r) r = getObjPtr__6cEvent6eObjIdUc(Event, 0x668, a);
-        } else
-            r = getObjPtr__6cEvent6eObjIdUc(Event, id, a);
-    }
+    void *r;
+    if (!id)
+        return 0;
+    if (id == 0x605) {
+        r = getObjPtr__6cEvent6eObjIdUc(Event, 0x605, a);
+        if (!r) r = getObjPtr__6cEvent6eObjIdUc(Event, 0x600, a);
+    } else if (id == 0x3D6) {
+        r = getObjPtr__6cEvent6eObjIdUc(Event, 0x3D6, a);
+        if (!r) r = getObjPtr__6cEvent6eObjIdUc(Event, 0x668, a);
+    } else
+        r = getObjPtr__6cEvent6eObjIdUc(Event, id, a);
     return r;
 }
-#endif
 
 struct V16F { float x, y, z, w; } __attribute__((aligned(16)));
 extern char *pCamWork;

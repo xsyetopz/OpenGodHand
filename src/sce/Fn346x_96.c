@@ -8,6 +8,7 @@ void func_00349840(char *);
 int func_003492E8(void);
 int func_00349468(char *);
 char *func_00348938(char *);
+int func_00348968(char *);
 
 // FUNCTION: GAME 0x00346E70
 int func_00346E70(unsigned a)
@@ -81,4 +82,46 @@ int func_00349250(char *p)
     if (func_003492E8() == 1)
         r = func_00349468(p);
     return r;
+}
+
+// FUNCTION: GAME 0x00348550
+void func_00348550(char *p, int a)
+{
+    if (func_00348968(p) == 1) {
+        char *vt = *(char **)(p + 8);
+        int arg = *(int *)(p + 0x1C);
+        if (vt) {
+            void (*fn)(int, int) = *(void (**)(int, int))(vt + 0x24);
+            if (fn)
+                fn(arg, a);
+        }
+    }
+}
+
+// FUNCTION: GAME 0x003485B0
+void func_003485B0(char *p, int a)
+{
+    if (func_00348968(p) == 1) {
+        char *vt = *(char **)(p + 8);
+        int arg = *(int *)(p + 0x1C);
+        if (vt) {
+            void (*fn)(int, int) = *(void (**)(int, int))(vt + 0x28);
+            if (fn)
+                fn(arg, a);
+        }
+    }
+}
+
+// FUNCTION: GAME 0x00348610
+void func_00348610(char *p, int a)
+{
+    if (func_00348968(p) == 1) {
+        char *vt = *(char **)(p + 8);
+        int arg = *(int *)(p + 0x1C);
+        if (vt) {
+            void (*fn)(int, int) = *(void (**)(int, int))(vt + 0x30);
+            if (fn)
+                fn(arg, a);
+        }
+    }
 }
