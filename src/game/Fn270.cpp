@@ -13,17 +13,14 @@ struct Em27 {
     unsigned char m_2F4, m_2F5, m_2F6, m_2F7;
 };
 
-#ifdef NONMATCHING
-// 2 words differ: original ends with sltu v0,zero,v0; mine uses sra/andi
-// DRAFT: GAME 0x2744B8
+// FUNCTION: GAME 0x2744B8
 extern "C" int func_002744B8(char *self)
 {
     if ((*(int *)(self + 0x564) ^ 0x211) != 0)
         return 0;
-    return (*(unsigned *)(self + 0x16D4) & 0x20) != 0;
+    int x = *(int *)(self + 0x16D4) & 0x20;
+    return x != 0;
 }
-#endif
-
 // FUNCTION: GAME 0x27EDC8
 extern "C" void func_0027EDC8(char *self)
 {

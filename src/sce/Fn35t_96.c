@@ -5,12 +5,6 @@ void func_0034C390(char *, int, int);
 void func_0035C2D0(int, int, int, int, int);
 void func_0036A070(int);
 
-// DRAFT: GAME 0x3545D8
-// diff: 5 words; original calls with jal (lw a1 in the delay slot) and returns normally, ours folds to a tail j
-#ifdef NONMATCHING
-void func_003545D8(char *a, int b) { func_0034C390(a, *(int *)(a + 0x1FC8), b); }
-#endif
-
 // FUNCTION: GAME 0x350B38
 void func_00350B38(char *a) { a += 0xE48; if (*(int *)(a + 0x24) != 0x7FFFFFFF) *(int *)a = 1; }
 
@@ -22,12 +16,6 @@ int func_00357258(int *a) { int r = 1; if ((unsigned)(a[0x12] - 1) < 4) r = a[0x
 
 // FUNCTION: GAME 0x3520B0
 void func_003520B0(int *a) { int *b; a[2] = 0; a[0] = 0; a[1] = 0; b = a + 4; *(long *)b = -1; b[3] = -1; b[2] = 0; }
-
-// DRAFT: GAME 0x3570D0
-// diff: 8 words; original uses jal with li a1,7 in the delay slot, ours folds to a tail j
-#ifdef NONMATCHING
-void func_003570D0(int a, int b) { func_0035C2D0(a, 7, 8, b, 0); }
-#endif
 
 // FUNCTION: GAME 0x355670
 void func_00355670(int *a) { if (a) { if (*a == 4) *a = 3; else *a = 0; a[0x58 / 4] = -1; } }

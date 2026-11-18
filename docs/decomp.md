@@ -102,6 +102,7 @@ These source shapes reproduce patterns this compiler emits only one way:
   original branches, an early `return` sometimes avoids it.
 - Store order in source is not always the emitted order: delay-slot filling
   moves the last store first. When stores mismatch, permute them.
+- gcc emits the last-written byte store first and the rest in source order, so to get stores `2F5,2F6,2F7` write `2F6,2F7,2F5`.
 - `if (p) g(p); return p;` matches only as `int r = a; if (a) r = g(a); return r;`.
 - A derived constructor `if (p) { base(p); p->vt = X; } return p;` builds
   the vtable in `v1` only when `base` is declared returning `void *`; a `void`
@@ -157,7 +158,7 @@ The libraries come from more than one SCE compiler, all built as C at -O2:
 | 0x31C000-0x327FFF    | mixed 2.9 / 2.96 / ProDG | per object, see below       |
 | 0x328098-0x36F048    | `ee-gcc2.96`        | 10 of 10 sampled framed units    |
 | 0x3875A8-0x393F30    | `ee-gcc2.9-991111`  | 0x389170, 0x389400 match         |
-| 0x3951F8-0x3A4AF0    | `ee-gcc2.9-991111`? | `sd` prologues, untested         |
+| 0x3951F8-0x3A4AF0    | `ee-gcc2.9-991111`; framed call wrappers `ee-gcc3.2-030926` + `-fno-optimize-sibling-calls` | leaf/branch units match 2.9; 0x395180, 0x3964A0, 0x398B90 match only 3.2 |
 | 0x3B0268-0x3B9458    | `ee-gcc2.9-991111`  | 0x3B2148, 0x3B6B90 match         |
 | 0x3B9998-0x3BA900    | `ee-gcc2.96`        | fncmp matches pin both edges     |
 | 0x3BA978-end         | `ee-gcc2.9-991111`  | 0x3BAFD0 matches only under 2.9  |

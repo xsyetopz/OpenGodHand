@@ -65,3 +65,30 @@ void func_003471B8(int a, int b) { func_0035FC58(func_00346C48(a), b); }
 
 // FUNCTION: GAME 0x347E20
 void func_00347E20(int *a) { int v = a[0x48 / 4]; if (v) func_00335B88(v); }
+
+int func_0035E080(int, int *);
+void *memcpy(void *, const void *, unsigned);
+
+// FUNCTION: GAME 0x342958
+int func_00342958(int *a, int *b, int *c) { *a = 0x249E4; *b = 0x9C40; *c = 0x800; return *a + *b + *c; }
+
+// FUNCTION: GAME 0x347370
+void func_00347370(int *a) { int **o = (int **)a[0x17C / 4]; if (o) ((void (*)(int **))((int *)*o)[3])(o); }
+
+// FUNCTION: GAME 0x347420
+void func_00347420(int *a) { int **o = (int **)a[0x17C / 4]; if (o) ((void (*)(int **))((int *)*o)[5])(o); }
+
+// DRAFT: GAME 0x344F30
+// diff: xor/movz scheduling: orig xor a0,v0,1-reg; movz v0,local,a0
+#ifdef NONMATCHING
+int func_00344F30(int a) { int r; return func_0035E080(a, &r) != 1 ? -1 : r; }
+#endif
+
+// FUNCTION: GAME 0x3465B8
+int func_003465B8(void *a, unsigned b, int c) { memcpy((void *)(0x70000000 + c), a, b); return 0; }
+
+// DRAFT: GAME 0x344E58
+// diff: store/load order differs (7 words)
+#ifdef NONMATCHING
+void func_00344E58(int *s, int *d) { int x = ((short *)s)[6]; int y = ((short *)s)[7]; d[0] = s[2]; d[5] = x; d[1] = s[0]; d[3] = y; d[4] = x; d[2] = s[1]; }
+#endif
