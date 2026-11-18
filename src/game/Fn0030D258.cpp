@@ -6,7 +6,7 @@ extern "C" void FlushCache(int);
 extern "C" int sceGsSyncPath(int, int);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x30D258
+// DRAFT: GAME 0x30D258 - 63 words differ: original does not fold the 0x40000>>16 / 0x100000>>16 / 0x400000>>8 constants (hoisted in s3-s5, dsra) and saves 7 regs; ours folds (188 vs 256 bytes). Tried short params, long constants, inline shift helper.
 extern "C" void func_0030D258()
 {
     char li[0x60];

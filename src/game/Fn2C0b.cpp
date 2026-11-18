@@ -37,7 +37,7 @@ extern "C" Blk *func_002CD968(void *, int);
 extern "C" Blk *func_002CD930(void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2CD7C8 - self/sz saved in swapped s1/s2, store order and beql differ (20 words)
+// DRAFT: GAME 0x2CD7C8 - self/sz saved in swapped s1/s2, store order and beql differ (20 words); tried early returns, n reuse, owner temp, -16 mask, assign-in-if: no change
 extern "C" int func_002CD7C8(void *self, unsigned n)
 {
     int sz = (n + 15) & 0xFFFFFFF0u;

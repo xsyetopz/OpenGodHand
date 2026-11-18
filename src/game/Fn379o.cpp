@@ -47,7 +47,7 @@ extern "C" void func_0037ACA0(void *p)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x378180
-// diff: 21 words; same size, but the original keeps the divisor in a2 and loads the FP constants after the cvt, ours differs in register choice and scheduling
+// diff: 21 words; original uses beql/subu (no movn) with divisor in a2 and FP constants loaded after cvt; ours uses movn. Tried single-expression, d<180 else form, early-return duplicate, float-select form
 extern "C" int func_00378180(short a, short *out)
 {
     int n = 360;

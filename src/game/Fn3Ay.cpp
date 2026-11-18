@@ -58,7 +58,7 @@ extern Tab *D_003F852C;
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x394D58
-// diff: original has one shared `return 7` block mid-loop and v1 reuse (124 bytes); ours 132 with bgez/b layout
+// diff: 16 words; original has one shared `return 7` after the v<5 test with bnel delay-slot stores (124 bytes), ours 132; tried for(;n;n--,r++), goto/continue/nested-if forms
 extern "C" int func_00394D58(int *out)
 {
     D_003F5520.m_4 = 0x31415926;
@@ -67,20 +67,17 @@ extern "C" int func_00394D58(int *out)
         *out = D_0040A420;
     Tab *t = D_003F852C;
     int n = t->m_10;
-    if (n) {
-        Rec *r = t->m_c;
-        do {
-            int v = r->m_a;
-            if (v < 0)
-                return 7;
-            if (v < 2)
-                r->m_b = 0;
-            else if (v < 5)
-                r->m_b = 1;
-            else
-                return 7;
-            r++;
-        } while (--n);
+    Rec *r = t->m_c;
+    for (; n; n--, r++) {
+        int v = r->m_a;
+        if (v < 0)
+            return 7;
+        if (v < 2)
+            r->m_b = 0;
+        else if (v < 5)
+            r->m_b = 1;
+        else
+            return 7;
     }
     return 0;
 }

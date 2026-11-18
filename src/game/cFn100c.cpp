@@ -26,7 +26,7 @@ extern "C" int func_00135250(void *, float *a, float *b, float *c, float *d)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x139910
-// diff: load/store scheduling of the two vec temps differs (21 words)
+// diff: load/store scheduling of the two vec temps differs (21 words; an inline helper with struct V gives 17 but the lui 1.0f still precedes the loads, not applied)
 extern "C" void func_00139910(char *self)
 {
     char *p = *(char **)(self + 0x364);

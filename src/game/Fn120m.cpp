@@ -122,7 +122,7 @@ extern "C" void _$_12CustomIDWork(void *, int);
 extern "C" void func_0030F5A0(void *);
 extern const char D_0041DCC8[];
 
-// DRAFT: GAME 0x13DE90 - 22 words: target keeps self+0x120 in a temp (v0/s2) and copies self into s1; ours puts self in s2 and compares post-decrement
+// DRAFT: GAME 0x13DE90 - 19 words: target has self in s1, first in v0->s2; ours swaps s1/s2 and lui s3/s4 order (tried for(;;) break form, p/first decl order, me alias)
 #ifdef NONMATCHING
 extern "C" void func_0013DE90(char *self, unsigned f)
 {
@@ -132,9 +132,12 @@ extern "C" void func_0013DE90(char *self, unsigned f)
         W *p = (W *)(self + 0x38C);
         if (first != p) {
             p--;
-            do {
+            for (;;) {
                 _$_12CustomIDWork(p, 0);
-            } while (first != p--);
+                if (first == p)
+                    break;
+                p--;
+            }
         }
     }
     *(const void **)(self + 0x80) = D_0041DCC8;

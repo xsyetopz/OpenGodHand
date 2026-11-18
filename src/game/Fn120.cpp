@@ -79,7 +79,7 @@ extern "C" char *func_0012E5C8(char *p)
     return p;
 }
 
-// DRAFT: GAME 0x12C758 - 20 words: original tests m_unk698 with beql into the m_unk6A0 test and an explicit 'return 0' branch; mine emits bnez
+// DRAFT: GAME 0x12C758 - 20 words: original tests m_unk698 with beql into the m_unk6A0 test and an explicit 'return 0' branch; mine emits bnez; tried && chain (20), int r=0 (27), || early return (20), early return on 0x608 (21)
 #ifdef NONMATCHING
 extern "C" int func_0012C758(pl00 *self)
 {

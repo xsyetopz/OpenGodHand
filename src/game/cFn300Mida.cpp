@@ -144,7 +144,7 @@ extern "C" void func_00309028(S309028 *p)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x305FB0
-// 20 words differ: original keeps t in a2 and the loop counter in a0 (self is dead after the load)
+// 20 words differ: original keeps t in a2 and the loop counter in a0 (self is dead after the load); tried i declared first, while loop, t2 order: no change
 extern "C" void *func_00305FB0(char *self, int id)
 {
     char *t = *(char **)(self + 0x400);

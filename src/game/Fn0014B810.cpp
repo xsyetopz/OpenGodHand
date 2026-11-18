@@ -5,7 +5,7 @@ extern "C" void func_0031A600(void *, int, int, char *);
 extern "C" void func_0031A650(void *, int, int, char *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x14B810
+// DRAFT: GAME 0x14B810 - 54 words differ: original keeps o in a1, e in t1 with daddu copies and duplicated tails; ours merges tails (224 vs 264 bytes). Tried struct-array index, hoisted flags load.
 extern "C" void func_0014B810(char *self, char *o, short h)
 {
     int i = D_007476B0 & 1;

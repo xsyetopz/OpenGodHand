@@ -190,7 +190,7 @@ extern "C" void func_00305A68(char *self)
 extern "C" char *func_00306F88(char *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x306D18 (19 words off: zero stores in the cVec init loop fold to $zero instead of the hoisted $f1)
+// DRAFT: GAME 0x306D18 - 19 words: original stores c[0..2] as sw $zero outside loop, reloads c[0] (lwc1) in loop and stores hoisted float 0.0 ($f1) via swc1; mine folds to sw $zero. Tried init outside loop, int-cast c stores (hoists load, 26), mixed int/float (19), c[] copies (25-71)
 extern "C" void func_00306D18(char *self)
 {
     float c[4];
