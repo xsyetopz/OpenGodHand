@@ -100,3 +100,71 @@ void cSnd::BgmEvAllSuspend(float f)
         func_002CD4A8(n, f);
     }
 }
+
+// FUNCTION: GAME 0x2D1958
+void cSnd::BgmEvDataEnd()
+{
+    for (sBgmNode *n = m_bgmList; n; n = n->m_next) {
+        if (n->m_kind - 0x80 == 1)
+            func_002CD4A8(n, 10.0f);
+    }
+    func_002CFF90(GetBgmData(1));
+}
+
+// FUNCTION: GAME 0x2D19D8
+int cSnd::BgmEvDataCheck()
+{
+    if (func_002CFF78(GetBgmData(1)) == 1)
+        return 1;
+    return func_002CFF68(GetBgmData(1));
+}
+
+// FUNCTION: GAME 0x2D1C78
+int cSnd::BgmEvSet(eBgmPt a, eBgmReqNo b)
+{
+    void *p = func_002D22B0(this, a, b);
+    if (p)
+        func_002CCB10(p);
+    p = func_002D2228(this);
+    return p ? func_002CC9C0(p, a, b, 4, 0xFFFFFFFFu, 0, 0) != 0 : 0;
+}
+
+// FUNCTION: GAME 0x2D1E48
+void cSnd::BgmEvPause(eBgmPt a, eBgmReqNo b)
+{
+    for (sBgmNode *n = m_bgmList; n; n = n->m_next) {
+        if (b == -1 || (n->m_kind - 0x80 == a && n->m_a == b)) {
+            if (n->m_b == 4)
+                func_00373488(n);
+        }
+    }
+}
+
+// FUNCTION: GAME 0x2D2178
+void cSnd::BgmFadeOutAll(float f, eBgmPt a, eBgmReqNo b)
+{
+    for (sBgmNode *n = m_bgmList; n; n = n->m_next) {
+        if (n->m_kind - 0x80 == a && n->m_a != b) {
+            if (func_00373A58(n) == 1)
+                func_002CD4A8(n, 3.0f);
+            else
+                func_002CD4A8(n, f);
+        }
+    }
+}
+
+#ifdef NONMATCHING
+// 0x2D1768 near-miss: missing the nop between `mtc1 $zero,$f0` and `c.le.s`
+// (compiled has the nop only after c.le.s), 4 bytes short; rest identical.
+// FUNCTION: GAME 0x2D1768
+void cSnd::BgmEventFade(eBgmReqNo r, float a, float b, float c)
+{
+    void *p = func_002D22B0(this, 0, r);
+    if (p) {
+        if (0.0f <= c) {
+            func_00373560(p, -1, func_00373938(p, 0) * c);
+        }
+        func_002CD4E0(p, b, a);
+    }
+}
+#endif

@@ -2,6 +2,7 @@
 #define CSCEATMANAGER_H
 
 #include "game/cSceAtUnit.h"
+#include "game/cVec.h"
 
 class cSceAtManager {
 public:
@@ -11,10 +12,21 @@ public:
     void AtExecute(cSceAtUnit *unit);
     void AtExecute(unsigned short id);
     cSceAtUnit *getUnit(unsigned int id);
+    void AtDataSet_exec(cSceAtUnit *unit, int a, void *b, void *c, eAreaTrgType trg);
+    void AtDataSet_exec(unsigned short id, int a, void *b, void *c, eAreaTrgType trg);
+    int SetEnable(cSceAtUnit *unit);
+    int SetEnable(unsigned short id);
+    void getCenterPos(unsigned short id, cVec &out);
+    void delUnitData(cSceAtUnit *unit);
+
+    int m_unk0;
+    char _pad4[0x5C - 4];
 };
 
 extern "C" cSceAtUnit *func_002C30C0(cSceAtManager *);
 extern "C" cSceAtUnit *func_002C30C8(cSceAtManager *);
+
+extern "C" void func_002C3058(cSceAtManager *, void *, cSceAtUnit *);
 
 struct cSceAtExecEntry {
     void (*m_fn)(cSceAtUnit *, int);

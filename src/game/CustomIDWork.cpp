@@ -11,6 +11,11 @@ CustomIDWork::CustomIDWork()
     m_work = 0;
 }
 
+// FUNCTION: GAME 0x2D5D80
+CustomIDWork::~CustomIDWork()
+{
+}
+
 // FUNCTION: GAME 0x2D5DA8
 void CustomIDWork::Initialize(cIDWork *work)
 {
@@ -64,10 +69,7 @@ void CustomIDWork::SetMessNo(int n)
         m_work->m_messNo = n;
 }
 
-#ifdef NONMATCHING
-// 0x2D6630: 6 words differ. The original keeps a `nop` between mtc1 and cvt.s.w
-// (36 bytes); the compiler emits none (32 bytes). Same pattern in SetLocalPosY
-// (0x2D6658) and SetOffsetPosX (0x2D66D0).
+// FUNCTION: GAME 0x2D6630
 void CustomIDWork::SetLocalPosX(int x)
 {
     if (m_work) {
@@ -76,7 +78,7 @@ void CustomIDWork::SetLocalPosX(int x)
     }
 }
 
-// 0x2D6658
+// FUNCTION: GAME 0x2D6658
 void CustomIDWork::SetLocalPosY(int y)
 {
     if (m_work) {
@@ -85,7 +87,7 @@ void CustomIDWork::SetLocalPosY(int y)
     }
 }
 
-// 0x2D6680: same missing nop, twice.
+// FUNCTION: GAME 0x2D6680
 void CustomIDWork::SetLocalPosXY(int x, int y)
 {
     if (m_work) {
@@ -95,7 +97,7 @@ void CustomIDWork::SetLocalPosXY(int x, int y)
     }
 }
 
-// 0x2D66D0
+// FUNCTION: GAME 0x2D66D0
 void CustomIDWork::SetOffsetPosX(int x)
 {
     if (m_work) {
@@ -103,7 +105,51 @@ void CustomIDWork::SetOffsetPosX(int x)
         m_work->m_offsetX = (float)x;
     }
 }
-#endif
+
+// FUNCTION: GAME 0x2D6720
+void CustomIDWork::SetOffsetPosXY(int x, int y)
+{
+    if (m_work) {
+        m_unk28 = 0;
+        m_work->m_offsetX = (float)x;
+        m_work->m_offsetY = (float)y;
+    }
+}
+
+// FUNCTION: GAME 0x2D6768
+void CustomIDWork::SetMoveOffsetPosX(int a, int b, unsigned short t)
+{
+    if (m_work) {
+        m_unk2C = (float)a;
+        m_unk28 = 3;
+        m_unk34 = (float)b;
+        m_unk44 = t;
+        m_unk46 = 0;
+    }
+}
+
+// FUNCTION: GAME 0x2D67B0
+void CustomIDWork::SetMoveOffsetPosXSin(int a, unsigned short t)
+{
+    if (m_work) {
+        m_unk28 = 5;
+        m_unk3C = (float)a;
+        m_unk44 = t;
+        m_unk46 = 0;
+    }
+}
+
+// FUNCTION: GAME 0x2D67F0
+void CustomIDWork::SetMoveOffsetPosY(int a, int b, unsigned short t)
+{
+    if (m_work) {
+        m_unk28 = 9;
+        m_unk30 = (float)a;
+        m_unk38 = (float)b;
+        m_unk44 = t;
+        m_unk46 = 0;
+    }
+}
 
 // FUNCTION: GAME 0x2D6870
 void CustomIDWork::ResetMoveOffsetPos()
@@ -148,5 +194,47 @@ void CustomIDWork::ResetScaleAnim()
         m_unk5C = 0;
         m_work->m_scaleX = m_unk60;
         m_work->m_scaleY = m_unk60;
+    }
+}
+
+// FUNCTION: GAME 0x2D6898
+void CustomIDWork::SetColorAnimNormal(COL c, unsigned short t)
+{
+    if (m_work) {
+        m_unk48 = 3;
+        m_unk50 = m_work->m_unk4C;
+        m_unk54 = c.c;
+        m_unk58 = t;
+        if (t == 0)
+            m_unk58 = 1;
+        m_unk5A = 0;
+    }
+}
+
+// FUNCTION: GAME 0x2D68D8
+void CustomIDWork::SetColorAnimNormal(COL a, COL b, unsigned short t)
+{
+    if (m_work) {
+        m_unk50 = a.c;
+        m_unk48 = 3;
+        m_unk54 = b.c;
+        m_unk58 = t;
+        if (t == 0)
+            m_unk58 = 1;
+        m_unk5A = 0;
+    }
+}
+
+// FUNCTION: GAME 0x2D6910
+void CustomIDWork::SetColorAnimSin(COL a, COL b, unsigned short t)
+{
+    if (m_work) {
+        m_unk50 = a.c;
+        m_unk48 = 5;
+        m_unk54 = b.c;
+        m_unk58 = t;
+        if (t == 0)
+            m_unk58 = 1;
+        m_unk5A = 0;
     }
 }

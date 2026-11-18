@@ -4,6 +4,11 @@
 The game code is built with SN Systems ProDG ee-gcc 2.95.3 (build 136): its
 prologues save callee-saved registers with `sq`, which no SCE gcc emits. The
 "GCC2096 SCE3020" string in the executable comes from the linked SCE libraries.
+The objects were assembled by SN's ps2eeas 1.8.19.316 (shipped in the
+ee-gcc2.95.2-273a package), not the packaged GNU as: it keeps a `nop` after
+`mtc1` before the FPU reads the moved register, as the game does, while the
+1.9.x builds also pad a load used across a branch, which the game does not.
+For SN packages `-c` therefore runs as `-S` followed by that ps2eeas.
 SN packages are Windows executables and run under Wine; the SCE Linux packages
 are i386 binaries. On anything but x86 Linux with Wine, both run in the i386
 container built from tools/docker/wine.Dockerfile (Docker or a compatible CLI
@@ -21,6 +26,7 @@ from __future__ import annotations
 import hashlib
 import os
 import platform
+import shlex
 import shutil
 import subprocess
 import sys
@@ -46,6 +52,7 @@ PINNED = {
     "ee-gcc2.96": "0590d2ca9da8f5903889d66761220d14b47a8d14ba987ca53db84a1650a1fd0a",
 }
 DEFAULT = "ee-gcc2.95.3-136"
+SN_AS = ("ee-gcc2.95.2-273a", "lib/gcc-lib/ee/2.95.2/ps2eeas.exe")
 IMAGE = "godhand-eecc:wine"
 DOCKERFILE = ROOT / "tools/docker/wine.Dockerfile"
 
@@ -136,6 +143,18 @@ def main() -> int:
             docker, "run", "--rm", "--platform", "linux/386", "-v", f"{ROOT}:{ROOT}", "-w", str(cwd),
             "-e", "WINEDEBUG=-all", IMAGE, *exe, *gcc_args,
         ]
+    sn_as = ensure_toolchain(SN_AS[0]) / SN_AS[1] if gcc.suffix == ".exe" else None
+    if sn_as and "-c" in argv and "-o" in argv:
+        out = argv[argv.index("-o") + 1]
+        asm = out + ".sn.s"
+        gargs = [*bflags, *("-S" if a == "-c" else a for a in argv)]
+        gargs[gargs.index("-o", len(bflags)) + 1] = asm
+        gsize = [a for a in argv if a.startswith("-G")][-1:]
+        steps = [[*exe, *gargs], [*exe[:-1], str(sn_as), *gsize, "-o", out, asm]]
+        if exe[0] != "wine":
+            steps[1] = ["wine", str(sn_as), *gsize, "-o", out, asm]
+        script = " && ".join(" ".join(shlex.quote(a) for a in step) for step in steps) + f" && rm -f {shlex.quote(asm)}"
+        cmd = cmd[: len(cmd) - len(exe) - len(gcc_args)] + ["sh", "-c", script]
     rc = subprocess.call(cmd)
     if rc == 0 and "-o" in argv and argv[argv.index("-o") + 1].endswith(".o"):
         normalize_symtab(Path(argv[argv.index("-o") + 1]))

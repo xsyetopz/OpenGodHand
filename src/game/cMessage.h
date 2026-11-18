@@ -14,11 +14,16 @@ public:
     void closeAll();
     void deleteAll();
     bool ckMessage(unsigned short no);
+    int deleteWorkId(unsigned short id);
+    int deleteMessNo(unsigned short no);
+    int closeMessNo(unsigned short no);
+    char *getRubyAddr(unsigned short no) const;
 
     char *m_table[4];
     cMessageNode *m_list;
 };
 
+extern int D_00747A0C;
 extern "C" cMessageNode *func_002AED40(cMessage *, unsigned short);
 extern "C" void func_002B2400(cMessageNode *);
 extern "C" cMessageNode *func_002AEF10(cMessage *, cMessageNode *);

@@ -78,3 +78,114 @@ void cScenario::beginRoomJumpForce(unsigned short room, const cVec &pos, float a
 {
     func_001FFF30(&Door, room, pos, ang, a, b, c);
 }
+
+extern cScenario *g_Sce;
+extern unsigned int D_00747A84;
+extern "C" void *Getplayer__Fv();
+extern "C" int func_0012BAF0(void *);
+extern "C" int func_002C4350(cScenario *);
+
+// FUNCTION: GAME 0x2C3E40
+int cScenario::isEventStartOk()
+{
+    if (D_00747A84 & 0x40000000)
+        return 0;
+    return func_0012BAF0(Getplayer__Fv()) != 0;
+}
+
+// FUNCTION: GAME 0x2C3E88
+void cScenario::waitEventStartOk()
+{
+    sScenarioTask *t = &m_task;
+    while (!isEventStartOk())
+        t->m_work->sleep(1);
+}
+
+// FUNCTION: GAME 0x2C4078
+void cScenario::waitCam()
+{
+    while (!isCamEnd())
+        g_Sce->m_task.m_work->sleep(1);
+}
+
+// FUNCTION: GAME 0x2C42E0
+void cScenario::setMess(unsigned int no)
+{
+    if (m_messNo != 0xFFFF)
+        endMess();
+    if (Message->create(no, 0, 0, 0) != 0xFFFF)
+        m_messNo = no;
+}
+
+// FUNCTION: GAME 0x2C43D8
+void cScenario::waitMess()
+{
+    while (func_002C4350(this) == 1)
+        g_Sce->m_task.m_work->sleep(1);
+    endMess();
+}
+
+// FUNCTION: GAME 0x2C52B0
+void cScenario::setOmBreak(const char *name)
+{
+    sRoomSave *rs = &g_RoomSave;
+    long h = 0;
+    int i = 0;
+    if (*name) {
+        do {
+            h |= (long)*name << (i * 8);
+            i++;
+            name++;
+        } while (i < 8 && *name);
+    }
+    func_002BECB0(rs, h);
+}
+
+extern cObjBaseArray objbaseArray;
+extern "C" int func_002BED08(sRoomSave *, long);
+
+// FUNCTION: GAME 0x2C5110
+int cScenario::isOmBreak(cOmBase *om)
+{
+    if (!om)
+        return 1;
+    if (func_002BED08(&g_RoomSave, om->m_id) == 1)
+        return 1;
+    long f = om->m_flags;
+    int r = 0;
+    if ((f >> 1) & 1)
+        r = 1;
+    return r;
+}
+
+// FUNCTION: GAME 0x2C5168
+int cScenario::isOmBreak(const char *name)
+{
+    cObjBaseArray *arr = &objbaseArray;
+    long h = 0;
+    int i = 0;
+    if (*name) {
+        do {
+            h |= (long)*name << (i * 8);
+            i++;
+            name++;
+        } while (i < 8 && *name);
+    }
+    return isOmBreak(arr->SearchOM(h));
+}
+
+// FUNCTION: GAME 0x2C5220
+int cScenario::isOmBreak(unsigned short room, const char *name)
+{
+    sRoomSave *rs = &g_RoomSave;
+    long h = 0;
+    int i = 0;
+    if (*name) {
+        do {
+            h |= (long)*name << (i * 8);
+            i++;
+            name++;
+        } while (i < 8 && *name);
+    }
+    return func_002BED60(rs, room, h);
+}

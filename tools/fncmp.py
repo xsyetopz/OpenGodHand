@@ -40,6 +40,8 @@ def compiled(obj: Path, sym: str) -> tuple[bytes, dict[int, int]]:
     with obj.open("rb") as f:
         elf = ELFFile(f)
         sec = elf.get_section_by_name(f".text.{sym}") or elf.get_section_by_name(".text")
+        if sec is None:
+            raise SystemExit(f"{obj}: no section for {sym}")
         symtab = elf.get_section_by_name(".symtab")
         start = None
         for s in symtab.iter_symbols():

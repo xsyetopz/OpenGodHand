@@ -318,3 +318,142 @@ void cCoreSave::clearKillEmNum()
             m_save->m_killEmNum[i] = 0;
     }
 }
+
+// FUNCTION: GAME 0x1FA908
+void cCoreSave::setKeyCardNum(int n)
+{
+    if (m_save) {
+        m_save->m_keyCardNum = n;
+        if (m_save->m_keyCardNum > 9)
+            m_save->m_keyCardNum = 9;
+        if (m_save->m_keyCardNum < 0)
+            m_save->m_keyCardNum = 0;
+    }
+}
+
+// FUNCTION: GAME 0x1FA9B8
+void cCoreSave::setKeyNum(int n)
+{
+    if (m_save) {
+        m_save->m_keyNum = n;
+        if (m_save->m_keyNum > 9)
+            m_save->m_keyNum = 9;
+        if (m_save->m_keyNum < 0)
+            m_save->m_keyNum = 0;
+    }
+}
+
+// FUNCTION: GAME 0x1FC388
+void cCoreSave::setCasinoTicketNum(int n)
+{
+    if (m_save) {
+        m_save->m_casinoTicketNum = n;
+        if (m_save->m_casinoTicketNum > 9)
+            m_save->m_casinoTicketNum = 9;
+        if (m_save->m_casinoTicketNum < 0)
+            m_save->m_casinoTicketNum = 0;
+    }
+}
+
+// FUNCTION: GAME 0x1FC3E8
+void cCoreSave::addCasinoTicket(int n)
+{
+    if (m_save) {
+        m_save->m_casinoTicketNum += n;
+        if (m_save->m_casinoTicketNum > 9)
+            m_save->m_casinoTicketNum = 9;
+        if (m_save->m_casinoTicketNum < 0)
+            m_save->m_casinoTicketNum = 0;
+    }
+}
+
+// FUNCTION: GAME 0x1FADF0
+void cCoreSave::addTensionItem(unsigned char n)
+{
+    if (m_save) {
+        m_save->m_tensionItem += n;
+        if (m_save->m_tensionItem > 5)
+            m_save->m_tensionItem = 5;
+    }
+}
+
+// FUNCTION: GAME 0x1FBD28
+void cCoreSave::addComboST(unsigned char n)
+{
+    if (m_save) {
+        m_save->m_comboST += n;
+        if (m_save->m_comboST > 6)
+            m_save->m_comboST = 6;
+    }
+}
+
+// FUNCTION: GAME 0x1FBD60
+int cCoreSave::getComboST()
+{
+    if (m_save == 0)
+        return 0;
+    if (D_00747A34 & 0x1000000)
+        m_save->m_comboST = 6;
+    return m_save->m_comboST;
+}
+
+// FUNCTION: GAME 0x1FBE08
+int cCoreSave::getKillEmNum(int n)
+{
+    if (m_save == 0)
+        return 0;
+    n -= 1;
+    if (n < 0)
+        return 0;
+    if (n >= 5)
+        return 0;
+    return (short)m_save->m_killEmNum[n];
+}
+
+// FUNCTION: GAME 0x1FC580
+int cCoreSave::getAllKillEmNum(int n)
+{
+    if (m_save == 0)
+        return 0;
+    n -= 1;
+    if (n < 0)
+        return 0;
+    if (n >= 5)
+        return 0;
+    return m_save->m_allKillEmNum[n];
+}
+
+#ifdef NONMATCHING
+// FUNCTION: GAME 0x1FBF90
+// Remaining diff (7 words): original loop has no nop before the back-branch `beqz` (60 bytes); ours adds a delay-slot nop (64).
+void cCoreSave::setClearStage(unsigned short n)
+{
+    if (m_save) {
+        unsigned int f = 0;
+        unsigned int i = 0;
+        do {
+            f |= 1 << i;
+            i++;
+        } while (i <= n);
+        m_save->m_clearStage = f;
+    }
+}
+#endif
+
+#ifdef NONMATCHING
+// FUNCTION: GAME 0x1FB868
+// Remaining diff (17 words): original copies v to $a3 right after the null check and clamps in $a3; ours schedules the clamp differently (68 vs 68 bytes).
+void cCoreSave::setComboMax(unsigned int i, int v)
+{
+    if (m_save) {
+        if (i < 6) {
+            int c = 0;
+            if (v > -1)
+                c = v;
+            if (c > 6)
+                c = 6;
+            m_save->m_combo[i].m_comboMax = c;
+        }
+    }
+}
+#endif

@@ -6,14 +6,13 @@ bool cMessage::ckMessage(unsigned short no)
     return func_002AED40(this, no) != 0;
 }
 
-#ifdef NONMATCHING
-// 0x2AEAD0 NEAR-MISS: 1 word: addu operand order (original addu a1,v1,a1; ours a1,a1,v1)
+// FUNCTION: GAME 0x2AEAD0
 char *cMessage::getMessageAddr(unsigned short no) const
 {
     char *base = m_table[no >> 12];
-    return base + *(int *)(base + (no & 0xFFF) * 8 + 4);
+    int *e = (int *)base + (no & 0xFFF) * 2;
+    return base + e[1];
 }
-#endif
 
 // FUNCTION: GAME 0x2AED10
 cMessageNode *cMessage::searchWorkId(unsigned short id) const
@@ -26,20 +25,72 @@ cMessageNode *cMessage::searchWorkId(unsigned short id) const
 }
 
 #ifdef NONMATCHING
-// 0x2AECD0 NEAR-MISS: original has an extra nop before the bnez loop branch (60 vs 64 bytes); -Wa,-g no help
+// 0x2AECD0 NEAR-MISS: do-while form reproduces the assembler-inserted nops but emits one nop too many before bnez (original: lw; nop; bnez; nop). 8 spellings tried (for, while, do-while, volatile, inline, asm nop, early-next)
 void cMessage::closeAll()
 {
-    for (cMessageNode *n = m_list; n; n = n->m_next)
-        func_002B2400(n);
+    cMessageNode *n = m_list;
+    if (n) {
+        do {
+            func_002B2400(n);
+            n = n->m_next;
+        } while (n);
+    }
 }
 #endif
 
 #ifdef NONMATCHING
-// 0x2AEC88 NEAR-MISS: original has two nops before bnez (64 vs 72 bytes)
+// 0x2AEC88 NEAR-MISS: do-while form emits 3 nops after the jal where the original has 2 (4 bytes longer); for/while spellings emit none
 void cMessage::deleteAll()
 {
     cMessageNode *n = m_list;
-    while (n)
-        n = func_002AEF10(this, n);
+    if (n) {
+        do {
+            n = func_002AEF10(this, n);
+        } while (n);
+    }
 }
 #endif
+
+// FUNCTION: GAME 0x2AEBF8
+int cMessage::deleteWorkId(unsigned short id)
+{
+    cMessageNode *n = searchWorkId(id);
+    if (!n)
+        return 0;
+    func_002AEF10(this, n);
+    return 1;
+}
+
+// FUNCTION: GAME 0x2AEC40
+int cMessage::deleteMessNo(unsigned short no)
+{
+    cMessageNode *n = func_002AED40(this, no);
+    if (!n)
+        return 0;
+    func_002AEF10(this, n);
+    return 1;
+}
+
+// FUNCTION: GAME 0x2AED70
+int cMessage::closeMessNo(unsigned short no)
+{
+    cMessageNode *n = func_002AED40(this, no);
+    if (!n)
+        return 0;
+    func_002B2400(n);
+    return 1;
+}
+
+// FUNCTION: GAME 0x2AEB00
+char *cMessage::getRubyAddr(unsigned short no) const
+{
+    if (!D_00747A0C) {
+        char *base = m_table[no >> 12];
+        int *e = (int *)base + (no & 0xFFF) * 2;
+        int off = e[2];
+        if (off)
+            return base + off;
+        return 0;
+    }
+    return 0;
+}

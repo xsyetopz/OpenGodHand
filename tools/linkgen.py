@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import struct
 import subprocess
 import sys
@@ -54,7 +55,15 @@ def matches(obj: Path, vram: int, sym: str, span: int, raw: bytes) -> bool:
     return True
 
 
-def local_refs(obj: Path, sym: str) -> set[str]:
+def known_symbols(cfg) -> set[str]:
+    """Every name the final link defines without compiled code."""
+    names = {n for row in cfg["sections"] for _v, _s, n in configure.read_units(row[4])}
+    for f in ("config/aliases.ld", "build/undefined_funcs_auto.txt", "build/undefined_syms_auto.txt"):
+        names |= set(re.findall(r"^(\S+)\s*=", (ROOT / f).read_text(), re.M))
+    return names
+
+
+def local_refs(obj: Path, sym: str, known: set[str]) -> set[str]:
     """Sections of `obj` that `sym` relocates against through a section symbol
     or a symbol defined outside a function section. Only matching function
     sections are linked, so a reference to a compiled `.rodata` constant or
@@ -69,8 +78,12 @@ def local_refs(obj: Path, sym: str) -> set[str]:
             for r in rs.iter_relocations():
                 target = symtab.get_symbol(r["r_info_sym"])
                 shndx = target["st_shndx"]
-                if not isinstance(shndx, int) or shndx == 0:
-                    continue  # undefined or absolute: resolved by the asm units
+                if shndx == "SHN_UNDEF":
+                    if target.name not in known:
+                        out.add(target.name)  # a name the original never defines
+                    continue
+                if not isinstance(shndx, int):
+                    continue  # absolute
                 name = elf.get_section(shndx).name
                 if target["st_info"]["type"] == "STT_SECTION" or not name.startswith(".text."):
                     out.add(name)
@@ -92,11 +105,12 @@ def main() -> int:
         end = text_units[n + 1][0] if n + 1 < len(text_units) else sections[0][0][2]
         spans[vram] = end - vram
 
+    known = known_symbols(cfg)
     status: dict[int, str] = {}
     refs: dict[int, set[str]] = {}
     for vram, obj, sym in cfg["compiled"]:
         status[vram] = "match" if matches(ROOT / obj, vram, sym, spans[vram], raw) else "differ"
-        refs[vram] = local_refs(ROOT / obj, sym)
+        refs[vram] = local_refs(ROOT / obj, sym, known)
     # A reference to another function section resolves only if that function
     # is linked as well; drop unresolvable matches until none remain.
     while True:

@@ -11,6 +11,16 @@ full build still reproduces `SLUS_215.03` byte for byte.
   the SCE gcc 2.9x/2.96 builds never emit, and it does not enable strict
   aliasing at -O2. Build 136 is the only package that matches every function
   decompiled so far; builds 114 and 273a miss `cMessage::ckMessage`.
+- Assembler: SN ps2eeas 1.8.19.316 (shipped in `ee-gcc2.95.2-273a`), not the
+  package's GNU as. The compiler emits reorder-mode assembly and the assembler
+  chooses hazard nops: 1.8.19 keeps a `nop` between `mtc1` and the FPU
+  instruction reading that register, as the game does; GNU as omits it, and
+  ps2eeas 1.9.x additionally pads a load used across a branch, which the game
+  never does. `tools/eecc.py` runs `-c` as `-S` followed by ps2eeas.
+- A build-time gate (`tools/linkgen.py`) links an annotated function only when
+  its bytes match and every symbol it references exists in the final link;
+  otherwise the asm unit stays. `build/linkgen.tsv` lists each annotated
+  function's status (`match`, `differ`, `refs ...`).
 - `tools/eecc.py` runs the Windows executables under Wine, in the i386
   container from `tools/docker/wine.Dockerfile` unless the host is x86 Linux
   with Wine. The SCE "GCC2096 SCE3020" string in the executable belongs to the

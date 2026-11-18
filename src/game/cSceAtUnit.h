@@ -1,6 +1,8 @@
 #ifndef CSCEATUNIT_H
 #define CSCEATUNIT_H
 
+#include "game/cVec.h"
+
 enum eActType { ACT_0 };
 
 enum eSceAt_id { SCEAT_0 };
@@ -10,6 +12,7 @@ enum eScehitType { SHT_0 };
 
 class cSceAtUnit {
 public:
+    void getCenterPos(cVec &out);
     void AtInit(eSceAt_id id, eAreaHitType hit, eAreaTrgType trg, eActType act);
     void ActTypeSet(eActType actType, eActType actType2);
     void SetEnable(unsigned char);
@@ -23,7 +26,7 @@ public:
     unsigned char m_unk3A;
     unsigned char m_unk3B;
     unsigned int m_unk3C;
-    char _pad40[4];
+    void *m_unk40;
     unsigned char m_unk44;
     char _pad45[0x4E - 0x45];
     unsigned char m_unk4E;
@@ -36,6 +39,7 @@ public:
 };
 
 extern "C" void *memset(void *, int, unsigned int);
+extern "C" int func_002C0E68(cSceAtUnit *);
 extern "C" void func_002C0E20(cSceAtUnit *);
 extern "C" void func_002C0E60(cSceAtUnit *);
 

@@ -137,7 +137,7 @@ def main() -> int:
     n.append(f"rule cc\n  command = {args.cc} $CXXFLAGS -c -o $out $in\n  description = CC $in")
     n.append(
         f"rule ld\n  command = {tool('ld')} -EL --no-warn-mismatch -Map $map -T $script "
-        "-T build/undefined_funcs_auto.txt -T build/undefined_syms_auto.txt -o $out\n  description = LD $out"
+        "-T config/aliases.ld -T build/undefined_funcs_auto.txt -T build/undefined_syms_auto.txt -o $out\n  description = LD $out"
     )
     n.append(f"rule pack\n  command = {py} tools/elfpack.py pack $in $out\n  description = PACK $out")
     n.append(f"rule check\n  command = {py} tools/check.py $in && touch $out\n  description = CHECK $in")
@@ -171,7 +171,7 @@ def main() -> int:
     )
     n.append(f"  script = {script}")
 
-    n.append(f"build build/{TARGET}.elf: ld | {script} " + " ".join(objs + gated))
+    n.append(f"build build/{TARGET}.elf: ld | {script} config/aliases.ld " + " ".join(objs + gated))
     n.append(f"  script = {script}\n  map = build/{TARGET}.map")
     n.append(f"build build/{TARGET}: pack config/elf_layout.json build/{TARGET}.elf assets/elf | tools/elfpack.py")
     n.append(f"build build/{TARGET}.ok: check build/{TARGET} | tools/check.py config/{TARGET}.sha1")

@@ -17,12 +17,15 @@ struct sBgmData {
 struct sBgmNode {
     char _pad0[0x88];
     sBgmNode *m_next;
-    char _pad8C[0x98 - 0x8C];
+    int m_kind;
+    int m_a;
+    int m_b;
     unsigned m_flags;
     char _pad9C[0xB0 - 0x9C];
     int m_state;
 };
 
+enum eBgmPt { eBgmPt_0 };
 enum eSndId { eSndId_0 };
 
 extern "C" {
@@ -33,7 +36,16 @@ void func_002D0728(cSnd *, unsigned, float);
 void func_002CD500(sBgmNode *, int, float);
 void func_002CD4A8(sBgmNode *, float);
 void *func_002D2228(cSnd *);
-void func_002CC9C0(void *, int, int, int, unsigned, int, int);
+void *func_002D22B0(cSnd *, int, int);
+void func_002CCB10(void *);
+void func_00373488(sBgmNode *);
+int func_00373A58(sBgmNode *);
+float func_00373938(void *, int);
+void func_00373560(void *, int, float);
+void func_002CD4E0(void *, float, float);
+int func_002CFF78(sBgmData *);
+int func_002CFF68(sBgmData *);
+int func_002CC9C0(void *, int, int, int, unsigned, int, int);
 void func_002CFF90(sBgmData *);
 void func_002D0128(sBgmData *, int, unsigned);
 }
@@ -54,6 +66,12 @@ public:
     void BgmEventSet(eBgmReqNo r, int a, int b);
     void BgmEvDataInit(unsigned a);
     void BgmEvAllSuspend(float f);
+    void BgmEvDataEnd();
+    int BgmEvDataCheck();
+    int BgmEvSet(eBgmPt a, eBgmReqNo b);
+    void BgmEvPause(eBgmPt a, eBgmReqNo b);
+    void BgmFadeOutAll(float f, eBgmPt a, eBgmReqNo b);
+    void BgmEventFade(eBgmReqNo r, float a, float b, float c);
 
     char _pad0[0x18];
     sBgmNode *m_bgmList;
