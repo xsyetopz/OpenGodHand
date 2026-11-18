@@ -236,7 +236,7 @@ extern "C" void func_0013C630(char *s)
     *(float *)(s + 0x64) = c.v[1];
 }
 
-// DRAFT: GAME 0x13D400 (register allocation differs after 3 tries)
+// DRAFT: GAME 0x13D400 (18 words: orig keeps self+0xD0 in s0 with copy s4 and recomputes self+0x120 after loop; mine CSEs it into s4; tried addu idiom, decl order, int-cast base)
 #ifdef NONMATCHING
 extern "C" void func_002AA3D8(void *, int);
 extern "C" void Initialize__12CustomIDWorkP7cIDWork(void *, void *);

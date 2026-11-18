@@ -5,6 +5,7 @@ static inline unsigned char Eq(volatile unsigned char *v, int n) { return *v == 
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x304C48
+// 55 differing words: orig reloads mode byte per test, bools via bne/daddu+andi; tried plain, volatile (kept), Eq()==1, local flags (62)
 extern "C" void func_00304C48(unsigned char *self)
 {
     int ok = 1;

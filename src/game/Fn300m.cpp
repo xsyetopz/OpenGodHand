@@ -245,7 +245,7 @@ extern "C" char *func_001333B8(void *, unsigned short);
 extern "C" int func_00308D68(char *, int);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x308DA8 (18 words off: original tests the hit count once before the loop and keeps the entry base in a0)
+// DRAFT: GAME 0x308DA8 (18 words off; nested ifs, early returns, result-var goto tried (worse): original tests the hit count once before the loop and keeps the entry base in a0)
 extern "C" int func_00308DA8(char *self, int a1, int a2)
 {
     int *hit[8];

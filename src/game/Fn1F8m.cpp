@@ -183,8 +183,7 @@ void cArea::AreaGetCenterPos(cVec &out)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1F88A8 - 20 words: type-2 case fp register choice and store order
+// FUNCTION: GAME 0x1F88A8
 extern "C" void func_001F88A8(char *a, cVec *c, unsigned char type, float w, float d, float h)
 {
     float *p = (float *)a;
@@ -195,8 +194,8 @@ extern "C" void func_001F88A8(char *a, cVec *c, unsigned char type, float w, flo
     case 1: {
         float hw = w * 0.5f;
         float hd = d * 0.5f;
-        p[2] = h;
         p[1] = c->y;
+        p[2] = h;
         p[3] = hw;
         p[4] = c->x - hw;
         p[5] = c->z - hd;
@@ -211,19 +210,18 @@ extern "C" void func_001F88A8(char *a, cVec *c, unsigned char type, float w, flo
     case 2:
         p[4] = c->x;
         p[5] = c->z;
-        p[2] = h;
         p[1] = c->y;
+        p[2] = h;
         p[3] = w * 0.5f;
-        *(int *)(a + 0x2C) = 0;
         *(int *)(a + 0x18) = 0;
         *(int *)(a + 0x1C) = 0;
         *(int *)(a + 0x20) = 0;
         *(int *)(a + 0x24) = 0;
         *(int *)(a + 0x28) = 0;
+        *(int *)(a + 0x2C) = 0;
         break;
     }
 }
-#endif
 
 // FUNCTION: GAME 0x1FD448
 extern "C" void func_001FD448(char *self)

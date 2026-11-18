@@ -7,6 +7,7 @@ extern int **IDSys;
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2AAEF0
+// 51 differing words: stack arg layout (orig 7C,80 at sp0/sp8 then 0x10..0x2C packed 4-byte, frame 0x70 vs 0x80); tried struct-arg variants (worse)
 extern "C" void func_002AAEF0(unsigned char *a, int *b, unsigned char *c)
 {
     char *tex = *(char **)(c + 0x24);

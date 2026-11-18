@@ -1,12 +1,11 @@
-// DRAFT: GAME 0x1509A0
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x1509A0
 extern "C" void func_001509A0(char *p) {
     *(int *)(p + 0x3C) = 0;
-    char *q = p + 0x3BF80;
+    
     int n = 0x280;
     do {
+        char *q = p + n * 0x180 - 0x80;
         *(long *)(q - 0x40) = 0x70000002;
-        n--;
         *(int *)(q - 0x38) = 0;
         *(int *)(q - 0x34) = 0x50000002;
         *(long *)(q - 0x30) = (0x8000L << 45 | 0x8001);
@@ -42,7 +41,5 @@ extern "C" void func_001509A0(char *p) {
         *(long *)(q + 0x58) = 0x53;
         *(long *)(q + 0x68) = 0;
         *(int *)(q + 0x78) = 0;
-        q -= 0x180;
-    } while (n != 0);
+            } while (--n != 0);
 }
-#endif

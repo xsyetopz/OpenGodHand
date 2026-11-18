@@ -77,6 +77,7 @@ public:
     void beginRoomJump(unsigned char a, unsigned char b, unsigned int c, unsigned char d);
     void beginRoomJump(unsigned short room, const cVec &pos, float ang, unsigned char a, unsigned int b, unsigned char c);
     void beginRoomJumpForce(unsigned short room, const cVec &pos, float ang, unsigned char a, unsigned int b, unsigned char c);
+    void beginKurohukuBattle();
 
     sVec4 m_jumpPos;
     float m_jumpAng;

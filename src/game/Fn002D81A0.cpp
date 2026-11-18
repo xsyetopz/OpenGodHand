@@ -12,6 +12,7 @@ static inline int Cl(float v)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2D81A0
+// 55 differing words: out ptr swapped into t0/a1, final lui/addu hoisted; tried struct offsets, early-return/ternary/if-assign clamp helper
 extern "C" void func_002D81A0(D81A0 *self, float *out, unsigned long *col)
 {
     int r = Cl(self->c);

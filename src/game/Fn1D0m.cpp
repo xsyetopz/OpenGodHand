@@ -94,7 +94,7 @@ public:
     void SetFall();
 };
 
-// DRAFT: GAME 0x1C8CB8 - sink branch layout: target beqz+delay sw, b; ours beql/daddu first
+// DRAFT: GAME 0x1C8CB8 - 7 words differ: original has sink sw in beqz delay slot after 0x644 store, ours puts 0x644 sw in delay and sink after join; sink-before, if/else, ternary variants tried
 void cOmThrow::SetFall()
 {
     char *self = (char *)this;
@@ -108,12 +108,8 @@ void cOmThrow::SetFall()
     *(int *)(self + 0x610) = 0;
     *(int *)(self + 0x618) = 0;
     *(int *)(self + 0x644) = 0;
+    char *w = b ? **(char ***)(self + 0x278) : 0;
     sink = b;
-    char *w;
-    if (b)
-        w = **(char ***)(self + 0x278);
-    else
-        w = 0;
     if (w) {
         cVec *d = *(cVec **)(w + 0xD0);
         *d = *(cVec *)(self + 0x630);
