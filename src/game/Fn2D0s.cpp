@@ -3,6 +3,8 @@ extern "C" {
 void func_002D0820(char *, float);
 void func_002D31B0(int, unsigned int);
 void *memset(void *, int, unsigned);
+int Check__4cDvd6eDvdId(void *, int);
+void set__13cActionButton12eScePriority8eActType11eActBtnTypePvT48eActFunc(void *, int, int, int, int, int, int);
 void sceVu0ApplyMatrix(float *, float *, float *);
 int func_002D22B0(void *, int, int);
 void func_002D2F78(void *, int, int, int, int);
@@ -13,6 +15,8 @@ int func_002CFF68(void *);
 }
 extern char D_0044D388[];
 extern char Snd[];
+extern char Dvd[];
+extern char g_ActBtn[];
 extern char *D_00747A94;
 extern char *D_00747A98;
 
@@ -106,4 +110,85 @@ extern "C" int GetHeadPtr__8cBgmData(char *self)
 {
     if (!func_002CFF68(self)) return 0;
     return *(int *)(self + 0xC);
+}
+
+// FUNCTION: GAME 0x2D0728
+extern "C" void func_002D0728(char *self, int a1, float f)
+{
+    *(int *)(self + 0x50) = a1;
+    func_002D0820(self, f);
+}
+
+// FUNCTION: GAME 0x2D0578
+extern "C" char *func_002D0578(char *self, int i)
+{
+    char *p = *(char **)(self + 0x30);
+    if (!p) return 0;
+    return *(char **)(p + 0x10) + i * 8;
+}
+
+// FUNCTION: GAME 0x2D0598
+extern "C" char *func_002D0598(char *self, int i)
+{
+    char *p = *(char **)(self + 0x30);
+    if (!p) return 0;
+    return *(char **)(p + 0x14) + i * 16;
+}
+
+// FUNCTION: GAME 0x2D05B8
+extern "C" char *func_002D05B8(char *self, int i)
+{
+    char *p = *(char **)(self + 0x30);
+    if (!p) return 0;
+    return *(char **)(p + 0x1C) + i * 2;
+}
+
+// FUNCTION: GAME 0x2D31E0
+extern "C" void func_002D31E0() { func_002D31B0(1, 0xFFFF); }
+
+// FUNCTION: GAME 0x2D3220
+extern "C" void func_002D3220(void *self) { memset(self, 0, 0xC0); }
+
+// FUNCTION: GAME 0x2D42B0
+extern "C" int func_002D42B0(char *self)
+{
+    if (!*(int *)self) return 0;
+    return *(int *)(*(char **)(self + 8) + 0x24);
+}
+
+// FUNCTION: GAME 0x2D5440
+extern "C" void func_002D5440(char *self, int a1)
+{
+    if (!*(char **)(self + 4) || a1 == -1) return;
+    *(unsigned char *)(*(char **)self + a1 * 0x58 + 0x50) = *(unsigned char *)(*(char **)(self + 4) + 0x50);
+}
+
+// FUNCTION: GAME 0x2D65F8
+extern "C" void func_002D65F8(char *self, float a, float b, float c, float d)
+{
+    if (!*(char **)(self + 4)) return;
+    *(float *)(*(char **)(self + 4) + 0x70) = a;
+    *(float *)(*(char **)(self + 4) + 0x74) = b;
+    *(float *)(*(char **)(self + 4) + 0x78) = c;
+    *(float *)(*(char **)(self + 4) + 0x7C) = d;
+}
+
+// FUNCTION: GAME 0x2D0318
+extern "C" int func_002D0318(char *self)
+{
+    int id = *(int *)(self + 0x1C);
+    if (!id) return 1;
+    return Check__4cDvd6eDvdId(Dvd, id) == 0;
+}
+
+// FUNCTION: GAME 0x2DB770
+extern "C" void func_002DB770()
+{
+    set__13cActionButton12eScePriority8eActType11eActBtnTypePvT48eActFunc(g_ActBtn, 0xB, 0x13, 0x10, 0, 0, 0);
+}
+
+// FUNCTION: GAME 0x2DB7A8
+extern "C" void func_002DB7A8()
+{
+    set__13cActionButton12eScePriority8eActType11eActBtnTypePvT48eActFunc(g_ActBtn, 0xB, 0x14, 0x11, 0, 0, 0);
 }

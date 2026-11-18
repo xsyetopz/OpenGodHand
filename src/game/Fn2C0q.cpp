@@ -161,6 +161,92 @@ extern "C" void func_002CA518(char *self)
     func_002CB200(self);
 }
 
+extern "C" char CoreSave[];
+extern "C" int getSkill__9cCoreSave8PL_SKILL(char *c, int s);
+extern "C" int setSkill__9cCoreSave8PL_SKILLSc(char *c, int s, signed char v);
+extern "C" void func_00372C68(char *a);
+extern "C" void func_002CC578(char *a);
+extern char D_0044CEE8[];
+extern char D_005FEE18[];
+extern char D_00603A40[];
+extern "C" int func_002D3050(char *a, int b, char *c, int d);
+extern "C" void func_002CFCB0(char *a, int b);
+extern "C" int func_002D2EE8(char *a, int b);
+extern "C" void func_00374B70(int a, int b, int c, int d, int e);
+extern "C" void func_00375988(int a, int b, int c, int d);
+
+// FUNCTION: GAME 0x2C9A90
+extern "C" int func_002C9A90(char *self, int idx)
+{
+    if (!*(int *)self)
+        return 0;
+    return getSkill__9cCoreSave8PL_SKILL(CoreSave, (self + idx)[0x14]);
+}
+
+// FUNCTION: GAME 0x2C9BB0
+extern "C" int func_002C9BB0(char *self, int idx, unsigned char v)
+{
+    if (*(int *)self)
+        return setSkill__9cCoreSave8PL_SKILLSc(CoreSave, (self + idx)[0x14], v);
+}
+
+// FUNCTION: GAME 0x2CC500
+extern "C" char *func_002CC500(char *self)
+{
+    func_00372C68(self);
+    *(char **)(self + 0x80) = D_0044CEE8;
+    func_002CC578(self);
+    return self;
+}
+
+// FUNCTION: GAME 0x2CC5E8
+extern "C" void func_002CC5E8(char *self)
+{
+    char *p = *(char **)(self + 0x84);
+    if (p)
+        *(char **)(p + 0x88) = *(char **)(self + 0x88);
+    else
+        *(char **)D_005FEE18 = *(char **)(self + 0x88);
+    p = *(char **)(self + 0x88);
+    if (p)
+        *(char **)(p + 0x84) = *(char **)(self + 0x84);
+    *(int *)(self + 0x94) = 0;
+}
+
+// FUNCTION: GAME 0x2CF888
+extern "C" int func_002CF888(char *self)
+{
+    if (*(int *)(self + 0x18))
+        return 0;
+    char *o = *(char **)(self + 0x10);
+    char *a = *(char **)(o + 0x20);
+    if (a != o)
+        *(int *)(self + 0x30) = func_002D3050(D_00603A40, (int)a, self + 0x18, *(int *)(o + 0x24));
+    func_002CFCB0(self, 0x10);
+    return 1;
+}
+
+// FUNCTION: GAME 0x2CF9A8
+extern "C" int func_002CF9A8(char *self)
+{
+    char *d = D_00603A40;
+    int r = 0;
+    if (func_002D2EE8(d, *(int *)(self + 0x30))) {
+        if (func_002D2EE8(d, *(int *)(self + 0x34)))
+            r = 1;
+    }
+    return r;
+}
+
+// FUNCTION: GAME 0x2CFB60
+extern "C" void func_002CFB60(char *self)
+{
+    char *o = *(char **)(self + 0x10);
+    func_00374B70(*(short *)(self + 0x2C), *(int *)(self + 0x14), *(int *)(self + 0x18), *(int *)(self + 0x1C), *(int *)(o + 0x18));
+    func_00375988(*(short *)(self + 0x2C), *(int *)(self + 0x14), *(int *)(self + 0x18), *(int *)(self + 0x1C));
+    func_002CFCB0(self, 0x40);
+}
+
 #ifdef NONMATCHING
 // FUNCTION: GAME 0x2C0DA8
 extern "C" void AreaSet__10cSceAtUnitR4cVecff9eAreaType(char *self, void *v, float a, float b, int t)

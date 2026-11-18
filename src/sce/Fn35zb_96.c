@@ -205,3 +205,79 @@ int func_0035A7A0(char *a, char *b)
     return *(int *)(a + 0x4C) == 4;
 }
 #endif
+
+// FUNCTION: GAME 0x35D1B0
+void func_0035D1B0(int *a, int b, int c, int d, int e)
+{
+    a[0] = b; a[1] = c; a[2] = d; a[3] = e;
+}
+
+// FUNCTION: GAME 0x35D740
+void func_0035D740(int *a, int b, int c)
+{
+    a[0] = 1; a[1] = b; a[2] = c;
+}
+
+// FUNCTION: GAME 0x35A518
+void func_0035A518(int *a)
+{
+    *(short *)((char *)a + 0x1E) = 0;
+    a[0] = 0;
+    a[1] = 0;
+    a[2] = 0;
+    a[3] = 0;
+    a[4] = 0;
+    a[5] = 0;
+    a[6] = 0;
+    *(short *)((char *)a + 0x1C) = 0;
+}
+
+// FUNCTION: GAME 0x35D800
+int func_0035D800(int *a)
+{
+    int v = a[0];
+    return v < -1 || v >= 2;
+}
+
+// FUNCTION: GAME 0x35EA60
+void func_0035EA60(int *a)
+{
+    int n = a[3] - 1; int s = a[4]; a[4] = -s; a[1] += s * n;
+}
+
+// FUNCTION: GAME 0x35FE20
+void func_0035FE20(int *a, int b, int c)
+{
+    int t = b * a[1]; a[2] -= b; a[0] = a[0] + t + c;
+}
+
+// FUNCTION: GAME 0x35EEF8
+void func_0035EEF8(char *a)
+{
+    void (*f)(int) = *(void (**)(int))(a + 0x70); int x = *(int *)(a + 0x38); if (f) f(x);
+}
+
+extern int func_0035C2D0();
+
+// FUNCTION: GAME 0x358940
+int func_00358940(int a)
+{
+    return func_0035C2D0(a, 7, 6, 0, 0);
+}
+
+// FUNCTION: GAME 0x35A260
+void func_0035A260(char *a, int b, int *c)
+{
+    int *p = *(int **)(a + b * 0x44 + 0x1F38); if (!p) { *c = 0; return; } *c = *p;
+}
+
+extern int D_003EE800;
+
+// FUNCTION: GAME 0x35FFB0
+void func_0035FFB0(int *a)
+{
+    if (a) {
+        *a = 0;
+        D_003EE800--;
+    }
+}

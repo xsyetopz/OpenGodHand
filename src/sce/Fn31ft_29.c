@@ -35,6 +35,7 @@ typedef unsigned int UHItype __attribute__ ((mode (HI)));
 typedef unsigned int USItype __attribute__ ((mode (SI)));
 typedef unsigned int UDItype __attribute__ ((mode (DI)));
 #define INLINE __inline__
+#define F_D_BITOFF (52+8-(23+7))
 #define NGARDS    7L
 #define GARDROUND 0x3f
 #define GARDMASK  0x7f
@@ -58,6 +59,9 @@ typedef union { FLO_type value; fractype value_raw; struct { fractype fraction:F
 #define pack_d func_0031EB38
 #define unpack_d func_0031EC48
 #define __make_fp func_0031EDA0
+#define sf_to_df func_0031EDD0
+#define __muldi3 func_0031DE10
+#define __make_dp func_0031EAB0
 INLINE static int isnan (fp_number_type * x) { return x->class == CLASS_SNAN || x->class == CLASS_QNAN; }
 INLINE static int isinf (fp_number_type * x) { return x->class == CLASS_INFINITY; }
 INLINE static int iszero (fp_number_type * x) { return x->class == CLASS_ZERO; }
@@ -201,3 +205,43 @@ __make_fp(fp_class_type class,
 }
 
 extern DFtype __make_dp (fp_class_type, unsigned int, int, UDItype frac);
+
+extern DFtype __make_dp (fp_class_type, unsigned int, int, UDItype frac);
+
+// FUNCTION: GAME 0x31EDD0
+DFtype
+sf_to_df (SFtype arg_a)
+{
+  fp_number_type in;
+
+  unpack_d ((FLO_union_type *) & arg_a, &in);
+  return __make_dp (in.class, in.sign, in.normal_exp,
+		    ((UDItype) in.fraction.ll) << F_D_BITOFF);
+}
+
+/* libgcc2.c, L_muldi3 (longlong.h umul_ppmm for __mips__).  */
+typedef int SItype __attribute__ ((mode (SI)));
+typedef int DItype __attribute__ ((mode (DI)));
+struct DIstruct {SItype low, high;};
+typedef union { struct DIstruct s; DItype ll; } DIunion;
+#define umul_ppmm(w1, w0, u, v) \
+  __asm__ ("multu %2,%3" : "=l" ((USItype) (w0)), "=h" ((USItype) (w1)) : "d" ((USItype) (u)), "d" ((USItype) (v)))
+#define __umulsidi3(u, v) \
+  ({DIunion __w; umul_ppmm (__w.s.high, __w.s.low, u, v); __w.ll; })
+
+// FUNCTION: GAME 0x31DE10
+DItype
+__muldi3 (DItype u, DItype v)
+{
+  DIunion w;
+  DIunion uu, vv;
+
+  uu.ll = u,
+  vv.ll = v;
+
+  w.ll = __umulsidi3 (uu.s.low, vv.s.low);
+  w.s.high += ((USItype) uu.s.low * (USItype) vv.s.high
+	       + (USItype) uu.s.high * (USItype) vv.s.low);
+
+  return w.ll;
+}

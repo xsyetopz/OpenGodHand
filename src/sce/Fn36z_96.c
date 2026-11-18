@@ -3,7 +3,9 @@
 extern int func_0036D410();
 extern int func_0036D460();
 extern int func_00369F20();
+extern int func_0036C670();
 extern int D_003F1EC8[];
+extern int *func_0036CB08();
 struct E3 { int f; char pad[0x20]; };
 
 extern int func_0036C5F8();
@@ -49,22 +51,79 @@ char *func_0036C248(void)
     if (s) {
         func_0036C438(s, 0x40C);
         s = func_0036C2F0(s);
-        *(int *)(s + 0x3B4) = ((int (*)(char *))func_0036C670)(s);
+        *(int *)(s + 0x3B4) = func_0036C670(s);
+        return s;
+    }
+    return s;
+}
+
+// FUNCTION: GAME 0x36BDA0
+int func_0036BDA0(int **a, int b, int c)
+{
+    int buf[4];
+    int f = (b == 0);
+    ((void (*)(int **, int, int, int *))(*a)[6])(a, b, c, buf);
+    ((void (*)(int **, int, int *))(*a)[8])(a, f, buf);
+    return buf[1];
+}
+
+struct E5 { int f; char pad[0xFC]; };
+struct T5 { char pad[0xC]; int n; struct E5 e[1]; };
+extern struct T5 *D_003F1A98;
+extern void func_0036CB58();
+
+// FUNCTION: GAME 0x369020
+struct E5 *func_00369020(void)
+{
+    int i;
+    int n = D_003F1A98->n;
+    struct E5 *e = D_003F1A98->e;
+    for (i = 0; i < n; i++, e++)
+        if (e->f == 1) return e;
+    return 0;
+}
+
+// FUNCTION: GAME 0x36C518
+void func_0036C518(int idx, int v)
+{
+    int n = D_00766CE8.n;
+    struct E4 *e = D_00766CE8.e;
+    for (; n > 0; n--, e++)
+        if (e->f == 2) *(int *)((char *)e + 0x190 + idx * 4) = v;
+}
+
+// FUNCTION: GAME 0x36CAB0
+int *func_0036CAB0(void)
+{
+    int *s = func_0036CB08();
+    if (s) {
+        func_0036CB58(s);
+        D_003F1EC8[0]++;
+        *s = 1;
         return s;
     }
     return s;
 }
 
 #ifdef NONMATCHING
+// DRAFT: GAME 0x36A070
+// diff: 18 words off: orig reuses a2=2 for the 0x35C compare, ours loads a second 2 into a3 (2 probes)
+int func_0036A070(char *a)
+{
+    if (func_0036C5F8()) return func_00369F20(0, 0xFF030211, 2);
+    *(int *)(a + 0x408) = 1;
+    if (*(int *)(a + 0x35C) == 2) func_0036C8D0(a);
+}
+
 // DRAFT: GAME 0x36CB08
 // diff: 10 words, original loop keeps the table base in v0 and tests with bnez+nop where ours uses bnel (3 probes)
-struct E3 *func_0036CB08(void)
+int *func_0036CB08(void)
 {
     int i;
     int n = D_003F1EC8[1];
     struct E3 *e = (struct E3 *)(D_003F1EC8 + 2);
     for (i = 0; i < n; i++, e++)
-        if (e->f == 0) return e;
+        if (e->f == 0) return (int *)e;
     return 0;
 }
 
@@ -103,20 +162,20 @@ int func_0036D3D8(void)
 }
 
 // DRAFT: GAME 0x36CC08
-// diff: 3 words off: lbu load order a3,a1,a2 vs orig a1,a2,a3 (4 probes)
+// diff: 2 words off: lbu a3/a2 loads swapped vs orig (6 probes; x,y,z and z,y,x and volatile q[0x16] tried)
 void func_0036CC08(unsigned char *a, int b, int c)
 {
     void (*fn)(int, int, int, int) = *(void (**)(int, int, int, int))(a + 0x1C);
-    int x = a[0x14], y = a[0x15], z = a[0x16];
+    int z = a[0x16], y = a[0x15], x = a[0x14];
     if (fn) fn(c, x, y, z);
 }
 
 // DRAFT: GAME 0x36CC40
-// diff: 3 words off: same as 0x36CC08 with offset 0x20
+// diff: 2 words off, same as 0x36CC08 with offset 0x20
 void func_0036CC40(unsigned char *a, int b, int c)
 {
     void (*fn)(int, int, int, int) = *(void (**)(int, int, int, int))(a + 0x20);
-    int x = a[0x14], y = a[0x15], z = a[0x16];
+    int z = a[0x16], y = a[0x15], x = a[0x14];
     if (fn) fn(c, x, y, z);
 }
 

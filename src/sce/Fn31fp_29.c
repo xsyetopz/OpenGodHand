@@ -44,7 +44,6 @@ typedef unsigned int UHItype __attribute__ ((mode (HI)));
    range, mapped to the original symbols. */
 #define ALIAS(n, a) __asm__ (".globl " #n "\n\t" #n " = " #a)
 ALIAS (__unpack_d, func_0031DFA8);
-ALIAS (fptodp, func_0031EDD0);
 ALIAS (__floatdidf, func_0031DC98);
 ALIAS (__fixunssfdi, func_0031DBA0);
 

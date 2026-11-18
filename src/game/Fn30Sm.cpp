@@ -5,9 +5,12 @@ extern "C" void func_003028E8(void *);
 extern "C" void func_002FB7B0(int);
 extern "C" void func_00300C00(int, int);
 extern "C" void func_002F7110(void *);
+extern "C" int func_003069A8(char *, unsigned, char **);
+extern "C" int func_00306A08(char *, unsigned, char **);
 extern "C" int D_00450080;
 extern "C" int D_0044FCF8;
 
+struct E16 { int a, b, c, d; };
 struct S4 { char pad[0xF0]; void *p; };
 struct S5A { char pad[0x420]; float f; void *p; };
 struct S5B { int pad[0x100]; unsigned a, b, c, d, e, f; };
@@ -39,7 +42,70 @@ extern "C" void func_00305BC0(S5B *s) {
     s->f = 0; s->a = 0; s->b = 0; s->c = 0xFFFFFFFFu; s->d = 0xFFFFFFFFu;
 }
 
+// FUNCTION: GAME 0x3057A0
+extern "C" void func_003057A0(E16 *p) {
+    for (unsigned i = 0; i < 0x40; i++) { p[i].a = 5; p[i].b = 0; p[i].c = 0; p[i].d = 0; }
+}
+
+// FUNCTION: GAME 0x3058D8
+extern "C" E16 *func_003058D8(E16 *p, int k) {
+    for (unsigned i = 0; i < 0x40; i++) { if (p[i].a == k) return &p[i]; }
+    return 0;
+}
+
+// FUNCTION: GAME 0x306A48
+extern "C" int func_00306A48(char *a, unsigned i, char **o) {
+    *o = 0;
+    if (i >= *(unsigned *)(a + 4)) return 0;
+    char *q = (char *)((int *)a + i);
+    int off = *(int *)(q + 0x10);
+    if (!off) return 0;
+    *o = a + off;
+    return 1;
+}
+
+// FUNCTION: GAME 0x306C78
+extern "C" int func_00306C78(char **a, unsigned i, char **o, char **p) {
+    *o = 0; *p = 0;
+    if (i < 0x40) {
+        char *z = (char *)a + (i << 2); char *q = *(char **)z;
+        if (q) return func_003069E8(q, i, o, p) != 0;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x306CC8
+extern "C" int func_00306CC8(char **a, unsigned i, char **o, char **p) {
+    *p = 0;
+    if (i < 0x40) {
+        char *z = (char *)a + (i << 2); char *q = *(char **)z;
+        if (q) return func_00306A08(q, (unsigned)o, p) != 0;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x3078E0
+extern "C" int func_003078E0(unsigned a) {
+    if (!a) return -1;
+    unsigned v = a & 0xFF00;
+    if (v == 0x500) return -1;
+    if (!((int)v < 0x601)) return -1;
+    return a | 0x40000000;
+}
+
+// FUNCTION: GAME 0x3089F0
+extern "C" int func_003089F0(int *a, int k) {
+    for (int i = 0; i < 0x20; i++) { if (a[i] == k) return 1; if (!a[i]) { a[i] = k; return 1; } }
+    return 0;
+}
+
+// FUNCTION: GAME 0x308D68
+extern "C" int func_00308D68(int *a, int k) {
+    for (int i = 0; i < 0x20; i++) { if (!a[i]) return 0; if (a[i] == k) return 1; }
+    return 0;
+}
+
 #ifdef NONMATCHING
-// DRAFT: GAME 0x300060 (8 words off: original copies a0 to v0 and tests v0)
+// DRAFT: GAME 0x300060 (8 words off with -O2 -G0: original copies a0 to v0 and tests v0)
 extern "C" void func_00300060(void *a) { if (a) func_002F7110(a); }
 #endif

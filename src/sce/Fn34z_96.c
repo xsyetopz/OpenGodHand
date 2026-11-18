@@ -204,3 +204,87 @@ void func_0034DC88(int *a)
     a[0] = 0;
     a[1] = 0;
 }
+
+extern int D_003EE0B8;
+int func_0034D188(unsigned char *);
+void func_0034CA00(int, int, int);
+void func_0034C2B8(int, int, int *);
+
+// FUNCTION: GAME 0x34F4A8
+void func_0034F4A8(char *a)
+{
+    int *p = *(int **)(a + 0x1F7C);
+    p[8]++;
+}
+
+// FUNCTION: GAME 0x34DD58
+void func_0034DD58(int *a)
+{
+    a[0] = 0;
+    a[1] = 0;
+    a[2] = 0;
+    a[3] = 0;
+    a[4] = 0;
+}
+
+// FUNCTION: GAME 0x34D160
+int func_0034D160(unsigned char *a)
+{
+    return func_0034D188(a) == 0x1BF;
+}
+
+// FUNCTION: GAME 0x34D188
+int func_0034D188(unsigned char *a)
+{
+    return (((a[0] << 8 | a[1]) << 8 | a[2]) << 8) | a[3];
+}
+
+// FUNCTION: GAME 0x34DAC0
+void func_0034DAC0(char *a)
+{
+    int *s = (int *)(a + 0x98);
+    int *d = (int *)(a + 0x90C);
+    d[9] = s[1];
+    d[10] = s[2];
+    d[11] = s[3];
+}
+
+// FUNCTION: GAME 0x34DB20
+int func_0034DB20(char *a)
+{
+    int *p = (int *)a;
+    if (!p[0x1E]) return -1;
+    p += 0x35;
+    if (p[5]) return p[6];
+    return -1;
+}
+
+// FUNCTION: GAME 0x34DEC8
+int func_0034DEC8(int *a)
+{
+    if (!a) return -1;
+    if (!a[0x12]) return -1;
+    D_003EE0B8 = (int)a;
+    return 0;
+}
+
+// FUNCTION: GAME 0x34DFA8
+int func_0034DFA8(char *a)
+{
+    func_0034CA00((int)a, *(int *)(a + 0x1F44), 1);
+    return 0;
+}
+
+// FUNCTION: GAME 0x34CAD0
+int func_0034CAD0(int a, int b)
+{
+    int x[5];
+    func_0034C2B8(a, b, x);
+    return x[1] + x[3];
+}
+
+// FUNCTION: GAME 0x34E988
+char *func_0034E988(char *a)
+{
+    return a + *(int *)(a + 0x1F84) * 0x74 + 0x1320;
+}

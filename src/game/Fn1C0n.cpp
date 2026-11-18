@@ -5,18 +5,23 @@ extern const char D_00429EC8[];
 extern "C" void func_001B6E90(void *);
 extern "C" int moveMotion__FP8cObjBase(void *);
 
-// FUNCTION: GAME 0x001CA1F8
+#ifdef NONMATCHING
+// DRAFT: GAME 0x001CA1F8
+// diff: 6 differing words (60 vs 60 bytes)
 extern "C" void func_001CA1F8(char *self)
 {
-    switch (*(unsigned char *)(self + 0x2F6)) {
-    case 0:
+    unsigned char v = *(unsigned char *)(self + 0x2F6);
+    if (v == 0)
         *(unsigned char *)(self + 0x2F6) = 1;
-    case 1:
-        moveMotion__FP8cObjBase(self);
-    }
+    else if (v != 1)
+        return;
+    moveMotion__FP8cObjBase(self);
 }
+#endif
 
-// FUNCTION: GAME 0x001C2328
+#ifdef NONMATCHING
+// DRAFT: GAME 0x001C2328
+// diff: 16 differing words (76 vs 68 bytes)
 extern "C" int func_001C2328(char *self)
 {
     if (*(unsigned char *)(self + 0x2F4) != 0)
@@ -32,6 +37,7 @@ extern "C" int func_001C2328(char *self)
         return 0;
     return 1;
 }
+#endif
 
 // FUNCTION: GAME 0x001C24A0
 extern "C" int func_001C24A0(char *self)
@@ -45,7 +51,9 @@ extern "C" int func_001C24A0(char *self)
     return 0;
 }
 
-// FUNCTION: GAME 0x001C8F80
+#ifdef NONMATCHING
+// DRAFT: GAME 0x001C8F80
+// diff: 7 differing words (72 vs 72 bytes)
 extern "C" void *func_001C8F80(char *self)
 {
     func_001B6E90(self);
@@ -55,6 +63,7 @@ extern "C" void *func_001C8F80(char *self)
     *(int *)(self + 0x608) = 0;
     return self;
 }
+#endif
 
 // FUNCTION: GAME 0x001CD7A8
 extern "C" void func_001CD7A8(char *self)
@@ -73,25 +82,28 @@ extern "C" void func_001CD7A8(char *self)
     }
 }
 
-// FUNCTION: GAME 0x001C3C58
+#ifdef NONMATCHING
+// DRAFT: GAME 0x001C3C58
+// diff: 22 differing words (92 vs 96 bytes)
 extern "C" int func_001C3C58(int *out, int *a)
 {
-    if (!a)
-        return 0;
-    out[0] = (int)a;
-    if (a[0] != 0x534D4F) {
+    if (a) {
+        out[0] = (int)a;
+        if (a[0] == 0x534D4F) {
+            if (a[1] != 0) {
+                out[1] = a[2] < 2 ? (int)(a + 3) : (int)(a + 4);
+                return 1;
+            }
+        }
         out[0] = 0;
-        return 0;
     }
-    if (a[1] == 0) {
-        out[0] = 0;
-        return 0;
-    }
-    out[1] = a[2] < 2 ? (int)(a + 3) : (int)(a + 4);
-    return 1;
+    return 0;
 }
+#endif
 
-// FUNCTION: GAME 0x001DBEB0
+#ifdef NONMATCHING
+// DRAFT: GAME 0x001DBEB0
+// diff: 16 differing words (104 vs 104 bytes)
 extern "C" void func_001DBEB0(char *self)
 {
     int i = 0x33;
@@ -110,6 +122,7 @@ extern "C" void func_001DBEB0(char *self)
         q--;
     } while (--i >= 0);
 }
+#endif
 
 extern "C" void __7cIDBase(void *);
 extern "C" void __12CustomIDWork(void *);

@@ -81,3 +81,154 @@ int func_00395F68(int a)
     }
     return old;
 }
+
+extern int D_003F86A0, D_003F86A4, D_003F8674, D_003F8668, D_003F8654;
+extern int D_0077C3C0, D_003F8660, D_003F866C, D_003F8670;
+extern void iSignalSema(int);
+extern void SignalSema(int);
+extern void DeleteSema(int);
+extern int func_003B63A0(void);
+extern void func_003B63F0(void);
+extern void func_003B2500(int);
+
+// FUNCTION: GAME 0x3984D8
+void func_003984D8(int *a)
+{
+    D_003F86A0 = *a;
+    D_003F86A4 = D_003F86A0;
+    if (D_003F86A0 == 0xB) {
+        D_003F86A0 = 0;
+        D_003F8674 = 0;
+        return;
+    }
+    iSignalSema(D_003F8668);
+    if (D_003F8654 && D_0077C3C0)
+        iSignalSema(D_003F8660);
+    else
+        D_003F8674 = 0;
+    D_003F86A0 = 0;
+}
+
+// FUNCTION: GAME 0x398720
+void func_00398720(void)
+{
+    int en;
+    if (D_003F8654) {
+        D_003F86A0 = -1;
+        SignalSema(D_003F8660);
+    }
+    DeleteSema(D_003F8668);
+    DeleteSema(D_003F866C);
+    DeleteSema(D_003F8670);
+    DeleteSema(D_003F8660);
+    en = func_003B63A0();
+    func_003B2500(0x80000012);
+    if (en)
+        func_003B63F0();
+}
+
+extern int D_0077C300[];
+extern char D_0077C0C0[];
+extern int sceSifCallRpc(void *, int, int, void *, int, void *, int, void *, void *);
+extern void func_00397E18(int, int, int);
+
+// FUNCTION: GAME 0x3982C8
+int func_003982C8(int a, int b, int c)
+{
+    D_0077C300[0] = 10;
+    D_0077C300[1] = a;
+    D_0077C300[2] = b;
+    D_0077C300[3] = c;
+    if (sceSifCallRpc(D_0077C0C0, 1, 0, D_0077C300, 0x80, D_0077C300, 0x80, 0, 0) < 0)
+        return 0;
+    {
+        int r = D_0077C300[4];
+        if (r == 1) {
+            func_00397E18(a, b, 2);
+            r = D_0077C300[4];
+        }
+        return r;
+    }
+}
+
+struct Ob {
+    char _pad[0x38];
+    int m_38;
+    char _pad2[4];
+    long m_40;
+};
+extern long func_003B0268(int, int, int);
+
+// FUNCTION: GAME 0x3932B8
+long func_003932B8(struct Ob *o, char *buf, long n)
+{
+    long k = -1;
+    long left = n;
+    long r;
+    while (left > 0) {
+        r = func_003B0268(o->m_38, (int)buf, left);
+        if (r == k) {
+            *(int *)o |= 0x20;
+            break;
+        }
+        left -= r;
+        buf += r;
+    }
+    n -= left;
+    if (o->m_40 >= 0)
+        o->m_40 += n;
+    return n;
+}
+
+extern void func_003BAD80(void);
+#define R32(a) (*(volatile unsigned int *)(a))
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x39A8E8
+// diff: 5 words (store/hi-lo form of last two writes)
+int func_0039A8E8(void)
+{
+    int en = func_003B63A0();
+    R32(0x1000F590) = R32(0x1000F520) | 0x10000;
+    R32(0x1000B000) &= 0xFFFFFEFF;
+    R32(0x1000B400) &= 0xFFFFFEFF;
+    R32(0x1000F590) = R32(0x1000F520) & 0xFFFEFFFF;
+    if (en)
+        func_003B63F0();
+    {
+        volatile unsigned int *a = (volatile unsigned int *)0x1000B020;
+        unsigned int *b = (unsigned int *)0x1000B420;
+        *a = 0;
+        *b = 0;
+    }
+    func_003BAD80();
+    return 1;
+}
+#endif
+
+extern int D_003F8650;
+extern char D_0045E2A0[];
+extern char D_003F9810[];
+extern int scePrintf(const char *, ...);
+extern void DelayThread(int);
+extern int func_003B3328(char *);
+
+// FUNCTION: GAME 0x398DA0
+int func_00398DA0(int a)
+{
+    if (a == 0) {
+        if (D_003F8650 > 0)
+            scePrintf(D_0045E2A0);
+        while (D_003F8674 || func_003B3328(D_003F9810))
+            DelayThread(4000);
+        return 0;
+    }
+    {
+        int r = 1;
+        if (!D_003F8674) {
+            if (!func_003B3328(D_003F9810))
+                r = 0;
+        }
+        return r;
+    }
+}

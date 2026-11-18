@@ -54,7 +54,8 @@ struct Fn379F {
     unsigned short m_0;
 };
 extern "C" Fn379F *func_00376A90(int);
-extern "C" int func_003769B0(int);
+struct Fn379T;
+extern "C" Fn379T *func_003769B0(int);
 
 // FUNCTION: GAME 0x375EF8
 extern "C" int func_00375EF8(int a)
@@ -227,3 +228,140 @@ extern "C" int func_00377FA0(void)
     return n & 0xFF;
 }
 #endif
+
+struct Fn379T {
+    unsigned short m_0;
+    char _p2[2];
+    int m_4;
+    unsigned char m_8;
+    char _p9[0x37];
+};
+extern Fn379T D_0076F050[];
+
+// FUNCTION: GAME 0x3769B0
+extern "C" Fn379T *func_003769B0(int id)
+{
+    Fn379T *e = D_0076F050;
+    int i = 0;
+    do {
+        if (e->m_0 && !(e->m_8 & 0x10)) {
+            if (id == 0)
+                return e;
+            if (e->m_4 == id)
+                return e;
+        }
+        i++;
+        e++;
+    } while (i < 0x60);
+    return 0;
+}
+
+extern "C" int func_00379EC0(void *);
+extern "C" void func_0037A1F0(void *);
+extern "C" int func_0037A4C8(void *);
+extern "C" int func_0037AD08(void *);
+extern "C" void func_0037AD88(void *);
+extern "C" void func_0037A298(void *);
+
+// FUNCTION: GAME 0x37ACA0
+extern "C" void func_0037ACA0(void *p)
+{
+    if (func_00379EC0(p))
+        return;
+    func_0037A1F0(p);
+    if (!func_0037A4C8(p) && !func_0037AD08(p))
+        func_0037AD88(p);
+    func_0037A298(p);
+}
+
+// FUNCTION: GAME 0x378180
+extern "C" int func_00378180(short a, short *out)
+{
+    int n = 360;
+    int d = a % n;
+    if (d >= 180)
+        d = n - d;
+    float f = (float)d;
+    f = f * 127.0f;
+    f = f / 180.0f;
+    *out = (int)(f + 0.5f);
+    return 0;
+}
+
+struct Fn379U {
+    char _p0[0x28];
+    signed char m_28;
+    char _p29[0xF];
+    unsigned m_38;
+};
+
+// FUNCTION: GAME 0x37B798
+extern "C" int func_0037B798(Fn379U *p)
+{
+    signed char old = p->m_28;
+    if (p->m_38 & 0x1000)
+        p->m_28--;
+    if (p->m_38 & 0x4000)
+        p->m_28++;
+    if (p->m_28 < 0)
+        p->m_28 = 5;
+    if (!(p->m_28 < 6))
+        p->m_28 = 0;
+    return p->m_28 != old;
+}
+
+struct Fn379V {
+    unsigned short m_0;
+    char _p2[2];
+    unsigned char m_4;
+    unsigned char m_5;
+    unsigned short m_6;
+    char _p8[4];
+    int m_C;
+    int m_10;
+    int m_14;
+    unsigned short m_18;
+    unsigned short m_1A;
+    unsigned short m_1C;
+    unsigned short m_1E;
+    unsigned short m_20;
+    unsigned short m_22;
+    unsigned short m_24;
+};
+struct Fn379W {
+    unsigned short m_0;
+    char _p2[2];
+    int m_4;
+    int m_8;
+    unsigned char m_C;
+    unsigned char m_D;
+    char _pE[4];
+    unsigned short m_12;
+    unsigned short m_14;
+    unsigned short m_16;
+    char _p18[8];
+    unsigned short m_20;
+    unsigned short m_22;
+    unsigned short m_24;
+    char _p26[6];
+    unsigned short m_2C;
+};
+
+// FUNCTION: GAME 0x37C1B8
+extern "C" void func_0037C1B8(Fn379V *d, Fn379W *s)
+{
+    d->m_0 = s->m_0;
+    d->m_4 = s->m_C;
+    d->m_5 = s->m_D;
+    d->m_6 = 0;
+    d->m_C = 0;
+    d->m_10 = s->m_4;
+    d->m_14 = s->m_8;
+    d->m_18 = s->m_12;
+    d->m_1A = s->m_14;
+    d->m_1C = s->m_20;
+    d->m_1E = s->m_22;
+    d->m_20 = s->m_24;
+    d->m_22 = s->m_2C;
+    d->m_24 = s->m_16;
+}

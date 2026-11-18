@@ -7,6 +7,11 @@ extern "C" int sceWrite(int, const void *, int);
 extern "C" int SdeSystemOutModeGet(void);
 extern "C" void *memset(void *, int, unsigned);
 extern "C" void func_001F45D8(void *);
+extern "C" void func_001EF978(void);
+extern "C" void func_001F29C0(void *, int, int);
+extern "C" void func_001FCCC0(void *);
+extern "C" unsigned char *func_001FFA68(void *);
+extern "C" int func_001FFD98(void *, unsigned char *);
 
 // FUNCTION: GAME 0x1F5A58
 extern "C" void *__7JukeBox(char *self)
@@ -139,4 +144,79 @@ extern "C" void *__16ColiseumEmSelect(char *self)
     *(int *)(self + 0x54) = 0;
     func_001F45D8(self + 0x60);
     return self;
+}
+
+// FUNCTION: GAME 0x1F0778
+extern "C" void func_001F0778(char *self)
+{
+    if (*(int *)(self + 0xB94) == 0) {
+        func_001EF978();
+        *(int *)(self + 0xB94) += 1;
+    }
+}
+
+// FUNCTION: GAME 0x1F0878
+extern "C" void func_001F0878(char *self)
+{
+    if (*(int *)(self + 0xB94) == 0) {
+        func_001EF978();
+        *(int *)(self + 0xB94) += 1;
+    }
+}
+
+// FUNCTION: GAME 0x1F1100
+extern "C" void func_001F1100(char *self)
+{
+    if (*(int *)(self + 0xB94) == 0) {
+        func_001EF978();
+        *(int *)(self + 0xB94) += 1;
+    }
+}
+
+// FUNCTION: GAME 0x1F17D0
+extern "C" void func_001F17D0(char *self)
+{
+    if (*(int *)(self + 0xB94) == 0) {
+        func_001EF978();
+        *(int *)(self + 0xB94) += 1;
+    }
+}
+
+// FUNCTION: GAME 0x1F2650
+extern "C" void func_001F2650(char *self)
+{
+    if (*(int *)(self + 0xB94) == 0) {
+        func_001EF978();
+        *(int *)(self + 0xB94) += 1;
+    }
+}
+
+// FUNCTION: GAME 0x1F3260
+extern "C" void func_001F3260(char *self)
+{
+    func_001F29C0(self, 4, 0);
+    *(int *)(self + 0x928) = 0;
+    *(int *)(self + 0x92C) = 0;
+    *(unsigned *)self |= 4;
+}
+
+// FUNCTION: GAME 0x1FD770
+extern "C" void func_001FD770(char *self)
+{
+    char *p = *(char **)(self + 0x3C);
+    if (p) {
+        do {
+            func_001FCCC0(p);
+            p = *(char **)(p + 0x24);
+        } while (p);
+    }
+}
+
+// FUNCTION: GAME 0x1FFA28
+extern "C" int func_001FFA28(void *self)
+{
+    unsigned char *r = func_001FFA68(self);
+    if (!r)
+        return 0;
+    return func_001FFD98(self, r);
 }

@@ -129,15 +129,18 @@ extern "C" int func_002AF068(unsigned short c)
 
 extern char Sys[];
 
-// FUNCTION: GAME 0x2A4ED8
+// DRAFT: GAME 0x2A4ED8 - 18 words differ: original rebuilds the Sys base address (lui/addiu) and keeps it in a2
+#ifdef NONMATCHING
 extern "C" void func_002A4ED8(char *self)
 {
     char *b = self + 0x28000;
     *(int *)(b + 0x2054) = (int)self + ((*(unsigned *)(Sys + 0x210) & 1) * 0x15000 + 0x50);
     *(int *)(b + 0x2058) = (int)self + ((*(unsigned *)(Sys + 0x210) & 1) * 0x15000 + 0x50) + 0x15000;
 }
+#endif
 
-// FUNCTION: GAME 0x2A58D8
+// DRAFT: GAME 0x2A58D8 - 12 words differ: original branches s==4 and s==6 to separate stores and keeps -1 as lui/ori
+#ifdef NONMATCHING
 extern "C" void func_002A58D8(char *self, unsigned v)
 {
     if (v == 0xFFFFFFFF) {
@@ -150,23 +153,24 @@ extern "C" void func_002A58D8(char *self, unsigned v)
     } else
         *(unsigned *)(self + 0x28000 + 0x2064) = v;
 }
+#endif
 
 // FUNCTION: GAME 0x2A73F0
 extern "C" int func_002A73F0(char *self)
 {
     int *q = (int *)(self + 0x520);
     q[0] = 0;
-    q[2] = 0;
     q[1] = 0;
+    q[2] = 0;
     *(short *)(self + 0x570) = -1;
-    *(int *)(self + 0x574) = 2;
-    *(float *)(self + 0x3A8) = 1.0f;
-    *(int *)(self + 0x254) |= 0x8000000;
     *(float *)(self + 0x5A8) = 1.0f;
     *(int *)(self + 0x5A0) = 0;
     *(short *)(self + 0x548) = 0;
     *(short *)(self + 0x54A) = 0;
     *(int *)(self + 0x54C) = 0;
+    *(int *)(self + 0x254) |= 0x8000000;
+    *(float *)(self + 0x3A8) = 1.0f;
+    *(int *)(self + 0x574) = 2;
     return 1;
 }
 
@@ -237,5 +241,68 @@ extern "C" void func_002A9800(DlHead *h, int off)
         if (o)
             o->m_0 = n;
         h->m_10 = n;
+    }
+}
+
+extern "C" void func_002A58A0(char *, int);
+extern "C" void func_002A58D8(char *, unsigned);
+
+// FUNCTION: GAME 0x2A4E58
+extern "C" void func_002A4E58(char *self, int a, short b, int c, unsigned d, float x, float y, float z)
+{
+    char *p = self + 0x28000;
+    *(int *)(p + 0x2074) = a;
+    *(short *)(p + 0x2078) = b;
+    *(float *)(p + 0x207C) = x;
+    *(float *)(p + 0x2080) = x;
+    *(float *)(p + 0x2084) = y;
+    *(float *)(p + 0x2088) = z;
+    func_002A58A0(self, c);
+    func_002A58D8(self, d);
+}
+
+extern "C" int *func_002A4F30(char *, int);
+extern "C" void func_0031A650(void *, int, int, int);
+extern char D_00754C80[];
+
+// FUNCTION: GAME 0x2A5930
+extern "C" void func_002A5930(char *self)
+{
+    int *p = func_002A4F30(self, 0x10);
+    if (p) {
+        *(long long *)p = 0x70000000;
+        p[2] = 0x11000000;
+        p[3] = 0;
+        char *b = self + 0x28000;
+        func_0031A650(D_00754C80, *(int *)(b + 0x2060), *(int *)(b + 0x2064), *(int *)(b + 0x2050));
+    }
+}
+
+extern "C" int func_001FAEA0(void *);
+extern "C" void func_002A9B50(float *);
+extern char CoreSave[];
+
+// FUNCTION: GAME 0x2A9BF0
+extern "C" void func_002A9BF0(float *self)
+{
+    float t = (float)(func_001FAEA0(CoreSave) * 30 + 0x78);
+    self[0] = t;
+    if (t < self[1])
+        self[1] = t;
+    func_002A9B50(self);
+}
+
+extern "C" void func_00309000(char *);
+extern char D_005CB3B0[];
+
+// FUNCTION: GAME 0x2AD1B0
+extern "C" void func_002AD1B0(int a, int b)
+{
+    if (b == 0xFFFF && a) {
+        char *p = D_005CB3B0 + 0x744;
+        for (int i = 0x27F; i != -1; i--) {
+            func_00309000(p);
+            p += 0xAC;
+        }
     }
 }

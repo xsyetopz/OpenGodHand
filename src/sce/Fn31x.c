@@ -133,19 +133,6 @@ int func_0031F9D0(char *o)
     return r != 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x31EDD0 (2 words differ: original stores ra before the float argument; 2.9 emits swc1 first)
-struct U2 { int cls, sign, exp; unsigned frac; };
-extern void func_0031EC48(float *, struct U2 *);
-extern void func_0031EAB0(int, int, int, unsigned long long);
-void func_0031EDD0(float f)
-{
-    struct U2 u;
-    func_0031EC48(&f, &u);
-    func_0031EAB0(u.cls, u.sign, u.exp, ((unsigned long long)u.frac << 32) >> 2);
-}
-
-#endif
 
 // FUNCTION: GAME 0x3202E0
 extern void *malloc(unsigned);

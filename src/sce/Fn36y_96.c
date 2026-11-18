@@ -259,7 +259,7 @@ void func_0036C8D0(char *a)
 }
 
 // FUNCTION: GAME 0x369F20
-int func_00369F20(char *a, int b)
+int func_00369F20(char *a, int b, int c)
 {
     if (a == 0) func_00369F70(D_003F1AA0, b);
     else func_00369F70(a + 0x250, b);

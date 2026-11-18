@@ -218,14 +218,5 @@ void func_003209D0(int x, char *a, char *b)
     memcpy(d, s, x < 31 ? 16 : (x > 63 ? 8 : 4));
 }
 
-// DRAFT: GAME 0x31DE10 (14 words differ: 64-bit multiply is matched in structure; the 0xFFFFFFFF mask constant is scheduled earlier than in the original)
-long long func_0031DE10(long long a, long long b)
-{
-    int al = a, bl = b;
-    int ah = a >> 32, bh = b >> 32;
-    unsigned long long p = (unsigned long long)(unsigned)al * (unsigned)bl;
-    int hi = (int)(p >> 32) + (bh * al + ah * bl);
-    return (p & 0xFFFFFFFF) | ((long long)hi << 32);
-}
 #endif
 
