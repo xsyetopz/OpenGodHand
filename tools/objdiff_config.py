@@ -6,8 +6,9 @@ group, where a group approximates a translation unit: units are walked in link o
 new group opens whenever the class of a named function changes (GCC 2.x mangled
 name). Free and unnamed `func_*` functions join the preceding group. Groups are
 named after their class, `_2`, `_3` on repeats; `sdk` (sce*, Sde*, kernel calls)
-and `libc` (memcpy, __builtin_*, ...) are keys of their own. Categories: game,
-sdk, libc/runtime, unknown (groups before the first named function).
+and `libc` (memcpy, __builtin_*, ...) are keys of their own, and every unit in the
+CRI middleware span forms `cri`. Categories: game, sdk, CRI middleware,
+libc/runtime, unknown (groups before the first named function).
 
 target_path  build/expected/<group>.o   all asm units of the group, assembled
                                         from a generated build/expected/<group>.s
@@ -40,8 +41,11 @@ KERNEL = set(
     "CreateThread DeleteThread TerminateThread GetThreadId CreateSema DeleteSema SignalSema iSignalSema "
     "WaitSema PollSema FlushCache DelayThread StartThread".split()
 )
-CATEGORY = {"class": "game", "sdk": "sdk", "libc": "libc", "none": "unknown"}
-CATEGORY_NAMES = {"game": "Game", "sdk": "SDK", "libc": "libc/runtime", "unknown": "Unknown"}
+# CRI ADX/Sofdec code carries few .sndata names, so it is placed by address
+# (docs/decomp.md, "CRI middleware") rather than by symbol.
+CRI_SPAN = (0x322978, 0x36D1A8)
+CATEGORY = {"class": "game", "sdk": "sdk", "cri": "cri", "libc": "libc", "none": "unknown"}
+CATEGORY_NAMES = {"game": "Game", "sdk": "SDK", "cri": "CRI middleware", "libc": "libc/runtime", "unknown": "Unknown"}
 
 
 def class_of(name: str) -> str | None:
@@ -77,7 +81,7 @@ def group_units(units) -> dict[str, list[tuple[int, int, str]]]:
     count: dict[str, int] = defaultdict(int)
     cur_key, cur = None, None
     for u in units:
-        k = key_of(u[2])
+        k = ("cri", "cri") if CRI_SPAN[0] <= u[0] < CRI_SPAN[1] else key_of(u[2])
         if cur is None or (k is not None and k[1] != cur_key):
             kind, key = k or ("none", "unknown")
             count[key] += 1

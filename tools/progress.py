@@ -10,7 +10,7 @@ Usage:
 The report comes from `tools/bin/objdiff-cli report generate` (see
 tools/objdiff_config.py); a function counts as matched when objdiff reports a
 fuzzy match of 100%. Output is the self-contained build/progress.svg: one block
-per category (game, sdk, libc/runtime, unknown), one labelled rectangle per group sized by code
+per category (game, sdk, CRI middleware, libc/runtime, unknown), one labelled rectangle per group sized by code
 bytes, and one cell per function (green matched, grey not) in address order. The
 overall percentage is printed by code bytes and by function count.
 """

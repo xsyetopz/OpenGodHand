@@ -124,6 +124,11 @@ def main() -> int:
     tag_compiler, tag_flags = configure.source_build(args.src)
     args.compiler = args.compiler or tag_compiler
     args.flags = args.flags or tag_flags
+    # DRAFT functions sit under #ifdef NONMATCHING, so without the define the
+    # object holds no section for them.
+    draft = f"DRAFT: GAME 0x{args.addr:X}"
+    if draft in args.src.read_text(errors="replace") and "-DNONMATCHING" not in shlex.split(args.flags):
+        args.flags += " -DNONMATCHING"
     pick = ["--compiler", args.compiler] if args.compiler else []
     cmd = [sys.executable, str(ROOT / "tools/eecc.py"), *pick, *shlex.split(args.flags), "-c", "-o", str(obj), str(args.src)]
     if subprocess.call(cmd, cwd=ROOT):
