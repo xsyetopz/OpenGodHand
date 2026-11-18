@@ -142,3 +142,85 @@ int func_003B2E38(int a, int b, int c, int d)
 {
     return func_003B26C8(0x80000008, d, 0x40, 0, 0, 0) ? 0 : 0x800;
 }
+
+extern int func_003B63A0();
+extern void func_003B63F0();
+extern int func_003AF9F0();
+extern int func_003AF9E0();
+extern int func_003AFA10();
+extern int func_003AFA00();
+
+// FUNCTION: GAME 0x3B06D8
+int func_003B06D8(int a)
+{
+    int s0, r;
+    __asm__ volatile("mfc0 %0, $12" : "=r"(s0));
+    s0 &= 0x10000;
+    if (s0)
+        func_003B63A0();
+    r = func_003AF9F0(a);
+    __asm__ volatile("sync");
+    if (s0)
+        func_003B63F0();
+    return r;
+}
+
+// FUNCTION: GAME 0x3B0740
+int func_003B0740(int a)
+{
+    int s0, r;
+    __asm__ volatile("mfc0 %0, $12" : "=r"(s0));
+    s0 &= 0x10000;
+    if (s0)
+        func_003B63A0();
+    r = func_003AF9E0(a);
+    __asm__ volatile("sync");
+    if (s0)
+        func_003B63F0();
+    return r;
+}
+
+// FUNCTION: GAME 0x3B07A8
+int func_003B07A8(int a)
+{
+    int s0, r;
+    __asm__ volatile("mfc0 %0, $12" : "=r"(s0));
+    s0 &= 0x10000;
+    if (s0)
+        func_003B63A0();
+    r = func_003AFA10(a);
+    __asm__ volatile("sync");
+    if (s0)
+        func_003B63F0();
+    return r;
+}
+
+// FUNCTION: GAME 0x3B0810
+int func_003B0810(int a)
+{
+    int s0, r;
+    __asm__ volatile("mfc0 %0, $12" : "=r"(s0));
+    s0 &= 0x10000;
+    if (s0)
+        func_003B63A0();
+    r = func_003AFA00(a);
+    __asm__ volatile("sync");
+    if (s0)
+        func_003B63F0();
+    return r;
+}
+
+extern void func_003AFD50();
+extern void func_003AFD40();
+
+// FUNCTION: GAME 0x3B66D0
+int func_003B66D0(void)
+{
+    unsigned v[2];
+    func_003AFD50(&v[0]);
+    v[1] = (v[0] & 0xFFFF1FFF) | 0x2000;
+    func_003AFD40(&v[1]);
+    func_003AFD50(&v[1]);
+    func_003AFD40(&v[0]);
+    return ((v[1] >> 13) & 7) == 0;
+}

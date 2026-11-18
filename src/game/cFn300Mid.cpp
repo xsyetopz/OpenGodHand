@@ -120,3 +120,24 @@ extern "C" int func_00306F10(char *self, int i)
     return r;
 }
 #endif
+
+class cHeap;
+void *_MemoryAlloc(unsigned int size, unsigned int align, cHeap &heap);
+extern "C" void *memset(void *, int, unsigned int);
+extern "C" void *__4cObj(void *);
+extern char D_00450CE8[];
+
+// FUNCTION: GAME 0x312E88
+extern "C" void *func_00312E88()
+{
+    char *p = (char *)_MemoryAlloc(0x360, 0x10, *(cHeap *)D_00754C20);
+    if (!p)
+        return 0;
+    memset(p, 0, 0x360);
+    __4cObj(p);
+    *(void **)(p + 0x214) = D_00450CE8;
+    __asm__ volatile("sqc2 $vf0,0x310(%0)" : : "r"(p) : "memory");
+    *(char *)(p + 0x32C) = 0;
+    __asm__ volatile("sqc2 $vf0,0x340(%0)" : : "r"(p) : "memory");
+    return p;
+}

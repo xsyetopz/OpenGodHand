@@ -37,3 +37,59 @@ int **endl__FR7ostream(int **o)
     func_0038EB28(10, **o);
     return func_003892C0(o);
 }
+
+extern int D_00451270[], D_00451288[];
+float fRand1_1__Fv();
+float func_0031D108();
+void func_0031DFA8();
+void func_0031E758();
+void *func_0031E048();
+void func_0031DE78();
+struct A { long long v; };
+struct B { int w[8]; };
+
+// FUNCTION: GAME 0x31D050
+float frand__Fff(float a, float b)
+{
+    float h = (b - a) * 0.5f;
+    return h * fRand1_1__Fv() + (a + h);
+}
+
+// FUNCTION: GAME 0x31D168
+float func_0031D168(float a, float b)
+{
+    float h = (b - a) * 0.5f;
+    return h * func_0031D108() + (a + h);
+}
+
+// FUNCTION: GAME 0x31E870
+void func_0031E870(struct A a, struct A b)
+{
+    struct B x, y;
+    func_0031DFA8(&a, &x);
+    func_0031DFA8(&b, &y);
+    func_0031E758(&x, &y);
+}
+
+// FUNCTION: GAME 0x31E288
+void func_0031E288(struct A a, struct A b)
+{
+    struct B x, y, z;
+    func_0031DFA8(&a, &x);
+    func_0031DFA8(&b, &y);
+    func_0031DE78(func_0031E048(&x, &y, &z));
+}
+
+// FUNCTION: GAME 0x321848
+int *func_00321848(int **p)
+{
+    *p = D_00451270;
+    return (int *)p;
+}
+
+// FUNCTION: GAME 0x3218E0
+int *func_003218E0(int **p)
+{
+    *p = D_00451288;
+    return (int *)p;
+}

@@ -401,12 +401,11 @@ extern "C" int func_00373F38(Fn37Sel *o, int, Fn37Ent *, int, int);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x373298
-// diff: 73 words; entry pointer lands in v1 not a0, 4C load not hoisted above the type test, t0 spilled (register-var workaround)
+// diff: 73 words; entry pointer lands in v1 not a0, 4C load not hoisted above the type test, t0 spilled to s2
 extern "C" int func_00373298(Fn37Sel *o, int idx)
 {
     Fn37Ent *e = o->m_6C + idx;
-    int r;
-    register int t __asm__("$8");
+    int r, t;
     o->m_70 = e;
     o->m_58 = e->m_0A;
     o->m_78 = idx;

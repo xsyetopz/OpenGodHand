@@ -148,7 +148,7 @@ struct MeshBase {
     int off[1];
 };
 // DRAFT: GAME 0x1551E0
-// diff: 23 words; original divides by a variable 0x18 (a2) with break check, a second 0x18 check before mul by 0x90, bnez-skip for q++; compiled folds to movz. 0x1552F0 is the same unit with 0x70.
+// diff: 23 words; original divides by a variable 0x18 (a2) with break check, a second 0x18 check before mul by 0x90, bnez-skip for q++; compiled folds to movz. 0x1552F0 is the same unit with 0x70. Probes: a non-volatile local struct {b,h} reproduces the dead stack stores without reloads; if/else on n%24 keeps a branch but emits an else-arm and 8 more bytes; if(n%24)q++ if-converts to movz (3 probes, round 26).
 #ifdef NONMATCHING
 extern "C" int func_001551E0(char *self, int i)
 {

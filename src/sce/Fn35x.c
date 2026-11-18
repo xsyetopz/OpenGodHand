@@ -18,6 +18,21 @@ void func_00397450(int *, int, int);
 void func_00366C50(int *, int, int);
 int func_0036C920(int);
 extern int D_003EE278;
+void func_0035EF30(int, void *), func_0035EF38(int, void *), func_0035EF40(int, void *);
+void func_0035EF50(int, void *), func_0035EF60(int, void *), func_0035EF70(int, void *);
+int func_0035EF78();
+extern void func_00365D18(), func_00366730(), func_00365EC0(), func_00366368(), func_00366110(), func_003665C0();
+int func_00346E70(int);
+void func_00346ED0(char *, char *), func_00346FA0(char *, char *);
+void func_00346FC0(int, char *, char *);
+void func_00347008(int, char *);
+int func_00346D80(int, char *);
+int func_00346E20(int, int);
+int func_00346D08();
+void func_0034C890();
+void func_0034CAF8(int, int *, int *);
+long long func_0034CCB0(long long, int);
+int func_0036A3E8(int, int **);
 extern int D_003EE0A4;
 void func_00355AC8();
 int func_003569E0(int, int, int, int, int, int, int, int);
@@ -359,7 +374,9 @@ int func_00356648(int a, int b, int c)
     return r;
 }
 
-// FUNCTION: GAME 0x35FAD8
+#ifdef NONMATCHING
+// DRAFT: GAME 0x35FAD8
+// diff: store order permuted (0x3C first vs 0x0), 16 words
 void func_0035FAD8(int *p, int b, int c)
 {
     int v;
@@ -381,6 +398,7 @@ void func_0035FAD8(int *p, int b, int c)
     p[0x38 / 4] = v;
     p[0x64 / 4] = 0;
 }
+#endif
 
 // FUNCTION: GAME 0x369078
 int *func_00369078(int *p)
@@ -417,12 +435,15 @@ void func_00349988(char *a, int b, int c, int d, int e, int f, int g)
     func_0035F788(s, buf, buf2);
 }
 
-// FUNCTION: GAME 0x34B0F0
+#ifdef NONMATCHING
+// DRAFT: GAME 0x34B0F0
+// diff: epilogue: lds hoisted above sw *c/*d, 4 words (locals order A,B,C,w)
 void func_0034B0F0(int a, int b, int *c, int *d)
 {
-    int w[2];
-    long long A[2], B[2];
+    long long A[2];
+    long long B[2];
     int C[4];
+    int w[2];
     D_003EE0A4 = func_00329F98(b);
     func_0032A160(b, &w[0], &w[1]);
     A[0] = w[0];
@@ -433,6 +454,7 @@ void func_0034B0F0(int a, int b, int *c, int *d)
     *c = C[0];
     *d = C[2];
 }
+#endif
 
 // FUNCTION: GAME 0x34A038
 void func_0034A038(char *a, int b, int c, int *d)
@@ -451,4 +473,65 @@ void func_0034A038(char *a, int b, int c, int *d)
     func_00349FB0(s3, n, buf);
     s1[0x48 / 4] += n;
     *d = n;
+}
+
+// FUNCTION: GAME 0x35F788
+int func_0035F788(int a, int b, int c)
+{
+    *(int *)(a + 0x50) = 0;
+    func_0035EF30(a, func_00365D18);
+    func_0035EF38(a, func_00366730);
+    func_0035EF40(a, func_00365EC0);
+    func_0035EF50(a, func_00366368);
+    func_0035EF60(a, func_00366110);
+    func_0035EF70(a, func_003665C0);
+    return func_0035EF78(a, b, c);
+}
+
+// FUNCTION: GAME 0x346C58
+int func_00346C58(int a, char *b, char *c)
+{
+    int *bi = (int *)b;
+    int *ci = (int *)c;
+    ci[0] = func_00346E70(bi[2]);
+    func_00346ED0(b, c);
+    func_00346FA0(b, c);
+    func_00346FC0(a, b, c);
+    func_00347008(a, c);
+    ci[0x88 / 4] = bi[0x88 / 4];
+    ci[0x8C / 4] = bi[0x8C / 4];
+    ci[0x90 / 4] = func_00346D80(a, b);
+    ci[0x94 / 4] = func_00346E20(a, bi[0x30 / 4]);
+    return func_00346D08(a, b);
+}
+
+// FUNCTION: GAME 0x34AA20
+void func_0034AA20(char *a)
+{
+    int buf[3];
+    int *s1 = *(int **)(a + 0x2004);
+    func_0034C890(a, *(int *)(a + 0x200C), buf);
+    if (buf[0]) {
+        func_0034CAF8(buf[0], &buf[1], &buf[2]);
+        *(long long *)(a + 0x9B8) = func_0034CCB0(*(long long *)(a + 0x9B8), buf[1]);
+        *(long long *)(a + 0x9C0) = func_0034CCB0(*(long long *)(a + 0x9C0), buf[2]);
+        func_0034CAF8(s1[1], &buf[1], &buf[2]);
+        *(long long *)(a + 0x9D0) = func_0034CCB0(*(long long *)(a + 0x9D0), buf[1]);
+        *(long long *)(a + 0x9D8) = func_0034CCB0(*(long long *)(a + 0x9D8), buf[2]);
+    }
+}
+
+// FUNCTION: GAME 0x36A668
+int func_0036A668(int a, int *b, int *c)
+{
+    int **o = func_00338B90((void *)b[0], b[1]);
+    int r = -1;
+    if (o) {
+        int n;
+        r = func_0036A3E8(a, o);
+        n = ((int (*)(int **, int))(*o)[9])(o, 1);
+        *c = b[1] - n;
+        ((void (*)(int **))(*o)[3])(o);
+    }
+    return r;
 }

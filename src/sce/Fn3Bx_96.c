@@ -17,6 +17,149 @@ extern char D_00460928[];
 extern void *memset(void *, int, unsigned);
 extern void func_003B9DE0(const char *);
 
+extern void *memset(void *, int, unsigned);
+extern void func_003B9DE0(const char *);
+extern void func_003B9FB8();
+extern void func_003B9FD0();
+extern void func_003BA058();
+extern void func_003BA8C0();
+extern void func_003BA900();
+extern void func_003B9E10();
+extern void func_003B9D98();
+extern void func_003B9D48();
+extern void func_003B9D30();
+extern char D_00460818[];
+extern char D_00460840[];
+extern char D_004608B0[];
+extern char D_00460888[];
+extern void (*D_003D141C)();
+extern void (*D_003E9D20)();
+extern void (*D_003D1420)();
+extern void (*D_003E9D18)();
+extern void (*D_003E9D1C)();
+extern void func_003B9B20();
+extern void func_003B9BF0();
+extern void func_003B9BB8();
+extern void func_003B9CE8();
+extern void func_00329EA8();
+extern void func_003B9AF8();
+extern void func_00326220();
+extern void func_00326238();
+extern void func_00325C60();
+extern void func_0033F1A8();
+extern void func_00325C78();
+extern void func_00326250();
+extern void func_003B9E60();
+extern int func_003BA800();
+extern void func_003BA000();
+extern void func_003BA0C8();
+extern void func_003BA830();
+extern int *func_003B9F60(void);
+extern int *func_003B9EB0();
+
+// FUNCTION: GAME 0x3B9B20
+void func_003B9B20(int *a)
+{
+    int *b, *c, *s;
+    func_00329EA8();
+    b = (int *)a[1];
+    c = (int *)b[1];
+    s = (int *)c[0x30];
+    if (s) {
+        func_00325C60();
+        func_003BA058(s);
+        func_003B9FD0(s);
+        c[0x30] = 0;
+        func_00325C78();
+        func_00326220(a, 0);
+        func_00326250(a);
+        func_003B9E60();
+    }
+}
+
+// FUNCTION: GAME 0x3B9BF0
+void func_003B9BF0(int *a)
+{
+    int v[2];
+    int s = a[0x30];
+    if (!func_003BA800(s)) {
+        a[0x22] = 0;
+        ((void (*)())func_003BA058)(s);
+    }
+    if (a[1] == 1) {
+        a[0x22] = 0;
+        ((void (*)())func_003BA000)(s);
+        a[1] = 2;
+    } else if (a[1] == 2) {
+        int t;
+        func_003BA0C8(s);
+        ((void (*)())func_003BA830)(s, &v[0], &v[1]);
+        t = v[1] / 4 - a[0x22];
+        a[0x25] = v[0];
+        a[0x24] = t;
+        a[0x22] += t;
+        if (func_003BA800(s) == 3) {
+            ((void (*)())func_003BA058)(s);
+            a[1] = 0;
+            a[6] = v[1] / 4;
+        }
+    }
+}
+
+// FUNCTION: GAME 0x3B9EB0
+int *func_003B9EB0(int a, int b)
+{
+    int *p;
+    if (!a) {
+        func_003B9DE0(D_00460888);
+        return 0;
+    }
+    if (b < 0x1800) {
+        func_003B9DE0(D_004608B0);
+        return 0;
+    }
+    p = func_003B9F60();
+    if (p) {
+        memset(p, 0, 0x3C);
+        func_003B9FB8(p);
+        p[2] = a;
+        p[3] = b;
+        p[6] = 2;
+        p[0] = 1;
+    }
+    return p;
+}
+
+// FUNCTION: GAME 0x3B9998
+void func_003B9998(int *a, int b, int c)
+{
+    int *s4 = &a[6];
+    int s1, *s5, *s0;
+    func_00329EA8();
+    func_003B9AF8(a);
+    func_00326220(a, 1);
+    func_00326238(a, 0);
+    func_003B9E10();
+    func_003B9D98(func_003B9D48, 0);
+    s5 = (int *)((int *)a[1])[1];
+    s1 = a[4];
+    func_00325C60();
+    s0 = func_003B9EB0(b, c);
+    if (!s0) {
+        func_0033F1A8(D_00460818, D_00460840);
+        return;
+    }
+    func_003BA8C0(s0, s1, *s4);
+    func_003BA900(s0, 0x14);
+    s5[0x30] = (int)s0;
+    D_003D141C = func_003B9B20;
+    D_003E9D20 = func_003B9BF0;
+    D_003D1420 = func_003B9BB8;
+    D_003E9D18 = func_003B9CE8;
+    D_003E9D1C = func_003B9D30;
+    func_00325C78();
+}
+
 // FUNCTION: GAME 0x3B9D30
 void func_003B9D30(void)
 {
@@ -226,134 +369,4 @@ void func_003BA978(int a)
 }
 #endif
 
-extern char D_00460818[];
-extern char D_00460840[];
-extern char D_004608B0[];
-extern char D_00460888[];
-extern void (*D_003D141C)();
-extern void (*D_003E9D20)();
-extern void (*D_003D1420)();
-extern void (*D_003E9D18)();
-extern void (*D_003E9D1C)();
-extern void func_003B9B20();
-extern void func_003B9BF0();
-extern void func_003B9BB8();
-extern void func_003B9CE8();
-extern void func_00329EA8();
-extern void func_003B9AF8();
-extern void func_00326220();
-extern void func_00326238();
-extern void func_00325C60();
-extern void func_0033F1A8();
-extern void func_00325C78();
-extern void func_00326250();
-extern void func_003B9E60();
-extern int func_003BA800();
-extern void func_003BA000();
-extern void func_003BA0C8();
-extern void func_003BA830();
-extern int *func_003B9F60(void);
-extern int *func_003B9EB0();
-
-// FUNCTION: GAME 0x3B9B20
-void func_003B9B20(int *a)
-{
-    int *b, *c, *s;
-    func_00329EA8();
-    b = (int *)a[1];
-    c = (int *)b[1];
-    s = (int *)c[0x30];
-    if (s) {
-        func_00325C60();
-        func_003BA058(s);
-        func_003B9FD0(s);
-        c[0x30] = 0;
-        func_00325C78();
-        func_00326220(a, 0);
-        func_00326250(a);
-        func_003B9E60();
-    }
-}
-
-// FUNCTION: GAME 0x3B9BF0
-void func_003B9BF0(int *a)
-{
-    int v[2];
-    int *s = (int *)a[0x30];
-    if (!func_003BA800(s)) {
-        a[0x22] = 0;
-        ((void (*)())func_003BA058)(s);
-    }
-    if (a[1] == 1) {
-        a[0x22] = 0;
-        ((void (*)())func_003BA000)(s);
-        a[1] = 2;
-    } else if (a[1] == 2) {
-        int t;
-        func_003BA0C8(s);
-        ((void (*)())func_003BA830)(s, &v[0], &v[1]);
-        t = v[1] / 4 - a[0x22];
-        a[0x25] = v[0];
-        a[0x24] = t;
-        a[0x22] += t;
-        if (func_003BA800(s) == 3) {
-            ((void (*)())func_003BA058)(s);
-            a[1] = 0;
-            a[6] = v[1] / 4;
-        }
-    }
-}
-
-// FUNCTION: GAME 0x3B9EB0
-int *func_003B9EB0(int a, int b)
-{
-    int *p;
-    if (!a) {
-        func_003B9DE0(D_00460888);
-        return 0;
-    }
-    if (b < 0x1800) {
-        func_003B9DE0(D_004608B0);
-        return 0;
-    }
-    p = func_003B9F60();
-    if (p) {
-        memset(p, 0, 0x3C);
-        func_003B9FB8(p);
-        p[2] = a;
-        p[3] = b;
-        p[6] = 2;
-        p[0] = 1;
-    }
-    return p;
-}
-
-// FUNCTION: GAME 0x3B9998
-void func_003B9998(int *a, int b, int c)
-{
-    int *s4 = &a[6];
-    int s1, *s5, *s0;
-    func_00329EA8();
-    func_003B9AF8(a);
-    func_00326220(a, 1);
-    func_00326238(a, 0);
-    func_003B9E10();
-    func_003B9D98(func_003B9D48, 0);
-    s5 = (int *)((int *)a[1])[1];
-    s1 = a[4];
-    func_00325C60();
-    s0 = func_003B9EB0(b, c);
-    if (!s0) {
-        func_0033F1A8(D_00460818, D_00460840);
-        return;
-    }
-    func_003BA8C0(s0, s1, *s4);
-    func_003BA900(s0, 0x14);
-    s5[0x30] = (int)s0;
-    D_003D141C = func_003B9B20;
-    D_003E9D20 = func_003B9BF0;
-    D_003D1420 = func_003B9BB8;
-    D_003E9D18 = func_003B9CE8;
-    D_003E9D1C = func_003B9D30;
-    func_00325C78();
-}
+// 0x3B9F60 near-miss: original is a do-while over D_003FC7B8 (stride 0x3C) with two induction pointers and loop padding; ours folds the one-element loop (24 vs 84 bytes)

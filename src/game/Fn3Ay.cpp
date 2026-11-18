@@ -55,3 +55,54 @@ extern "C" long func_003AE128(int *self, int a1, int a2, int a3)
         *self = D_0077DB88;
     return r;
 }
+
+// Round 26.
+// FUNCTION: GAME 0x3A93F8
+extern "C" char *func_003A93F8(char *s, char *t)
+{
+    if (!*s)
+        return *t ? 0 : s;
+    for (; *s; s++) {
+        char c = *t;
+        if (!c)
+            return s;
+        if (c == *s) {
+            int j = 0;
+            for (;;) {
+                j++;
+                char d = t[j];
+                if (!d)
+                    return s;
+                if (d != s[j])
+                    break;
+            }
+        }
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x3A95A8
+extern "C" char *func_003A95A8(char *s)
+{
+    int n = 0;
+    while (s[n])
+        n++;
+    n--;
+    if (n > 0) {
+        char *q = s + n;
+        char *p = s;
+        int i;
+        i = 0;
+        do {
+            unsigned char c = *q;
+            char d = *p;
+            i++;
+            n--;
+            *p = c;
+            *q = d;
+            p++;
+            q--;
+        } while (i < n);
+    }
+    return s;
+}

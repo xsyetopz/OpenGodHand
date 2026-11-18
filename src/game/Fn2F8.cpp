@@ -1,6 +1,19 @@
 // Small functions in 0x2D0000-0x2FFFFF.
 
 #include "cSnd.h"
+#include "cTaskWork.h"
+
+struct cObj;
+void ReleaseObj(cObj *);
+class cHeap {
+public:
+    void free(void *p);
+};
+class cWorldLight {
+public:
+    void Del_LightData(unsigned short id, unsigned a);
+};
+extern cWorldLight World_light_work;
 
 extern "C" {
 void func_002F1AA0(int, unsigned);
@@ -322,10 +335,6 @@ void *func_002F7090()
 }
 
 void func_002EBC50(char *, int);
-void DelLight(void *, unsigned short, unsigned) __asm__("Del_LightData__11cWorldLightUsUi");
-void HeapFree(void *, void *) __asm__("free__5cHeapPv");
-void ReleaseObj(void *) __asm__("ReleaseObj__FP4cObj");
-extern char World_light_work[];
 extern int D_00786578; extern const char D_0044F868[];
 extern const char D_0044E640[], D_0044F448[], D_0044F1C8[];
 
@@ -343,7 +352,7 @@ void *func_002F9CE0()
 void func_002E76F8(char *p, int f)
 {
     *(const char **)(p + 0xF0) = D_0044E640;
-    DelLight(World_light_work, *(unsigned short *)(p + 0x2B2), *(unsigned *)(p + 0x2B4));
+    World_light_work.Del_LightData(*(unsigned short *)(p + 0x2B2), *(unsigned *)(p + 0x2B4));
     func_002FBE28(p, f);
 }
 
@@ -353,7 +362,7 @@ void func_002F5730(char *p, int f)
     *(const char **)(p + 0xF0) = D_0044F448;
     char *q = *(char **)(p + 0x2F0);
     if (q)
-        HeapFree(*(void **)(q - 0x20), q);
+        (*(cHeap **)(q - 0x20))->free(q);
     func_002EBC50(p, f);
 }
 
@@ -362,14 +371,11 @@ void func_002F4B30(char *p, int f)
 {
     *(const char **)(p + 0xF0) = D_0044F1C8;
     if (*(void **)(p + 0x2B0))
-        ReleaseObj(*(void **)(p + 0x2B0));
+        ReleaseObj(*(cObj **)(p + 0x2B0));
     func_002FBE28(p, f);
 }
 
 void func_002D5790(char *);
-void KillTask(char *) __asm__("kill__9cTaskWork");
-void ExitTask(char *) __asm__("exit__9cTaskWork");
-void SleepTask(void *, unsigned short) __asm__("sleep__9cTaskWork");
 void func_0030F5A0(char *);
 int func_00345B88(int);
 void func_00345F48(int, int);
@@ -390,7 +396,7 @@ void func_002D56A8(char *p)
 {
     int i;
     for (i = 0; i < *(unsigned short *)(p + 0xC); i++)
-        KillTask(*(char **)p + i * 0x58);
+        ((cTaskWork *)(*(char **)p + i * 0x58))->kill();
 }
 
 // FUNCTION: GAME 0x2D5708
@@ -399,7 +405,7 @@ void func_002D5708(char *p, int f)
     *(const char **)(p + 0x54) = D_0044D1E8;
     char *q = *(char **)(p + 0x10);
     if (q)
-        HeapFree(*(void **)(q - 0x20), q);
+        (*(cHeap **)(q - 0x20))->free(q);
     if (f & 1)
         func_0030F5A0(p);
 }
@@ -425,7 +431,7 @@ void func_002D5AD8(char *p)
         (*(void (**)(int))(p + 0x14))(*(int *)(p + 0x18));
         break;
     }
-    ExitTask(p);
+    ((cTaskWork *)p)->exit();
 }
 
 // FUNCTION: GAME 0x2D5250
@@ -435,9 +441,9 @@ void func_002D5250(unsigned short a)
     void *w = *(void **)(t + 4);
     if (w) {
         *(unsigned short *)(t + 0x34) = a;
-        SleepTask(w, 1);
+        ((cTaskWork *)w)->sleep(1);
     } else
-        SleepTask(D_00752C04, a);
+        ((cTaskWork *)D_00752C04)->sleep(a);
 }
 }
 
