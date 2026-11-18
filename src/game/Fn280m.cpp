@@ -205,10 +205,12 @@ extern "C" void func_002948E8(char *self, int arg)
 }
 
 // DRAFT: GAME 0x281D10
-// diff: constant select emits movz (t0=2, movz zero) instead of movn (t0=0, movn 2)
+// diff: constant select emits movz (t0=2, movz zero) instead of movn (t0=0, movn 2); ternary forms and inline select did not help; original also uses a0 for the switch value
 extern "C" void func_00281D10(char *self)
 {
-    int m = *(unsigned char *)(self + 0x15B0) == 0 ? 0 : 2;
+    int m = 0;
+    if (*(unsigned char *)(self + 0x15B0) != 0)
+        m = 2;
     switch (*(unsigned char *)(self + 0x2F6)) {
     case 0: {
         char *t = *(char **)(self + 0x304);

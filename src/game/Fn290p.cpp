@@ -95,7 +95,7 @@ extern "C" int func_00295860(char *self)
 
 extern "C" int func_0026ECC0(char *);
 
-// DRAFT: GAME 0x291AC8 - range test codegen differs (original adds xori and branch layout, 35 words)
+// DRAFT: GAME 0x291AC8 - 31 words: original has slti+xori+bnel for the t<0x250 test; >=, ==0, int flag, compound and unsigned-subtract forms all failed
 #ifdef NONMATCHING
 extern "C" int func_00291AC8(char *self, const float *pos, char *skip, float r)
 {

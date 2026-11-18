@@ -34,16 +34,16 @@ extern "C" void func_002BA878(char *self)
     *(float *)(self + 0xE4) = Sq(func_001F7E28(self + 0x110));
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2BE458
-// diff: 2 words, sw 0x4C0(s1) scheduled before a3=sp; ~8 forms tried (separate store, comma arg, temps, buf pointer)
 extern "C" void *memset(void *, int, unsigned);
 extern "C" void func_00398B90(char *, char *);
-extern "C" void func_00399728(int, unsigned, void *, char *);
+// The callee returns int; declaring it void lets the 0x4C0 store drift
+// past the a3 setup.
+extern "C" int func_00399728(int, unsigned, void *, char *);
 extern "C" void func_00398DA0(int);
 extern "C" void *_MemoryAlloc__FUiUiR5cHeap(unsigned, unsigned, void *);
 extern char D_0044C0B8[];
 extern void *MemDefalutHeapPtr;
+// FUNCTION: GAME 0x2BE458
 extern "C" void func_002BE458(char *self)
 {
     char buf[0x40];
@@ -55,4 +55,3 @@ extern "C" void func_002BE458(char *self)
     func_00399728(*(int *)(buf + 0x10), n, *(void **)(self + 0x4C0) = m, buf);
     func_00398DA0(0);
 }
-#endif

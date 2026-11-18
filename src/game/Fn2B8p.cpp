@@ -137,15 +137,12 @@ extern "C" void func_002BF170(char *p)
 
 extern "C" void func_002BE5F0(char *);
 
-// DRAFT: GAME 0x2BE858
-// diff: 1 word, addu operand order (a1,a0 in the original); ~25 source forms tried (int/long casts, shift, struct, unsigned, int param, commuted operands, temps)
-#ifdef NONMATCHING
-extern "C" void func_002BE858(char *p, int i)
+// FUNCTION: GAME 0x2BE858
+extern "C" void func_002BE858(int p, int i)
 {
-    p = p + (i << 3);
-    if (*(unsigned char *)(p + 4) == 1) func_002BE5F0(p);
+    int q = (i << 3) + p;
+    if (*(unsigned char *)(q + 4) == 1) func_002BE5F0((char *)q);
 }
-#endif
 
 // FUNCTION: GAME 0x2BF108
 extern "C" char *getFree__9cRoomSaveUi(char *self, unsigned i)
@@ -249,12 +246,9 @@ extern "C" void setOffsetPos__15cCollisionShapeRC4cVec(char *self, float *v)
 
 extern "C" void func_002BE670(char *);
 
-// DRAFT: GAME 0x2BE8B0
-// diff: 1 word, addu operand order (same as 0x2BE858)
-#ifdef NONMATCHING
-extern "C" void unlinkNoFree__7cRelSysQ27cRelSys8eRelType(char *p, int i)
+// FUNCTION: GAME 0x2BE8B0
+extern "C" void unlinkNoFree__7cRelSysQ27cRelSys8eRelType(int p, int i)
 {
-    p = p + (i << 3);
-    if (*(unsigned char *)(p + 4) == 1) func_002BE670(p);
+    int q = (i << 3) + p;
+    if (*(unsigned char *)(q + 4) == 1) func_002BE670((char *)q);
 }
-#endif
