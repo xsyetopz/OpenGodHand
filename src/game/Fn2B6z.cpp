@@ -1,4 +1,3 @@
-#ifdef NONMATCHING
 extern unsigned D_00747A2C[];
 extern int D_005E6908;
 extern "C" int func_002BF700(char *);
@@ -66,4 +65,3 @@ extern "C" void func_002BE708(char *self, unsigned short id)
     }
     func_002BE838(self, buf, 0);
 }
-#endif

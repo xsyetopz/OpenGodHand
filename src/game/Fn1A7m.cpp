@@ -28,9 +28,7 @@ extern "C" float func_001AE6A0(char *self)
     return D_00428000[lv] * *(float *)(self + 0x5A8);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x001AE630
-// diff: 3 words, second v in v1 instead of a0
+// FUNCTION: GAME 0x001AE630
 extern "C" int func_001AE630(char *self)
 {
     int n = 0;
@@ -41,9 +39,9 @@ extern "C" int func_001AE630(char *self)
             return 1;
     } else
         n = 1;
-    p = *(int **)(self + 0x608);
-    if (p) {
-        int w = p[0x9D0 / 4];
+    int *q = *(int **)(self + 0x608);
+    if (q) {
+        int w = q[0x9D0 / 4];
         if (w < 0)
             n++;
         else if (w & 0x40000000)
@@ -52,7 +50,6 @@ extern "C" int func_001AE630(char *self)
         n++;
     return n >= 2;
 }
-#endif
 
 // FUNCTION: GAME 0x001A7788
 extern "C" void *func_001A7788(char *self)

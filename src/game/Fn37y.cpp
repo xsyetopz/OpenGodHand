@@ -94,12 +94,13 @@ void func_003794D0(void *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x37B768
-// diff: original computes idx*32+0x16C then adds o; gcc folds 0x16C into the sh offset (44 vs 48 bytes)
+// diff: 5 words; address temp lands in v0 not a1 (idx*32+0x16C kept apart via empty asm barrier; without it gcc folds 0x16C into sh, 10 words)
 extern "C" void func_0037B768(char *o)
 {
-    short *t = (short *)(o + 0x16C);
-    short *q = (short *)((char *)t + o[0x27] * 32);
-    *q = 0;
+    int off = o[0x27] * 32 + 0x16C;
+    __asm__("" : "+r"(off));
+    char *q = o + off;
+    *(short *)q = 0;
     func_003749D8(o[0x27]);
 }
 #endif
@@ -183,21 +184,17 @@ void func_0037AEC0(void *);
 void func_0037D680(void *);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x37D170
-// diff: original tests at loop bottom with bnel delay-slot reuse; ours 56 vs 52 bytes (extra beqz/nop entry test)
+// FUNCTION: GAME 0x37D170
 extern "C" unsigned short *func_0037D170()
 {
     int p = (int)D_0076B9C0;
     int e = p + 0xF00;
     do {
-        if (*(unsigned short *)p == 0)
-            return (unsigned short *)p;
-        p += 0x50;
+        if (*(unsigned short *)p != 0) { p += 0x50; continue; }
+        return (unsigned short *)p;
     } while (p < e);
     return 0;
 }
-#endif
 
 // FUNCTION: GAME 0x37AC68
 extern "C" void func_0037AC68(void *o)

@@ -108,6 +108,7 @@ extern "C" char func_001FC020(int *self)
 extern "C" int func_002CB278(void *);
 extern char Snd[];
 // DRAFT: GAME 0x1FF4D0 (3 words: original keeps the range test in v0, compiled reuses a1)
+// diff: 3 words; ~15 forms tried (temps, int/unsigned id, inline helper, &&, ?:)
 extern "C" void func_001FF4D0(char *self, unsigned id)
 {
     unsigned t = id - 0x200;

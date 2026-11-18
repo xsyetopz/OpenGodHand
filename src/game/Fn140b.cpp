@@ -86,18 +86,15 @@ char *getMeshPtr__6cModeli(void *self, int i);
 void func_002A9680(void *heap, void *p);
 void func_0030F5A0(void *p);
 }
-// DRAFT: GAME 0x14D7D0
-// diff: original is bnez with 0x16 in the delay slot then 0x18 (sltiu/xori); compiled gives beql or movz forms (if/else, ?:, int ok tried).
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x14D7D0
 extern "C" void func_0014D7D0(char *self)
 {
     char *mesh = getMeshPtr__6cModeli(self, 0);
     char *x = *(char **)(mesh + 0x388);
     char *volatile keep = x;
-    (void)keep;
-    self[0x2BE] = (*(unsigned short *)(x + 8) >= 2) ? 0x16 : 0x18;
+    int ok = *(unsigned short *)(x + 8) >= 2;
+    self[0x2BE] = ok ? 0x16 : 0x18;
 }
-#endif
 
 // FUNCTION: GAME 0x1483C8
 extern "C" void func_001483C8(char *self, int flags)

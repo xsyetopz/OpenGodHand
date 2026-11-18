@@ -1,5 +1,5 @@
 // Small helpers from 0x2C0000-0x2D0000.
-extern "C" void func_001F88A8(char *a, void *c, unsigned char type, float w, float d, float h);
+extern "C" void func_001F88A8(char *a, void *c, float w, float d, float h, unsigned char type);
 
 // FUNCTION: GAME 0x2C53A8
 extern "C" char *func_002C53A8(char *self)
@@ -259,10 +259,8 @@ extern "C" void func_002CD9A0(int on, int id)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2C0DA8
-extern "C" void AreaSet__10cSceAtUnitR4cVecff9eAreaType(char *self, void *v, float a, float b, int t)
+// FUNCTION: GAME 0x2C0DA8
+extern "C" void AreaSet__10cSceAtUnitR4cVecff9eAreaType(char *self, void *v, float a, float b, unsigned char t)
 {
-    func_001F88A8(self + 4, v, t, a, a, b);
+    func_001F88A8(self + 4, v, a, a, b, t);
 }
-#endif

@@ -41,16 +41,15 @@ extern "C" int openLoad__9cSaveLoad(unsigned char *self)
 
 extern unsigned char D_00747A51;
 extern "C" void func_002BEBC8();
+extern "C" int func_002BED08(unsigned *self, long key);
 
-// diff: 2 words, original shifts a>>8 into $v0 where ours uses $a1
-// DRAFT: GAME 0x2BED60
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2BED60
 extern "C" int func_002BED60(unsigned *self, unsigned short a, long b)
 {
     int r;
-    unsigned char c = D_00747A51;
-    unsigned hi = a >> 8;
-    if (c == hi) {
+    // Shifting into r first puts the shift in $v0, as the original does.
+    r = a >> 8;
+    if (D_00747A51 == r) {
         unsigned s0 = *self;
         func_002BEBC8();
         r = func_002BED08(self, b);
@@ -59,13 +58,10 @@ extern "C" int func_002BED60(unsigned *self, unsigned short a, long b)
         r = 0;
     return r;
 }
-#endif
 
 extern "C" unsigned char *func_002BEAA8(char *, unsigned short);
 
-// diff: 7 words, operand order of the base+offset adds and load scheduling
-// DRAFT: GAME 0x2BEB00
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2BEB00
 extern "C" char *func_002BEB00(char **self, unsigned short id, unsigned char k)
 {
     unsigned char *e = func_002BEAA8((char *)self, id);
@@ -73,11 +69,12 @@ extern "C" char *func_002BEB00(char **self, unsigned short id, unsigned char k)
     if (e && k < e[2]) {
         int off = (e[3] + k) * 0x30;
         char *b = *self;
-        r = (char *)((int)b + *(int *)(b + 8)) + off;
+        // Two statements: the base sum is formed before off is added.
+        r = (char *)((int)b + *(int *)(b + 8));
+        r = r + off;
     }
     return r;
 }
-#endif
 
 // FUNCTION: GAME 0x2B4F98
 extern "C" char *func_002B4F98(char *self, int key)

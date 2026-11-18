@@ -122,20 +122,18 @@ extern "C" void func_001F9E28(char **self)
         *(int *)(*self + 0x170) = SdeSystemOutModeGet();
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1FCCC0 - 9 words: andi/addiu mask form and branch offsets differ
-extern "C" void func_001FCCC0(char *p)
+// FUNCTION: GAME 0x1FCCC0
+extern "C" void func_001FCCC0(void *self)
 {
+    char *p = (char *)self;
     if (*(short *)(p + 0x30)) {
-        unsigned short n = *(unsigned short *)(p + 0x30) - 1;
-        *(unsigned short *)(p + 0x30) = n;
-        if (n == 0) {
-            int *q = *(int **)(p + 0x28);
-            *q &= ~2;
+        short *c = (short *)(p + 0x30);
+        if (--*c == 0) {
+            unsigned *q = *(unsigned **)(p + 0x28);
+            *q &= 0xFFFFFFFD;
         }
     }
 }
-#endif
 
 // FUNCTION: GAME 0x1F3580
 extern "C" void *__16ColiseumEmSelect(char *self)

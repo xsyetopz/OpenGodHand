@@ -36,7 +36,7 @@ extern "C" void func_002BA878(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2BE458
-// diff: 2 words, sw 0x4C0(s1) scheduled before a3=sp
+// diff: 2 words, sw 0x4C0(s1) scheduled before a3=sp; ~8 forms tried (separate store, comma arg, temps, buf pointer)
 extern "C" void *memset(void *, int, unsigned);
 extern "C" void func_00398B90(char *, char *);
 extern "C" void func_00399728(int, unsigned, void *, char *);

@@ -221,22 +221,16 @@ extern "C" void func_002BA650(char *self, float f)
     ((void (*)(char *))(*(void **)(vt + 0x54)))(self + *(short *)(vt + 0x50));
 }
 
-// DRAFT: GAME 0x2BA7B8
-// diff: 4 words, vtable fn pointer loaded into v0 instead of v1 (two forms tried)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2BA7B8
+struct VE { short off; short pad; float (*fn)(char *); };
 extern "C" void func_002BA7B8(char *self)
 {
-    char *vt = *(char **)(self + 0x100);
-    int o1 = *(short *)(vt + 0x20);
-    float (*f1)(char *) = (float (*)(char *))*(void **)(vt + 0x24);
-    float a = f1(self + o1);
-    vt = *(char **)(self + 0x100);
-    int o2 = *(short *)(vt + 0x10);
-    float (*f2)(char *) = (float (*)(char *))*(void **)(vt + 0x14);
-    float b = f2(self + o2);
+    VE *e = (VE *)(*(char **)(self + 0x100) + 0x20);
+    float a = e->fn(self + e->off);
+    VE *g = (VE *)(*(char **)(self + 0x100) + 0x10);
+    float b = g->fn(self + g->off);
     *(float *)(self + 0xE4) = a + b;
 }
-#endif
 
 extern "C" void func_002BE550(char *);
 extern char RelSys[];

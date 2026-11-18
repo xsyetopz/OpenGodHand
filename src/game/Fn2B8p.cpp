@@ -138,7 +138,7 @@ extern "C" void func_002BF170(char *p)
 extern "C" void func_002BE5F0(char *);
 
 // DRAFT: GAME 0x2BE858
-// diff: 1 word, addu operand order (a1,a0 in the original); 6 source forms tried (index, int cast, shift, struct, unsigned)
+// diff: 1 word, addu operand order (a1,a0 in the original); ~25 source forms tried (int/long casts, shift, struct, unsigned, int param, commuted operands, temps)
 #ifdef NONMATCHING
 extern "C" void func_002BE858(char *p, int i)
 {

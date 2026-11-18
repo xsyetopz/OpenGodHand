@@ -41,7 +41,8 @@ extern "C" void func_002B0208(char *);
 extern "C" void func_002B0420(char *);
 
 // DRAFT: GAME 0x2B0028
-// diff: 6 words, register choice for the lw/lhu/andi chain (v0/v1 vs a2); switch layout matches, 5 forms tried
+// diff: 6 words, register choice for the lw/lhu/andi chain (v0/v1 vs a2); switch layout matches, ~12 forms tried
+// (temps, struct members, extra unused param, if-chain); original uses a2 for 0x9400, i.e. a1 held by another pseudo
 #ifdef NONMATCHING
 extern "C" void func_002B0028(char *self)
 {

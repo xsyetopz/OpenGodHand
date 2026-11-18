@@ -10,27 +10,24 @@ void func_00373FC8(void *);
 int func_00374360(void *);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x37D728
-// diff: addu operand order (1 word)
+// FUNCTION: GAME 0x37D728
 extern "C" void func_0037D728(char *o)
 {
-    int a = *(unsigned short *)(o + 0x46) + *(unsigned short *)(o + 0x48);
-    *(unsigned short *)(o + 0x4A) = a;
-    if (((unsigned char *)o)[5] & 1)
+    unsigned short *p = (unsigned short *)o;
+    p[0x25] = p[0x23] + p[0x24];
+    if (o[5] & 1)
         return;
-    *(unsigned short *)(o + 0x4A) = *(unsigned short *)(o + 0x2E) + a;
+    p[0x25] += p[0x17];
 }
-#endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x37E488
-// diff: result reg v1 vs v0, branch sense (3 words)
+// FUNCTION: GAME 0x37E488
 extern "C" void func_0037E488(char *o)
 {
-    o[2] = func_0037E8D8((int *)o) ? 0xC : 1;
+    if (func_0037E8D8((int *)o))
+        o[2] = 0xC;
+    else
+        o[2] = 1;
 }
-#endif
 
 // FUNCTION: GAME 0x37FE40
 extern "C" void func_0037FE40(char *o)
@@ -57,7 +54,7 @@ extern "C" void func_00376400(int *o)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x373F38
-// diff: s0/s1 swapped (saved-reg allocation)
+// diff: 8 words; s0/s1 swapped (o in s0, r in s1 vs original o in s1, r in s0); 10 source forms tried
 extern "C" int func_00373F38(void *o)
 {
     int r = func_00373D90(o);
@@ -68,7 +65,7 @@ extern "C" int func_00373F38(void *o)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x374508
-// diff: s0/s1 swapped (saved-reg allocation)
+// diff: 8 words; s0/s1 swapped (o in s0, r in s1 vs original o in s1, r in s0); 10 source forms tried
 extern "C" int func_00374508(void *o)
 {
     int r = func_00374360(o);
@@ -76,3 +73,4 @@ extern "C" int func_00374508(void *o)
     return r;
 }
 #endif
+

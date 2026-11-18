@@ -3,8 +3,7 @@ extern int D_00755800;
 extern int D_00755804;
 extern char *D_00755840;
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x31BDC8 - 3 words differ: lw D_00755800/D_00755840 register swap (v0/v1) in the copy loop
+// FUNCTION: GAME 0x31BDC8
 extern "C" void func_0031BDC8(char *self)
 {
     unsigned long f = D_00747A78;
@@ -13,7 +12,7 @@ extern "C" void func_0031BDC8(char *self)
         char *dst = self + 0x100;
         int i;
         for (i = 0; i < 32; i++) {
-            dst[i] = *((D_00755800 << 5) + D_00755840 + i);
+            dst[i] = ((char (*)[32])D_00755840)[D_00755800][i];
         }
         int n = D_00755800 + 1;
         D_00755800 = n;
@@ -22,7 +21,6 @@ extern "C" void func_0031BDC8(char *self)
         }
     }
 }
-#endif
 
 extern unsigned D_00747A2C[];
 extern unsigned D_00747A88;
@@ -60,8 +58,7 @@ extern "C" int func_00160F38(char *self)
 
 extern int D_00747A84[];
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2BF420 - flag-bit load schedule differs
+// FUNCTION: GAME 0x2BF420
 extern "C" void func_002BF420(char *p)
 {
     if (D_00747A84[1] >= 0) {
@@ -69,8 +66,9 @@ extern "C" void func_002BF420(char *p)
         unsigned long b = (f >> 6) & 1;
         if (b) {
             p[0] = 4;
-            p[0xC] = 1;
             p[3] = 0;
+            p[0xC] = 1;
+            p[0] = 4;
         } else {
             p[3] = 0;
             p[0] = 5;
@@ -79,7 +77,6 @@ extern "C" void func_002BF420(char *p)
         p[1] = 0;
     }
 }
-#endif
 
 extern int D_00586B34;
 extern unsigned char D_0074748C;
