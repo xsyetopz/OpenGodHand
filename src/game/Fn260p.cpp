@@ -30,35 +30,41 @@ extern "C" void func_0027DC50(char *self, int k)
 }
 #endif
 
-// DRAFT: GAME 0x278570 - lw instead of lwu at +0x60 and store order of 2F4..2F7 (4 words)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x278570
+struct UF {
+    char pad[0x60];
+    unsigned f;
+};
 extern "C" void func_00278570(char *self)
 {
     if (*(int *)(self + 0x564) != 0x232 && *(short *)(self + 0x54A) > 0) {
         char *p = *(char **)(self + 0x670);
         if (p) {
-            if ((*(unsigned *)(p + 0x60) & 1UL) && !(0.0f < *(float *)(self + 0x54C))) {
-                self[0x2F7] = 0;
+            unsigned long f = (unsigned long)((UF *)p)->f;
+            unsigned long b = f & 1;
+            if (b && !(0.0f < *(float *)(self + 0x54C))) {
                 self[0x2F5] = 1;
                 self[0x2F4] = 0;
                 self[0x2F6] = 0;
+                self[0x2F7] = 0;
             }
         }
     }
 }
-#endif
 
 extern "C" void calcParts__6cModel(char *);
 
-// DRAFT: GAME 0x279C20 - original keeps the byte at +0x2B4 in a stack slot (frame 0x20, 6 words differ)
-#ifdef NONMATCHING
+static inline int IsSet(const int &v) { return v != 0; }
+static inline char *Slot0(char *o)
+{
+    if (IsSet(*(unsigned char *)(o + 0x2B4)))
+        return **(char ***)(o + 0x278);
+    return 0;
+}
+// FUNCTION: GAME 0x279C20
 extern "C" void func_00279C20(char *self)
 {
-    char *m = 0;
-    unsigned c = (unsigned char)self[0x2B4];
-    __asm__ volatile("" : : "m"(c));
-    if (c)
-        m = **(char ***)(self + 0x278);
+    char *m = Slot0(self);
     if (m)
         *(char **)(m + 0x148) = self;
     *(float *)(self + 0x24C) = 1.0f;
@@ -66,7 +72,6 @@ extern "C" void func_00279C20(char *self)
     *(int *)(self + 0x1580) = 0;
     calcParts__6cModel(self);
 }
-#endif
 
 extern "C" void setTextureExchange__6cModelPCUiPCvi(void *, const unsigned *, const void *, int);
 extern "C" void func_002A8578(char *, char *, char *, int, int, int, float);
@@ -169,28 +174,26 @@ extern "C" void func_0026A338(char *self)
 
 extern "C" void func_001CFE88(void *, int);
 
-// DRAFT: GAME 0x26BAD8 - 4 words: li of i/cnt scheduled after the n test (original sets s2 before beqz)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x26BAD8
 extern "C" void func_0026BAD8(char *self, unsigned n, int arg)
 {
     if ((*(int *)(self + 0x564) ^ 0x211) == 0) {
         unsigned i = 0;
-      if (n) {
         unsigned cnt = 0;
-        void **p = (void **)(self + 0x710);
-        do {
-            if (*p) {
-                cnt++;
-                func_001CFE88(*p, arg);
-                *p = 0;
-            }
-            i++;
-            p++;
-        } while (i < 8 && cnt < n);
-      }
+        if (n) {
+            void **p = (void **)(self + 0x710);
+            do {
+                if (*p) {
+                    cnt++;
+                    func_001CFE88(*p, arg);
+                    *p = 0;
+                }
+                i++;
+                p++;
+            } while (i < 8 && cnt < n);
+        }
     }
 }
-#endif
 
 struct cVecZ;
 extern cVecZ ZeroVec;
@@ -225,7 +228,7 @@ extern "C" void func_00262980(char *self)
 
 extern "C" int ReleaseEm__9cEmManageP7cEmBase(void *, void *);
 
-// DRAFT: GAME 0x279838 - 4 words: original loads li 1 in the beqz delay slot, shared with the case 1 compare
+// DRAFT: GAME 0x279838 - 4 words: original loads li 1 once in the beqz delay slot, shared with the case 1 compare (if-chain, case-order and fallthrough switch tried)
 #ifdef NONMATCHING
 extern "C" void func_00279838(char *self)
 {
@@ -233,7 +236,12 @@ extern "C" void func_00279838(char *self)
     switch ((unsigned char)self[0x2F6]) {
     case 0:
         self[0x2F6] = 1;
-    case 1: {
+    case 1:
+        break;
+    default:
+        return;
+    }
+    {
         float f = *(float *)(self + 0x24C) - 0.1f;
         *(float *)(self + 0x24C) = f;
         if (f <= 0.0f) {
@@ -241,7 +249,6 @@ extern "C" void func_00279838(char *self)
             ReleaseEm__9cEmManageP7cEmBase(g_EmManage, self);
             self[0x2F6]++;
         }
-    }
     }
 }
 #endif

@@ -14,36 +14,6 @@ int func_0031FAE8(char *(*f0)(void), int (*f1)(void), int a, int b, int (*f3)(vo
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x31EC48 (13 words differ: 2.9 schedules the srl/and of x before the sign store)
-struct U { int cls, sign, exp, frac; };
-
-void func_0031EC48(unsigned *p, struct U *u)
-{
-    unsigned x = *p;
-    int e = (x >> 23) & 0xFF;
-    unsigned fr = x & 0x7FFFFF;
-    u->sign = x >> 31;
-    if (e == 0) {
-        u->cls = 2;
-        return;
-    }
-    if (e == 0xFF) {
-        if (fr == 0) {
-            u->cls = 4;
-            return;
-        }
-        if (fr & 0x100000)
-            u->cls = 1;
-        else
-            u->cls = 0;
-        u->frac = fr;
-        return;
-    }
-    u->frac = (fr << 7) | 0x40000000;
-    u->exp = e - 0x7F;
-    u->cls = 3;
-}
-
 // DRAFT: GAME 0x31DFA8 (27 words differ, all from one missing nop: the original aligns the e == 0x7FF block)
 struct UD { unsigned cls; int sign, exp, pad; unsigned long long frac; };
 void func_0031DFA8(unsigned long long *p, struct UD *u)
@@ -71,28 +41,6 @@ void func_0031DFA8(unsigned long long *p, struct UD *u)
     u->frac = (fr << 8) | 0x1000000000000000ULL;
     u->exp = e - 0x3FF;
     u->cls = 3;
-}
-
-// DRAFT: GAME 0x31EA10 (23 words differ: original tests cls with xori/beqz and jumps from cls == 4 past the range checks)
-unsigned func_0031EA10(double d)
-{
-    struct UD u;
-    func_0031DFA8(&d, &u);
-    if (u.cls == 2)
-        return 0;
-    if (u.cls < 2)
-        return 0;
-    if (u.sign)
-        return 0;
-    if (u.cls != 4) {
-        if (u.exp < 0)
-            return 0;
-        if (u.exp >= 0x20)
-            return ~0;
-    }
-    if (u.exp >= 0x3D)
-        return u.frac << (u.exp - 0x3C);
-    return u.frac >> (0x3C - u.exp);
 }
 
 // DRAFT: GAME 0x31EF18 (15 words differ: original numbers a1/a3 as s1/s2, this gives s2/s1)
@@ -197,21 +145,6 @@ void func_0031EDD0(float f)
     func_0031EAB0(u.cls, u.sign, u.exp, ((unsigned long long)u.frac << 32) >> 2);
 }
 
-// DRAFT: GAME 0x31EAE0 (6 words differ: the original builds t|1 first and selects with movz, this emits movn with the t|1 copy in v1)
-struct D2 { int cls, sign, exp, pad; long long frac; };
-extern void func_0031DFA8(double *, struct D2 *);
-extern void func_0031EDA0(int, int, int, int);
-void func_0031EAE0(double d)
-{
-    struct D2 u;
-    int t, j;
-    func_0031DFA8(&d, &u);
-    t = (int)((u.frac << 2) >> 32);
-    j = t | 1;
-    if ((u.frac & 0x3FFFFFFF) == 0)
-        j = t;
-    func_0031EDA0(u.cls, u.sign, u.exp, j);
-}
 #endif
 
 // FUNCTION: GAME 0x3202E0

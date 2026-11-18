@@ -87,24 +87,3 @@ extern "C" void func_002C9BF8(char *p, int i)
     if (*(int *)p)
         CoreSave.setSkill((PL_SKILL) * (signed char *)(p + i + 0x14), (signed char)-1);
 }
-
-#ifdef NONMATCHING
-struct Ent {
-    char a, b;
-    int c, d, e, f, g, h, i, j;
-};
-
-// DRAFT: GAME 0x2CFF30 (8 words off: original stores 0x18 last, scheduler hoists it)
-extern "C" Ent *func_002CFF30(Ent *self)
-{
-    self->j = -1;
-    self->a = 0;
-    self->b = 0;
-    self->c = 0;
-    self->e = 0;
-    self->f = 0;
-    self->g = 0;
-    self->h = -1;
-    return self;
-}
-#endif

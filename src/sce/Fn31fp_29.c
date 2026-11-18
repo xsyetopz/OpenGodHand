@@ -43,16 +43,7 @@ typedef unsigned int UHItype __attribute__ ((mode (HI)));
 /* Names the compiler emits for the helpers defined elsewhere in this unit
    range, mapped to the original symbols. */
 #define ALIAS(n, a) __asm__ (".globl " #n "\n\t" #n " = " #a)
-ALIAS (__pack_d, func_0031DE78);
 ALIAS (__unpack_d, func_0031DFA8);
-ALIAS (dpadd, func_0031E288);
-ALIAS (dpsub, func_0031E2E0);
-ALIAS (dpmul, func_0031E348);
-ALIAS (dpcmp, func_0031E870);
-ALIAS (litodp, func_0031E8C0);
-ALIAS (dptoul, func_0031EA10);
-ALIAS (dptofp, func_0031EAE0);
-ALIAS (__unpack_f, func_0031EC48);
 ALIAS (fptodp, func_0031EDD0);
 ALIAS (__floatdidf, func_0031DC98);
 ALIAS (__fixunssfdi, func_0031DBA0);

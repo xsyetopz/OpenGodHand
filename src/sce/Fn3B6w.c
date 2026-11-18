@@ -104,3 +104,108 @@ int func_003B59D8(int a)
         return D_00781800;
     return -1;
 }
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3B2488 (28 words off: original keeps the array base reloaded for the 3rd store and un-shared index math; mine CSEs, 84 vs 120 bytes)
+struct E { int a, b, gp; };
+struct T { int pad[3]; struct E *neg; int pad2; struct E *pos; };
+extern struct T D_0077E518;
+register int gp __asm__("$28");
+void func_003B2488(int i, int x, int y)
+{
+    if (i < 0) {
+        struct E *e;
+        i &= 0x7FFFFFFF;
+        e = &D_0077E518.neg[i];
+        e->b = y;
+        e->a = x;
+        D_0077E518.neg[i].gp = gp;
+    } else {
+        struct E *e = &D_0077E518.pos[i];
+        e->b = y;
+        e->a = x;
+        D_0077E518.pos[i].gp = gp;
+    }
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3B58E0 (3 words off: original puts lui in $v0 and fills the sw delay slot)
+extern int sceSifBindRpc();
+int func_003B58E0(void)
+{
+    int *p;
+    for (;;) {
+        if (sceSifBindRpc(D_007817C0, 0x80000003, 0) < 0)
+            return -1;
+        if (*(int *)(D_007817C0 + 0x24) != 0)
+            break;
+        {
+            int i = 0x100000;
+            do {
+                i--;
+                __asm__ volatile("nop");
+                __asm__ volatile("nop");
+                __asm__ volatile("nop");
+                __asm__ volatile("nop");
+            } while (i != -1);
+        }
+    }
+    D_003FAEF4 = 0;
+    return 0;
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3B6738 (5 words off: arg load order of the 3rd func_003B6668 call, loop uses plain bnez)
+extern int func_003B66D0(void);
+extern void func_003B6668(int, int);
+extern void func_003B6678(int, void *, int);
+extern int func_003B66C0(void);
+extern void FlushCache(int);
+extern int D_003FB6C8[];
+extern char D_003FAF20[];
+void func_003B6738(void)
+{
+    unsigned i;
+    int *p;
+    int *b;
+    if (func_003B66D0() == 0)
+        return;
+    i = 2;
+    b = D_003FB6C8;
+    p = b + 4;
+    func_003B6668(b[0], b[1]);
+    func_003B6678(0x80074000, D_003FAF20, 0x7A8);
+    FlushCache(0);
+    FlushCache(2);
+    func_003B6668(b[2], b[3]);
+    do {
+        i++;
+        func_003B6668(p[0], func_003B66C0());
+        p += 2;
+    } while (i < 3);
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3B7200 (19 words off: original keeps D_003FBE90 base in $a3 and orders the stores differently)
+struct N { struct N *next; int p4; volatile int id; int f0c; int p10, p14; long f18; int p20, p24; int f28; };
+struct Q { int p[3]; volatile int ctr; int cnt; struct N *head; };
+extern struct Q D_003FBE90;
+int func_003B7200(void)
+{
+    struct Q *q = &D_003FBE90;
+    struct N *n = q->head;
+    if (n == 0)
+        return 0x80008005;
+    q->cnt++;
+    n->f28 = 0;
+    n->f0c = 0;
+    q->head = n->next;
+    n->f18 = 0;
+    q->ctr++;
+    n->id = ((q->ctr << 1) & 0x3FE) | 1;
+    return ((int)n << 4) | n->id;
+}
+#endif

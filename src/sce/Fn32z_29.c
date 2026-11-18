@@ -229,29 +229,3 @@ long long func_0031DE10(long long a, long long b)
 }
 #endif
 
-// FUNCTION: GAME 0x31E8C0
-struct F31E8 { int cls; int sign; int exp; unsigned long long frac; };
-extern long long func_0031DE78(struct F31E8 *);
-long long func_0031E8C0(int a)
-{
-    struct F31E8 u;
-    u.cls = 3;
-    u.sign = (unsigned)a >> 31;
-    if (a == 0) {
-        u.cls = 2;
-    } else {
-        u.exp = 0x3C;
-        if (u.sign) {
-            if (a == 0x80000000)
-                return 0xC1E0000000000000LL;
-            u.frac = -a;
-        } else {
-            u.frac = a;
-        }
-        while (u.frac <= 0x0FFFFFFFFFFFFFFFULL) {
-            u.frac <<= 1;
-            u.exp--;
-        }
-    }
-    return func_0031DE78(&u);
-}
