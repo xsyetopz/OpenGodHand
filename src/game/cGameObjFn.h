@@ -25,7 +25,7 @@ extern void func_0030F5A0();
 extern void func_002B16F0(void *);
 extern void *getTexAddr(void *, int, u32) __asm__("getTexAddr__10cIDManager7eIdDataUi");
 
-void *operator new(unsigned, void *p) { return p; }
+inline void *operator new(unsigned, void *p) { return p; }
 struct PathFinding {
     PathFinding();
 };

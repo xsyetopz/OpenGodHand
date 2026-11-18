@@ -100,3 +100,22 @@ extern "C" int func_00382850(int, unsigned char *b)
     return 0;
 }
 #endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x383280
+// diff: n loaded into a2 not a0 (orig copies a0->a2 in loop); 5 words, register allocation
+extern "C" int func_00383280(int, unsigned char *b)
+{
+    int n = *(int *)(b + 8);
+    unsigned char *q = b + 0x18;
+    b = q;
+    int i = 0;
+    while (i < n) {
+        int j = i + 1;
+        if (b[j])
+            return 1;
+        i = j;
+    }
+    return 0;
+}
+#endif
