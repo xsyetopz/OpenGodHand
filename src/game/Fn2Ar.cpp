@@ -109,10 +109,13 @@ extern "C" int isClip__C8cGameObj(char *self)
 {
     long l = *(unsigned *)(self + 0x5A0);
     long a = l & 1;
-    if (a) return 1;
-    long b = (l >> 1) & 1;
-    if (b) return 1;
-    return isClip__C6cModel(self) != 0;
+    int r = 1;
+    if (!a) {
+        long b = (l >> 1) & 1;
+        if (!b)
+            r = isClip__C6cModel(self) != 0;
+    }
+    return r;
 }
 #endif
 

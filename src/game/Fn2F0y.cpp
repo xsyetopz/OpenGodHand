@@ -7,7 +7,7 @@ extern "C" void func_002F7CD8(void *);
 extern "C" void func_002CA690(void *);
 
 // DRAFT: GAME 0x300088
-// diff: 8 words; original copies a0 into v0 and tests v0 (daddu v0,a0,zero; beqz v0), mine tests a0 directly
+// diff: 8 words; original copies a0 into v0 and tests v0 (daddu v0,a0,zero; beqz v0), mine tests a0 directly; tried int cast, local copy, int*, early return, base-class upcast, p?p+0:0 (no change)
 extern "C" void func_00300088(void *p)
 {
     if (p)

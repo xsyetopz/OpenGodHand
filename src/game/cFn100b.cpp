@@ -92,9 +92,7 @@ extern "C" void func_0013EBA0(char *self)
 
 extern "C" void sceVu0ApplyMatrix(void *, void *, void *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x133AA8
-// diff: flags sw vs swc1 0x20 order, and final swc1 0x24/0x28 swapped (4 words)
+// FUNCTION: GAME 0x133AA8
 extern "C" void func_00133AA8(char *self)
 {
     sceVu0ApplyMatrix(self + 0x60, *(void **)(self + 0x40), self + 0x50);
@@ -105,12 +103,11 @@ extern "C" void func_00133AA8(char *self)
     *(float *)(self + 0x10) = x - r;
     *(float *)(self + 0x14) = y - r;
     *(float *)(self + 0x18) = z - r;
-    *(int *)(self + 8) &= -3;
-    *(float *)(self + 0x28) = z + r;
-    *(float *)(self + 0x24) = y + r;
     *(float *)(self + 0x20) = x + r;
+    *(float *)(self + 0x24) = y + r;
+    *(float *)(self + 0x28) = z + r;
+    *(int *)(self + 8) &= -3;
 }
-#endif
 
 // FUNCTION: GAME 0x13C220
 extern "C" void func_0013C220(char *self)

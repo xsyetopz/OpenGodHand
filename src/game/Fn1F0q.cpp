@@ -102,7 +102,9 @@ extern "C" int func_001FF0D8(char *p)
 {
     if (*(int *)(p + 4) != 0)
         return 1;
-    if ((*(int *)(p + 8) >> 2) & 1)
+    unsigned long f = (unsigned long)*(int *)(p + 8);
+    unsigned long b = (f >> 2) & 1;
+    if (b)
         return 0;
     return *(int *)(p + 0x10) != 0;
 }
