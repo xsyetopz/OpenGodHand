@@ -554,3 +554,108 @@ void cCoreSave::useGodItem()
         m_save->m_godItem[5] = 0;
     }
 }
+
+// FUNCTION: GAME 0x1FB6C8
+int cCoreSave::getCombo(unsigned int i, unsigned int j)
+{
+    if (m_save == 0)
+        return 0;
+    if (j >= 6)
+        return 0;
+    if (getComboMax(i) <= j)
+        return 0;
+    if (i >= 6)
+        return 0;
+    return m_save->m_combo[i].m_skill[j];
+}
+
+// FUNCTION: GAME 0x1FB750
+signed char cCoreSave::getComboLv(unsigned int i, unsigned int j)
+{
+    if (m_save == 0)
+        return 0;
+    if (j >= 6)
+        return 0;
+    if (getComboMax(i) <= j)
+        return 0;
+    if (i >= 6)
+        return 0;
+    return m_save->m_combo[i].m_lv[j];
+}
+
+// FUNCTION: GAME 0x1FB7D8
+void cCoreSave::setCombo(unsigned int i, unsigned int j, PL_SKILL skill, signed char lv)
+{
+    if (m_save && j < 6 && i < 6) {
+        m_save->m_combo[i].m_skill[j] = skill;
+        m_save->m_combo[i].m_lv[j] = lv;
+    }
+}
+
+extern "C" void *memset(void *, int, unsigned int);
+
+// FUNCTION: GAME 0x1FC518
+extern "C" void func_001FC518(cCoreSave *self, int v)
+{
+    if (self->m_save)
+        self->m_save->m_fightingRingEmListNo = v;
+}
+
+// FUNCTION: GAME 0x1FC5B8
+extern "C" void func_001FC5B8(cCoreSave *self)
+{
+    if (self->m_save)
+        self->m_save->m_allKillNpcNum = 0;
+}
+
+// FUNCTION: GAME 0x1FC5E8
+extern "C" void func_001FC5E8(cCoreSave *self)
+{
+    if (self->m_save)
+        self->m_save->m_allContinueNum = 0;
+}
+
+// FUNCTION: GAME 0x1FC618
+extern "C" void func_001FC618(cCoreSave *self)
+{
+    if (self->m_save)
+        self->m_save->m_allStageTime = 0;
+}
+
+// FUNCTION: GAME 0x1FC6C8
+extern "C" void func_001FC6C8(cCoreSave *self)
+{
+    if (self->m_save)
+        self->m_save->m_oliviaFlags &= 0xFFFE;
+}
+
+// FUNCTION: GAME 0x1FC6E8
+extern "C" void func_001FC6E8(cCoreSave *self)
+{
+    if (self->m_save)
+        self->m_save->m_oliviaFlags |= 1;
+}
+
+// FUNCTION: GAME 0x1FC708
+extern "C" int func_001FC708(cCoreSave *self)
+{
+    if (self->m_save == 0)
+        return 0;
+    return self->m_save->m_oliviaFlags & 1;
+}
+
+// FUNCTION: GAME 0x1FC548
+extern "C" void func_001FC548(cCoreSave *self)
+{
+    if (self->m_save) {
+        for (unsigned i = 0; i < 5; i++)
+            self->m_save->m_allKillEmNum[i] = 0;
+    }
+}
+
+// FUNCTION: GAME 0x1FC438
+extern "C" void func_001FC438(cCoreSave *self)
+{
+    if (self->m_save)
+        memset((char *)self->m_save + 0xB98, 0, 0x10);
+}

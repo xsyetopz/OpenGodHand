@@ -91,7 +91,9 @@ public:
     char _padD8[0xEC - 0xD8];
     void *m_roomExitFunc;
     void *m_roomExitArg;
-    char _padF4[0x111 - 0xF4];
+    void *m_roomExitFunc2;
+    void *m_roomExitArg2;
+    char _padFC[0x111 - 0xFC];
     unsigned char m_camWait;
     unsigned short m_messNo;
 };

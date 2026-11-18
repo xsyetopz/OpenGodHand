@@ -11,6 +11,8 @@ public:
     void setOpenFix();
     void setCloseFix();
     void setInitFix();
+    void setFire();
+    void clearFire();
     int getState();
     unsigned char isActive();
 

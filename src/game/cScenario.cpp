@@ -1,5 +1,10 @@
 #include "game/cScenario.h"
 
+extern "C" void *memset(void *, int, unsigned int);
+
+extern "C" void func_002C3968(cScenario *self, int n);
+extern "C" int func_002C4350(cScenario *self);
+
 struct sRoomSave;
 extern sRoomSave g_RoomSave;
 extern unsigned int D_00463964;
@@ -83,7 +88,6 @@ extern cScenario *g_Sce;
 extern unsigned int D_00747A84;
 extern "C" void *Getplayer__Fv();
 extern "C" int func_0012BAF0(void *);
-extern "C" int func_002C4350(cScenario *);
 
 // FUNCTION: GAME 0x2C3E40
 int cScenario::isEventStartOk()
@@ -237,7 +241,6 @@ void cScenario::endExtraGame()
 }
 #endif
 
-extern "C" void func_002C3968(cScenario *, int);
 extern "C" int func_002D5580(cTaskManager *, void *, void *, int);
 extern "C" void func_002C4150(cScenario *, unsigned short, void *, bool, unsigned char, int);
 extern "C" void setPlayerPos__FRC4cVecf(const cVec &, float);
@@ -368,5 +371,29 @@ void cScenario::move()
             func_002C4E18(this);
         }
     }
+}
+#endif
+
+// FUNCTION: GAME 0x2C4DD0
+extern "C" void func_002C4DD0(cScenario *self, void *func, void *arg)
+{
+    self->m_roomExitFunc2 = func;
+    self->m_roomExitArg2 = arg;
+}
+
+// FUNCTION: GAME 0x2C3968
+extern "C" void func_002C3968(cScenario *self, int n)
+{
+    if (n >= 0)
+        memset((char *)self + 0x54 + n * 8, 0, 8);
+}
+
+#ifdef NONMATCHING
+// 0x2C4350: near-miss; original loads a message global via lui/lw (0x23A4 offset) and calls func_2AEDA0 with different branch layout
+extern "C" int func_002C4350(cScenario *self)
+{
+    if (self->m_messNo != 0xFFFF)
+        return Message->ckMessage(self->m_messNo);
+    return 0;
 }
 #endif

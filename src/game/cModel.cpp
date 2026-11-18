@@ -81,3 +81,10 @@ void cModel::setLayerDisplay(int layer, bool on)
         }
     }
 }
+
+// FUNCTION: GAME 0x147018
+extern "C" void func_00147018(char *self)
+{
+    *(int *)(self + 0xB0) = 0;
+    *(unsigned short *)(self + 0xAC) = 0xFFFF;
+}

@@ -11,6 +11,8 @@ public:
     unsigned char isActive();
     void setEventMode(bool on);
     void setLock(bool on);
+    void setOpen();
+    void setClose();
     void connectDoor(cOm5f *door);
 
     char _pad5B8[0x760 - 0x5B8];

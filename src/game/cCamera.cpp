@@ -19,3 +19,26 @@ void cCamera::resetVib()
     m_unk258 = 0;
     m_unk264 = 0;
 }
+
+extern "C" void func_00139010(int a, unsigned int b);
+extern "C" void func_00139090(void *);
+extern void *pCamWork;
+
+// FUNCTION: GAME 0x139040
+extern "C" void func_00139040()
+{
+    func_00139010(1, 0xFFFF);
+}
+
+// FUNCTION: GAME 0x138C70
+extern "C" void func_00138C70(char *self)
+{
+    *(int *)(self + 0x1028) = 1;
+    func_00139090(self);
+    pCamWork = self;
+}
+
+// FUNCTION: GAME 0x138BB8
+extern "C" void func_00138BB8()
+{
+}

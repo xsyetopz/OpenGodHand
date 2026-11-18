@@ -39,16 +39,21 @@ struct sSaveData {
     unsigned char m_tensionItem;
     unsigned char m_reelItem;
     unsigned char m_paper;
-    char _pad158[0x78];
-    struct { int m_comboMax; char _pad4[0x20]; } m_combo[6];
-    char _pad2A8[0x8EC];
+    char _pad158[0x58];
+    struct {
+        int m_skill[6];
+        signed char m_lv[6];
+        char _pad1E[2];
+        int m_comboMax;
+    } m_combo[6];
+    char _pad288[0x90C];
     int m_casinoTicketNum;
     char _padB98[0x10];
     int m_fightingRingEmListNo;
     unsigned short m_allKillEmNum[5];
     unsigned short m_allKillNpcNum;
     unsigned short m_allContinueNum;
-    char _padBBA[2];
+    unsigned short m_oliviaFlags;
     int m_allStageTime;
     int m_oliviaCostumeNo;
 };
@@ -61,6 +66,9 @@ public:
     void addVitalItem(unsigned char);
     void addKillEmNum();
     int getGameLevelPoint();
+    int getCombo(unsigned int, unsigned int);
+    signed char getComboLv(unsigned int, unsigned int);
+    void setCombo(unsigned int, unsigned int, PL_SKILL, signed char);
     int getReelItem();
     int ckClearStage(unsigned short);
     int ckGodReel(eCommandNo);

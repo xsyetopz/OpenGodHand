@@ -7,7 +7,7 @@
 class pl00 {
 public:
     void SetCannonReflect(unsigned char v);
-    bool ckMotionCam();
+    int ckMotionCam();
     void DiscardWeapon();
     int CkSubScreen();
     int ckAtkActBtnEnable();
@@ -29,7 +29,11 @@ public:
     char _pad2F8[0x54A - 0x2F8];
     short m_unk54A;
     float m_unk54C;
-    char _pad550[0x660 - 0x550];
+    char _pad550[0x640 - 0x550];
+    int m_unk640;
+    char m_unk644[4];
+    char m_unk648;
+    char _pad649[0x660 - 0x649];
     cVec m_unk660;
     char _pad66C[4];
     float m_unk670;

@@ -24,9 +24,8 @@ cMessageNode *cMessage::searchWorkId(unsigned short id) const
     return 0;
 }
 
-// FUNCTION: GAME 0x2AECD0
-// The original has a nop between the next-pointer load and the loop branch; the
-// asm statement reproduces it (the source-level cause is unknown).
+// 0x2AECD0: differs only by the assembler hazard nop between the next-pointer load and the loop branch
+#ifdef NONMATCHING
 void cMessage::closeAll()
 {
     cMessageNode *n = m_list;
@@ -34,23 +33,23 @@ void cMessage::closeAll()
         do {
             func_002B2400(n);
             n = n->m_next;
-            __asm__ volatile("nop");
         } while (n);
     }
 }
+#endif
 
-// FUNCTION: GAME 0x2AEC88
-// Two original nops after the call, reproduced with an asm statement.
+// 0x2AEC88: differs only by two assembler nops after the call
+#ifdef NONMATCHING
 void cMessage::deleteAll()
 {
     cMessageNode *n = m_list;
     if (n) {
         do {
             n = func_002AEF10(this, n);
-            __asm__ volatile("nop\n\tnop");
         } while (n);
     }
 }
+#endif
 
 // FUNCTION: GAME 0x2AEBF8
 int cMessage::deleteWorkId(unsigned short id)
