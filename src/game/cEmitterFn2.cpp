@@ -37,7 +37,7 @@ extern "C" void func_00305B90()
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x307118
-// 8 words differ: gcc folds the compare to xor/sltiu; the original uses bne with a delay-slot clear
+// 2 words differ with inline isFill(): loaded value lands in v1 instead of a0 (plain form: 8 words)
 extern "C" int func_00307118(unsigned int *p)
 {
     if (*p == 0xCDCDCDCD)

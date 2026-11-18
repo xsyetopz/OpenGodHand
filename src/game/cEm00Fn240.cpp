@@ -388,3 +388,92 @@ extern "C" void func_0025B5A8(char *self)
     }
 }
 #endif
+
+extern char g_HeatSys[];
+extern const float D_005850B0[];
+extern "C" float capVu0MagnitudeSqXZ__FPCfT0(const float *, const float *);
+extern "C" void func_00281260(void *);
+extern "C" void func_00283170(void *);
+extern "C" void func_002495E0(void *, float);
+extern "C" void func_00262AA8(void *);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x249960
+// diff: 2 words; g_HeatSys flag lbu lands in v0 instead of v1
+extern "C" void func_00249960(char *self)
+{
+    capVu0MagnitudeSqXZ__FPCfT0(*(const float **)((char *)Getplayer() + 0xF0), D_005850B0);
+    *(unsigned *)(self + 0x16D0) |= 0x30400;
+    char *h;
+    switch (B(0x2F6)) {
+    case 0:
+        B(0x1864) = 0;
+        {
+            unsigned short r = func_00276468(self);
+            char *o = *(char **)(self + 0x304);
+            func_002A8578(self, *(int *)(o + 0x3D34) + (int)o, *(int *)(o + 0x3D38) + (int)o, 0xA, 0.0f, r, 0);
+        }
+        if (*(void **)(self + 0x748))
+            func_00281260(*(void **)(self + 0x748));
+        if (*(void **)(self + 0x74C))
+            func_00283170(*(void **)(self + 0x74C));
+        if (*(void **)(self + 0x750))
+            func_00283170(*(void **)(self + 0x750));
+        *(unsigned *)(self + 0x16D0) &= 0xFCFFFFFF;
+        B(0x2F6)++;
+    case 1:
+        func_002495E0(self, 0.0f);
+        moveMotion((cObjBase *)self);
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+        h = g_HeatSys;
+        break;
+    default:
+        h = g_HeatSys;
+    }
+    if (*(unsigned char *)(h + 0x10) == 0)
+        func_00262AA8(self);
+}
+#endif
+
+extern "C" void func_00281338(void *);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x24AA68
+// diff: 17 words; original fills the shared `b` with the 2F7 store (344 bytes vs our 348)
+extern "C" void func_0024AA68(char *self)
+{
+    *(unsigned *)(self + 0x16D0) |= 0x30400;
+    switch (B(0x2F6)) {
+    case 0:
+        B(0x1864) = 0;
+        {
+            unsigned short r = func_00276468(self);
+            char *o = *(char **)(self + 0x304);
+            func_002A8578(self, *(int *)(o + 0x3D94) + (int)o, *(int *)(o + 0x3D98) + (int)o, 0xA, 0.0f, r, 0);
+        }
+        if (*(void **)(self + 0x748))
+            func_00281338(*(void **)(self + 0x748));
+        if (*(void **)(self + 0x74C))
+            func_00283170(*(void **)(self + 0x74C));
+        if (*(void **)(self + 0x750))
+            func_00283170(*(void **)(self + 0x750));
+        *(float *)(self + 0x600) = 30.0f;
+        B(0x2F6)++;
+    case 1:
+        if (*(float *)(self + 0x600) > 0.0f) {
+            *(unsigned *)(self + 0x16D0) |= 0x800000;
+            *(float *)(self + 0x600) = *(float *)(self + 0x600) - *(float *)(self + 0x5A8);
+        }
+        if (moveMotion((cObjBase *)self)) {
+            B(0x2F5) = 0xA1;
+            B(0x2F6) = 0;
+            B(0x2F7) = 0;
+            B(0x2F4) = 0;
+        } else {
+            ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+            ((cObjBase *)self)->addNullSpeed(1.0f);
+        }
+    }
+}
+#endif

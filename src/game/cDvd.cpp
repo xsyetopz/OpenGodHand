@@ -380,3 +380,89 @@ extern "C" int func_00200F50(DvdMgr *self, int id)
     return r;
 }
 #endif
+
+extern "C" void func_00200B20(DvdMgr *);
+extern "C" void func_00201C28(void *);
+extern "C" void func_00201D20(void *);
+extern "C" int func_003999A8();
+extern "C" int func_00323618(char *, int);
+extern "C" void *Getplayer__Fv();
+extern char D_0042C780[];
+extern unsigned int D_00747A78[];
+struct __attribute__((packed)) DvdB24 {
+    char c[24];
+};
+
+// FUNCTION: GAME 0x200658
+extern "C" void func_00200658()
+{
+    memset(D_00747A78, 0, 8);
+    D_00747A78[2] &= 0xFFEFFFFF;
+    *(float *)((char *)Getplayer__Fv() + 0x54C) = 30.0f;
+}
+
+// FUNCTION: GAME 0x2009B0
+extern "C" void func_002009B0(char *d, char *s)
+{
+    *(DvdB24 *)(d + 0x1C) = *(DvdB24 *)s;
+}
+
+// FUNCTION: GAME 0x201160
+void cDvd::CheckWait(eDvdId id)
+{
+    while (Check(id))
+        func_00200B20((DvdMgr *)this);
+}
+
+// FUNCTION: GAME 0x2011B0
+extern "C" void func_002011B0(DvdMgr *self)
+{
+    while (self->m_cur)
+        func_00200B20(self);
+}
+
+// FUNCTION: GAME 0x201A00
+extern "C" int func_00201A00(void *)
+{
+    if (func_003999A8() == 0x14) {
+        int v = func_00323618(D_0042C780, 0);
+        if (v) {
+            func_00323A70(v);
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// FUNCTION: GAME 0x201BE0
+extern "C" void func_00201BE0(unsigned char *p)
+{
+    switch (*p) {
+    case 0:
+        func_00201C28(p);
+        break;
+    case 1:
+        func_00201D20(p);
+        break;
+    }
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x201250
+// diff: 8 words; the slot scan is strength-reduced to a pointer walk, the original keeps the i*0x88 mult.
+extern "C" void func_00201250(DvdMgr *self)
+{
+    int i = 0;
+    if (self->m_slot[0].m_used == 0) {
+        while (1) {
+            i = i + 1;
+            if (!(i < 32))
+                return;
+            DvdSlot *s = self->m_slot + i;
+            if (s->m_used)
+                break;
+        }
+    }
+    self->m_state = 1;
+}
+#endif

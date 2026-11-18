@@ -48,6 +48,25 @@ ANNOT = re.compile(r"^//\s*FUNCTION:\s*GAME\s+0x([0-9A-Fa-f]+)")
 DEFN = re.compile(r"[\w:~<>]+\s*\(")
 
 
+COMPILER_TAG = re.compile(r"^//\s*COMPILER:\s*(\S+)")
+FLAGS_TAG = re.compile(r"^//\s*FLAGS:\s*(.*\S)")
+
+
+def source_build(src: Path) -> tuple[str | None, str]:
+    """Compiler package and flags for a source.
+
+    Leading `// COMPILER: NAME` and `// FLAGS: ...` comment lines override the
+    default package (tools/eecc.py DEFAULT) and append to CXXFLAGS.
+    """
+    compiler, flags = None, CXXFLAGS
+    for line in Path(src).read_text(errors="replace").splitlines()[:4]:
+        if m := COMPILER_TAG.match(line):
+            compiler = m.group(1)
+        elif m := FLAGS_TAG.match(line):
+            flags += " " + m.group(1)
+    return compiler, flags
+
+
 def tool(name: str) -> str:
     """Resolve a binutils program; `CROSS` overrides the prefix."""
     prefix = os.environ.get("CROSS", "mipsel-linux-gnu-")
@@ -160,7 +179,7 @@ def main() -> int:
     n.append(f"ASFLAGS = {ASFLAGS}")
     n.append(f"CXXFLAGS = {CXXFLAGS}")
     n.append(f"rule as\n  command = {tool('as')} $ASFLAGS -o $out $in\n  description = AS $in")
-    n.append(f"rule cc\n  command = {args.cc} $CXXFLAGS -c -o $out $in\n  description = CC $in")
+    n.append(f"rule cc\n  command = {args.cc} $pick $CXXFLAGS $flags -c -o $out $in\n  description = CC $in")
     n.append(
         f"rule ld\n  command = {tool('ld')} -EL --no-warn-mismatch -Map $map -T $script "
         "-T config/aliases.ld -T build/undefined_funcs_auto.txt -T build/undefined_syms_auto.txt -o $out\n  description = LD $out"
@@ -182,6 +201,11 @@ def main() -> int:
         o = "build/" + str(src.with_suffix(".o"))
         hs = headers(src)
         n.append(f"build {o}: cc {src}" + (" | " + " ".join(hs) if hs else ""))
+        compiler, flags = source_build(src)
+        if compiler:
+            n.append(f"  pick = --compiler {compiler}")
+        if flags != CXXFLAGS:
+            n.append(f"  flags = {flags[len(CXXFLAGS):].strip()}")
         cobjs.append(o)
 
     script = f"build/{TARGET}.link.ld"

@@ -219,3 +219,32 @@ extern const char D_00426C68[];
 // FUNCTION: GAME 0x1A0908
 OM_DMG_DTOR(1A0908, D_00426C68, 0x600, func_001C2820)
 
+
+extern const char D_00426D50[];
+extern const char D_00427060[];
+extern const char D_00427400[];
+extern const char D_004277B8[];
+
+// FUNCTION: GAME 0x1A0B78
+OM_DMG_DTOR(1A0B78, D_00426D50, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x1A3B20
+OM_DMG_DTOR(1A3B20, D_00427060, 0x600, func_001C2820)
+
+// FUNCTION: GAME 0x1A6038
+OM_DMG_DTOR(1A6038, D_00427400, 0x608, func_001B6F38)
+
+extern char g_CollScr;
+extern "C" void func_0012EC58(void *coll, void *p);
+
+// FUNCTION: GAME 0x1A8380
+extern "C" void func_001A8380(char *self, int flag)
+{
+    *(const void **)(self + 0x214) = D_004277B8;
+    void *d = *(void **)(self + 0x600);
+    if (d) {
+        func_0012EC58(&g_CollScr, d);
+        *(void **)(self + 0x600) = 0;
+    }
+    func_001B6F38(self, flag);
+}

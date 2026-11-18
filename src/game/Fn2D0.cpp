@@ -93,3 +93,32 @@ extern "C" void func_002D3220(void *p)
 {
     memset(p, 0, 0xC0);
 }
+
+extern "C" void func_002D0820(char *);
+
+// FUNCTION: GAME 0x2D0728
+extern "C" void func_002D0728(char *p, int v)
+{
+    *(int *)(p + 0x50) = v;
+    func_002D0820(p);
+}
+
+// FUNCTION: GAME 0x2D42B0
+extern "C" int func_002D42B0(char *p)
+{
+    if (!*(int *)p)
+        return 0;
+    return *(int *)(*(char **)(p + 8) + 0x24);
+}
+
+// FUNCTION: GAME 0x2D36E8
+extern "C" int *func_002D36E8(int *p)
+{
+    p[0] = 0;
+    p[1] = 0;
+    p[2] = 0;
+    p[5] = 0;
+    p[6] = 0;
+    p[0xA8 / 4] = 0;
+    return p;
+}

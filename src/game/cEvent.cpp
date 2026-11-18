@@ -691,50 +691,40 @@ extern char objbaseArray[];
 extern "C" EvObj *SearchOM__13cObjBaseArrayUl(char *, unsigned long);
 extern "C" void func_00298CF0();
 
-// near-miss: 34 differing words; the original keeps s and i in separate regs (a2/a3) and hoists lui/addiu of objbaseArray into t0 before the loop; mine swaps a2/a3 and is 4 bytes longer
-#ifdef NONMATCHING
-// DRAFT: GAME 0x298C58
+// FUNCTION: GAME 0x298C58
 extern "C" void func_00298C58()
 {
+    char *arr = objbaseArray;
     char *s = D_0044ABE0;
     unsigned long key = 0;
     int i = 0;
-    if (*s) {
-        do {
-            key |= (long)*s << (i * 8);
-            i++;
-            s++;
-        } while (i < 8 && *s);
+    while (i < 8 && s[i]) {
+        key |= (long)s[i] << (i * 8);
+        i++;
     }
-    EvObj *o = SearchOM__13cObjBaseArrayUl(objbaseArray, key);
+    EvObj *o = SearchOM__13cObjBaseArrayUl(arr, key);
     if (o) {
         o->m_flags |= 2;
     }
     func_00297B60(Event, (void *)func_00298CF0);
 }
-#endif
 
-// near-miss: 31 differing words; same key-building loop issue as 0x298C58
-#ifdef NONMATCHING
-// DRAFT: GAME 0x298CF0
+// FUNCTION: GAME 0x298CF0
 extern "C" void func_00298CF0()
 {
+    char *arr = objbaseArray;
     char *s = D_0044ABE0;
     unsigned long key = 0;
     int i = 0;
-    if (*s) {
-        do {
-            key |= (long)*s << (i * 8);
-            i++;
-            s++;
-        } while (i < 8 && *s);
+    while (i < 8 && s[i]) {
+        key |= (long)s[i] << (i * 8);
+        i++;
     }
-    EvObj *o = SearchOM__13cObjBaseArrayUl(objbaseArray, key);
+    EvObj *o = SearchOM__13cObjBaseArrayUl(arr, key);
     if (o) {
         o->m_flags &= ~2;
     }
 }
-#endif
 
 
 // near-miss: 33 differing words; original loads into v1 with no hoisted lui; mine hoists lui v0 and is 8 bytes longer
@@ -811,5 +801,72 @@ extern "C" void func_002988A8(EvObj *self, int, int n)
             setMeshDisplay__6cModelPCcb(self, D_0044AB98, 0);
             break;
         }
+    }
+}
+
+extern char Snd[];
+extern "C" void *GetBgmData__4cSndi(char *, int);
+extern "C" void func_002D0220(void *, int, char *);
+extern char D_0044AC00[], D_0044AC08[], D_0044AC10[];
+// FUNCTION: GAME 0x298DB8
+extern "C" void func_00298DB8()
+{
+    int n = 0;
+    int i;
+    for (i = 0; i < 3; i++) {
+        if (D_003C0548[i]) n++;
+    }
+    switch (n) {
+    case 1:
+        func_00297C88(Event, 0x1001);
+        func_002D0220(GetBgmData__4cSndi(Snd, 1), 1, D_0044AC00);
+        break;
+    case 2:
+        func_00297C88(Event, 0x1002);
+        func_002D0220(GetBgmData__4cSndi(Snd, 1), 1, D_0044AC08);
+        break;
+    case 3:
+        func_00297C88(Event, 0x1003);
+        func_002D0220(GetBgmData__4cSndi(Snd, 1), 1, D_0044AC10);
+        break;
+    }
+}
+
+extern char D_0044AC28[], D_0044AC30[];
+extern "C" void func_002990A0();
+static inline unsigned long KeyOf(char *s)
+{
+    unsigned long key = 0;
+    int i = 0;
+    while (i < 8 && s[i]) {
+        key |= (long)s[i] << (i * 8);
+        i++;
+    }
+    return key;
+}
+// FUNCTION: GAME 0x298F88
+extern "C" void func_00298F88()
+{
+    EvObj *o = SearchOM__13cObjBaseArrayUl(objbaseArray, KeyOf(D_0044AC28));
+    if (o) {
+        o->m_flags |= 2;
+    }
+    o = SearchOM__13cObjBaseArrayUl(objbaseArray, KeyOf(D_0044AC30));
+    if (o) {
+        o->m_flags |= 2;
+    }
+    func_00297B60(Event, (void *)func_002990A0);
+}
+
+// FUNCTION: GAME 0x2990A0
+extern "C" void func_002990A0()
+{
+    EvObj *o = SearchOM__13cObjBaseArrayUl(objbaseArray, KeyOf(D_0044AC28));
+    if (o) {
+        o->m_flags &= ~2;
+    }
+    o = SearchOM__13cObjBaseArrayUl(objbaseArray, KeyOf(D_0044AC30));
+    if (o) {
+        o->m_flags &= ~2;
     }
 }

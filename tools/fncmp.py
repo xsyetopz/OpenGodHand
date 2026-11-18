@@ -110,7 +110,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("src", type=Path)
     ap.add_argument("addr", type=lambda s: int(s, 0))
-    ap.add_argument("--flags", default=configure.CXXFLAGS)
+    ap.add_argument("--flags", help="override flags (default: CXXFLAGS plus the source's // FLAGS:)")
     ap.add_argument("--compiler", help="decomp.me compiler package (see tools/eecc.py)")
     ap.add_argument("--sym", help="symbol name in the object (default: original name)")
     ap.add_argument("-q", action="store_true", help="print only the verdict")
@@ -121,6 +121,9 @@ def main() -> int:
     # A per-process object lets several comparisons of one source run at once.
     obj = ROOT / "build/fncmp" / args.src.resolve().relative_to(ROOT).with_suffix(f".{os.getpid()}.o")
     obj.parent.mkdir(parents=True, exist_ok=True)
+    tag_compiler, tag_flags = configure.source_build(args.src)
+    args.compiler = args.compiler or tag_compiler
+    args.flags = args.flags or tag_flags
     pick = ["--compiler", args.compiler] if args.compiler else []
     cmd = [sys.executable, str(ROOT / "tools/eecc.py"), *pick, *shlex.split(args.flags), "-c", "-o", str(obj), str(args.src)]
     if subprocess.call(cmd, cwd=ROOT):

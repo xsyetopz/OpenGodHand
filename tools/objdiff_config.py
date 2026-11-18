@@ -109,7 +109,7 @@ def emit(units, sources: dict[Path, list[int]]) -> list[str]:
     (ROOT / "build/expected").mkdir(parents=True, exist_ok=True)
     n = [
         "rule asm_obj\n  command = $as $ASFLAGS -o $out $in\n  description = AS $out",
-        "rule ldr\n  command = $ld -EL -r -o $out $in\n  description = LD -r $out",
+        "rule ldr\n  command = $ld -EL -r -T config/merge.ld -o $out $in\n  description = LD -r $out",
         "rule report\n  command = tools/bin/objdiff-cli report generate -p . -o $out\n  description = REPORT $out",
         "rule progress\n  command = $py tools/progress.py --no-build\n  description = PROGRESS $out",
     ]
@@ -136,7 +136,7 @@ def emit(units, sources: dict[Path, list[int]]) -> list[str]:
         if len(srcs_of.get(g, ())) == 1:  # a lone object needs no `ld -r`
             unit["base_path"] = next(iter(srcs_of[g]))
         elif srcs_of.get(g):
-            n.append(f"build build/actual/{g}.o: ldr {' '.join(sorted(srcs_of[g]))}")
+            n.append(f"build build/actual/{g}.o: ldr {' '.join(sorted(srcs_of[g]))} | config/merge.ld")
             unit["base_path"] = f"build/actual/{g}.o"
             actual.append(unit["base_path"])
         if "base_path" in unit and unit["base_path"] not in actual:

@@ -337,4 +337,13 @@ void func_002A98D8(char *self, int f)
         func_0030F5A0();
 }
 
+void *memset(void *, int, unsigned);
+void func_002AE940(void *, int);
+// FUNCTION: GAME 0x2ACCD8
+void func_002ACCD8(void *p) { memset(p, 0, 0x100); }
+// FUNCTION: GAME 0x2AE970
+void func_002AE970() { func_002AE940((void *)1, 0xFFFF); }
+// FUNCTION: GAME 0x2AF6E0
+void func_002AF6E0(int *p, int on) { if (on) *p |= 2; else *p &= -3; }
+
 }

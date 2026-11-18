@@ -809,6 +809,8 @@ DTOR_CLONE(func_003218B0, D_00451288, 0)
 DTOR_CLONE(_$_21cCollisionScrollSolid, D_0041D5A8, 0x5C)
 // FUNCTION: GAME 0x1339C0
 DTOR_CLONE(_$_15cCollisionSolid, D_0041D808, 0x30)
+// FUNCTION: GAME 0x2D5C38
+DTOR_CLONE(func_002D5C38, D_0044D1C8, 0x30)
 
 // 0x173AD8 near-miss (cluster of 6 identical 0x1D4 units; no COP2). See diff note below.
 #ifdef NONMATCHING

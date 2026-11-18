@@ -122,6 +122,7 @@ int func_001F9FF0(void *);
 void unlinkNoFree__7cRelSysQ27cRelSys8eRelType(void *, int);
 void free__5cHeapPv(void *, void *);
 void *memset(void *, int, unsigned);
+unsigned irand__Fv();
 // FUNCTION: GAME 0x295978
 int func_00295978(char *self) { void *e = GetEm__9cEmManageUc(&g_EmManage, *(unsigned char *)self); *(void **)(self + 4) = e; return e != 0; }
 // FUNCTION: GAME 0x2954D0
@@ -147,6 +148,17 @@ void func_002962F0(char *self)
     if (p) free__5cHeapPv(*(void **)(p - 0x20), p);
     *(int *)(self + 0x10) = 0;
     func_00297660(self);
+}
+#endif
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2949E8
+// 1 word differs: first beql branch offset (+6 words, original +1)
+int func_002949E8(char *self, unsigned n)
+{
+    unsigned char m = irand__Fv() % n;
+    if ((irand__Fv() & 3) != 0 && *(char *)(self + 0x53F) < m) { *(unsigned char *)(self + 0x53F) = *(unsigned char *)(self + 0x53F) + 1; return 0; }
+    *(char *)(self + 0x53F) = 0;
+    return 1;
 }
 #endif
 }

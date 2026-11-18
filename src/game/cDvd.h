@@ -9,6 +9,7 @@ class cDvd {
 public:
     bool FileExist(const char *);
     int Check(eDvdId);
+    void CheckWait(eDvdId);
 };
 
 #endif

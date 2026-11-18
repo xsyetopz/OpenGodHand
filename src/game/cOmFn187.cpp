@@ -107,3 +107,63 @@ extern "C" void func_0017DF88(char *self)
         *(void **)(self + 0x674) = 0;
     }
 }
+
+extern "C" void func_001C2820(void *self, int flag);
+extern "C" void func_001C7DE0(void *self, int flag);
+extern const char D_00423E48[];
+extern const char D_00427148[];
+extern const char D_00427230[];
+extern const char D_004272F8[];
+extern const char D_00427E60[];
+extern const char D_00428090[];
+extern const char D_00428160[];
+extern const char D_00428928[];
+extern const char D_00428C20[];
+#define OM_DMG_DTOR_A(ADDR, VT, TOFF, GOFF, BASE) \
+    extern "C" void func_00##ADDR(char *self, int flag) \
+    { \
+        *(const void **)(self + 0x214) = VT; \
+        void *d = *(void **)(self + TOFF); \
+        if (d) { \
+            func_001FE278(&g_DmgManage, d); \
+            *(void **)(self + TOFF) = 0; \
+        } \
+        void *g = *(void **)(self + GOFF); \
+        if (g) { \
+            g_DmgManage.ReleaseDamageGive((cDamageGive *)g); \
+            *(void **)(self + GOFF) = 0; \
+        } \
+        BASE(self, flag); \
+    }
+
+// FUNCTION: GAME 0x18F1A0
+OM_DMG_DTOR_A(18F1A0, D_00423E48, 0x654, 0x658, func_001C7DE0)
+
+// FUNCTION: GAME 0x1A3D98
+OM_DMG_DTOR_A(1A3D98, D_00427148, 0x600, 0x604, func_001C2820)
+
+// FUNCTION: GAME 0x1A43B8
+OM_DMG_DTOR_A(1A43B8, D_00427230, 0x764, 0x768, func_001B6F38)
+
+// FUNCTION: GAME 0x1A5190
+OM_DMG_DTOR_A(1A5190, D_004272F8, 0x624, 0x620, func_001B6F38)
+
+// FUNCTION: GAME 0x1ABE08
+OM_DMG_DTOR_A(1ABE08, D_00427E60, 0x624, 0x628, func_001B6F38)
+
+// FUNCTION: GAME 0x1AE8B0
+OM_DMG_DTOR_A(1AE8B0, D_00428090, 0x600, 0x604, func_001B6F38)
+
+// FUNCTION: GAME 0x1B02C8
+OM_DMG_DTOR_A(1B02C8, D_00428160, 0x600, 0x604, func_001B6F38)
+
+// FUNCTION: GAME 0x1B6758
+OM_DMG_DTOR_A(1B6758, D_00428928, 0x624, 0x620, func_001B6F38)
+
+// FUNCTION: GAME 0x1B87F0
+OM_DMG_DTOR_A(1B87F0, D_00428C20, 0x624, 0x620, func_001B6F38)
+
+extern const char D_00426E78[];
+
+// FUNCTION: GAME 0x1A0DF0
+OM_DMG_DTOR_N(1A0DF0, D_00426E78, 1, 0x608)
