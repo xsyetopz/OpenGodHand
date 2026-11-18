@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import shlex
 import struct
 import subprocess
@@ -125,9 +126,9 @@ def main() -> int:
     args.compiler = args.compiler or tag_compiler
     args.flags = args.flags or tag_flags
     # DRAFT functions sit under #ifdef NONMATCHING, so without the define the
-    # object holds no section for them.
-    draft = f"DRAFT: GAME 0x{args.addr:X}"
-    if draft in args.src.read_text(errors="replace") and "-DNONMATCHING" not in shlex.split(args.flags):
+    # object holds no section for them. Tags may zero-pad the address (0x001CA1F8).
+    draft = re.compile(rf"DRAFT: GAME 0x0*{args.addr:X}\b", re.I)
+    if draft.search(args.src.read_text(errors="replace")) and "-DNONMATCHING" not in shlex.split(args.flags):
         args.flags += " -DNONMATCHING"
     pick = ["--compiler", args.compiler] if args.compiler else []
     cmd = [sys.executable, str(ROOT / "tools/eecc.py"), *pick, *shlex.split(args.flags), "-c", "-o", str(obj), str(args.src)]
