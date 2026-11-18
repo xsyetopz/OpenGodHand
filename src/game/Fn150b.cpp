@@ -23,21 +23,6 @@ extern "C" void func_00150418(char *self);
 extern "C" void *func_002A96C0(int size, int n, int a);
 extern "C" void *func_0030EE08(void *p, int a, int heap);
 extern "C" void func_002A96D8(void *self, void *q, int size, int n, int a);
-// DRAFT: GAME 0x1504B0
-// diff: 10 words; callees/args/stores match but s0/s1 are swapped (original self=s0, n=s1) and tail store order 20,24,18,1C is scheduler-hoisted.
-#ifdef NONMATCHING
-extern "C" void func_001504B0(char *self, int n)
-{
-    func_00150418(self);
-    void *p = func_002A96C0(0x220, n, 0x10);
-    void *q = func_0030EE08(p, 0x10, MemDefalutHeapPtr);
-    func_002A96D8(self, q, 0x220, n, 0x10);
-    *(int *)(self + 0x24) = n;
-    *(int *)(self + 0x18) = n;
-    *(int *)(self + 0x1C) = n;
-    *(void **)(self + 0x20) = p;
-}
-#endif
 
 struct Loc155 {
     char *m;

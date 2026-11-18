@@ -38,12 +38,6 @@ extern "C" int func_00321218(int a) { int o = D_003C4F00; D_003C4F00 = a; return
 // FUNCTION: GAME 0x320270
 extern "C" void func_00320270() { abort(); }
 
-// DRAFT: GAME 0x32F4D0
-// diff: original `addu a1,a1,a0` / `lw 0xB4(a1)`; compiled `addu a0,a0,a1` / `lw 0xB4(a0)` (operand order)
-#ifdef NONMATCHING
-extern "C" int func_0032F4D0(char *p, int i) { return *(int *)((i << 4) + p + 0xB4); }
-#endif
-
 struct S30 { char _p[0x30]; int m_30; int m_34; };
 struct SA8 { char _p[0xA8]; int m_a8; };
 struct S01 { char _p0; signed char m_1; };

@@ -141,33 +141,6 @@ extern "C" void func_00200B20(DvdMgr *self)
 }
 #endif
 
-#ifdef NONMATCHING
-// NONMATCHING 0x201018: 16 words differ (loop pointer/counter/self register assignment s0/s1/s2 permuted)
-extern "C" void func_00201018(DvdMgr *self)
-{
-    int *cur = self->m_cur;
-    int i;
-    DvdSlot *s = self->m_slot;
-    if (cur) {
-        int v = cur[0x84 / 4];
-        if (v == 0) {
-            self->m_cur = 0;
-        } else {
-            func_00324008(v);
-            func_002018F0(self);
-            self->m_cur = 0;
-        }
-    }
-    i = 31;
-    do {
-        func_00201228(self, s);
-        i--;
-        s++;
-    } while (i >= 0);
-    self->m_state = 0;
-}
-#endif
-
 // FUNCTION: GAME 0x201718
 extern "C" void func_00201718(DvdMgr *self)
 {

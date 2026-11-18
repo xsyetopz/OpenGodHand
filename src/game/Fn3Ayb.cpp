@@ -83,25 +83,3 @@ struct Big {
     int m_10;
     unsigned m_14[1];
 };
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3AF118
-// diff: original shares one `x<y?-1:1` tail (sltu in bnel delay slot) and keeps a3=a+0x14 as loop base; ours 18 words off
-extern "C" int __mcmp(Big *a, Big *b)
-{
-    int d = a->m_10 - b->m_10;
-    if (d)
-        return d;
-    unsigned *base = a->m_14;
-    unsigned *pa = &a->m_14[b->m_10 - 1];
-    unsigned *pb = &b->m_14[b->m_10 - 1];
-    do {
-        unsigned x = *pa;
-        unsigned y = *pb;
-        if (x != y)
-            return x < y ? -1 : 1;
-        pb--;
-    } while (base < pa--);
-    return 0;
-}
-#endif

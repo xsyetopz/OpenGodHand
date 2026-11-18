@@ -93,31 +93,6 @@ extern "C" int func_00171B70(sC3 *s)
     return 1;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1793D0
-// diff: li order of 0xF/1 swaps and clear-store order differs (8 words); all 24 clear orders tried
-extern "C" void func_001793D0(sTy *s)
-{
-    switch (s->m_2f5) {
-    case 0:
-        Snd.SeCall(2, 2, s, 0, 0, 0, 0);
-        s->m_t = 15;
-        s->m_2f5 = 1;
-        s->m_2f6 = 0;
-        s->m_2f7 = 0;
-    case 1:
-        s->m_t--;
-        if ((short)s->m_t <= 0) {
-            s->m_2f7 = 0;
-            s->m_2f4 = 0;
-            s->m_2f5 = 0;
-            s->m_2f6 = 0;
-        }
-        break;
-    }
-}
-#endif
-
 // FUNCTION: GAME 0x17ADE0
 FN17_MODE(func_0017ADE0, D_003BDA20)
 // FUNCTION: GAME 0x17E230

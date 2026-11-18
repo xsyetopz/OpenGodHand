@@ -4,30 +4,6 @@ extern "C" void SdeSystemOutModeSet(int);
 extern "C" void func_001FF3A0(void *);
 extern "C" void trans__7cIDBase(void *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1F9C30 - reg alloc/order differs (lui/lw *a0 swapped)
-extern "C" void func_001F9C30(WT **p)
-{
-    (*p)->a = WorldTime.a;
-    (*p)->b = WorldTime.b;
-}
-#endif
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1FC170 - a0/a1/v1 reg alloc swapped
-extern "C" void func_001FC170(char **p, int n, int v)
-{
-    unsigned char i = n;
-    char *q = *p;
-    if (q) {
-        if (i < 10) {
-            q[0x98 + i] = v;
-        }
-    }
-}
-
-#endif
-
 // FUNCTION: GAME 0x1F9E68
 extern "C" void func_001F9E68(char **p)
 {

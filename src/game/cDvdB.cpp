@@ -58,35 +58,6 @@ extern "C" unsigned char func_00201960(DvdCnt2 *s)
 }
 
 #ifdef NONMATCHING
-// NONMATCHING 0x2017A8: 33 words differ (original keeps slot base in s0 across the call; register allocation differs)
-extern "C" DvdSlot *func_002017A8(DvdMgr *self)
-{
-    int i = 0;
-    DvdSlot *base = self->m_slot;
-    DvdSlot *r = base;
-    int *q = &base->m_used;
-    do {
-        if (*q == 0)
-            return r;
-        i++;
-        r++;
-        q += 0x22;
-    } while (i < 32);
-    func_002011B0(self);
-    q = &base->m_used;
-    r = self->m_slot;
-    int end = (int)q + 0x1100;
-    do {
-        if (*q == 0)
-            return r;
-        q += 0x22;
-        r++;
-    } while ((int)q < end);
-    return 0;
-}
-#endif
-
-#ifdef NONMATCHING
 // NONMATCHING 0x200F50: 2 words differ (s1/s4 setup order: addiu s1,self,4 and addiu s4,self,0x1108 swapped)
 extern "C" int func_00200F50(DvdMgr *self, int id)
 {
@@ -186,25 +157,5 @@ extern "C" void func_00201BE0(unsigned char *p)
         break;
     }
 }
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x201250
-// diff: 8 words; the slot scan is strength-reduced to a pointer walk, the original keeps the i*0x88 mult.
-extern "C" void func_00201250(DvdMgr *self)
-{
-    int i = 0;
-    if (self->m_slot[0].m_used == 0) {
-        while (1) {
-            i = i + 1;
-            if (!(i < 32))
-                return;
-            DvdSlot *s = self->m_slot + i;
-            if (s->m_used)
-                break;
-        }
-    }
-    self->m_state = 1;
-}
-#endif
 
 extern "C" void func_002D5250(int);

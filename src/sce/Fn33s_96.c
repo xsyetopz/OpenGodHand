@@ -20,12 +20,6 @@ int strlen(const char *);
 // FUNCTION: GAME 0x335360
 char *func_00335360(void) { char *r = 0; int i; for (i = 0; i < 0x20; i++) { char *p = D_003DA5F8 + i * 0x238; if (*p == 0) { r = p; break; } } return r; }
 
-// DRAFT: GAME 0x330518
-// diff: 4 words; original keeps strlen+1 in $v0 then copies to $a3 (we use $a3 directly, loop head addu/nop order differs)
-#ifdef NONMATCHING
-void func_00330518(char *s) { unsigned n = strlen(s) + 1; unsigned i; for (i = 0; i < n; i++) { int c = (unsigned char)s[i]; if ((unsigned)(c - 0x61) < 0x1A) s[i] = c - 0x20; } }
-#endif
-
 extern char D_00455990[], D_00455920[], D_004559A0[], D_00455950[];
 extern char D_00455C48[], D_00455BD8[], D_00455C58[], D_00455C08[];
 void func_00338A48(char *, char *);

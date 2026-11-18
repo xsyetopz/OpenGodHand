@@ -67,7 +67,7 @@ struct HE2A {
 };
 
 // DRAFT: GAME 0x2A8A08
-// diff: 1 word, addu operand order for &h[parent] (a3=t0+v0 vs v0+t0)
+// diff: 1 word, addu operand order for &h[parent] (a3=t0+v0 vs v0+t0); tried &h[parent], h+parent, (char*)h+parent*8 forms: all 1 word off
 #ifdef NONMATCHING
 void func_002A8A08(HE2A *h, int i, int lim, HE2A item)
 {

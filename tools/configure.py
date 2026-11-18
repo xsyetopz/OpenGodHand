@@ -140,12 +140,20 @@ def unit_obj(unit_dir: str, vram: int) -> str:
     return f"build/{unit_dir}/{vram:08X}.o"
 
 
-def linker_script(sections, replaced: dict[int, tuple[str, str]]) -> str:
+# Marks a unit that a neighbouring replacement covers: no input line is emitted.
+DROP = ("", "")
+
+
+def linker_script(sections, replaced: dict[int, tuple[str, str]], absolute: dict[str, int] | None = None) -> str:
     """`sections` pairs each SECTIONS row with its units; `replaced` maps a unit
     address to (object path, input section) supplied by compiled code. A key
     may be a `.text` function unit or a `.rodata` jump-table unit (linkgen
-    places a matched switch function's own table over the asm unit)."""
-    out = ["ENTRY(func_00100008)", "SECTIONS", "{"]
+    places a matched switch function's own table over the asm unit).
+    `absolute` pins labels of dropped units (name -> address) so remaining
+    asm code that references them still links."""
+    out = ["ENTRY(func_00100008)"]
+    out += [f"{n} = 0x{a:X};" for n, a in sorted((absolute or {}).items())]
+    out += ["SECTIONS", "{"]
     for (name, base, _end, _src, unit_dir), units in sections:
         noload = " (NOLOAD)" if name in NOLOAD else ""
         # splitfuncs names unit sections after splat's input section; .sndata's is .data.
@@ -154,6 +162,8 @@ def linker_script(sections, replaced: dict[int, tuple[str, str]]) -> str:
         # Inside an output section `.` is an offset from the section start.
         for vram, _size, _name in units:
             obj, sec = replaced.get(vram) or (unit_obj(unit_dir, vram), insec)
+            if (obj, sec) == DROP:
+                continue
             out.append(f'    . = 0x{vram - base:X}; "{obj}"({sec})')
         out.append("  }")
     out += ["  /DISCARD/ : { *(*) }", "}", ""]

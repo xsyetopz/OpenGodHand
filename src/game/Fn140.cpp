@@ -122,25 +122,6 @@ extern "C" int func_0015FD68(char *self)
     return -1;
 }
 
-// DRAFT: GAME 0x161B30, 0x162720 (same body) and 0x16EDE0 (0 -> -1, 1 -> 10, else 10)
-// diff: original stores and returns the constant in v0 on two duplicated `jr; sw v0` tails; compiled
-// keeps -1 in v1 for the store (11 differing words, 56 vs 48 bytes). Tried r-variable, assignment-as-value.
-#ifdef NONMATCHING
-extern "C" int func_00161B30(char *self)
-{
-    unsigned char t = self[0x64];
-    if (t == 0) {
-        *(int *)(self + 0x60) = 10;
-        return 10;
-    }
-    if (t == 1) {
-        *(int *)(self + 0x60) = -1;
-        return -1;
-    }
-    return -1;
-}
-#endif
-
 // FUNCTION: GAME 0x15FEE0
 extern "C" void func_0015FEE0(char *self)
 {
@@ -150,23 +131,6 @@ extern "C" void func_0015FEE0(char *self)
         a[i] = m;
     self[0xF15] = 0;
 }
-
-// DRAFT: GAME 0x1415E8
-// diff: original loop is `beqz; (v1--) sb sb; bgez; (a0+=0xC)` (52 bytes); compiled uses bgezl with a lw copy (60 bytes). for/do-while/struct forms tried.
-#ifdef NONMATCHING
-extern "C" void func_001415E8(char *self, char v)
-{
-    char **p = (char **)(self + 0x22F4);
-    for (int i = 16; i >= 0; i--) {
-        char *e = *p;
-        if (e) {
-            e[0x75] = 1;
-            e[0x76] = v;
-        }
-        p = (char **)((char *)p + 0xC);
-    }
-}
-#endif
 
 extern "C" void func_001468B0(void *self);
 extern "C" void func_001614D0(char *p);

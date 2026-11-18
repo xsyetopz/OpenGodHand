@@ -54,22 +54,6 @@ extern "C" void func_00148200(float *p, float a, float b)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x14D7D0 - 8 words differ: original computes (x<2)^1 with xori and branches
-extern "C" void func_0014D7D0(char *self)
-{
-    char *m = (char *)getMeshPtr__6cModeli(self, 0);
-    char *v[2];
-    v[0] = *(char **)(m + 0x388);
-    char *w = v[0];
-    unsigned short x = *(unsigned short *)(w + 8);
-    if ((x < 2) ^ 1)
-        self[0x2BE] = 0x16;
-    else
-        self[0x2BE] = 0x18;
-}
-#endif
-
 // FUNCTION: GAME 0x1494F8
 extern "C" void func_001494F8(char *self, void *o)
 {

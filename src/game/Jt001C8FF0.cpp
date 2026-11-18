@@ -1,0 +1,32 @@
+// Jump-table switch unit (own file: its .rodata must be exactly the table).
+extern "C" void func_001B6FB8(char *);
+extern "C" void setTexChange__7cOmBaseUi(char *, unsigned);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1C8FF0 - 29 words differ: block order of default/ret 1 tail and v0/v1 use for the lhu-0x3E4 index
+extern "C" int Initialize__8cOmTrumpQ28cOmTrump9eNumberId(char *self, int n)
+{
+    int v;
+    func_001B6FB8(self);
+    switch (*(unsigned short *)(self + 0x2FE)) {
+    case 0x3E4:
+        *(int *)(self + 0x600) = 4;
+        setTexChange__7cOmBaseUi(self, 0);
+        *(int *)(self + 0x604) = n;
+        return 1;
+    case 0x3E5:
+        *(int *)(self + 0x600) = 0;
+        goto call;
+    case 0x3E6: v = 1; break;
+    case 0x3E7: v = 2; break;
+    case 0x3E8: v = 3; break;
+    default:
+        return 0;
+    }
+    *(int *)(self + 0x600) = v;
+call:
+    setTexChange__7cOmBaseUi(self, n);
+    *(int *)(self + 0x604) = n;
+    return 1;
+}
+#endif

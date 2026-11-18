@@ -124,7 +124,8 @@ extern "C" void func_0030A978(float *m, float *x, float *y, float *z)
 
 extern char D_00747A2C[];
 
-// FUNCTION: GAME 0x30B090
+#ifdef NONMATCHING
+// DRAFT: GAME 0x30B090 (about 30 words off: original keeps one base reg and reloads flags; gcc splits base/offset and reuses the flag load)
 extern "C" void func_0030B090(void)
 {
     unsigned *b = (unsigned *)D_00747A2C;
@@ -132,10 +133,10 @@ extern "C" void func_0030B090(void)
         return;
     if (b[-2] & 0x8000)
         return;
-    unsigned *c = (unsigned *)(D_00747A2C - 0x58C);
+    unsigned *c = b - 0x58C / 4;
     if (b[-2] & 0x4000)
         c[0x5A0 / 4] = 0;
-    if ((b[-0x58C / 4] & 0x90F) != 0x90F) {
+    if ((c[0] & 0x90F) != 0x90F) {
         b[-2] &= ~0x1000u;
         c[0x5A0 / 4] = 0;
         return;
@@ -150,3 +151,4 @@ extern "C" void func_0030B090(void)
         b[-2] |= 0x1000;
     }
 }
+#endif

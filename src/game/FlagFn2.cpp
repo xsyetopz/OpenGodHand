@@ -210,38 +210,3 @@ extern char D_0042C7D0[];
 extern "C" void getGlobalHMS__10cWorldTimePUiN21(void *, unsigned *, unsigned *, unsigned *);
 extern "C" void setEnding__3cE3b(void *, int);
 extern "C" void debugPrint__9cScenarioPCce(void *, const char *, ...);
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x201C28 - 28 words differ: 0x708 constant hoisted before the t<self[2] branch (bnel+lb in original); one extra word
-extern "C" void func_00201C28(char *self)
-{
-    char *sys = Sys;
-    if (*(unsigned short *)(sys + 0x5B0) == 0x20) {
-        return;
-    }
-    int w = *(int *)(sys + 0x5E4);
-    if ((w & 0x4000) == 0) {
-        if (w & 0x2000000) {
-            return;
-        }
-    }
-    if (*(int *)(sys + 0x58C) < 0) {
-        return;
-    }
-    if (self[2] > 0) {
-        unsigned t;
-        getGlobalHMS__10cWorldTimePUiN21(WorldTime, 0, &t, 0);
-        if (t >= (unsigned)self[2]) {
-            setEnding__3cE3b(self, 1);
-        }
-        int wt = *(int *)WorldTime;
-        int per = self[2] * 0x708;
-        debugPrint__9cScenarioPCce(g_Sce, D_0042C7D0, per - wt, wt);
-    }
-    unsigned long f = D_00747A24;
-    unsigned long b = (f >> 3) & 1;
-    if (b) {
-        setEnding__3cE3b(self, 1);
-    }
-}
-#endif

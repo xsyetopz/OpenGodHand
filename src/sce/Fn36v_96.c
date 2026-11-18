@@ -42,34 +42,6 @@ void func_00360520(int a, unsigned *src, short *dst)
 
 #ifdef NONMATCHING
 
-// DRAFT: GAME 0x36DD18
-// diff: orig stores D4,7C,4C0,4C,70,74,78,40C.. in source order; 2.96 sched hoists 4C/78/D0 first (12-19 words)
-extern void *memset(void *, int, unsigned);
-void func_0036DD18(char *o)
-{
-    int *s = (int *)(o + 0x160);
-    memset(s, 0, 0x4D0);
-    s[0xD4 / 4] = 1;
-    s[0x7C / 4] = 255;
-    s[0x4C0 / 4] = 0;
-    s[0x4C / 4] = 1;
-    s[0x70 / 4] = 0;
-    s[0x74 / 4] = 255;
-    s[0x78 / 4] = 255;
-    s[0x40C / 4] = 0;
-    s[0x410 / 4] = 0;
-    s[0x414 / 4] = 0;
-    s[0x418 / 4] = 0;
-    s[0x41C / 4] = 0;
-    s[0x420 / 4] = 0;
-    s[0x428 / 4] = 0;
-    s[0x3C8 / 4] = 0;
-    s[0x49C / 4] = 0;
-    s[0x4A0 / 4] = 0;
-    s[0x4B0 / 4] = 0;
-    s[0xD0 / 4] = 0;
-}
-
 // DRAFT: GAME 0x369E98
 // diff: orig s1=a2/s2=a1 and stores [1] before [0]; ours stores [0] first (4 words, 4 probes)
 extern int func_0036C5F8();

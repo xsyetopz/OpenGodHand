@@ -75,28 +75,6 @@ extern "C" int atexit(void (*f)(void))
 extern unsigned char D_003FA998[];
 extern "C" char *func_003A95A8(char *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3A9620
-// diff: itoa loop; original keeps v in a0 with movz (neg via srl in t2); ours copies v to a3 and uses movn (160 vs 156 bytes, 36 words); signed/unsigned param and if-forms tried
-extern "C" char *func_003A9620(unsigned v, char *buf, int base)
-{
-    unsigned neg = v >> 31;
-    int i = 0;
-    if (neg) {
-        if (base == 10)
-            v = -v;
-    }
-    do {
-        buf[i++] = D_003FA998[v % base];
-        v = v / base;
-    } while (v);
-    if (neg)
-        buf[i++] = '-';
-    buf[i] = 0;
-    return func_003A95A8(buf);
-}
-#endif
-
 struct Bigint {
     unsigned m_0;
     int m_4;

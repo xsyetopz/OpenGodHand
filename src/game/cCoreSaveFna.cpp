@@ -201,16 +201,6 @@ extern "C" int func_001FC360(SaveSelf *self, int b)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1F9C30
-// original loads *self before WorldTime and uses addiu-based WorldTime+4; compiled reorders lui/lw
-extern "C" void func_001F9C30(TimeSelf *self)
-{
-    self->m_save->m_0 = WorldTime.m_0;
-    self->m_save->m_4 = WorldTime.m_4;
-}
-#endif
-
 // FUNCTION: GAME 0x1F9C58
 extern "C" void func_001F9C58(SaveSelf *self)
 {

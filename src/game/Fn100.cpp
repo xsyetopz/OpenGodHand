@@ -188,33 +188,4 @@ extern "C" void func_00102DE8(char *self)
         ((cObjBase *)self)->addNullSpeed(one);
     }
 }
-
-// DRAFT: GAME 0x10CC58
-// diff: 8 words; original fills the beq delay slot with daddu a0,s0 and calls func_00123938 with addiu a1 after the four stores.
-extern "C" void func_0010CC58(char *self)
-{
-    switch (B(0x2F6)) {
-    case 0: {
-        *(short *)(self + 0x5E0) = 0;
-        *(short *)(self + 0x5E2) = 0;
-        char *t = *(char **)(self + 0x304);
-        func_002A8578(self, *(int *)(t + 0x220) + (int)t, *(int *)(t + 0x278) + (int)t, 3, 0.0f, 0, 0);
-        *(int *)(self + 0x15B0) = 0x10;
-        B(0x2F6) = B(0x2F6) + 1;
-    }
-    case 1:
-        *(float *)(self + 0x15F0) = D_003BD48C;
-        if (*(int *)(self + 0x15B0)) {
-            *(int *)(self + 0x15B0) = *(int *)(self + 0x15B0) - 1;
-            func_00124E68(self, 0.19634954f);
-        }
-        if (moveMotion((cObjBase *)self)) {
-            B(0x2F4) = 0;
-            B(0x2F5) = 0;
-            B(0x2F6) = 0;
-            B(0x2F7) = 0;
-            func_00123938(self, 1);
-        }
-    }
-}
 #endif

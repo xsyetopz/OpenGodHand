@@ -187,25 +187,6 @@ extern "C" void *malloc(unsigned n)
     return r;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3A93A8
-// diff: original loops lb/bnez with lbu in delay slot and movz after xor; ours emits bnel and different schedule
-extern "C" char *strrchr(char *s, int c)
-{
-    char ch = c;
-    char *r = 0;
-    if (*s) {
-        do {
-            unsigned char u = *(unsigned char *)s;
-            if ((char)u == ch)
-                r = s;
-            s++;
-        } while (*s);
-    }
-    return *s == ch ? s : r;
-}
-#endif
-
 // FUNCTION: GAME 0x3A80A8
 extern "C" void func_003A80A8(void *)
 {
@@ -265,16 +246,3 @@ extern "C" int func_003ADF50(void *self, int a1)
     return r;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3A6130
-// diff: original has a nop between lw a0,0x54(s0) and lw v0,0x38(a0); ours has none (4 bytes short); volatile member, volatile local and temp-after-load variants tried, no change
-extern "C" int func_003A6130(Fq *self)
-{
-    if (!self->m_54)
-        self->m_54 = (Rn *)_impure_ptr;
-    Rn *p = self->m_54;
-    if (!p->m_38)
-        func_003A61F0(p);
-    return self->m_e;
-}
-#endif

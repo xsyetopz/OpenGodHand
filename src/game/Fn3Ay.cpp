@@ -57,61 +57,6 @@ extern "C" long func_003AE128(int *self, int a1, int a2, int a3)
 }
 
 // Round 26.
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3A93F8
-// diff: original indexes t[j]/s[j] with addu a3 (no strength reduction); ours strength-reduces to a pointer (124 vs 116 bytes); unsigned index and s[i+j] forms also fail
-extern "C" char *func_003A93F8(char *s, char *t)
-{
-    if (!*s)
-        return *t ? 0 : s;
-    for (; *s; s++) {
-        char c = *t;
-        if (!c)
-            return s;
-        if (c == *s) {
-            int j = 0;
-            for (;;) {
-                j++;
-                char d = t[j];
-                if (!d)
-                    return s;
-                if (d != s[j])
-                    break;
-            }
-        }
-    }
-    return 0;
-}
-
-#endif
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3A95A8
-// diff: 3 words, the i=0 / q=s+n / p=s setup instructions are scheduled in a different order; p,q,i declaration order and plain initialisers tried
-extern "C" char *func_003A95A8(char *s)
-{
-    int n = 0;
-    while (s[n])
-        n++;
-    n--;
-    if (n > 0) {
-        char *q = s + n;
-        char *p = s;
-        int i = 0;
-        do {
-            unsigned char c = *q;
-            char d = *p;
-            i++;
-            n--;
-            *p = c;
-            *q = d;
-            p++;
-            q--;
-        } while (i < n);
-    }
-    return s;
-}
-#endif
 
 extern "C" int func_003AD0F8(int);
 

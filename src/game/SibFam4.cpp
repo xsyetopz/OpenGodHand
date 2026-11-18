@@ -237,18 +237,6 @@ void initData__10cCockPlBar(char *w)
     v->fn(w + v->delta);
 }
 
-// DRAFT: GAME 0x195980
-// diff: 5 words, ptr/delta/fn registers allocated v0/v1/a1 instead of v1/a1/v0
-#ifdef NONMATCHING
-void func_00195980(char *w)
-{
-    VEnt *v = &(*(VEnt **)(w + 0x214))[13];
-    int d = v->delta;
-    void (*f)(void *) = v->fn;
-    f(w + d);
-}
-#endif
-
 // FUNCTION: GAME 0x374548
 void func_00374548(int **p)
 {

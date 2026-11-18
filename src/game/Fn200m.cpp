@@ -25,54 +25,8 @@ extern "C" char *func_002017A8(char *self)
 }
 #endif
 
-struct Slot2 {
-    int a;
-    int key;
-    char pad[0x7C];
-    void *res;
-};
-struct Pool2 {
-    Slot2 *cur;
-    Slot2 slots[0x20];
-};
-
-extern "C" void func_00324008();
-extern "C" void func_002018F0(void *);
 extern "C" void func_00201290(void *);
 extern "C" void func_00201228(void *, void *);
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x200F50 - result and cur swap v1/a0
-extern "C" int func_00200F50(Pool2 *self, int key)
-{
-    int r = 0;
-    Slot2 *c = self->cur;
-    if (c == 0)
-        return 0;
-    if (c->key == key) {
-        if (c->res != 0) {
-            func_00324008();
-            func_002018F0(self);
-        }
-        self->cur = 0;
-        func_00201290(self);
-        r = 1;
-    } else {
-        Slot2 *s = self->slots;
-        int *k = &self->slots[0].key;
-        int *end = &self->slots[0x20].key;
-        do {
-            if (*k == key) {
-                func_00201228(self, s);
-                r = 1;
-            }
-            k += 0x22;
-            s++;
-        } while ((int)k < (int)end);
-    }
-    return r;
-}
-#endif
 
 class cHeap;
 void *_MemoryAlloc(unsigned int, unsigned int, cHeap &);

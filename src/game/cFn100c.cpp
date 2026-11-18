@@ -77,24 +77,6 @@ extern "C" void func_0013DF70(char *self)
 
 extern "C" void func_001331B8(void *, long);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1332D0
-// diff: char->long widening emits lbu+dsll32/dsra32; original shifts the lb result directly with dsllv (22 words)
-extern "C" void SetCollEnable__16cCollisionScrollPCcb(void *self, const signed char *s, int)
-{
-    long m = 0;
-    if (*s) {
-        int i = 0;
-        do {
-            m |= (long)*s << (i * 8);
-            i++;
-            s++;
-        } while (i < 8 && *s);
-    }
-    func_001331B8(self, m);
-}
-#endif
-
 extern "C" void SetEffectParts__F12eEffDataType6eEffIdP4cObjiffffi(int, int, void *, int, float, float, float, float, int);
 extern "C" void KillEffect__FPC4cObji13eEspEraseMode(void *, int, int);
 

@@ -66,7 +66,6 @@ public:
 };
 extern "C" void func_001331B8(cCollisionScroll *, long, bool);
 
-// FUNCTION: GAME 0x1332D0
 void cCollisionScroll::SetCollEnable(const char *name, bool on)
 {
     long key = 0;
@@ -133,7 +132,6 @@ public:
     char *m_ent;
 };
 
-// FUNCTION: GAME 0x133330
 void cCollisionScroll2::SetLayerCollEnable(unsigned char layer, bool on)
 {
     if (!m_h)
@@ -149,40 +147,5 @@ void cCollisionScroll2::SetLayerCollEnable(unsigned char layer, bool on)
                 *(unsigned *)(e + 0x10) |= 2;
         }
     }
-}
-#endif
-
-// DRAFT: GAME 0x133AA8 - 23 words: original schedules the six adds/subs interleaved with the lw flags and stores max.x, min.xyz, max.yz in that order; mine stores in a different order and is one nop short
-#ifdef NONMATCHING
-extern "C" void sceVu0ApplyMatrix(float *, float *, float *);
-
-class cFn130Box {
-public:
-    char _pad0[8];
-    unsigned m_flags;
-    char _padC[4];
-    float m_min[3];
-    char _pad1C[4];
-    float m_max[3];
-    char _pad2C[0x40 - 0x2C];
-    float *m_mat;
-    char _pad44[0xC];
-    float m_in[4];
-    float m_out[4];
-    float m_r;
-};
-
-// FUNCTION: GAME 0x133AA8
-extern "C" void func_00133AA8(cFn130Box *b)
-{
-    sceVu0ApplyMatrix(b->m_out, b->m_mat, b->m_in);
-    float r = b->m_r;
-    b->m_max[0] = b->m_out[0] + r;
-    b->m_flags &= ~3u;
-    b->m_min[0] = b->m_out[0] - r;
-    b->m_min[1] = b->m_out[1] - r;
-    b->m_min[2] = b->m_out[2] - r;
-    b->m_max[1] = b->m_out[1] + r;
-    b->m_max[2] = b->m_out[2] + r;
 }
 #endif

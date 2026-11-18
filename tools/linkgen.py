@@ -20,7 +20,9 @@ the build and the progress tools can tell which functions are linked.
 
 A switch function whose only data reference is its own `.rodata` jump table
 (see `jump_table`) also places that section at the original `jtbl_` unit's
-address, replacing `asm/data/rodata/<addr>.o`.
+address, replacing `asm/data/rodata/<addr>.o`. A function whose only data
+reference is a reloc-free `.rodata` section equal to a run of original rodata
+units (see `rodata_span`) places that section over the run the same way.
 """
 
 from __future__ import annotations
@@ -100,6 +102,33 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, tables: li
     return None
 
 
+def rodata_span(obj: Path, name: str, raw: bytes, units: list[tuple[int, int]]) -> list[int] | None:
+    """Return the original rodata units (addresses, ascending) that the object's
+    `name` section reproduces byte for byte, or None.
+
+    Only a section without relocations of its own qualifies (floats, strings,
+    constant tables), so its bytes are final before linking. They must equal
+    the original bytes at a unit boundary and end on one, and be aligned to
+    the section's alignment; linkgen places the section at the first unit and
+    drops the covered ones."""
+    with obj.open("rb") as f:
+        elf = ELFFile(f)
+        sec = elf.get_section_by_name(name)
+        if sec is None or elf.get_section_by_name(".rel" + name) or elf.get_section_by_name(".rela" + name):
+            return None
+        data = sec.data()
+        align = max(sec["sh_addralign"], 1)
+    if not data:
+        return None
+    ends = {v + sz for v, sz in units}
+    for n, (uv, _sz) in enumerate(units):
+        if uv % align or uv + len(data) not in ends:
+            continue
+        if raw[uv + fncmp.TEXT_OFF : uv + fncmp.TEXT_OFF + len(data)] == data:
+            return [v for v, _s in units[n:] if v < uv + len(data)]
+    return None
+
+
 def known_symbols(cfg) -> set[str]:
     """Every name the final link defines without compiled code."""
     names = {n for row in cfg["sections"] for _v, _s, n in configure.read_units(row[4])}
@@ -167,6 +196,10 @@ def main() -> int:
     status: dict[int, str] = {}
     refs: dict[int, set[str]] = {}
     jtbl: dict[int, tuple[int, str]] = {}
+    ro_span: dict[int, tuple[str, list[int]]] = {}
+    ro_units = [(v, sz) for row, units in sections if row[0] == ".rodata" for v, sz, _n in units]
+    ro_names = {v: n for row, units in sections if row[0] == ".rodata" for v, _sz, n in units}
+    absolute: dict[str, int] = {}
     for vram, obj, sym in cfg["compiled"]:
         status[vram] = "match" if matches(ROOT / obj, vram, sym, spans[vram], raw) else "differ"
         refs[vram] = local_refs(ROOT / obj, sym, known)
@@ -175,6 +208,12 @@ def main() -> int:
             if jt:
                 jtbl[vram] = jt
                 refs[vram].discard(jt[1])
+            elif len(refs[vram]) == 1 and next(iter(refs[vram])).startswith(".rodata"):
+                name = next(iter(refs[vram]))
+                span_units = rodata_span(ROOT / obj, name, raw, ro_units)
+                if span_units:
+                    ro_span[vram] = (name, span_units)
+                    refs[vram].clear()
     # A reference to another function section resolves only if that function
     # is linked as well; drop unresolvable matches until none remain.
     while True:
@@ -195,6 +234,12 @@ def main() -> int:
             placed[vram] = (gated(obj), f".text.{sym}")
             if vram in jtbl:  # the jump table replaces the asm .rodata unit
                 placed[jtbl[vram][0]] = (gated(obj), jtbl[vram][1])
+            if vram in ro_span:  # a constant section replaces its asm units
+                first, *rest = ro_span[vram][1]
+                placed[first] = (gated(obj), ro_span[vram][0])
+                placed.update({u: configure.DROP for u in rest})
+                # asm code still names the dropped units' labels: pin them.
+                absolute.update({ro_names[u]: u for u in ro_span[vram][1]})
         rows.append(f"{vram:08X}\t{status[vram]}\t{sym}\n")
     # Every function not placed is weakened, annotated or not, so the asm
     # unit of the same name wins and work in progress cannot clash with it.
@@ -205,7 +250,7 @@ def main() -> int:
     for obj, syms in weak.items():
         subprocess.check_call([objcopy, *(f"--weaken-symbol={s}" for s in syms), obj, gated(obj)], cwd=ROOT)
 
-    script.write_text(configure.linker_script(sections, placed))
+    script.write_text(configure.linker_script(sections, placed, absolute))
     (ROOT / "build/linkgen.tsv").write_text("".join(rows))
     differ = [r.split("\t")[2].strip() for r in rows if "\tmatch\t" not in r]
     print(f"linkgen: {len(placed)} compiled functions linked, {len(differ)} kept in asm"

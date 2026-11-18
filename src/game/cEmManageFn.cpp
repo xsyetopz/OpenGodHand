@@ -150,15 +150,4 @@ void func_002962F0(char *self)
     func_00297660(self);
 }
 #endif
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2949E8
-// 1 word differs: first beql branch offset (+6 words, original +1)
-int func_002949E8(char *self, unsigned n)
-{
-    unsigned char m = irand__Fv() % n;
-    if ((irand__Fv() & 3) != 0 && *(char *)(self + 0x53F) < m) { *(unsigned char *)(self + 0x53F) = *(unsigned char *)(self + 0x53F) + 1; return 0; }
-    *(char *)(self + 0x53F) = 0;
-    return 1;
-}
-#endif
 }

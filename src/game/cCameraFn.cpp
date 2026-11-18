@@ -94,17 +94,6 @@ extern "C" void func_00138F98(char *p)
         pCamWork->move();
 }
 
-#ifdef NONMATCHING
-// 0x13C168 near-miss: original loads lbu and tests ((c ^ 1) & 1) == 0 before trans(); compiled folds to lb/bne with 1 in v1 (48 vs 44 bytes)
-// DRAFT: GAME 0x13C168
-extern "C" void func_0013C168(char *p)
-{
-    if (*(bool *)(p + 0x94) == true)
-        ((cIDBase *)p)->trans();
-}
-
-#endif
-
 extern "C" void func_00139180(int);
 extern int D_00747A78;
 extern "C" void resetAnim(void *) __asm__("resetAnim__7cIDBase");

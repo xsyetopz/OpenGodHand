@@ -30,32 +30,6 @@ float func_002C31D0(float x)
     return x;
 }
 
-// DRAFT: GAME 0x2CCB58
-// diff: 40 words, original keeps 1 in a1 and uses movz for the (f & 8) result; ours folds to sra/andi
-#ifdef NONMATCHING
-int func_002CCB58(Snd2C *self)
-{
-    self->m_c0 = self->m_bc;
-    int r = 0;
-    if (self->m_8c - 0x80 == *(int *)(Snd + 0x118))
-        r = (self->m_90 == *(int *)(Snd + 0x11C));
-    int ok = 1;
-    if (r == ok) {
-        self->m_98 |= 8;
-        self->m_bc = *(int *)(Snd + 0x120);
-        return ok;
-    }
-    unsigned f = self->m_98;
-    self->m_98 = f & ~8;
-    r = ok;
-    if (!(f & 8))
-        r = 0;
-    if (self->m_a4 != 0)
-        self->m_bc = self->m_a4->m_4;
-    return r;
-}
-#endif
-
 extern int D_00747A84;
 struct Node2C {
     Node2C *m_0;
@@ -103,4 +77,95 @@ void func_002CB080(Pool2C *self, Hdr2C *h)
         } while (p != 0);
     }
 }
+
+struct Quad2C {
+    float x0, z0, x1, z1, x2, z2, x3, z3, ymin, ymax;
+};
+struct Pt2C {
+    float x, y, z;
+};
+
+// DRAFT: GAME 0x2C0B38
+// diff: 31 words, float register allocation and tail branch layout of the quad containment test
+#ifdef NONMATCHING
+int func_002C0B38(Quad2C *q, Pt2C *p)
+{
+    float y = p->y;
+    if (y < q->ymin)
+        return 0;
+    if (q->ymax < y)
+        return 0;
+    float px = p->x - q->x0;
+    float pz = p->z - q->z0;
+    float e1x = q->x1 - q->x0;
+    float e1z = q->z1 - q->z0;
+    float e3x = q->x3 - q->x0;
+    float e3z = q->z3 - q->z0;
+    if (e1z * px < e1x * pz)
+        return 0;
+    if (e3x * pz < e3z * px)
+        return 0;
+    float dz = q->z2 - q->z0;
+    float dx = q->x2 - q->x0;
+    pz = pz - dz;
+    e1x = e1x - dx;
+    px = px - dx;
+    e1z = e1z - dz;
+    e3x = e3x - dx;
+    e3z = e3z - dz;
+    if (e1x * pz < e1z * px)
+        return 0;
+    return !(e3z * px < e3x * pz);
+}
+#endif
+
+struct Rec2C {
+    char _p[0x14];
+    short m_14;
+    char _p1[0x24 - 0x16];
+};
+struct Sort2C {
+    Rec2C *m_0;
+    char _p[0xC];
+    unsigned m_10;
+    signed char m_14[1];
+};
+
+// DRAFT: GAME 0x2C9950
+// diff: 14 words, register allocation only (a0/v1 vs v0/a0 in compare; a3/t0 swapped in backward pass)
+#ifdef NONMATCHING
+void func_002C9950(Sort2C *self)
+{
+    if (self->m_0 == 0 || self->m_10 == 0)
+        return;
+    int swapped;
+    do {
+        unsigned i = 0;
+        swapped = 0;
+        while (i < self->m_10 - 1) {
+            signed char a = self->m_14[i];
+            signed char b = self->m_14[i + 1];
+            if (self->m_0[b].m_14 < self->m_0[a].m_14) {
+                self->m_14[i] = self->m_14[i + 1];
+                self->m_14[i + 1] = a;
+                swapped = 1;
+            }
+            i++;
+        }
+        if (swapped) {
+            while (i >= 2) {
+                unsigned j = i - 1;
+                signed char a = self->m_14[i];
+                signed char b = self->m_14[j];
+                if (self->m_0[a].m_14 < self->m_0[b].m_14) {
+                    self->m_14[i] = self->m_14[j];
+                    self->m_14[j] = a;
+                    swapped = 1;
+                }
+                i = j;
+            }
+        }
+    } while (swapped);
+}
+#endif
 }

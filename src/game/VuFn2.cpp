@@ -112,30 +112,6 @@ extern "C" void func_001BD1A0(ObjH *a0)
         self->c4 = 2; self->c5 = 0; self->fl |= 1; self->c6 = 0; self->c7 = 0;
     }
 }
-// DRAFT: GAME 0x2EA798
-// diff: 21 words; original has 2 nops between mtc1 1.0f and div.s, branch to the 1.0f return is one word longer
-struct CamWork { char p0[0x210]; float pos[4]; };
-extern CamWork *pCamWork;
-float capVu0Length(const float *);
-extern "C" void func_002B6160(void *, void *);
-struct ObjI { char p0[0x2C8]; float k; };
-extern "C" float func_002EA798(ObjI *self)
-{
-    Sv16 a;
-    func_002B6160(&a, self);
-    Sv16 b;
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)b.v) : "r"(pCamWork->pos));
-    if (self->k != 0.0f) {
-        a.v[0] -= b.v[0]; a.v[1] -= b.v[1]; a.v[2] -= b.v[2];
-        float s = 1000.0f;
-        __asm__ volatile("lqc2 $vf4,%0\n\tmfc1 $t0,%1\n\tqmtc2.ni $t0,$vf5\n\tvmulx.xyz $vf4,$vf4,$vf5x\n\tsqc2 $vf4,%0" : "+m"(*(Qv *)a.v) : "f"(s) : "$8");
-        float d = capVu0Length(a.v) / self->k;
-        if (d > 1.0f) d = 1.0f;
-        if (d < 0.0f) d = 0.0f;
-        return 1.0f - d;
-    }
-    return 1.0f;
-}
 // DRAFT: GAME 0x138648
 // diff: 6 words; ApplyMatrix arg setup order and the &d pointer / ctor scheduling differ
 extern "C" void func_0030A8C8(void *, float *, float *, float *);

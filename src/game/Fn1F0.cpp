@@ -59,20 +59,6 @@ extern "C" int func_001FC198(char *p, unsigned a)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1FC360 - compiler emits srav/movn instead of sllv/movz
-extern "C" int func_001FC360(char *p, int bit)
-{
-    p = *(char **)p;
-    int r = 1;
-    if (!p)
-        return 0;
-    if (!(*(int *)(p + 0xB90) & (r << bit)))
-        r = 0;
-    return r;
-}
-#endif
-
 // FUNCTION: GAME 0x1FCDB8
 extern "C" void func_001FCDB8(char *p)
 {

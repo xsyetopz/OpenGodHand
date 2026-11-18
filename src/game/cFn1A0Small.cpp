@@ -102,21 +102,6 @@ extern "C" void func_001ACB50(F618 *self)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1B8030
-// diff: original branches (result in a0); gcc folds to movn (ternary, inline helper) or addu/sltu (&&); retries failed
-extern "C" int func_001B8030(H2FE *self)
-{
-    int h = self->m_h;
-    int r;
-    if (h < 0x3C0)
-        r = 0;
-    else
-        r = h < 0x400;
-    return r;
-}
-#endif
-
 // FUNCTION: GAME 0x1AA500
 extern "C" void func_001AA500(A9E0 *self)
 {

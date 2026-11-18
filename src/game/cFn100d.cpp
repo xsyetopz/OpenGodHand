@@ -30,16 +30,6 @@ extern "C" void func_00134458(char *self, int flag)
         func_0030F5A0(self);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x12C4F0
-// diff: original keeps ld result in v0 and ends with li 1 + movn; compiled uses a1 and bne/branches (8-9 words).
-extern "C" int func_0012C4F0(char *self)
-{
-    unsigned long m = *(unsigned long *)(self + 0x2F0) & 0xFFFF00000000UL;
-    return m == (0xC020UL << 27) || m == (0xA020UL << 27);
-}
-#endif
-
 extern "C" void *func_0012B328(void *);
 extern "C" void SetParent__8cOmThrowP8cGameObj(void *, void *);
 extern "C" void *Getplayer__Fv(void);

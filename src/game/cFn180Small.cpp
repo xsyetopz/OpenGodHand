@@ -49,15 +49,3 @@ void cOm1f::setHomePos(const cVec &v)
         h->z = v.z;
     }
 }
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x195980
-// diff: register allocation (adj/fn in v1/a1 vs a1/v0)
-extern "C" void func_00195980(char *self)
-{
-    VT *vt = *(VT **)(self + 0x214);
-    int adj = vt->m_adj;
-    void (*fn)(void *) = vt->m_fn;
-    fn(self + adj);
-}
-#endif

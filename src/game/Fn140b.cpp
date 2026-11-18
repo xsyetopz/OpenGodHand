@@ -81,30 +81,6 @@ extern "C" void func_00145410(char *self)
     }
 }
 
-// DRAFT: GAME 0x148200
-// diff: 1.0f stores at 0x14/0x38 get hoisted by the scheduler; original keeps source order (9-14 words differ per permutation).
-#ifdef NONMATCHING
-extern "C" void func_00148200(float *self, float a, float b)
-{
-    self[8] = a;
-    self[9] = b;
-    self[10] = 1.0f;
-    self[15] = 0;
-    self[0] = 1.0f;
-    self[1] = 0;
-    self[2] = 0;
-    self[3] = 0;
-    self[4] = 0;
-    self[6] = 0;
-    self[7] = 0;
-    self[11] = 0;
-    self[12] = 0;
-    self[13] = 0;
-    self[5] = 1.0f;
-    self[14] = 0;
-}
-#endif
-
 extern "C" {
 char *getMeshPtr__6cModeli(void *self, int i);
 void func_002A9680(void *heap, void *p);

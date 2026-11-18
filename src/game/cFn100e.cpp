@@ -1,44 +1,6 @@
 #include "cFn100Decl.h"
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x13F558
-// diff: original keeps one v0 = self+n*4 and copies it to a0/a1; compiled uses distinct regs (~12 words).
-extern "C" void func_0013F558(char *self, char *o)
-{
-    if ((D_00747A84 & 0x20000000) == 0) {
-        if ((*(unsigned *)(o + 0x2F0) & 0x1000) == 0) {
-            unsigned char n = self[0x358];
-            if (n < 5) {
-                char *v = self + n * 4;
-                *(char **)(v + 0x250) = o;
-                char *w = v;
-                *(char **)(w + 0x35C) = self + (n * 0x50 + 0xC0);
-                *(int *)(v + 0xA8) = 0;
-                self[0x358] = self[0x358] + 1;
-            }
-        }
-    }
-}
-#endif
-
 extern char *CoreSave;
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x13DAE0
-// diff: 2 words; original's third test is a plain beqz to the shared epilogue, compiled emits beql with a duplicated epilogue.
-extern "C" void func_0013DAE0(char *self)
-{
-    unsigned f = D_00747A84;
-    if ((f & 0x8000000) == 0) {
-        if (f & 0x2000000)
-            return;
-        if (*(unsigned *)(CoreSave + 0x14) & 0x4000000) {
-            trans__7cIDBase(self + 0xD0);
-            trans__7cIDBase(self);
-        }
-    }
-}
-#endif
 
 extern "C" void func_00138CA8(char *self, char *dst, char *src, unsigned char m);
 extern "C" void reset__7cCamera(void *);
@@ -201,20 +163,3 @@ extern unsigned short D_00747A50;
 extern char g_SceAt[];
 extern "C" int func_002C2568(void *, int, int);
 extern "C" void func_002DBE98(void);
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x12C758
-// diff: original uses a1=self and a leaf-style 0x10 frame with v0=0 set in the first branch delay slot; compiled differs in regs and branch-likely use.
-extern "C" int func_0012C758(char *self)
-{
-    if (D_00747A50 == 0x608) {
-        if (*(int *)(self + 0x698) == 0 && *(int *)(self + 0x6A0) == 0) {
-            if (func_002C2568(g_SceAt, *(int *)(self + 0xF0), 0) == 1) {
-                func_002DBE98();
-                return 1;
-            }
-        }
-    }
-    return 0;
-}
-#endif

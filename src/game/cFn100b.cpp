@@ -90,25 +90,6 @@ extern "C" void func_0013EBA0(char *self)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x13F510
-// diff: first two prologue insns (lui a1 / addiu v1) swapped
-extern "C" void func_0013F510(char *self)
-{
-    short i;
-    int *p;
-    for (p = (int *)(self + 0xB8), i = 4; i >= 0; i--) {
-        p[0x6A] = 0;
-        ((float *)p)[0x86] = 1.0f;
-        p[0] = 0;
-        p--;
-    }
-    *(int *)(self + 0xA0) = 0;
-    self[0x358] = 0;
-    self[0x384] = 0;
-}
-#endif
-
 extern "C" void sceVu0ApplyMatrix(void *, void *, void *);
 
 #ifdef NONMATCHING
