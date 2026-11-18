@@ -9,7 +9,7 @@ extern const char D_0045FC90[];
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3AE598
-// diff: 3 words; the null-checked CHECK_INIT gives the nop and 404 bytes, but adds a beqz on the reent (v1) before the sw that the original lacks
+// diff: 3 words; the null-checked CHECK_INIT gives the nop and 404 bytes but adds a beqz on the reent before the sw; dropping the check loses the nop too (88 words)
 int func_003AE598(int c, FILE *fp)
 {
     if (c == EOF)

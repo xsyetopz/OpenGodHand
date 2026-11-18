@@ -11,15 +11,15 @@ int vfprintf_(FILE *, const char *, __VALIST) __asm__("func_003A9D88");
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3A6A20
-// diff: 14 words: va_start must yield &saved-a1 (sp+0x58); __builtin_next_arg yields sp+0x90 and reorders prologue stores
+// diff: 13 words: ap = next_arg(fmt) - 0x38 now gives sp+0x58; remaining: original reloads _impure_ptr after the _data store and orders sd ra before sd a2/daddu a1
 int printf(const char *fmt, ...)
 {
     int ret;
     va_list ap;
 
-    va_start(ap, fmt);
-    stdout->_data = _REENT;
-    ret = vfprintf(stdout, fmt, ap);
+    ap = (va_list)((char *)__builtin_next_arg(fmt) - 0x38);
+    _stdout_r(_REENT)->_data = _REENT;
+    ret = vfprintf(_stdout_r(_REENT), fmt, ap);
     va_end(ap);
     return ret;
 }

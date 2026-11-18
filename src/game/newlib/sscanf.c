@@ -14,7 +14,7 @@ unsigned strlen(const char *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3A6CE0
-// diff: va_start prologue differs (see printf.c)
+// diff: 21 words with ap = next_arg(fmt) - 0x30 before the call (140 vs 152 bytes); see printf.c
 int func_003A6CE0(const char *str, const char *fmt, ...)
 {
     int ret;
@@ -27,7 +27,7 @@ int func_003A6CE0(const char *str, const char *fmt, ...)
     f._read = (int (*)())eofread_;
     f._ub._base = 0;
     f._lb._base = 0;
-    va_start(ap, fmt);
+    ap = (va_list)((char *)__builtin_next_arg(fmt) - 0x30);
     ret = __svfscanf_(&f, fmt, ap);
     va_end(ap);
     return ret;

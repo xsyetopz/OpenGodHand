@@ -26,7 +26,7 @@ void func_0031C438(void)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x31D928 (12 words differ: p/q register roles are swapped against the original loop, which also leaves one more nop-free delay slot)
+// DRAFT: GAME 0x31D928 (11 words differ: structure matches, but p/q take a1/a2 where the original uses a2/a1)
 extern int D_003C4030[];
 extern int func_0031D778(unsigned, int *);
 
@@ -35,15 +35,16 @@ int func_0031D928(unsigned n)
     int c = 0x14;
     int a = func_0031D778(n, &c);
     if (c != 1) {
-        char *p, *q;
+        char *p = (char *)a + n;
+        char *q;
         int i;
-        p = (char *)a + n;
         D_003C4030[((n + 7) >> 3) - 1] = (int)p;
         q = p;
-        for (i = 1; c - 1 != i; i++) {
-            p = q + n;
+        p = q + n;
+        for (i = 1; i != c - 1; i++) {
             *(int *)q = (int)p;
             q = p;
+            p = q + n;
         }
         *(int *)q = 0;
     }
@@ -98,4 +99,49 @@ void func_0031D2F8(char *o, int i)
         func_0014B640(o, h, &bb);
         _$_12cBoundingBox(&bb, 2);
     }
+}
+
+struct D { unsigned char flag; char p0[3]; int a4; int n8; int aC; int n10; int a14; int n18; };
+struct S { int n0; int o4; int n8; int oC; int n10; int o14; };
+struct E { char p[0x10]; int v; char q[0xC]; };
+extern void *memcpy(void *, const void *, unsigned);
+
+// FUNCTION: GAME 0x31C238
+void func_0031C238(struct D *d, struct S *s, int base)
+{
+    int i;
+    if (d->flag == 0) {
+        d->aC = base + s->o4;
+        d->a4 = base + s->oC;
+        d->a14 = base + s->o14;
+    } else {
+        memcpy((void *)d->aC, (void *)(base + s->o4), s->n0 << 5);
+        memcpy((void *)d->a4, (void *)(base + s->oC), s->n8 * 12);
+        memcpy((void *)d->a14, (void *)(base + s->o14), s->n10 << 1);
+    }
+    d->n10 = s->n0;
+    d->n8 = s->n8;
+    d->n18 = s->n10;
+    for (i = 0; i < d->n10; i++)
+        ((struct E *)d->aC)[i].v += d->a14;
+}
+
+extern int func_0031CA58(int);
+extern void Draw_Line_sc__FPA3_fUiUib(float (*)[3], unsigned, unsigned, int);
+
+// FUNCTION: GAME 0x31CA88
+void func_0031CA88(short *pts, short n, int c, unsigned z)
+{
+    float buf[n][4];
+    int k = n;
+    float (*q)[4] = buf;
+    do {
+        (*q)[0] = pts[0];
+        (*q)[1] = pts[1];
+        (*q)[2] = z;
+        (*q)[3] = 1.0f;
+        pts += 2;
+        q++;
+    } while (--k);
+    Draw_Line_sc__FPA3_fUiUib((float (*)[3])buf, n - 1, func_0031CA58(c), 1);
 }

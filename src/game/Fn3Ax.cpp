@@ -43,12 +43,6 @@ extern "C" void func_003A6A88(void)
     func_003A6020();
 }
 
-// FUNCTION: GAME 0x3A7C28
-extern "C" double atof(const char *s)
-{
-    return strtod(s, 0);
-}
-
 // FUNCTION: GAME 0x3A6290
 extern "C" void func_003A6290(void *self)
 {
@@ -95,12 +89,6 @@ extern "C" long func_003ACE90(void *, const char *, char **, int);
 extern "C" long func_003A9018(void *, const char *, char **, int);
 extern "C" void func_003AB188(void *, void *, int, int);
 extern "C" Pr *_Balloc(void *, int);
-
-// FUNCTION: GAME 0x3A7C48
-extern "C" int atoi(const char *s)
-{
-    return (int)strtol(s, 0, 10);
-}
 
 // FUNCTION: GAME 0x3AD130
 extern "C" void func_003AD130(void)
@@ -157,8 +145,6 @@ struct FreeNode {
 // Round 24.
 extern "C" void func_003A8048(void *);
 extern "C" void func_003A80A8(void *);
-extern "C" void func_003ACA28(void *, void *);
-extern "C" void *func_003AC2F8(void *, unsigned);
 extern "C" int GetThreadId(void);
 extern "C" int WaitSema(int);
 extern "C" int SignalSema(int);
@@ -169,23 +155,6 @@ extern int D_003FA990;
 extern int D_003FA994;
 extern int D_003FAF18;
 extern int D_0077DB88;
-
-// FUNCTION: GAME 0x3A7CC0
-extern "C" void free(void *p)
-{
-    func_003A8048(_impure_ptr);
-    func_003ACA28(_impure_ptr, p);
-    func_003A80A8(_impure_ptr);
-}
-
-// FUNCTION: GAME 0x3A7C70
-extern "C" void *malloc(unsigned n)
-{
-    func_003A8048(_impure_ptr);
-    void *r = func_003AC2F8(_impure_ptr, n);
-    func_003A80A8(_impure_ptr);
-    return r;
-}
 
 // FUNCTION: GAME 0x3A80A8
 extern "C" void func_003A80A8(void *)

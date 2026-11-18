@@ -5,11 +5,11 @@ static inline void sel(char *self, unsigned n)
 {
     *(unsigned short *)(self + 0x604) = n;
     switch ((unsigned short)n) {
-    case 0: setTexChange__7cOmBaseUi(self, 0); break;
-    case 1: setTexChange__7cOmBaseUi(self, 1); break;
-    case 2: setTexChange__7cOmBaseUi(self, 2); break;
-    case 3: setTexChange__7cOmBaseUi(self, 3); break;
-    case 4: break;
+    case 1: setTexChange__7cOmBaseUi(self, 0); break;
+    case 2: setTexChange__7cOmBaseUi(self, 1); break;
+    case 3: setTexChange__7cOmBaseUi(self, 2); break;
+    case 4: setTexChange__7cOmBaseUi(self, 3); break;
+    case 0: break;
     }
 }
 

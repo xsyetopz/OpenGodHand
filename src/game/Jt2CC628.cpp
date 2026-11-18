@@ -24,15 +24,15 @@ extern "C" void func_002CC628(char *self)
             func_003739A0(self, 0, Snd.v);
     }
     switch (*(unsigned *)(self + 0x94)) {
-    case 1:
-    case 5:
-        func_002CD1D0(self);
+    case 3:
+        func_002CCBF8(self);
         break;
     case 2:
         func_002CCD80(self);
         break;
-    case 3:
-        func_002CCBF8(self);
+    case 1:
+    case 5:
+        func_002CD1D0(self);
         break;
     case 4:
         func_002CD310(self);

@@ -134,3 +134,38 @@ void func_00321378(int a, int b, int c)
     *q = n;
 }
 #endif
+
+extern void func_0031DA48(void);
+extern void _cleanup(void);
+extern void _exit(int);
+
+// FUNCTION: GAME 0x31DB70
+void func_0031DB70(int code)
+{
+    func_0031DA48();
+    _cleanup();
+    _exit(code);
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x31DA48 (5 words differ: original loads the target from p[-1] in v1 and stores the advanced pointer in the jalr delay slot)
+extern void (**D_003C4080)(void);
+void func_0031DA48(void)
+{
+    while (*D_003C4080) {
+        void (*f)(void) = *D_003C4080;
+        D_003C4080++;
+        f();
+    }
+}
+
+// DRAFT: GAME 0x31CEB8 (14 words differ: 2.9 turns the final call into a tail jump; the original keeps jal plus sd/ld $ra)
+extern void func_0030F2B0(unsigned);
+extern int D_00747B10, D_00747B14;
+void func_0031CEB8(void)
+{
+    D_00747B10 = 0x3124;
+    D_00747B14 = 0x66B;
+    func_0030F2B0(0xD8A9523D);
+}
+#endif

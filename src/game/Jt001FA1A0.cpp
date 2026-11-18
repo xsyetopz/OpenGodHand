@@ -7,8 +7,7 @@ extern "C" int getGameDifficulty__9cCoreSave();
 extern "C" int getGameLevel__9cCoreSave(Jc *);
 extern "C" void setGameLevel__9cCoreSavei(Jc *, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1FA1A0 - 2 words differ: g_CasinoWork load is lw+srl, original is lwu+dsra.
+// FUNCTION: GAME 0x1FA1A0
 extern "C" void func_001FA1A0(Jc *self)
 {
     if (self->m_0 == 0)
@@ -16,7 +15,9 @@ extern "C" void func_001FA1A0(Jc *self)
     if (getGameDifficulty__9cCoreSave() == 2)
         return;
     if (CoreSave->m_14 & 0x4000000) {
-        if (((unsigned long)(unsigned)g_CasinoWork >> 1 & 1) == 0)
+        long t = (unsigned)g_CasinoWork;
+        t >>= 1;
+        if ((t & 1) == 0)
             return;
     }
     switch (getGameLevel__9cCoreSave(self)) {
@@ -36,4 +37,3 @@ extern "C" void func_001FA1A0(Jc *self)
         break;
     }
 }
-#endif

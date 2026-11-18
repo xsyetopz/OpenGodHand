@@ -11,9 +11,7 @@
 int vfprintf_(FILE *, const char *, __VALIST) __asm__("func_003A9D88");
 #define vfprintf vfprintf_
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3A6C58
-// diff: va_start yields sp+0xE0 instead of &saved-a2 (sp+0xB0); prologue store order differs
+// FUNCTION: GAME 0x3A6C58
 int sprintf(char *str, const char *fmt, ...)
 {
     int ret;
@@ -24,10 +22,9 @@ int sprintf(char *str, const char *fmt, ...)
     f._bf._base = f._p = (unsigned char *)str;
     f._bf._size = f._w = INT_MAX;
     f._data = _REENT;
-    va_start(ap, fmt);
+    ap = (va_list)((char *)__builtin_next_arg(fmt) - 0x30);
     ret = vfprintf(&f, fmt, ap);
     va_end(ap);
     *f._p = 0;
     return ret;
 }
-#endif

@@ -117,7 +117,8 @@ extern "C" void SetDamageCollActive__11cDamageUnitb(void *, int);
 extern "C" void SetDmgGiveHitVec__11cDamageGiveRC4cVec(void *, void *);
 extern char ZeroVec[];
 
-// FUNCTION: GAME 0x262980
+// DRAFT: GAME 0x262980 - 31 words differ from the original (fncmp); the FUNCTION claim was false
+#ifdef NONMATCHING
 extern "C" void func_00262980(Eh *self)
 {
     DmgU *u;
@@ -131,6 +132,7 @@ extern "C" void func_00262980(Eh *self)
     self->m_680->m_40 = -1;
     self->m_680->m_44 = 0;
 }
+#endif
 
 // FUNCTION: GAME 0x262A10
 extern "C" int func_00262A10(Eh *self)
@@ -174,7 +176,8 @@ struct Ev {
     else                            \
         self->m_16FC = -0.2617994f;
 
-// FUNCTION: GAME 0x26A338
+// DRAFT: GAME 0x26A338 - 30 words differ from the original (fncmp); the FUNCTION claim was false
+#ifdef NONMATCHING
 extern "C" void func_0026A338(Ev *self)
 {
     int s = self->m_564;
@@ -187,3 +190,4 @@ extern "C" void func_0026A338(Ev *self)
     }
     self->m_1700++;
 }
+#endif

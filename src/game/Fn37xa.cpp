@@ -158,19 +158,6 @@ extern "C" void func_00374148(void **o, int, int)
         func_00336D08(*o);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3737C8
-// diff: 11 words; ours is 72 bytes, original fills the beql delay slot with return 0
-extern "C" int func_003737C8(Fn37Obj *o, int m)
-{
-    if (func_00373A50(o)) {
-        unsigned t = o->m_4C & m;
-        return t != 0;
-    }
-    return 0;
-}
-#endif
-
 // FUNCTION: GAME 0x373810
 extern "C" void func_00373810(Fn37Obj *o, int m)
 {
@@ -231,23 +218,6 @@ extern "C" void func_003734F0(Fn37Obj *o)
         o->m_4C &= 0xFFFFFFFDu;
     }
 }
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x373118
-// diff: 14 words; original copies o to t0 and keeps the old 0x4C in t1 (inlined init), ours reuses a0
-extern "C" int func_00373118(Fn37Obj3 *o, int a, int *p, int f)
-{
-    o->m_48 = 1;
-    o->m_74 = a;
-    o->m_7C = p[2];
-    o->m_6C = p[1];
-    if (f)
-        o->m_4C |= 0x11;
-    else
-        o->m_4C |= 1;
-    return 1;
-}
-#endif
 
 // FUNCTION: GAME 0x373560
 extern "C" void func_00373560(Fn37Obj4 *o, float f, int a)

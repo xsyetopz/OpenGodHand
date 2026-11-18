@@ -14,7 +14,12 @@ void func_00348BE0(char *);
 int func_00344610(void);
 int func_00344648(int);
 void func_00344770(int *);
-int func_00345598(int);
+int func_00345598();
+typedef struct { char pad[0x20]; void (*f)(void *, int, int *); } V;
+typedef struct { V *vt; } O;
+int func_003B0040(int);
+extern char D_004578B8[];
+int func_003607C8(int, int);
 
 // FUNCTION: GAME 0x33FCD0
 char *func_0033FCD0(char *a)
@@ -95,5 +100,52 @@ void func_00344B28(char *a, char *b, int *c)
     }
     c[0x48 / 4] = s1;
     c[0x44 / 4] = s0;
+}
+
+// DRAFT: GAME 0x340318
+// diff: 5 words, sb/sw store order near the end differs from the original
+void func_00340318(char *a)
+{
+    a[1] = 0;
+    if (a[2] == 1) {
+        O *o;
+        do {} while (func_003B0040(*(int *)(a + 0x2C)) >= 0);
+        o = *(O **)(a + 4);
+        o->vt->f(o, 0, (int *)(a + 0xC));
+        *(int *)(a + 0xC) = 0;
+        o = *(O **)(a + 8);
+        *(int *)(a + 0x10) = 0;
+        o->vt->f(o, 1, (int *)(a + 0x14));
+        *(int *)(a + 0x14) = 0;
+        a[2] = 0;
+        *(int *)(a + 0x18) = 0;
+        *(int *)(a + 0x3C) += *(int *)(a + 0x10);
+    }
+}
+
+// DRAFT: GAME 0x344C98
+// diff: 7 words, branch layout (bnel/b vs beql) of the t==0 / t==3 cases differs
+int func_00344C98(int a, char *b, int c, int d)
+{
+    int r = 0;
+    int k;
+    unsigned t = *(unsigned *)(b + 0x58);
+    if (t < 3) {
+        if (t == 0) goto p;
+        r = 2;
+        goto done;
+    } else if (t == 3) {
+        if (b[0x6C] != 0) goto done;
+        r = 2;
+        goto done;
+    }
+p:
+    func_00348BE0(D_004578B8);
+done:
+    k = func_00345598();
+    if (k == 1) {
+        if (func_003607C8(c, d) == k) r = 2;
+    }
+    return r;
 }
 #endif

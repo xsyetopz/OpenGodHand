@@ -10,7 +10,7 @@ int func_00331E70();
 
 typedef struct S {
     char pad0[2];
-    char step;
+    signed char step;
     char padx;
     int state;
     char pad[0x10];
@@ -31,7 +31,7 @@ void func_00331900(S *o) {
     long r;
     int t;
     if (o->state == 1) {
-        switch ((unsigned)((char *)o)[2]) {
+        switch (o->step) {
         case 2:
             func_00331310(o);
             o->step = 0;

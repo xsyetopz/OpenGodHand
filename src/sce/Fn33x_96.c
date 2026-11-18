@@ -198,16 +198,14 @@ void func_00336D08(char *a, int b, int c) {
     o[0xF0 / 4] = c;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x33B6E8
-// diff: 1 word (va pointer is sp+0x80 from __builtin_next_arg; the original has sp+0x48, the saved a1 slot; the package has no stdarg.h)
+// FUNCTION: GAME 0x33B6E8
 void func_0033B6E8(const char *fmt, ...) {
-    char *ap = __builtin_next_arg(fmt);
+    char *ap;
     memset(D_003E9990, 0, 0x80);
+    ap = (char *)__builtin_next_arg(fmt) - 0x38;
     vsprintf(D_003E9990, fmt, ap);
     if (D_007588B0.f) D_007588B0.f(D_007588B0.a, D_003E9990);
 }
-#endif
 
 // FUNCTION: GAME 0x32BC98
 void func_0032BC98(char *s, char *name, int c, int d) {
