@@ -19,14 +19,17 @@ import hashlib
 import os
 import platform
 import shutil
+import struct
 import subprocess
 import sys
 import tarfile
+import urllib.error
 import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-URL = "https://github.com/decompme/compilers/releases/download/compilers/{}.tar.xz"
+URL = "https://github.com/decompme/compilers/releases/download/compilers/{}"
+SUFFIXES = (".tar.xz", ".tar.gz")
 PINNED = {
     "ee-gcc2.96": "0590d2ca9da8f5903889d66761220d14b47a8d14ba987ca53db84a1650a1fd0a",
 }
@@ -39,15 +42,27 @@ def ensure_toolchain(name: str) -> Path:
     if home.exists():
         return home
     home.parent.mkdir(parents=True, exist_ok=True)
-    archive = home.parent / f"{name}.tar.xz"
-    if not archive.exists():
-        print(f"eecc: downloading {URL.format(name)}", file=sys.stderr)
-        urllib.request.urlretrieve(URL.format(name), archive)
+    archive = next((p for sfx in SUFFIXES if (p := home.parent / f"{name}{sfx}").exists()), None)
+    if archive is None:
+        for sfx in SUFFIXES:
+            archive = home.parent / f"{name}{sfx}"
+            print(f"eecc: downloading {URL.format(name + sfx)}", file=sys.stderr)
+            try:
+                urllib.request.urlretrieve(URL.format(name + sfx), archive)
+                break
+            except urllib.error.HTTPError:
+                archive.unlink(missing_ok=True)
+            except urllib.error.URLError:
+                archive.unlink(missing_ok=True)
+                raise
+        else:
+            raise SystemExit(f"eecc: no package named {name}")
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     if name in PINNED and digest != PINNED[name]:
         archive.unlink()
         raise SystemExit(f"eecc: {archive.name} SHA-256 {digest}, expected {PINNED[name]}")
     home.mkdir()
+    print(f"eecc: {name} SHA-256 {digest}", file=sys.stderr)
     with tarfile.open(archive) as tar:
         tar.extractall(home, filter="tar")
     return home
@@ -61,6 +76,28 @@ def driver(home: Path) -> tuple[Path, list[str]]:
     for d in libs[:1] + [p for p in (home / "ee/bin", home / "mips64r5900el-ps2-elf/bin") if p.exists()]:
         bflags += ["-B", f"{d}/"]
     return gcc, bflags
+
+
+def fix_symtab_info(obj: Path) -> None:
+    """Set .symtab sh_info to one past the last local symbol.
+
+    ee-gcc 2.96's assembler counts locals before it appends `gcc2_compiled.`
+    and `__gnu_compiled_cplusplus`, so sh_info is too small and modern GNU ld
+    rejects the object. Only this header field changes.
+    """
+    raw = bytearray(obj.read_bytes())
+    shoff, = struct.unpack_from("<I", raw, 0x20)
+    shnum, = struct.unpack_from("<H", raw, 0x30)
+    for i in range(shnum):
+        sh = shoff + i * 40
+        sh_type, = struct.unpack_from("<I", raw, sh + 4)
+        if sh_type != 2:  # SHT_SYMTAB
+            continue
+        off, size, _link, info, _align, entsize = struct.unpack_from("<6I", raw, sh + 16)
+        last_local = max((n for n in range(size // entsize) if raw[off + n * entsize + 12] >> 4 == 0), default=0)
+        if info != last_local + 1:
+            struct.pack_into("<I", raw, sh + 28, last_local + 1)
+            obj.write_bytes(raw)
 
 
 def main() -> int:
@@ -83,7 +120,10 @@ def main() -> int:
             docker, "run", "--rm", "--platform", "linux/386", "-v", f"{ROOT}:{ROOT}", "-w", str(cwd),
             IMAGE, str(gcc), *gcc_args,
         ]
-    return subprocess.call(cmd)
+    rc = subprocess.call(cmd)
+    if rc == 0 and "-o" in argv and argv[argv.index("-o") + 1].endswith(".o"):
+        fix_symtab_info(Path(argv[argv.index("-o") + 1]))
+    return rc
 
 
 if __name__ == "__main__":

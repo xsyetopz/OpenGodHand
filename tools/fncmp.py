@@ -76,7 +76,7 @@ def main() -> int:
 
     size, name = units()[args.addr]
     sym = args.sym or name
-    obj = ROOT / "build/fncmp" / args.src.with_suffix(".o").name
+    obj = ROOT / "build/fncmp" / args.src.resolve().relative_to(ROOT).with_suffix(".o")
     obj.parent.mkdir(parents=True, exist_ok=True)
     pick = ["--compiler", args.compiler] if args.compiler else []
     cmd = [sys.executable, str(ROOT / "tools/eecc.py"), *pick, *shlex.split(args.flags), "-c", "-o", str(obj), str(args.src)]

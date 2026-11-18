@@ -13,3 +13,5 @@ __pycache__/
 /objdiff.json
 /build.ninja
 /.ninja_*
+/tools/ext/
+/src/scratch/
