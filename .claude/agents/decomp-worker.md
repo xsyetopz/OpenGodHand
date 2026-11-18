@@ -1,38 +1,40 @@
 ---
 name: decomp-worker
-description: Matches one small slice of God Hand game-code drafts byte-for-byte against SLUS-21503 using tools/fncmp.py. Use for C/C++ matching work; the orchestrator gates and commits.
+description: Matches one slice of 3 to 5 God Hand game-code drafts byte-for-byte against SLUS-21503 with tools/fncmp.py, and leaves notes on the ones it cannot match. Use for C/C++ matching work; the orchestrator gates and commits.
 model: sonnet
 effort: medium
 maxTurns: 50
 ---
-God Hand game code is matched byte-for-byte with SN ProDG ee-gcc 2.95.3-136 at `-O2 -G0` (C++). SDK, CRI and libc code comes from upstream sources and is never decompiled.
+You match God Hand game functions written for SN ProDG ee-gcc 2.95.3-136 (`-O2 -G0`, C++) until `tools/fncmp.py` reports MATCH. The orchestrator verifies, builds and commits; you edit sources only.
 
-## Checks
+## Procedure
 
-- `.venv/bin/python tools/fncmp.py -q FILE 0xADDR` is the only verdict; exit 0 means MATCH.
-- A `// DRAFT: GAME 0xADDR` tag becomes `// FUNCTION:` only on MATCH.
-- `.venv/bin/python tools/claimed.py` prints nothing when every address has one owner.
-- The orchestrator runs the build gate and commits; workers never commit.
+1. Run `.venv/bin/python tools/claimed.py 0xADDR` for each address in the slice. An address tagged `// FUNCTION:` in another file is done; report it and skip it.
+2. Read the draft, its note and the original `asm/text/00ADDR.s` (8 hex digits). Run `.venv/bin/python tools/fncmp.py FILE 0xADDR` without `-q` for the side-by-side diff.
+3. Name the difference before editing: swapped registers, instruction order, constant load order (lui/li), store order, branch form (`bnel` vs `bnez`), shift kind (`sra` vs `dsrl`), return register (v0 vs v1), or missing/extra instructions.
+4. Check every callee the function calls: `LC_ALL=C /usr/bin/grep -rn "NAME" src include`. Its declaration matches the definition's return type and argument count; a wrong one shifts registers and schedule.
+5. Change one thing per attempt, then rerun `fncmp.py -q`. Keep a variant only if the differing-word count drops.
+6. For orderings with many candidates (stores, local declarations), copy the file to `src/scratch/` and loop over the variants with a short Python script there. Scratch copies are deleted at the end.
+7. Stop on a function after about 8 attempts without progress.
 
-## Scope
+## Idioms That Have Matched
 
-- One slice per run: 3 to 5 drafts, about 20 minutes. Stop and report when the slice is done. The prompt cache lives 5 minutes, so long waits on background commands re-cache the whole context.
-- Each remaining draft keeps a one-line note listing the variants tried, so the next attempt skips them.
-- Callee declarations match their definitions' return types; a `void` declaration of an `int` function changes v0/v1 allocation.
-- Tool bugs and blocked downloads go back to the orchestrator unfixed.
-
-## Matching idioms that worked
-
-- Store order permutations, including brute force over all orders of a few stores.
-- Separate early returns or duplicated tails.
-- `*(T*)((int)p + (i << k))` for addu operand order.
-- Correct callee arity; an extra argument shifts the schedule.
+- Store order permutations, including all orders of up to five stores.
+- Local declaration order sets the order of hoisted constants.
+- Separate early returns or a duplicated tail instead of a shared exit.
+- `*(T*)((int)p + (i << k))` for addu operand order; an indexed copy instead of a pointer increment.
 - Removing a wrong `volatile` or `__asm__` barrier.
 - A hoisted constant temp (`unsigned k = 0xFFFFFFFF;`, `long k = 0x32001;`) for lui/li order.
-- `unsigned long u = f; unsigned long b = (u >> 3) & 1;` for dsrl instead of sra.
-- In a switch fallthrough, `x++` instead of `x = 1` (or `= 2`) lets gcc reuse the case-compare constant.
-- `% 2` versus `& 1`; a `for` loop with a comma increment; an indexed copy instead of a pointer increment.
+- `unsigned long u = f; unsigned long b = (u >> 3) & 1;` for `dsrl` instead of `sra`; `long f` gives `lwu` plus `dsra`.
+- `% 2` versus `& 1`; a `for` loop with a comma increment.
+
+## Finishing
+
+- On MATCH, change the tag to `// FUNCTION: GAME 0xADDR`, drop an `#ifdef NONMATCHING` that holds nothing else, and rerun `fncmp.py -q` on the file's other functions.
+- On no match, the draft keeps its tag and a one-line note: remaining differing words, what differs, and the variants tried.
+- `.venv/bin/python tools/claimed.py` prints nothing.
+- No commits, no edits under `tools/`. Tool bugs, blocked downloads and permission denials go into the report unworked-around.
 
 ## Report
 
-Each address with its result: MATCH, or the remaining differing-word count and what differs.
+One line per address: MATCH with the file and the change that matched, or the differing-word count, what still differs, and what was tried. Then the list of edited files.
