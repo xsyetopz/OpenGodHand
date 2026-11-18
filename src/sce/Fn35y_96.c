@@ -85,3 +85,91 @@ int func_00359E80(int a)
     if (func_0034DEC8(a) != 0) func_0034DD70(0, 0xFF000111);
     return *(int *)(a + 0x48);
 }
+
+int func_0035A0A0(int);
+int func_0035A1C8(int, int);
+void func_0035A518(int);
+void func_0035B058(int);
+void func_0035A6F8(int);
+int func_0035AE18();
+
+// DRAFT: GAME 0x35A000
+// regs s1/s2 swapped (4 words)
+#ifdef NONMATCHING
+void func_0035A000(int a, int b, int c)
+{
+    if (func_0035A0A0(a)) *(int *)(a + b * 4 + 0xA0C) = c;
+}
+#endif
+
+// DRAFT: GAME 0x35A050
+// regs s1/s2 swapped (4 words)
+#ifdef NONMATCHING
+void func_0035A050(int a, int b, int c)
+{
+    if (func_0035A0A0(a)) *(int *)(a + b * 4 + 0xB9C) = c;
+}
+#endif
+
+// FUNCTION: GAME 0x35A4D0
+void func_0035A4D0(int *a, int b)
+{
+    *a = 0;
+    func_0035A518((int)(a + 1));
+    a[9] = b;
+    a[10] = 1;
+}
+
+// FUNCTION: GAME 0x35A6A8
+void func_0035A6A8(int a)
+{
+    func_0035A6F8(a);
+    if (func_0035A1C8(a, 0x47) == 1) func_0035B058(a);
+}
+
+// DRAFT: GAME 0x35A7C8
+// orig if/else with nop delay, mine merges bnel (10 words)
+#ifdef NONMATCHING
+void func_0035A7C8(int a, int *b)
+{
+    if (func_0035A1C8(a, 0x47) == 1) {
+        b[0x2D0 / 4] = b[0x2A8 / 4];
+    } else {
+        b[0x2D0 / 4] = b[0x2DC / 4];
+    }
+}
+#endif
+
+// FUNCTION: GAME 0x35AC58
+int func_0035AC58(int a, int *b, int *c)
+{
+    int r = func_0035AE18(a);
+    if (r) {
+        *b = -2;
+        *c = 1;
+        return 0;
+    }
+    return r;
+}
+
+// DRAFT: GAME 0x35AE18
+// 12 words off, mine 84 vs 80 B
+#ifdef NONMATCHING
+int func_0035AE18(int a, int *b, int *c)
+{
+    int v = *(int *)(a + 0x48);
+    if (v == 4 || v == -4 || v == 6 || v == -6) return 1;
+    *b = -1;
+    *c = 1;
+    return 0;
+}
+#endif
+
+extern void *memset(void *, int, unsigned);
+// FUNCTION: GAME 0x35C480
+void func_0035C480(int a)
+{
+    memset((void *)(a + 0x18), 0, 0xF0);
+    *(int *)(a + 0x14) = 0;
+    *(int *)(a + 0x19C) += 1;
+}

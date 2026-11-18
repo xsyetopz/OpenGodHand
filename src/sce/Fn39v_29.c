@@ -44,7 +44,7 @@ void func_0039AA38(struct Hd *h)
 }
 
 // FUNCTION: GAME 0x39C218
-void func_0039C218(int a)
+void func_0039C218(const char *a)
 {
     scePrintf(D_0045E630, a);
 }
@@ -56,33 +56,65 @@ void func_003970C8(char *p, int n)
         *p++ = 0;
 }
 
-extern void func_0039C390(void *, const char *);
+struct Cx {
+    char _pad[0xC];
+    int m_C;
+    char _pad2[0x868 - 0x10];
+    void *m_868;
+};
+struct Msg {
+    int m_0;
+    const char *m_4;
+};
+extern void func_0039AB20(void *, struct Msg *);
+extern void func_003B1EE0(char *, int, const char *, int);
+void func_0039C390(struct Cx *, const char *);
 extern char D_0045E8B0[];
 extern char D_0045E8E0[];
 extern char D_0045E8F8[];
 extern char D_0045E930[];
 extern void func_0039E7C0(void);
 
+// FUNCTION: GAME 0x39C390
+void func_0039C390(struct Cx *c, const char *s)
+{
+    struct Msg m;
+    if (c->m_868 && c && c->m_C) {
+        m.m_0 = 0;
+        m.m_4 = s;
+        func_0039AB20(c->m_868, &m);
+    } else
+        func_0039C218(s);
+}
+
+// FUNCTION: GAME 0x39C3E8
+void func_0039C3E8(struct Cx *c, const char *fmt, int arg)
+{
+    char buf[256];
+    func_003B1EE0(buf, 256, fmt, arg);
+    func_0039C390(c, buf);
+}
+
 // FUNCTION: GAME 0x3A09F0
-void func_003A09F0(void *a)
+void func_003A09F0(struct Cx *a)
 {
     func_0039C390(a, D_0045E8B0);
 }
 
 // FUNCTION: GAME 0x3A0A00
-void func_003A0A00(void *a)
+void func_003A0A00(struct Cx *a)
 {
     func_0039C390(a, D_0045E8E0);
 }
 
 // FUNCTION: GAME 0x3A0BF8
-void func_003A0BF8(void *a)
+void func_003A0BF8(struct Cx *a)
 {
     func_0039C390(a, D_0045E8F8);
 }
 
 // FUNCTION: GAME 0x3A0C08
-void func_003A0C08(void *a)
+void func_003A0C08(struct Cx *a)
 {
     func_0039C390(a, D_0045E930);
 }
@@ -96,3 +128,65 @@ void func_003A0DE8(void)
         func_0039E7C0();
 }
 #endif
+
+struct Sx {
+    char _pad[0x108];
+    int m_108;
+    char _pad1[0x160 - 0x10C];
+    int m_160;
+    char _pad2[0x184 - 0x164];
+    int m_184;
+    char _pad3[0x1C8 - 0x188];
+    int m_1C8;
+    char _pad4[0x1D4 - 0x1CC];
+    int m_1D4;
+    int m_1D8;
+    char _pad5[0x1E4 - 0x1DC];
+    int m_1E4;
+    int m_1E8;
+    char _pad6[0x1F4 - 0x1EC];
+    int m_1F4;
+};
+extern void func_0039B130(struct Sx *, int, int);
+extern void func_0039B3F0(struct Sx *, int, int, int);
+
+// FUNCTION: GAME 0x39B8D0
+void func_0039B8D0(struct Sx *s, int n, int flag)
+{
+    int a1, a2;
+    if (flag) {
+        if (s->m_184 == 3) {
+            func_0039B130(s, s->m_160 == 3 ? s->m_1D4 : s->m_1C8, n - 1);
+        } else {
+            if (s->m_160 == 3) {
+                a1 = s->m_1E4;
+                a2 = s->m_1F4;
+            } else {
+                a1 = s->m_1D8;
+                a2 = s->m_1E8;
+            }
+            func_0039B3F0(s, a1, a2, n - 1);
+        }
+    }
+    if (s->m_108 == 1)
+        s->m_108 = 2;
+}
+
+extern int func_003B63A0(void);
+extern void func_003B63F0(void);
+#define REG(a) (*(volatile unsigned int *)(a))
+
+// FUNCTION: GAME 0x39C228
+void func_0039C228(void)
+{
+    int r = func_003B63A0();
+    REG(0x1000F590) = REG(0x1000F520) | 0x10000;
+    REG(0x1000B000) = 0;
+    REG(0x1000B400) = 0;
+    REG(0x1000F590) = REG(0x1000F520) & 0xFFFEFFFF;
+    if (r)
+        func_003B63F0();
+    REG(0x1000B020) = 0;
+    REG(0x1000B420) = 0;
+    REG(0x10002010) = 0x40000000;
+}

@@ -32,7 +32,7 @@ unsigned long func_0038F0F0(void *f, const void *d, ssize n) { return _IO_file_x
 extern int func_0038F3D8(void *);
 extern int func_003A6420(int);
 extern void func_003A5F68(int);
-extern int func_00393878(void *);
+extern int func_00393878();
 
 // FUNCTION: GAME 0x38EF80
 int func_0038EF80(void *fp) { return func_0038F3D8(fp); }
@@ -61,3 +61,97 @@ int func_00393C18(int *o) { return ((o[2] >> 1) ^ 1) & 1; }
 
 // FUNCTION: GAME 0x393F10
 int func_00393F10(int *o) { return ((o[0] >> 1) ^ 1) & 1; }
+
+struct Sb {
+    int flags;
+    int pad04;
+    int w8;
+    int wC;
+    int pad10[8];
+    struct Sb *next;
+    char pad34[0xC];
+    long off;
+    char pad48[0x10];
+    void *fp;
+};
+extern unsigned int fwrite(const void *, int, int, void *);
+extern unsigned long func_0038B108(void *, const void *, long);
+
+// FUNCTION: GAME 0x38C238
+int func_0038C238(int *o)
+{
+    long n = o[2] - o[3];
+    int *q = (int *)o[12];
+    if (q) {
+        do {
+            if (q[2] < n)
+                n = q[2];
+            q = (int *)q[0];
+        } while (q);
+    }
+    return (int)n;
+}
+
+// FUNCTION: GAME 0x3936C0
+unsigned long func_003936C0(struct Sb *o, const void *d, long n)
+{
+    unsigned long r = fwrite(d, 1, n, o->fp);
+    if (o->off >= 0)
+        o->off += n;
+    return r;
+}
+
+// FUNCTION: GAME 0x393820
+unsigned long func_00393820(struct Sb *o, const void *d, long n)
+{
+    if (((o->flags >> 1) ^ 1) & 1)
+        return func_0038B108(o, d, n);
+    return fwrite(d, 1, n, o->fp);
+}
+
+extern int func_00392A80(void *, int, int);
+extern int func_003A6020(int);
+extern int doallocate__7filebuf(void *);
+
+// FUNCTION: GAME 0x393770
+int func_00393770(int *o)
+{
+    if (func_00392A80(o, o[4], o[5] - o[4]))
+        return -1;
+    if (!(o[0] & 8)) {
+        int r = func_003A6020(o[22]);
+        if (r)
+            return -1;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x3937D0
+int func_003937D0(int *o, int c)
+{
+    if (doallocate__7filebuf(o) == -1)
+        return -1;
+    if (c != -1)
+        return c;
+    return func_003A6020(o[22]);
+}
+
+#ifdef NONMATCHING
+struct VE {
+    short d, i;
+    int (*f)(void *, int, int);
+};
+
+// DRAFT: GAME 0x393878
+int func_00393878(int *o, int a)
+{
+    if (a) {
+        int fl = o[0];
+        if (fl & 2)
+            o[0] = fl & ~2;
+    } else if (!(o[0] & 2)) {
+        struct VE *v = *(struct VE **)((char *)o + 0x50);
+        v[10].f((char *)o + v[10].d, 0, 0);
+    }
+}
+#endif

@@ -1,4 +1,5 @@
 #include "game/cEmManage.h"
+#include "game/ESLibFn.h"
 
 // Scroll layer setters and player-state callbacks (0x2DB000-0x2DCD00).
 struct ScrObjQ {

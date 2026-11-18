@@ -1,5 +1,6 @@
 // Flag-bit query on the word at +0x50; sole switch of 0x2C0ED0.
-// FUNCTION: GAME 0x2C0ED0
+// DRAFT: GAME 0x2C0ED0 - gcc turns single-bit tests into shifts (sra/andi); original keeps lui/and/sltu with a shared tail (33 words differ)
+#ifdef NONMATCHING
 extern "C" int func_002C0ED0(char *self, unsigned id)
 {
     unsigned *p = (unsigned *)(self + 0x50);
@@ -29,3 +30,4 @@ extern "C" int func_002C0ED0(char *self, unsigned id)
     }
     return 0;
 }
+#endif

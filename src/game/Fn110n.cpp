@@ -157,53 +157,23 @@ extern "C" void func_00114460(char *self)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x114CB8 - 5 words differ: addu s1/s0 scheduling vs a2/a3 setup before SeCall
-extern "C" void func_00114CB8(char *self)
-{
-    switch (B(0x2F6)) {
-    case 0: {
-        *(short *)(self + 0x5E0) = 0;
-        *(short *)(self + 0x5E2) = 0;
-        func_001268F0(self);
-        func_00124E58(self);
-        func_00126770(self);
-        clearMotionCam__4pl00UiUi(self, 0, 0);
-        char *t = *(char **)(self + 0x304);
-        int a = *(int *)(t + 0x3D8) + (int)t;
-        int b = *(int *)(t + 0x3DC) + (int)t;
-        Snd.SeCall(0, 0x29, self, 0, 0, 0, 0);
-        func_002A8578(self, a, b, 3, 0.0f, 0, 0);
-        B(0x2F6)++;
-    }
-    case 1:
-        func_00124E68(self, 0.19634955f);
-        if (moveMotion((cObjBase *)self)) {
-            B(0x2F4) = 0; B(0x2F5) = 0; B(0x2F6) = 0; B(0x2F7) = 0;
-        }
-        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
-        ((cObjBase *)self)->addNullSpeed(1.0f);
-    }
-    if ((*(unsigned short *)(self + 0x3AC) & 1) && !*(int *)(self + 0x698)) func_0012A8D8(self);
-    func_00123938(self, 1);
-}
-#endif
 
 extern "C" void func_0012C348(void *, int);
 extern "C" void func_0012AC28(void *);
+extern "C" void func_0012B928(void *);
 
-// FUNCTION: GAME 0x11A8F8
+#ifdef NONMATCHING
+// DRAFT: GAME 0x11A8F8 - irand()%3 three-way selection: original uses v1/a0 temps and no extra callee-saved regs; mine spills a,b,t into s1-s3 (frame 0x60 vs 0x30)
 extern "C" void func_0011A8F8(char *self)
 {
     switch (B(0x2F6)) {
     case 0: {
-        int a, b;
-        char *t;
-        switch (irand() % 3) {
-        case 0: t = *(char **)(self + 0x304); a = *(int *)(t + 0x140); b = *(int *)(t + 0x144); break;
-        case 1: t = *(char **)(self + 0x304); a = *(int *)(t + 0x4DC); b = *(int *)(t + 0x4E0); break;
-        default: t = *(char **)(self + 0x304); a = *(int *)(t + 0x4E4); b = *(int *)(t + 0x4E8); break;
-        }
+        int a = 0, b = 0;
+        char *t = 0;
+        unsigned r = irand() % 3;
+        if (r == 1) { t = *(char **)(self + 0x304); a = *(int *)(t + 0x4DC); b = *(int *)(t + 0x4E0); }
+        else if (r == 0) { t = *(char **)(self + 0x304); a = *(int *)(t + 0x140); b = *(int *)(t + 0x144); }
+        else if (r == 2) { t = *(char **)(self + 0x304); a = *(int *)(t + 0x4E4); b = *(int *)(t + 0x4E8); }
         func_002A8578(self, a + (int)t, b + (int)t, 1, 0.0f, 0, 0);
         Snd.SeCall(0, 0xCE, self, 0, 0, 0, 0);
         func_0012C348(self, 0);
@@ -223,3 +193,4 @@ extern "C" void func_0011A8F8(char *self)
     if (*(float *)(self + 0x54C) <= 1.0f) *(unsigned short *)(self + 0x3AC) |= 0x40;
     func_00123938(self, 1);
 }
+#endif

@@ -130,8 +130,9 @@ def local_refs(obj: Path, sym: str, known: set[str]) -> set[str]:
                     if target.name not in known:
                         out.add(target.name)  # a name the original never defines
                     continue
-                if not isinstance(shndx, int):
-                    continue  # absolute
+                pinned = target.name in known and target["st_info"]["bind"] != "STB_LOCAL"
+                if not isinstance(shndx, int) or pinned:
+                    continue  # absolute, or a global the link script pins; locals stay in their section
                 name = elf.get_section(shndx).name
                 if target["st_info"]["type"] == "STT_SECTION" or not name.startswith(".text."):
                     out.add(name)
@@ -206,6 +207,8 @@ def main() -> int:
         derived = derived_addresses(ROOT / obj, sym, vram, raw, known | compiled_defs)
         absolute.update(derived)
         refs[vram] = local_refs(ROOT / obj, sym, known | set(derived))
+        if "$LEH_" in (ROOT / f"asm/text/{vram:08X}.s").read_text():
+            refs[vram].add("$LEH")  # exception tables in asm still name labels of this unit
         for name in sorted(refs[vram]):
             addr = positional_address(name, unit_at)
             if addr is not None:  # the original names this unit differently

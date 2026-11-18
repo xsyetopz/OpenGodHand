@@ -17,7 +17,8 @@ extern char Sys[];
 #define H(o) (*(short *)(self + (o)))
 #define UH(o) (*(unsigned short *)(self + (o)))
 
-// FUNCTION: GAME 0x236190
+// DRAFT: GAME 0x236190 - 9 words differ: 0x1D lives in v1/a3 instead of a2/v1 around the SetActive call in the m_568 <= 0 path
+#ifdef NONMATCHING
 extern "C" void func_00236190(char *self)
 {
     char *pl = (char *)Getplayer__Fv();
@@ -55,10 +56,13 @@ extern "C" void func_00236190(char *self)
             char *q = pl + 0x550;
             __asm__ volatile("lqc2 $vf4,0(%0)\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,0(%0)" : : "r"(p), "r"(q) : "memory");
         }
-        if (*(unsigned *)(Sys + 8) & 0xF0)
-            UH(0x568) = UH(0x568) - 1;
-        if (*(unsigned *)(Sys + 8) & 0xF00000)
-            UH(0x568) = UH(0x568) - 4;
+        {
+            unsigned *sy = (unsigned *)Sys;
+            if (sy[2] & 0xF0)
+                UH(0x568) = UH(0x568) - 1;
+            if (sy[2] & 0xF00000)
+                UH(0x568) = UH(0x568) - 4;
+        }
         *(float *)(self + 0x54C) = 3.0f;
         if (moveMotion__FP8cObjBase(self)) {
             func_002705D8(self);
@@ -69,8 +73,8 @@ extern "C" void func_00236190(char *self)
         if (UH(0x3AC) & 0x10) {
             if (H(0x568) <= 0) {
                 int k = 0x1D;
-                B(0x2F7)++;
                 B(0x2F5) = k;
+                B(0x2F7)++;
                 B(0x2F6) = 0;
                 B(0x2F4) = 1;
                 SetActive__21cCollisionSolidManageP8cGameObjb(g_CollSolidManage, self, 0);
@@ -84,3 +88,4 @@ extern "C" void func_00236190(char *self)
         break;
     }
 }
+#endif

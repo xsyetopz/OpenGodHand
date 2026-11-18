@@ -213,3 +213,63 @@ void func_0031EAE0(double d)
     func_0031EDA0(u.cls, u.sign, u.exp, j);
 }
 #endif
+
+// FUNCTION: GAME 0x3202E0
+extern void *malloc(unsigned);
+extern void *memset(void *, int, unsigned);
+extern void func_00320280(void);
+struct L320 { int a; void *b; int c, d, e, f; };
+struct L320 *func_003202E0(void)
+{
+    struct L320 *p = malloc(0x18);
+    if (p == 0)
+        func_00320280();
+    memset(p, 0, 0x18);
+    p->b = (char *)p + 0x10;
+    return p;
+}
+
+// FUNCTION: GAME 0x3203B0
+extern int D_00755C08;
+extern struct { int a; void *b; int c, d; } D_00755BF8;
+extern char D_00755C10[];
+void *func_003203B0(void)
+{
+    if (D_00755C08 == 0) {
+        D_00755C08 = 1;
+        memset(&D_00755BF8, 0, 0x10);
+        D_00755BF8.b = D_00755C10;
+    }
+    return &D_00755BF8;
+}
+
+// FUNCTION: GAME 0x321938
+unsigned char *func_00321938(unsigned char *p, unsigned *out)
+{
+    unsigned v;
+    int sh = 0;
+    unsigned char b = *p++;
+    v = b & 0x7F;
+    while (b & 0x80) {
+        b = *p++;
+        sh += 7;
+        v |= (b & 0x7F) << sh;
+    }
+    *out = v;
+    return p;
+}
+
+// FUNCTION: GAME 0x321308
+extern int func_0031F508(int, int, int);
+int func_00321308(char *o, int (*fn)(void), short *a2)
+{
+    int r;
+    if (a2 != 0 && a2[2] != 4)
+        return 0;
+    if ((unsigned)fn == 0xFFFFFFFF)
+        return *(int *)(o + 8);
+    r = func_0031F508(fn(), *(int *)(o + 0xC), *(int *)(o + 0x28));
+    if (r)
+        *(int *)(o + 8) = r;
+    return r;
+}
