@@ -12,7 +12,7 @@ void func_00338A48(char *, char *);
 void func_00339458(char *, char *);
 void func_0033A048(char *, char *);
 void func_0033F240(char *, char *, int);
-void func_003A5A20(char *, char *, int);
+int func_003A5A20(char *, char *, int);
 void func_0033B6E8(char *);
 
 // FUNCTION: GAME 0x338CD0
@@ -68,9 +68,7 @@ void func_0033F348(char *a, char *b, char *c, int d)
     func_0033F240(b, c + strlen(c), 4 - strlen(c));
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x33F1A8
-// diff: 2 words (lui/lw of D_003EADB8 uses $v0 instead of $v1)
+// FUNCTION: GAME 0x33F1A8
 void func_0033F1A8(char *a, char *b)
 {
     if (a == 0 || b == 0) {
@@ -82,4 +80,3 @@ void func_0033F1A8(char *a, char *b)
     if (D_003EADB8) (*D_003EADB8)(D_003EADBC, D_003EADC0);
     func_0033B6E8(D_003EADC0);
 }
-#endif

@@ -113,12 +113,12 @@ extern const char D_004272F8[];
 // FUNCTION: GAME 0x1A5100
 extern "C" void *func_001A5100(char *self)
 {
-    char *p = self + 0x630;
-    int i = 6;
     func_001B6E90(self);
     *(const void **)(self + 0x214) = D_004272F8;
     SIB_ZQ(self, 0x600);
     SIB_ZQ(self, 0x610);
+    char *p = self + 0x630;
+    int i = 6;
     do {
         SIB_ZQ(p, 0x0);
         SIB_ZQ(p, 0x10);
@@ -139,19 +139,19 @@ struct SibPool {
 };
 extern "C" void *func_002A97A0(void *p);
 extern "C" void *memset(void *, int, unsigned);
-extern "C" void func_00148358(void *p);
+extern "C" int func_00148358(void *p);
 // FUNCTION: GAME 0x149488
-extern "C" void func_00149488(SibPool *self)
+extern "C" int func_00149488(SibPool *self)
 {
     void *e = func_002A97A0(self);
     if (!e)
-        return;
+        return 0;
     unsigned c = self->cur - 1;
     self->cur = c;
     if (c < self->low)
         self->low = c;
     memset(e, 0, 0x480);
-    func_00148358(e);
+    return func_00148358(e);
 }
 
 extern "C" void *memcpy(void *, const void *, unsigned);

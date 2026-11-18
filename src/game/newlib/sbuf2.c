@@ -5,6 +5,7 @@ extern char *D_003FA9CC;
 extern char D_0077DB08[];
 int func_003B0268(void *, char *, int);
 
+// FUNCTION: GAME 0x3AB050
 int func_003AB050(void *h, char *buf, unsigned int n, int flush)
 {
     unsigned int i;

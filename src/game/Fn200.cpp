@@ -36,25 +36,6 @@ void func_00201250(Tbl200 *self)
     }
 }
 
-// DRAFT: GAME 0x200B20
-#ifdef NONMATCHING
-// diff: 2 words, switch tree emits slti/bnez instead of beqz/beq on 1,0,2
-void func_00200B20(Tbl200 *self)
-{
-    switch (self->m_1108) {
-    case 1:
-        func_00201290(self);
-        break;
-    case 2:
-        func_00201718(self);
-        break;
-    case 0:
-    default:
-        func_00201250(self);
-        break;
-    }
-}
-#endif
 }
 
 extern "C" {
@@ -74,54 +55,7 @@ void func_00201018(Tbl200 *self)
 }
 }
 
-// DRAFT: GAME 0x2017A8
-// diff: 30 words, original keeps two induction pointers per loop and tests the first slot before incrementing
-#ifdef NONMATCHING
-extern "C" Slot200 *func_002017A8(Tbl200 *self)
-{
-    for (int i = 0; i < 32; i++) {
-        if (self->m_s[i].m_0 == 0)
-            return &self->m_s[i];
-    }
-    func_002011B0(self);
-    for (Slot200 *p = self->m_s; p < self->m_s + 32; p++) {
-        if (p->m_0 == 0)
-            return p;
-    }
-    return 0;
-}
-#endif
 
-// DRAFT: GAME 0x200F50
-// diff: 28 words, register assignment differs (id/end swapped s3/s4) and loop test order
-#ifdef NONMATCHING
-extern "C" int func_00200F50(Tbl200 *self, int id)
-{
-    int r = 0;
-    Obj200 *o = self->m_0;
-    if (o == 0)
-        return 0;
-    if (o->m_4 == id) {
-        if (o->m_84 != 0) {
-            func_00324008(o->m_84);
-            func_002018F0(self);
-        }
-        self->m_0 = 0;
-        func_00201290(self);
-        r = 1;
-    } else {
-        Slot200 *s = self->m_s;
-        int q = (int)self + 8;
-        for (; q < (int)self + 0x1108; q += 0x88, s++) {
-            if (*(int *)q == id) {
-                func_00201228(self, s);
-                r = 1;
-            }
-        }
-    }
-    return r;
-}
-#endif
 
 // DRAFT: GAME 0x201FA0
 // diff: 34 words, nested sqc2 loop is folded into a pointer compare instead of separate counters

@@ -158,47 +158,6 @@ extern "C" void SetCannonDamage__4pl00(char *self)
 }
 #endif
 
-// DRAFT: GAME 0x102DE8 - gcc folds a+t into each branch (a1 loaded directly) instead of v1/a0 temps joined before addu
-#ifdef NONMATCHING
-extern "C" void func_00102DE8(char *self)
-{
-    switch (B(0x2F6)) {
-    case 0: {
-        int a, b;
-        int t;
-        switch (B(0x2F7)) {
-        case 0:
-            t = *(int *)(self + 0x304);
-            a = *(int *)(t + 0x34);
-            b = *(int *)(t + 0x38);
-            break;
-        case 1:
-            t = *(int *)(self + 0x304);
-            a = *(int *)(t + 0x3C);
-            b = *(int *)(t + 0x40);
-            break;
-        case 2:
-            t = *(int *)(self + 0x304);
-            a = *(int *)(t + 0x44);
-            b = *(int *)(t + 0x48);
-            break;
-        default:
-            t = *(int *)(self + 0x304);
-            a = *(int *)(t + 0x34);
-            b = *(int *)(t + 0x38);
-            break;
-        }
-        func_002A8578(self, a + t, b + t, 5, 0.0f, 0, 0);
-        B(0x2F6)++;
-    }
-    case 1:
-        if (moveMotion((cObjBase *)self)) { B(0x2F4)=0; B(0x2F5)=0; B(0x2F6)=0; B(0x2F7)=0; }
-        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
-        ((cObjBase *)self)->addNullSpeed(1.0f);
-    }
-}
-#endif
-
 // FUNCTION: GAME 0x102EE0
 extern "C" void func_00102EE0(char *self)
 {

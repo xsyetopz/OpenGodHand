@@ -102,6 +102,17 @@ def read_sources() -> dict[Path, list[int]]:
     return found
 
 
+def read_sources_all() -> list[Path]:
+    """Every real source path (same exclusions as read_sources), annotated or not."""
+    return [
+        p.relative_to(ROOT)
+        for p in sorted((ROOT / "src").rglob("*.c*"))
+        if p.suffix in (".c", ".cpp", ".cc")
+        and p.relative_to(ROOT).parts[:2] != ("src", "scratch")
+        and not p.name.startswith("_")
+    ]
+
+
 INCLUDE = re.compile(r'^\s*#\s*include\s+"([^"]+)"', re.M)
 
 

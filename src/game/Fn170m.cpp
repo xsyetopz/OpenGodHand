@@ -89,7 +89,6 @@ extern "C" void func_0017B010(char *self)
         func_001B7EE0(self, 2.0f);
 }
 
-#ifdef NONMATCHING
 struct V4 {
     float x, y, z, w;
 };
@@ -99,6 +98,7 @@ extern "C" void func_001C28A0(void *);
 extern "C" void *CreateDamageTake__13cDamageManageP8cGameObj8DMG_KIND(void *, void *, int);
 extern "C" int AddDamageCollCylinder__11cDamageUnitRC7cMatrixRC4cVecT2ff(void *, void *, void *, void *, float, float);
 
+#ifdef NONMATCHING
 #define FN170_INIT(NAME)                                                                                   \
     extern "C" int NAME(char *self)                                                                        \
     {                                                                                                      \
@@ -256,3 +256,54 @@ extern "C" void *func_0017FB48(char *self)
     } while (--n != -1);
     return self;
 }
+
+extern "C" void *func_001FD9D8(void *, void *, void *, void *, void *);
+extern "C" void func_001BFB28(void *);
+
+#define FN170_BOX(NAME, X, Y, Z) \
+extern "C" int NAME(char *self) \
+{ \
+    func_001B6FB8(self); \
+    V4 a, b, c, d; \
+    V4 *pa = &a; \
+    V4 *pb = &b; \
+    V4 *pc = &c; \
+    a.x = (X); \
+    a.y = (Y); \
+    a.z = (Z); \
+    pa->w = 1.0f; \
+    b.x = (X); \
+    b.y = (Y); \
+    b.z = (Z); \
+    pb->w = 1.0f; \
+    c.x = 0; \
+    c.y = b.y * -0.5f; \
+    c.z = 0; \
+    pc->w = 1.0f; \
+    void *t = CreateDamageTake__13cDamageManageP8cGameObj8DMG_KIND(g_DmgManage, self, 2); \
+    *(void **)(self + 0x600) = t; \
+    if (t) { \
+        V4 *pd = &d; \
+        d.x = 0; \
+        d.y = 0; \
+        d.z = 0; \
+        pd->w = 1.0f; \
+        func_001FD9D8(t, self + 0x80, &c, &d, &b); \
+    } \
+    *(short *)(self + 0x548) = 1; \
+    *(short *)(self + 0x54A) = 1; \
+    func_001BFB28(self); \
+    return 1; \
+}
+
+// FUNCTION: GAME 0x1705D0
+FN170_BOX(func_001705D0, 3.1f, 2.91f, 0.2f)
+
+// FUNCTION: GAME 0x170860
+FN170_BOX(func_00170860, 3.07599998f, 0.773999989f, 0.763999999f)
+
+// FUNCTION: GAME 0x170AF0
+FN170_BOX(func_00170AF0, 2.76600003f, 0.773999989f, 0.763999999f)
+
+// FUNCTION: GAME 0x170D80
+FN170_BOX(func_00170D80, 3.29200006f, 0.773999989f, 0.698000014f)

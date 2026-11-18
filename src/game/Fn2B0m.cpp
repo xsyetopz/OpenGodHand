@@ -40,24 +40,6 @@ struct Buf2B {
 };
 void func_002A7280(void *);
 
-// DRAFT: GAME 0x2BA1C8
-// diff: 4 words, second vtable load uses v1 for table and v0 for fn (original swapped)
-#ifdef NONMATCHING
-int func_002BA1C8(Buf2B *self, int n)
-{
-    func_002A7280(self);
-    VE2B *d = (VE2B *)(self->m_18 + 0x10);
-    int p = d->m_fn((char *)self + d->m_adj, self->m_8 * n);
-    self->m_4 = n;
-    self->m_0 = p;
-    if (n) {
-        int a2 = self->m_8 * n;
-        VE2B *e = (VE2B *)(self->m_18 + 0x20);
-        e->m_fn((char *)self + e->m_adj, p, a2);
-    }
-    return 1;
-}
-#endif
 
 extern void *Font;
 unsigned char func_002A4C00(void *, unsigned);
@@ -71,20 +53,6 @@ struct Txt2B {
     unsigned short *m_8c;
 };
 
-// DRAFT: GAME 0x2B33D8
-// diff: 23 words, flag-set tail is duplicated instead of shared via bnel into the lw/ori block
-#ifdef NONMATCHING
-void func_002B33D8(Txt2B *self)
-{
-    if (self->m_1c != 0) {
-        unsigned char a = func_002A4C00(Font, *self->m_8c);
-        if (!(((self->m_14 >> 1) & 1) && !((self->m_14 >> 2) & 1) && !(a & 1)))
-            self->m_14 |= 2;
-        else
-            func_002B3460(self);
-    }
-}
-#endif
 
 extern char *Cockpit;
 struct Task2B {

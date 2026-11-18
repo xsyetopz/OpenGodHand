@@ -73,7 +73,7 @@ extern "C" void func_002884E0(char *self)
 }
 
 extern char g_EmManage[];
-extern "C" void ReleaseEm__9cEmManageP7cEmBase(void *, void *);
+extern "C" int ReleaseEm__9cEmManageP7cEmBase(void *, void *);
 extern "C" void func_0028FB08(void *);
 
 extern "C" void *Getplayer__Fv();
@@ -109,6 +109,46 @@ extern "C" void func_002880C8(char *self)
     }
 }
 
+// FUNCTION: GAME 0x288C98
+extern "C" void func_00288C98(char *self)
+{
+    *(float *)(self + 0x54C) = 3.0f;
+    switch (*(unsigned char *)(self + 0x2F6)) {
+    case 0:
+        func_0028FB08(self);
+        self[0x2F6]++;
+    case 1: {
+        float f = *(float *)(self + 0x24C) - 0.1f;
+        *(float *)(self + 0x24C) = f;
+        if (f <= 0.0f) {
+            *(float *)(self + 0x24C) = 0.0f;
+            ReleaseEm__9cEmManageP7cEmBase(g_EmManage, self);
+            self[0x2F6]++;
+        }
+    }
+    }
+}
+
+// FUNCTION: GAME 0x28AB48
+extern "C" void func_0028AB48(char *self)
+{
+    *(float *)(self + 0x54C) = 3.0f;
+    switch (*(unsigned char *)(self + 0x2F6)) {
+    case 0:
+        func_0028FB08(self);
+        self[0x2F6]++;
+    case 1: {
+        float f = *(float *)(self + 0x24C) - 0.1f;
+        *(float *)(self + 0x24C) = f;
+        if (f <= 0.0f) {
+            *(float *)(self + 0x24C) = 0.0f;
+            ReleaseEm__9cEmManageP7cEmBase(g_EmManage, self);
+            self[0x2F6]++;
+        }
+    }
+    }
+}
+
 #ifdef NONMATCHING
 extern char *g_Sce;
 extern unsigned D_00747A84;
@@ -129,48 +169,6 @@ extern "C" void func_0028E7C8(void *self)
     startSoftEvent__9cScenario14eSoftEventType(g_Sce, 2);
     D_00747A84 &= 0xFFFEFFFF;
     markTask(taskExec__9cScenarioPvT1i(g_Sce, (void *)func_0028E858, self, 1));
-}
-
-// DRAFT: GAME 0x288C98
-// diff: final state++ uses v0 (original v1)
-extern "C" void func_00288C98(char *self)
-{
-    *(float *)(self + 0x54C) = 3.0f;
-    switch (*(unsigned char *)(self + 0x2F6)) {
-    case 0:
-        func_0028FB08(self);
-        self[0x2F6]++;
-    case 1: {
-        float f = *(float *)(self + 0x24C) - 0.1f;
-        *(float *)(self + 0x24C) = f;
-        if (f <= 0.0f) {
-            *(float *)(self + 0x24C) = 0.0f;
-            ReleaseEm__9cEmManageP7cEmBase(g_EmManage, self);
-            self[0x2F6]++;
-        }
-    }
-    }
-}
-
-// DRAFT: GAME 0x28AB48
-// diff: final state++ uses v0 (original v1)
-extern "C" void func_0028AB48(char *self)
-{
-    *(float *)(self + 0x54C) = 3.0f;
-    switch (*(unsigned char *)(self + 0x2F6)) {
-    case 0:
-        func_0028FB08(self);
-        self[0x2F6]++;
-    case 1: {
-        float f = *(float *)(self + 0x24C) - 0.1f;
-        *(float *)(self + 0x24C) = f;
-        if (f <= 0.0f) {
-            *(float *)(self + 0x24C) = 0.0f;
-            ReleaseEm__9cEmManageP7cEmBase(g_EmManage, self);
-            self[0x2F6]++;
-        }
-    }
-    }
 }
 
 struct Lnk {

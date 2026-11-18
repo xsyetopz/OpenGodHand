@@ -142,3 +142,70 @@ extern "C" void func_0013DE90(char *self, unsigned f)
         func_0030F5A0(self);
 }
 #endif
+
+#include "game/cEm00StateDecls.h"
+#ifdef NONMATCHING
+extern "C" {
+void func_0012AC28(void *);
+void func_0012B928(void *);
+void func_00124EC0(void *);
+void clearMotionCam__4pl00UiUi(void *, unsigned, unsigned);
+void SetPlCatched__9cEmManage(void *);
+void SetSlotWait__9cEmManagei(void *, int);
+void GetPlMotion__5cEm0015EM00_PLMOT_TYPEff(void *, int, float, float);
+}
+extern char g_EmManage[];
+
+// DRAFT: GAME 0x122A50 - fncmp MATCH (504 B); kept DRAFT because the switch jump table needs its own linked .rodata (linkgen local_refs gates on .rodata)
+extern "C" void func_00122A50(char *self)
+{
+    char *em = *(char **)(self + 0x694);
+    *(float *)(self + 0x54C) = 5.0f;
+    g_CollSolidManage.SetActive((cGameObj *)self, false);
+    SetPlCatched__9cEmManage(g_EmManage);
+    SetSlotWait__9cEmManagei(g_EmManage, 2);
+    *(int *)(self + 0x15F4) |= 0x80000;
+    switch (B(0x2F6)) {
+    case 0:
+        func_0012AC28(self);
+        func_0012B928(self);
+        if (em) {
+            *(cVec *)(*(char **)(em + 0xF0)) = **(cVec **)(self + 0xF0);
+            *(float *)(em + 0x104) = *(float *)(self + 0x104);
+        }
+        GetPlMotion__5cEm0015EM00_PLMOT_TYPEff(em, 0x54, 0.0f, 0.0f);
+        B(0x2F6)++;
+        goto c1;
+    case 2:
+        GetPlMotion__5cEm0015EM00_PLMOT_TYPEff(em, 0x55, 0.0f, 0.0f);
+        B(0x2F6)++;
+        goto c1;
+    case 4:
+        GetPlMotion__5cEm0015EM00_PLMOT_TYPEff(em, 0x56, 0.0f, 0.0f);
+        B(0x2F6)++;
+        goto c1;
+    case 1:
+    case 3:
+    case 5:
+    c1:
+        func_00124EC0(self);
+        if (moveMotion((cObjBase *)self))
+            B(0x2F6)++;
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+        break;
+    case 6:
+        GetPlMotion__5cEm0015EM00_PLMOT_TYPEff(em, 0x57, 0.0f, 0.0f);
+        B(0x2F6)++;
+    case 7:
+        func_00124EC0(self);
+        if (moveMotion((cObjBase *)self)) {
+            clearMotionCam__4pl00UiUi(self, 0, 0);
+            B(0x2F4) = 0; B(0x2F5) = 0; B(0x2F6) = 0; B(0x2F7) = 0;
+        }
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+        break;
+    }
+}
+#endif

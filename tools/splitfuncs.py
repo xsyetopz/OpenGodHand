@@ -79,8 +79,8 @@ def split_fragment(body: list[str]) -> list[list[str]]:
     while (n + 2 < len(words) and words[n] >> 16 == 0x27BD and not words[n] & 0x8000
            and words[n + 1] == 0):
         n += 2
-    if not n:
-        n = dead_prefix(words)
+    # A nop run before the prologue can follow the stripped pairs as well.
+    n += dead_prefix(words[n:])
     if not n:
         return [body]
     cut = {i for i, _m in insns[:n]}

@@ -53,6 +53,8 @@ extern "C" void func_00247218(Em *self)
             a = p->m_1F78;
             b = p->m_1F7C;
         }
+        a += (int)p;
+        b += (int)p;
         func_002A8578(self, a, b, 10, t, 0, 0.0f);
         self->m_568 = 10;
         self->m_623 = 1;
@@ -227,5 +229,147 @@ extern "C" void func_00249960(Eh *self)
     }
     if (!HeatFlag(g_HeatSys))
         func_00262AA8(self);
+}
+#endif
+
+struct Ei {
+    char _pad0[0x2F4];
+    unsigned char m_2F4;
+    unsigned char m_2F5;
+    unsigned char m_2F6;
+    unsigned char m_2F7;
+    char _pad1[0x304 - 0x2F8];
+    char *m_304;
+    char _pad2[0x3AC - 0x308];
+    unsigned short m_3AC;
+    char _pad3[0x564 - 0x3AE];
+    int m_564;
+    char _pad4[0x16D0 - 0x568];
+    unsigned m_16D0;
+    char _pad5[0x1864 - 0x16D4];
+    unsigned char m_1864;
+};
+
+// DRAFT: GAME 0x23D410
+// diff: about 25 words; the original keeps a chain of m_564 range tests whose arms all load the same 0xC4C/0xC50 offsets
+#ifdef NONMATCHING
+extern "C" void func_0023D410(Ei *self)
+{
+    switch (self->m_2F6) {
+    case 0: {
+        self->m_1864 = 0;
+        char *p = self->m_304;
+        int a = *(int *)(p + 0xC4C) + (int)p;
+        int b = *(int *)(p + 0xC50) + (int)p;
+        unsigned t = func_00276468(self) & 0xFFFF;
+        func_002A8578(self, a, b, 10, t, 0, 0.0f);
+        self->m_2F6++;
+    }
+    case 1:
+        if (moveMotion__FP8cObjBase(self)) {
+            self->m_2F4 = 0;
+            self->m_2F5 = 0x6E;
+            self->m_2F6 = 0;
+            self->m_2F7 = 0;
+        }
+        addNullSpeed_Rotation__8cObjBasef(self, 1.0f);
+        addNullSpeed__8cObjBasef(self, 1.0f);
+    }
+    if (self->m_3AC & 8)
+        self->m_16D0 |= 0x4000;
+}
+#endif
+
+// DRAFT: GAME 0x258C40
+// diff: about 25 words; same m_564 range-test chain as 0x23D410
+#ifdef NONMATCHING
+extern "C" void func_00258C40(Ei *self)
+{
+    self->m_16D0 |= 0x4000;
+    switch (self->m_2F6) {
+    case 0: {
+        char *p = self->m_304;
+        int a = *(int *)(p + 0xC4C) + (int)p;
+        int b = *(int *)(p + 0xC50) + (int)p;
+        unsigned t = func_00276468(self) & 0xFFFF;
+        func_002A8578(self, a, b, 10, t, 0, 0.0f);
+        self->m_2F6++;
+    }
+    case 1:
+        if (moveMotion__FP8cObjBase(self)) {
+            self->m_2F4 = 0;
+            self->m_2F5 = 0x6E;
+            self->m_2F6 = 0;
+            self->m_2F7 = 0;
+        }
+        addNullSpeed_Rotation__8cObjBasef(self, 1.0f);
+        addNullSpeed__8cObjBasef(self, 1.0f);
+    }
+}
+#endif
+
+extern "C" int GetSeqSEBase__FP8cObjBase(void *);
+extern "C" void SeCall__4cSnd6eSeBlksR4cObjP4cObjP6cPartsUii(void *, int, int, void *, int, int, int, int);
+extern char Snd[];
+
+struct Ej {
+    char _pad0[0x2F6];
+    unsigned char m_2F6;
+    char _pad1[0x304 - 0x2F7];
+    char *m_304;
+    char _pad2[0x54C - 0x308];
+    float m_54C;
+    char _pad3[0x564 - 0x550];
+    int m_564;
+};
+
+// DRAFT: GAME 0x2311A8
+// diff: 13 words; the original loads the offset pair into v1/a0 then adds the base, mine loads into a1/a2; m_2F6 increment via v1
+#ifdef NONMATCHING
+extern "C" void func_002311A8(Ej *self)
+{
+    switch (self->m_2F6) {
+    case 0: {
+        unsigned t = func_00276468(self) & 0xFFFF;
+        char *p;
+        int a, b;
+        switch (self->m_564) {
+        case 0x20A ... 0x20E:
+        case 0x218:
+        case 0x245 ... 0x247:
+        case 0x24F:
+        case 0x278 ... 0x279:
+            p = self->m_304;
+            a = *(int *)(p + 0x948);
+            b = *(int *)(p + 0x94C);
+            break;
+        case 0x21A ... 0x21E:
+        case 0x225:
+        case 0x22C ... 0x22F:
+        case 0x248 ... 0x249:
+        case 0x24C ... 0x24E:
+        case 0x252:
+        case 0x25A:
+            p = self->m_304;
+            a = *(int *)(p + 0x11A0);
+            b = *(int *)(p + 0x11A4);
+            break;
+        default:
+            p = self->m_304;
+            a = *(int *)(p + 0x1C0);
+            b = *(int *)(p + 0x1C4);
+            break;
+        }
+        func_002A8578(self, a + (int)p, b + (int)p, 10, t, 0, 0.0f);
+        SeCall__4cSnd6eSeBlksR4cObjP4cObjP6cPartsUii(Snd, 1, (short)GetSeqSEBase__FP8cObjBase(self), self, 0, 0, 0, 0);
+        self->m_54C = 2.0f;
+        self->m_2F6++;
+    }
+    case 1:
+        if (moveMotion__FP8cObjBase(self))
+            func_002705D8(self);
+        addNullSpeed_Rotation__8cObjBasef(self, 1.0f);
+        addNullSpeed__8cObjBasef(self, 1.0f);
+    }
 }
 #endif

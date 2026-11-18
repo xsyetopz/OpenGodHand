@@ -29,7 +29,9 @@ int func_003245B0(int a, int b, int c, int d, int e, int f) {
     return r;
 }
 
-// FUNCTION: GAME 0x323700
+// DRAFT: GAME 0x323700
+// diff: 23 words; orig copies d (a3) to v0 first and stores 3C,38,30 in that order; ours stores a3 directly
+#ifdef NONMATCHING
 int func_00323700(int *a, int b, int c, int d, int e) {
     a[0x34 / 4] = c;
     a[0x30 / 4] = a[0x3C / 4] = d;
@@ -45,9 +47,12 @@ int func_00323700(int *a, int b, int c, int d, int e) {
     a[0x10 / 4] = e << 11;
     return 0;
 }
+#endif
 
-// FUNCTION: GAME 0x324440
-int func_00324440(int *a) {
+// DRAFT: GAME 0x324440
+// diff: 2 words; orig sw v0,0x10 before daddu v1,v0 (ours daddu then sw)
+#ifdef NONMATCHING
+int adxf_GetFsizeByte(int *a) {
     int v;
     if (a == 0) {
         func_0033F130(D_00451928);
@@ -62,9 +67,12 @@ int func_00324440(int *a) {
     }
     return v;
 }
+#endif
 
-// FUNCTION: GAME 0x3234D0
-char *func_003234D0(void) {
+// DRAFT: GAME 0x3234D0
+// diff: 12 words; store scheduling (orig keeps 1 in v1, 0x200 stored last; ours hoists sb/0x2C)
+#ifdef NONMATCHING
+char *adxf_CreateAdxFs(void) {
     char *s = (char *)func_00323478();
     int v;
     if (s == 0) {
@@ -88,8 +96,11 @@ char *func_003234D0(void) {
     *(int *)(s + 0x2C) = 0x200;
     return s;
 }
+#endif
 
-// FUNCTION: GAME 0x324C90
+// DRAFT: GAME 0x324C90
+// diff: 1 word; dead volatile read of D_003C8138 lands in v0, orig v1
+#ifdef NONMATCHING
 void func_00324C90(void) {
     int id, t;
     if (D_003C80E0 == 0) {
@@ -100,4 +111,29 @@ void func_00324C90(void) {
         t = D_003C8138;
     }
     D_003C80E0 = D_003C80E0 + 1;
+}
+#endif
+
+extern int D_003CF9D8, D_003C80C0;
+extern volatile int D_003C8144;
+extern char _gp[], D_003CA9D0[];
+void func_00325010(void);
+int CreateThread(void *);
+int StartThread(int, int);
+
+// FUNCTION: GAME 0x3254F0
+void func_003254F0(void) {
+    int t;
+    struct {
+        int a, entry, stack, size, gp, prio, pad[6];
+    } p;
+    p.entry = (int)func_00325010;
+    p.stack = (int)D_003CA9D0;
+    p.size = 0x1000;
+    p.prio = D_003CF9D8;
+    p.gp = (int)_gp;
+    D_003C8144 = CreateThread(&p);
+    t = D_003C8144;
+    StartThread(D_003C8144, 0);
+    func_003AFB30(D_003C8144, D_003C80C0);
 }
