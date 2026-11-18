@@ -96,3 +96,82 @@ extern "C" void func_002EDEA0(char *self, cVec16 *pts, void *out, int idx)
         getPoint__7cSplineR4cVecf(Spline, out, r + 1.0f);
     }
 }
+
+extern "C" void func_002E8038(void *, float);
+extern "C" void func_002E8168(void *, float);
+extern "C" void func_002D9F68(void *, const char *, unsigned);
+extern char D_0044E808[];
+
+// FUNCTION: GAME 0x2E8210
+extern "C" int func_002E8210(char *self)
+{
+    char *o = *(char **)(self + 0x110);
+    *(int *)(self + 0x2B0) = *(int *)(o + 0x16C);
+    int n = *(int *)(o + 0x170);
+    *(int *)(self + 0x2BC) = n;
+    *(float *)(self + 0x2B4) = *(float *)(o + 0x13C);
+    *(float *)(self + 0x2B8) = *(float *)(o + 0x140);
+    if (n <= 0)
+        *(int *)(self + 0x2BC) = 0x19;
+    if (*(int *)(self + 0x2BC) > 0x20)
+        *(int *)(self + 0x2BC) = 0x20;
+    if (*(float *)(self + 0x2B4) != 0.0f)
+        func_002E8038(self, *(float *)(self + 0x2B4) * *(float *)(self + 0x2B4));
+    else
+        func_002E8038(self, 25.0f);
+    if (*(float *)(self + 0x2B8) != 0.0f)
+        func_002E8168(self, *(float *)(self + 0x2B8));
+    else
+        func_002E8168(self, 1.0f);
+    return 1;
+}
+
+// FUNCTION: GAME 0x2EA908
+extern "C" int func_002EA908(char *self)
+{
+    *(int *)(self + 0x2B8) = 0;
+    *(int *)(self + 0x2BC) = 0;
+    char *o = *(char **)(self + 0x110);
+    *(float *)(self + 0x2C0) = *(float *)(o + 0x13C) * 0.1f;
+    *(float *)(self + 0x2C4) = *(float *)(o + 0x140) * 0.1f;
+    int n = o[0x18C] + 2;
+    *(int *)(self + 0x2C8) = n;
+    *(float *)(self + 0x2B0) = (float)o[0x18D] * 0.1f + 1.0f;
+    *(float *)(self + 0x2B4) = (float)o[0x18E] * 0.1f + 1.0f;
+    unsigned c = (unsigned char)o[0x18F];
+    *(unsigned *)(self + 0x2CC) = c;
+    if (c >= 4) {
+        func_002D9F68(self, D_0044E808, c);
+        *(int *)(self + 0x2CC) = 0;
+        return 0;
+    }
+    if (c && n == 2)
+        *(int *)(self + 0x2C8) = 3;
+    return 1;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2EA798
+// 2 extra nops before the div.s in the original (1.0f load scheduled before the divide); rest of the body is the same
+#include "vu0.h"
+extern "C" float capVu0Length__FPCf(const float *);
+extern char *pCamWork;
+extern "C" float func_002EA798(char *self)
+{
+    float v[4], w[4];
+    func_002B6160((cVec *)v, self);
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)w) : "r"(pCamWork + 0x210));
+    float zero = 0.0f;
+    if (*(float *)(self + 0x2C8) != zero) {
+        v[0] = v[0] - w[0];
+        v[1] = v[1] - w[1];
+        v[2] = v[2] - w[2];
+        vu0_ScaleXYZ(v, v, 1000.0f);
+        float r = capVu0Length__FPCf(v) / *(float *)(self + 0x2C8);
+        if (1.0f < r) r = 1.0f;
+        if (r < zero) r = zero;
+        return 1.0f - r;
+    }
+    return 1.0f;
+}
+#endif

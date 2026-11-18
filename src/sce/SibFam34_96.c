@@ -93,3 +93,75 @@ int func_0033A2D0(int a) { func_003389F8(); func_0033A300(a); return func_00338A
 
 // FUNCTION: GAME 0x33A4C8
 int func_0033A4C8(int a) { func_003389F8(); func_0033A4F8(a); return func_00338A10(); }
+
+// second batch
+void func_00329070(void);
+int func_00329088(void);
+void func_00327DC0(int);
+void func_00327FD8(int);
+void func_00328048(int);
+void func_00328300(int);
+void func_00328398(int);
+void func_00328FA0(int);
+void func_003298F0(int);
+void func_003403C8(void);
+int func_003403E0(void);
+void func_003406B0(int);
+void func_00340700(int);
+
+// FUNCTION: GAME 0x327D90
+int func_00327D90(int a) { func_00329070(); func_00327DC0(a); return func_00329088(); }
+
+// FUNCTION: GAME 0x327FA8
+int func_00327FA8(int a) { func_00329070(); func_00327FD8(a); return func_00329088(); }
+
+// FUNCTION: GAME 0x328018
+int func_00328018(int a) { func_00329070(); func_00328048(a); return func_00329088(); }
+
+// FUNCTION: GAME 0x3282D0
+int func_003282D0(int a) { func_00329070(); func_00328300(a); return func_00329088(); }
+
+// FUNCTION: GAME 0x328368
+int func_00328368(int a) { func_00329070(); func_00328398(a); return func_00329088(); }
+
+// FUNCTION: GAME 0x328F70
+int func_00328F70(int a) { func_00329070(); func_00328FA0(a); return func_00329088(); }
+
+// FUNCTION: GAME 0x3298C0
+int func_003298C0(int a) { func_0033E6A8(); func_003298F0(a); return func_0033E6B0(); }
+
+// FUNCTION: GAME 0x340680
+int func_00340680(int a) { func_003403C8(); func_003406B0(a); return func_003403E0(); }
+
+// FUNCTION: GAME 0x3406D0
+int func_003406D0(int a) { func_003403C8(); func_00340700(a); return func_003403E0(); }
+
+// 0x345828 family: g(); return 0;
+void func_00324C50(void);
+void func_0032AF88(void);
+void func_0033F590(void);
+void func_003388F8(void);
+void func_00368DF0(void);
+void func_0036C220(void);
+void func_0035AE18(void);
+
+// FUNCTION: GAME 0x3248F0
+int func_003248F0(void) { func_00324C50(); return 0; }
+
+// FUNCTION: GAME 0x324910
+int func_00324910(void) { func_0032AF88(); return 0; }
+
+// FUNCTION: GAME 0x324930
+int func_00324930(void) { func_0033F590(); return 0; }
+
+// FUNCTION: GAME 0x326498
+int func_00326498(void) { func_003388F8(); return 0; }
+
+// FUNCTION: GAME 0x34E1B8
+int func_0034E1B8(void) { func_00368DF0(); return 0; }
+
+// FUNCTION: GAME 0x3506E0
+int func_003506E0(void) { func_0036C220(); return 0; }
+
+// FUNCTION: GAME 0x35AD00
+int func_0035AD00(void) { func_0035AE18(); return 0; }

@@ -187,7 +187,7 @@ extern "C" void func_002B5FC8(cNode *self, const float *p)
 }
 
 #ifdef NONMATCHING
-extern "C" void func_001B6E90(void *);
+extern "C" void *func_001B6E90(void *);
 extern "C" char D_00422498[];
 struct QK { char b0, b1, b2, pa; int w4, w8; int arr[8]; int w2C; int w30, w34, w38, w3C; char pb[0x10]; Sv16 sv[14]; int w130, w134, w138, w13C; };
 struct ObjK {

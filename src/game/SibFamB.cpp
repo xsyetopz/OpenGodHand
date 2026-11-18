@@ -196,7 +196,7 @@ void func_002FBE50(SFB_Em *);
 // FUNCTION: GAME 0x2FEB80
 void func_002FEB80(SFB_Em *p, int a, int b)
 {
-    if (p->m_a == a && p->m_b == b)
+    if (a == p->m_a && b == p->m_b)
         func_002FBE50(p);
 }
 
@@ -224,4 +224,15 @@ void func_001FAA18(cCoreSave *self, int n)
             *(int *)((char *)self->m_save + 0x6C) = 0;
     }
 }
+}
+
+// FUNCTION: GAME 0x2D6838
+extern "C" void func_002D6838(CustomIDWork *self, int a, unsigned short t)
+{
+    if (self->m_work) {
+        self->m_unk28 = 0x11;
+        *(float *)((char *)self + 0x40) = (float)a;
+        self->m_unk44 = t;
+        self->m_unk46 = 0;
+    }
 }
