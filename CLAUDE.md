@@ -12,6 +12,6 @@ Byte-for-byte matching decompilation of God Hand (PS2, SLUS-21503); `SLUS_215.03
 - zsh: unquoted `$a` stays one argument (write calls out); `echo == x` fails (quote it). `grep` is ugrep with pattern limits; long patterns use `LC_ALL=C /usr/bin/grep`.
 - `wc -l`, `cat`, `xargs` and `grep PATTERN` with an empty file list wait on stdin forever; pass `< /dev/null`.
 - `$TMPDIR` differs inside and outside the sandbox; shared scratch goes in `src/scratch/` (gitignored) or `build/`.
-- Subagent foreground commands stop after 180 s. Long jobs start in the background; finished jobs send a notification, and `sleep` polling is blocked.
+- Subagent foreground commands stop after 180 s. Long jobs start in the background; finished jobs send a notification, and `sleep` polling is blocked. `pgrep -f PATTERN` also matches the shell whose command line holds PATTERN, so a `while pgrep -f` wait never ends; wait on the job's notification instead.
 - `git checkout -- FILE` discards other agents' edits and `rm -rf "$VAR"` is refused; revert with Edit and remove explicit paths.
 - Subagents: `decomp-worker` (Sonnet) matches drafts, `decomp-writer` (Sonnet) decompiles free units, `scout` (Haiku) writes ranked slices to `build/slices/`, `lookup` (Haiku) answers read-only questions. Haiku contexts stay under 100k tokens. The prompt cache lasts 5 minutes; replace an idle worker instead of resuming it.
