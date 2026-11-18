@@ -319,3 +319,31 @@ extern "C" int func_00152340(char *self, long key)
     return -1;
 }
 #endif
+
+// DRAFT: GAME 0x159510
+// diff: loop tail duplication (bnel+lbu in delay slots) and handler-call reg alloc
+#ifdef NONMATCHING
+typedef float (*MotionFn159510)(char *, char *, int, float);
+extern MotionFn159510 D_003BD910[];
+float MotionGetParam(void *obj, int id, int kind, float f)
+{
+    char *o = (char *)obj;
+    if (o) {
+        char *e = o + 8;
+        for (unsigned i = 0; i < *(unsigned char *)(o + 6); i++, e += 12) {
+            if (*(signed char *)e != id)
+                continue;
+            unsigned w = *(unsigned *)e;
+            if (kind != -1 && (int)((w >> 8) & 0xF) != kind)
+                continue;
+            return D_003BD910[(w >> 12) & 0xF](o, e, kind, f);
+        }
+    }
+    if (kind < 9) {
+        if (kind < 6)
+            return 0.0f;
+        return 1.0f;
+    }
+    return 0.0f;
+}
+#endif

@@ -4,42 +4,11 @@
 
 void func_00388660(struct Is *, unsigned long, int);
 
-// FUNCTION: GAME 0x388BA8
-struct Is *func_00388BA8(struct Is *s, int v)
-{
-    if (opfx(s))
-        func_00388660(s, v, 0);
-    return s;
-}
-
 // FUNCTION: GAME 0x388CA8
 struct Is *func_00388CA8(struct Is *s, long v)
 {
     if (opfx(s))
         func_00388660(s, v, 0);
-    return s;
-}
-
-// FUNCTION: GAME 0x388AA0
-struct Is *func_00388AA0(struct Is *s, unsigned v)
-{
-    if (opfx(s))
-        func_00388660(s, v, 0);
-    return s;
-}
-
-// FUNCTION: GAME 0x388B18
-struct Is *func_00388B18(struct Is *s, long v)
-{
-    if (opfx(s)) {
-        long t = v;
-        int neg = 1;
-        if (t < 0 && !(s->ios->fl & 0x60)) {
-            t = -t;
-            neg = -1;
-        }
-        func_00388660(s, t, neg);
-    }
     return s;
 }
 
@@ -58,43 +27,9 @@ struct Is *func_00388C18(struct Is *s, long v)
     return s;
 }
 
-// FUNCTION: GAME 0x388A00
-struct Is *func_00388A00(struct Is *s, int v)
-{
-    if (opfx(s)) {
-        int t = v;
-        int neg = 1;
-        if (t < 0 && !(s->ios->fl & 0x60)) {
-            t = -t;
-            neg = -1;
-        }
-        func_00388660(s, (unsigned)t, neg);
-    }
-    return s;
-}
-
 int func_00389398(struct Is *);
 void func_0038ADC8(struct Is *, void *, int);
 extern char D_0045D0E8[], D_0045D0F0[];
-
-// FUNCTION: GAME 0x388380
-struct Is *func_00388380(struct Is *s, int a)
-{
-    int ok;
-    if (s->ios->st) {
-        s->ios->st |= 2;
-        ok = 0;
-    } else {
-        if (s->ios->tie)
-            func_00389268(s->ios->tie);
-        ok = 1;
-        if ((int)(s->ios->fl & 1))
-            ok = func_00389398(s);
-    }
-    if (ok)
-        func_0038ADC8(s, D_0045D0E8, a);
-    return s;
-}
 
 // FUNCTION: GAME 0x388420
 struct Is *func_00388420(struct Is *s, int a)
@@ -150,21 +85,21 @@ struct VTb {
 int func_0038C9E8(const char *, char *, int);
 void func_00389548(struct Is *);
 
-// FUNCTION: GAME 0x388FB0
-struct Is *func_00388FB0(struct Is *s, const char *str)
+// FUNCTION: GAME 0x388380
+struct Is *__rs__7istreamRd(struct Is *s, int a)
 {
-    if (opfx(s)) {
-        struct SB *sb = s->ios->sb;
-        char buf[0x400];
-        int n;
-        while ((n = func_0038C9E8(str, buf, 0x400)) != 0) {
-            if ((*(struct VTb **)((char *)sb + 0x50))->fn(sb, buf, n) != n) {
-                s->ios->st |= 4;
-                break;
-            }
-        }
-        if (s->ios->fl & 0x6000)
-            func_00389548(s);
+    int ok;
+    if (s->ios->st) {
+        s->ios->st |= 2;
+        ok = 0;
+    } else {
+        if (s->ios->tie)
+            func_00389268(s->ios->tie);
+        ok = 1;
+        if ((int)(s->ios->fl & 1))
+            ok = func_00389398(s);
     }
+    if (ok)
+        func_0038ADC8(s, D_0045D0E8, a);
     return s;
 }

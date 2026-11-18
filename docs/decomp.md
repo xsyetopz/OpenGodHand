@@ -123,6 +123,17 @@ These source shapes reproduce patterns this compiler emits only one way:
   or `mode(TI)` assignment emits `lq`/`sq` instead. fncmp disassembles these
   as `ldc2`/`sdc2`.
 
+## Open problem: `div.s` padding
+
+Most game `div.s` instructions follow two `nop`s, including some in the middle
+of straight-line code. None of the ProDG compilers (2.95.3-114, 2.95.2-273a,
+2.95.3-136) emits those nops at `-O2 -S`, and their `cc1plus` has no R5900
+divide-errata option; ee-gcc 2.96 pads every `div.s` itself and is the only
+package that knows `-mhandle-ee-div-pipeline-bug`. The padding therefore comes
+from SN's assembler: the 136 `ps2eeas` (`-Wdivbug-on`) pads one nop next to a
+branch or label but crashes under Wine, and the 1.8.19 build pads nothing.
+Until that is resolved, functions containing `div.s` stay in asm.
+
 ## SCE library regions
 
 The SDK and runtime libraries (libsce, libstdc++ such as `endl__FR7ostream`)

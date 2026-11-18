@@ -58,3 +58,44 @@ void func_002D9D50(int a, unsigned t, unsigned *h, unsigned *m, unsigned *s) {
 }
 
 }
+
+// 0x2D3388 callee decls
+extern "C" int func_003B5968(int);
+extern "C" void func_003B5A50(int);
+
+// FUNCTION: GAME 0x2D3388
+extern "C" void func_002D3388(int *p)
+{
+    int sh = 0;
+    int fail;
+    int *arr = p + 0x84 / 4;
+    int *q = arr;
+    int i;
+    p[0x78 / 4] = 0;
+    p[0x7C / 4] = p[0x74 / 4];
+    p[0x8C / 4] = 0;
+    p[0x90 / 4] = 0;
+    for (i = 1; i >= 0; i--, q++) {
+        q[-0x74 / 4] = 0;
+        q[0] = 0;
+    }
+    do {
+        p[0x68 / 4] = 0x20000 >> sh;
+        sh++;
+        fail = 0;
+        for (i = 0; i < 2; i++) {
+            int r = func_003B5968(p[0x68 / 4]);
+            *(int *)((char *)arr + (i << 2)) = r;
+            if (r == 0) {
+                fail = 1;
+                int *s = arr;
+                for (i = 1; i >= 0; i--, s++) {
+                    if (*s) func_003B5A50(*s);
+                    *s = 0;
+                }
+                break;
+            }
+        }
+    } while (fail);
+    p[0] |= 2;
+}

@@ -28,9 +28,7 @@
 
 
 /* Reconstruction of libio/iostream.cc (egcs/gcc 2.95 libio) as built in the SCE
-   libstdc++ of God Hand. Only functions whose bytes match are kept; the
-   // DRAFT markers carry the original address (see docs/decomp.md; units keep
-   their func_ names, so the C++ symbols are not linked yet). */
+   libstdc++ of God Hand. Only functions whose bytes match are kept. */
 #define _STREAM_COMPAT
 #include "iostream.h"
 #include "_jump.h"
@@ -43,7 +41,7 @@ extern int skip_ws(streambuf* sb);
 extern int read_int(istream& stream, unsigned LONGEST& val, int& neg);
 extern void write_int(ostream& stream, unsigned LONGEST val, int sign);
 
-// DRAFT: GAME 0x387610
+// FUNCTION: GAME 0x387610
 istream& istream::get(char& c)
 {
     if (ipfx1()) {
@@ -66,7 +64,7 @@ istream& istream::get(char& c)
     return *this;
 }
 
-// DRAFT: GAME 0x3876D0
+// FUNCTION: GAME 0x3876D0
 int istream::peek()
 {
   if (!good())
@@ -79,7 +77,7 @@ int istream::peek()
   return ch;
 }
 
-// DRAFT: GAME 0x387788
+// FUNCTION: GAME 0x387788
 istream& istream::ignore(int n /* = 1 */, int delim /* = EOF */)
 {
     _gcount = 0;
@@ -115,7 +113,7 @@ istream& istream::ignore(int n /* = 1 */, int delim /* = EOF */)
 
 
 int
-// DRAFT: GAME 0x387958
+// FUNCTION: GAME 0x387958
 istream::sync ()
 {
   streambuf *sb = rdbuf ();
@@ -130,7 +128,7 @@ istream::sync ()
     return 0;
 }
 
-// DRAFT: GAME 0x3879C0
+// FUNCTION: GAME 0x3879C0
 istream& istream::seekg(streampos pos)
 {
     pos = _strbuf->pubseekpos(pos, ios::in);
@@ -139,7 +137,7 @@ istream& istream::seekg(streampos pos)
     return *this;
 }
 
-// DRAFT: GAME 0x387A10
+// FUNCTION: GAME 0x387A10
 istream& istream::seekg(streamoff off, _seek_dir dir)
 {
   streampos pos = _IO_seekoff (_strbuf, off, (int) dir, _IOS_INPUT);
@@ -148,7 +146,7 @@ istream& istream::seekg(streamoff off, _seek_dir dir)
   return *this;
 }
 
-// DRAFT: GAME 0x387A60
+// FUNCTION: GAME 0x387A60
 streampos istream::tellg()
 {
 #if 0
@@ -161,7 +159,7 @@ streampos istream::tellg()
     return pos;
 }
 
-// DRAFT: GAME 0x387AB8
+// FUNCTION: GAME 0x387AB8
 istream& istream::operator>>(char& c)
 {
     if (ipfx0()) {
@@ -196,13 +194,13 @@ istream& istream::operator>>(TYPE& i)\
     return *this;\
 }
 
-// DRAFT: GAME 0x387F78
+// FUNCTION: GAME 0x387F78
 READ_INT(short)
 READ_INT(unsigned short)
-// DRAFT: GAME 0x388038
+// FUNCTION: GAME 0x388038
 READ_INT(int)
 READ_INT(unsigned int)
-// DRAFT: GAME 0x3880F8
+// FUNCTION: GAME 0x3880F8
 READ_INT(long)
 READ_INT(unsigned long)
 #if defined(__GNUC__) && !defined(__STRICT_ANSI__)
@@ -230,6 +228,9 @@ istream& istream::operator>>(long double& x)
     return *this;
 }
 
+// operator>>(double&) and (float&) match, but their "%lg"/"%g" literals sit in the
+// object's .rodata, which is not linked yet; Fn38y_29.c carries 0x388380 meanwhile.
+#ifdef NONMATCHING
 // DRAFT: GAME 0x388380
 istream& istream::operator>>(double& x)
 {
@@ -256,8 +257,9 @@ istream& istream::operator>>(float& x)
       }
     return *this;
 }
+#endif
 
-// DRAFT: GAME 0x3884C0
+// FUNCTION: GAME 0x3884C0
 istream& istream::operator>>(register streambuf* sbuf)
 {
     if (ipfx0()) {
@@ -282,7 +284,7 @@ istream& istream::operator>>(register streambuf* sbuf)
     return *this;
 }
 
-// DRAFT: GAME 0x3885B0
+// FUNCTION: GAME 0x3885B0
 ostream& ostream::operator<<(char c)
 {
     if (opfx()) {
@@ -326,7 +328,7 @@ ostream& ostream::operator<<(char c)
    If SIGN==0, val is unsigned. */
 
 
-// DRAFT: GAME 0x388A00
+// FUNCTION: GAME 0x388A00
 ostream& ostream::operator<<(int n)
 {
     if (opfx()) {
@@ -342,7 +344,7 @@ ostream& ostream::operator<<(int n)
     return *this;
 }
 
-// DRAFT: GAME 0x388AA0
+// FUNCTION: GAME 0x388AA0
 ostream& ostream::operator<<(unsigned int n)
 {
     if (opfx()) {
@@ -355,7 +357,7 @@ ostream& ostream::operator<<(unsigned int n)
 }
 
 
-// DRAFT: GAME 0x388B18
+// FUNCTION: GAME 0x388B18
 ostream& ostream::operator<<(long n)
 {
     if (opfx()) {
@@ -371,7 +373,7 @@ ostream& ostream::operator<<(long n)
     return *this;
 }
 
-// DRAFT: GAME 0x388BA8
+// FUNCTION: GAME 0x388BA8
 ostream& ostream::operator<<(unsigned long n)
 {
     if (opfx()) {
@@ -418,7 +420,7 @@ ostream& ostream::operator<<(const void *p)
 { Is in osform.cc, to avoid pulling in all of _IO_vfprintf by this file. */ }
 #endif
 
-// DRAFT: GAME 0x388FB0
+// FUNCTION: GAME 0x388FB0
 ostream& ostream::operator<<(register streambuf* sbuf)
 {
   if (opfx())
@@ -444,13 +446,13 @@ ostream& ostream::operator<<(register streambuf* sbuf)
   return *this;
 }
 
-// DRAFT: GAME 0x389090
+// FUNCTION: GAME 0x389090
 ostream::ostream(streambuf* sb, ostream* tied)
 {
   init (sb, tied);
 }
 
-// DRAFT: GAME 0x389170
+// FUNCTION: GAME 0x389170
 ostream& ostream::seekp(streampos pos)
 {
     pos = _strbuf->pubseekpos(pos, ios::out);
@@ -459,7 +461,7 @@ ostream& ostream::seekp(streampos pos)
     return *this;
 }
 
-// DRAFT: GAME 0x3891C0
+// FUNCTION: GAME 0x3891C0
 ostream& ostream::seekp(streamoff off, _seek_dir dir)
 {
   streampos pos = _IO_seekoff (_strbuf, off, (int) dir, _IOS_OUTPUT);
@@ -468,7 +470,7 @@ ostream& ostream::seekp(streamoff off, _seek_dir dir)
   return *this;
 }
 
-// DRAFT: GAME 0x389210
+// FUNCTION: GAME 0x389210
 streampos ostream::tellp()
 {
 #if 1
@@ -481,7 +483,7 @@ streampos ostream::tellp()
     return pos;
 }
 
-// DRAFT: GAME 0x389268
+// FUNCTION: GAME 0x389268
 ostream& ostream::flush()
 {
     if (_strbuf->sync())
@@ -489,13 +491,13 @@ ostream& ostream::flush()
     return *this;
 }
 
-// DRAFT: GAME 0x3892C0
+// FUNCTION: GAME 0x3892C0
 ostream& flush(ostream& outs)
 {
   return outs.flush();
 }
 
-// DRAFT: GAME 0x3892E0
+// FUNCTION: GAME 0x3892E0
 istream& ws(istream& ins)
 {
     if (ins.ipfx1()) {
@@ -516,7 +518,7 @@ istream& ws(istream& ins)
 // Differs from ws() manipulator in that failbit is set on EOF.
 // Called by ipfx() and ipfx0() if needed.
 
-// DRAFT: GAME 0x389398
+// FUNCTION: GAME 0x389398
 int istream::_skip_ws()
 {
     int ch = skip_ws(_strbuf);
@@ -530,20 +532,20 @@ int istream::_skip_ws()
     }
 }
 
-// DRAFT: GAME 0x389400
+// FUNCTION: GAME 0x389400
 ostream& ends(ostream& outs)
 {
     outs.put('\0');
     return outs;
 }
 
-// DRAFT: GAME 0x389438
+// FUNCTION: GAME 0x389438
 ostream& endl(ostream& outs)
 {
     return flush(outs.put('\n'));
 }
 
-// DRAFT: GAME 0x389470
+// FUNCTION: GAME 0x389470
 istream& lock(istream& ins)
 {
   _IO_flockfile (ins._strbuf);
@@ -566,7 +568,7 @@ ostream& unlock(ostream& outs)
 }
 
 
-// DRAFT: GAME 0x389490
+// FUNCTION: GAME 0x389490
 ostream& ostream::write(const char *s, streamsize n)
 {
     if (opfx()) {
@@ -581,7 +583,7 @@ ostream& ostream::write(const char *s, streamsize n)
 }
 
 
-// DRAFT: GAME 0x3895B0
+// FUNCTION: GAME 0x3895B0
 iostream::iostream(streambuf* sb, ostream* tied)
 {
   init (sb, tied);
@@ -590,7 +592,7 @@ iostream::iostream(streambuf* sb, ostream* tied)
 // NOTE: extension for compatibility with old libg++.
 // Not really compatible with fistream::close().
 #ifdef _STREAM_COMPAT
-// DRAFT: GAME 0x389710
+// FUNCTION: GAME 0x389710
 void ios::close()
 {
   if (_strbuf->_flags & _IO_IS_FILEBUF)
@@ -601,7 +603,7 @@ void ios::close()
   _state = badbit;
 }
 
-// DRAFT: GAME 0x389770
+// FUNCTION: GAME 0x389770
 int istream::skip(int i)
 {
     int old = (_flags & ios::skipws) != 0;

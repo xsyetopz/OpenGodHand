@@ -355,18 +355,135 @@ void func_003BA900(int *a, int b)
     a[6] = 144000 / (b * 1536) + 1;
 }
 
-// 0x3BA978 near-miss: frame 0x20 with ra at 0x10 (extra 8 bytes of locals) and the constant hoisting/scheduling differ
+// 0x3B9F60 near-miss: original is a do-while over D_003FC7B8 (stride 0x3C) with two induction pointers and loop padding; ours folds the one-element loop (24 vs 84 bytes)
+
+extern void *memcpy(void *, const void *, unsigned);
+extern char D_00460A70[];
+extern char D_00460A38[];
+
+struct IoBuf {
+    void *p;
+    int n;
+};
+struct IoVt {
+    char pad[0x18];
+    int (*rd)();
+    int (*unk)();
+    int (*wr)();
+};
+struct IoDev {
+    struct IoVt *vt;
+};
+struct IoObj {
+    char pad0[8];
+    char *buf;
+    int cap;
+    int pad1;
+    struct IoDev *dev;
+};
+
+// 0x3BA708 near-miss: second rd() call loads the device into v0 plus a0 copy and a nop delay slot; original keeps it in t0 with a0 copied in the jalr delay slot (rest matches)
 #ifdef NONMATCHING
-// DRAFT: GAME 0x3BA978
-void func_003BA978(int a)
+// DRAFT: GAME 0x3BA708
+int func_003BA708(struct IoObj *o)
 {
-    int r = func_003B63A0(a);
-    *(volatile unsigned *)0x1000F590 = *(volatile unsigned *)0x1000F520 | 0x10000;
-    *(volatile int *)0x1000B000 = a;
-    *(volatile unsigned *)0x1000F590 = *(volatile unsigned *)0x1000F520 & 0xFFFEFFFF;
-    if (r)
-        func_003B63F0();
+    struct IoBuf b;
+    int left = 0x1800;
+    int done;
+    struct IoDev *d;
+    o->dev->vt->rd(o->dev, 0, 0x1800, &b);
+    memcpy(b.p, o->buf, b.n);
+    done = b.n;
+    left -= done;
+    o->dev->vt->wr(o->dev, 1, &b);
+    if (left > 0) {
+        d = o->dev;
+        d->vt->rd(d, 0, left, &b);
+        memcpy(b.p, o->buf + done, b.n);
+        o->dev->vt->wr(o->dev, 1, &b, b.n);
+        left -= b.n;
+    }
+    if (left) {
+        func_003B9DE0(D_00460A70);
+        return -1;
+    }
+    return 0;
 }
 #endif
 
-// 0x3B9F60 near-miss: original is a do-while over D_003FC7B8 (stride 0x3C) with two induction pointers and loop padding; ours folds the one-element loop (24 vs 84 bytes)
+extern char D_00460978[];
+extern char D_004609A8[];
+extern char D_004609D8[];
+extern int D_003FC518[];
+extern int D_003FC528[];
+extern int D_003FC5C8[][40];
+
+// FUNCTION: GAME 0x3BA3D8
+int func_003BA3D8(int *o, unsigned char *p)
+{
+    unsigned c, i;
+    int skip;
+    if (p[0] == 0xB && p[1] == 0x77) {
+        o[10] = 1;
+        skip = 4;
+    } else if (p[0] == 0x77 && p[1] == 0xB) {
+        o[10] = 2;
+        skip = 5;
+    } else {
+        func_003B9DE0(D_00460978);
+        return -1;
+    }
+    p += skip;
+    c = *p >> 6;
+    if (c >= 3) {
+        func_003B9DE0(D_004609A8);
+        return -1;
+    }
+    o[11] = D_003FC518[c];
+    i = *p & 0x3F;
+    if (i >= 0x26) {
+        func_003B9DE0(D_004609D8);
+        return -1;
+    }
+    o[12] = D_003FC528[i];
+    o[13] = D_003FC5C8[c][i] << 1;
+    return 0;
+}
+
+struct IoObj2 {
+    char pad0[8];
+    char *buf;
+    int cap;
+    struct IoDev *dev;
+    char pad1[0x20];
+    int len;
+};
+
+// 0x3BA5A0 near-miss: same second rd() call scheduling difference as 0x3BA708 (8 bytes larger)
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3BA5A0
+int func_003BA5A0(struct IoObj2 *o)
+{
+    struct IoBuf b;
+    int left = o->len;
+    int off = 8;
+    o->dev->vt->rd(o->dev, 1, left, &b);
+    memcpy(o->buf + off, b.p, b.n);
+    left -= b.n;
+    off += b.n;
+    o->dev->vt->wr(o->dev, 0, &b);
+    if (left > 0) {
+        o->dev->vt->rd(o->dev, 1, left, &b);
+        memcpy(o->buf + off, b.p, b.n);
+        left -= b.n;
+        off += b.n;
+        o->dev->vt->wr(o->dev, 0, &b);
+    }
+    if (left) {
+        func_003B9DE0(D_00460A38);
+        return -1;
+    }
+    memset(o->buf + off, 0, o->cap - off);
+    return 0;
+}
+#endif

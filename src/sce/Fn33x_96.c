@@ -122,3 +122,140 @@ void func_0033BDD8(void) { int i; int *p; memset(D_003E9970, 0, 0x20); memset(D_
 // diff: 2 words (original loads the constant 5 into s3 before the pointer into s1)
 int func_0032F178(char *s) { int i, r; int *p; if (func_0032F468(*(int *)(s + 4)) == 3) { for (i = 0, p = (int *)(s + 0xC); i < s[3]; i++) { r = func_00329F98(*p++); if (r != 5 && r != 0) break; } if (i == s[3]) return 1; } return 0; }
 #endif
+
+// Round 27 declarations
+extern char D_00452D78[], D_003D9DE0[], D_004544E0[], D_004544E8[], D_00455308[], D_00455330[], D_004527A0[], D_003E9990[], D_003DA250[], D_003E2B68[];
+extern int D_003E8C08[], D_003E0710, D_003E0708;
+extern struct { void (*f)(int, char *); int a; } D_007588B0;
+char *strcat(char *, const char *);
+int strlen(const char *);
+int strcmp(const char *, const char *);
+int vsprintf(char *, const char *, void *);
+void func_0033FCB0(char *);
+void func_0033F130(char *);
+void func_00340920(int);
+int func_0032F570(int);
+int func_0032F538(int);
+int func_0032A4A8(int);
+void func_003329E8(char *);
+void func_0032EF00(void);
+void func_00329EA8(void);
+int func_0032B660(char *, int);
+void func_0033F130(char *);
+int func_003351C0(int, int *);
+void func_00334D68(int, char *);
+int func_00331C78(int);
+void func_00331F50(int);
+void func_00338960(void);
+void func_00338978(void);
+void func_00340130(void);
+void func_00338478(char *);
+void func_0033B200(void);
+
+// FUNCTION: GAME 0x32E150
+int func_0032E150(char *s) {
+    if (s == 0) { func_0033FCB0(D_00452D78); return -1; }
+    if ((unsigned)((unsigned char)s[1] - 1) < 3) {
+        switch (func_0032F570(*(int *)(s + 4))) {
+        case 0: return func_0032F538(*(int *)(s + 4));
+        case 1: return func_0032A4A8(*(int *)(s + 0xC));
+        }
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x333390
+void func_00333390(char *a, char *b) {
+    strcpy(b, D_003D9DE0);
+    if (*a != 0x2F && *a != 0x5C) strcat(b, D_004544E0);
+    strcat(b, a);
+    if (strcmp(b + strlen(b) - 2, D_004544E8) != 0) strcat(b, D_004544E8);
+    func_003329E8(b);
+}
+
+// FUNCTION: GAME 0x33AD08
+int func_0033AD08(char *s) {
+    int h = D_003E8C08[s[0]];
+    h = (h << 4) + D_003E8C08[s[1]];
+    h = (h << 4) + D_003E8C08[s[2]];
+    h = (h << 4) + D_003E8C08[s[3]];
+    h = (h << 4) + D_003E8C08[s[4]];
+    h = (h << 4) + D_003E8C08[s[5]];
+    h = (h << 4) + D_003E8C08[s[6]];
+    return h;
+}
+
+// FUNCTION: GAME 0x336D08
+void func_00336D08(char *a, int b, int c) {
+    int *q, *o, v;
+    if (a == 0) { func_0033F130(D_00455308); return; }
+    q = *(int **)(a + 4);
+    o = (int *)q[1];
+    v = o[0xE8 / 4];
+    if (a[3] < 2 || v == 0) { func_0033F130(D_00455330); return; }
+    func_00340920(v);
+    o[0xEC / 4] = b;
+    o[0xF0 / 4] = c;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x33B6E8
+// diff: 1 word (va pointer is sp+0x80 from __builtin_next_arg; the original has sp+0x48, the saved a1 slot; the package has no stdarg.h)
+void func_0033B6E8(const char *fmt, ...) {
+    char *ap = __builtin_next_arg(fmt);
+    memset(D_003E9990, 0, 0x80);
+    vsprintf(D_003E9990, fmt, ap);
+    if (D_007588B0.f) D_007588B0.f(D_007588B0.a, D_003E9990);
+}
+#endif
+
+// FUNCTION: GAME 0x32BC98
+void func_0032BC98(char *s, char *name, int c, int d) {
+    if (s == 0 || name == 0) { func_0033F130(D_004527A0); return; }
+    func_00329EA8();
+    strcpy(*(char **)(s + 0xB0), name);
+    *(int *)(s + 0xB4) = *(int *)(s + 0xB0);
+    *(int *)(s + 0xBC) = c;
+    *(int *)(s + 0xC0) = d;
+    *(int *)(s + 0xB8) = 0;
+    s[1] = 1;
+    s[0xAC] = 1;
+    s[2] = 0;
+    func_0032B660(s, 0);
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x334248
+// diff: 3 words (lui of D_003DA250 is scheduled before the jal delay slot, original places it after)
+int func_00334248(int a) {
+    int t[4]; int s0; char *p;
+    if (a == 0) return 0;
+    p = D_003DA250;
+    func_003351C0(a, t);
+    if (t[1] == 0) {
+        func_00334D68(a, p);
+        func_00331C78(0x4200);
+        s0 = func_00331EE8((int)p, 1);
+        func_00331C78(0x4201);
+        if (s0 < 0) return 0;
+        func_00331C78(0x4300);
+        func_00331F50(s0);
+        func_00331C78(0x4301);
+    }
+    return 1;
+}
+
+// DRAFT: GAME 0x338638
+// diff: 2 words (s1 = 15 and s2 = 1 are loaded in swapped order)
+void func_00338638(void) {
+    int i; char *p;
+    if (D_003E0710 == 1 && D_003E0708 <= 0) return;
+    func_00338960();
+    p = D_003E2B68;
+    for (i = 15; i >= 0; i--, p += 0x64)
+        if (*p == 1) func_00338478(p);
+    func_00338978();
+    func_00340130();
+    func_0033B200();
+}
+#endif

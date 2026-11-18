@@ -177,3 +177,107 @@ extern "C" void func_00377AC0(Fn38Pr *o, unsigned short kind)
         }
     }
 }
+
+#ifdef NONMATCHING
+struct Fn38Q { unsigned short m_00; short _p02; short m_04; short m_06; short m_08; short m_0A; unsigned m_0C; int m_10; short m_14; char _p16[10]; };
+extern Fn38Q D_0076A7D4[];
+extern "C" int func_00374AE0(int);
+
+// DRAFT: GAME 0x377CB8
+// diff: 4 words; hoisted constant order (lui s4 vs addiu s3) differs
+extern "C" void func_00377CB8(void)
+{
+    unsigned v = 0x1FFFFF;
+    int i = 0;
+    Fn38Q *e = D_0076A7D4;
+    do {
+        e->m_0C = v;
+        e->m_00 = 1;
+        v += 0xFFFE0000u;
+        e->m_04 = 0x80;
+        e->m_06 = 0x80;
+        e->m_08 = 0;
+        e->m_0A = 0;
+        int r = func_00374AE0(1);
+        e->m_14 = i;
+        e->m_10 = r;
+        i++;
+        e++;
+    } while (i < 2);
+}
+#endif
+
+struct Fn38Y { char _p0[3]; unsigned char m_03; unsigned char m_04; char _p05[0x5F]; int m_64; char _p68[0x6C]; int m_D4; };
+struct Fn38X { char _p0[8]; int m_08; char _p0C[0x14]; int m_20; };
+struct Fn38W { char _p0[0x38]; unsigned m_38; };
+
+// FUNCTION: GAME 0x383478
+extern "C" void func_00383478(char *o, Fn38W *w)
+{
+    Fn38X *x = (Fn38X *)(o + 0x414);
+    Fn38Y *y = (Fn38Y *)(o + 0x370);
+    int a;
+    if (y->m_03 & 1) {
+        if (x->m_20 != 0)
+            a = x->m_08;
+        else
+            goto L2;
+    } else if (y->m_64 != 0) {
+        a = 0;
+    } else {
+L2:
+        if (y->m_03 & 2)
+            a = y->m_D4;
+        else
+            a = 0;
+    }
+    unsigned f = w->m_38;
+    if (f & 4) {
+        unsigned c = y->m_04;
+        if (c != 0)
+            y->m_04 = c - 1;
+        else
+            y->m_04 = a;
+        return;
+    }
+    if (f & 8) {
+        int c = y->m_04;
+        if (c < a)
+            y->m_04 = c + 1;
+        else
+            y->m_04 = 0;
+    }
+}
+
+#ifdef NONMATCHING
+struct Fn38Z { char _p0[6]; unsigned char m_06; char _p07[0x36A]; char m_370; char m_371; char m_372; };
+struct Fn38Z2 { char _p0[1]; char m_01; char m_02; char _p3[0xF0]; int m_F4; void *m_F8; };
+extern "C" int func_00323000(int);
+extern "C" int func_00323918(int, int);
+extern "C" void *func_0031C8B8(unsigned, unsigned);
+extern "C" void func_00323A70(int);
+extern "C" void func_00323E80(int, int, void *);
+extern "C" int printf(const char *, ...);
+extern const char D_0045C270[];
+
+// DRAFT: GAME 0x37FC28
+// diff: 16 words; error tail is b/addiu in delay slot (ours 156 vs 160 bytes)
+extern "C" void func_0037FC28(char *o)
+{
+    Fn38Z2 *s = (Fn38Z2 *)(o + 0x370);
+    if (func_00323000(0xFF) == 3) {
+        s->m_F4 = func_00323918(0xFF, (unsigned char)o[6]);
+        void *r = func_0031C8B8(0x800, 0x40);
+        s->m_F8 = r;
+        if (r == 0) {
+            printf(D_0045C270);
+            s->m_01 = 1;
+            func_00323A70(s->m_F4);
+            o[2] = 10;
+        } else {
+            func_00323E80(s->m_F4, 1, r);
+            o[2] = 5;
+        }
+    }
+}
+#endif

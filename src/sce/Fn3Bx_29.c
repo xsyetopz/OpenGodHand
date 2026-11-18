@@ -373,3 +373,72 @@ int func_003B6B90(void)
         func_003B63F0();
     return 0;
 }
+
+extern void func_003BA9F0();
+extern void func_003BA978();
+
+// FUNCTION: GAME 0x3BA978
+void func_003BA978(int a)
+{
+    int r = func_003B63A0(a);
+    *(volatile unsigned *)0x1000F590 = *(volatile unsigned *)0x1000F520 | 0x10000;
+    *(volatile int *)0x1000B000 = a;
+    *(volatile unsigned *)0x1000F590 = *(volatile unsigned *)0x1000F520 & 0xFFFEFFFF;
+    if (r)
+        func_003B63F0();
+}
+
+// FUNCTION: GAME 0x3BA9F0
+void func_003BA9F0(int a)
+{
+    int r = func_003B63A0();
+    *(volatile unsigned *)0x1000F590 = *(volatile unsigned *)0x1000F520 | 0x10000;
+    *(volatile int *)0x1000B400 = a;
+    *(volatile unsigned *)0x1000F590 = *(volatile unsigned *)0x1000F520 & 0xFFFEFFFF;
+    if (r)
+        func_003B63F0();
+}
+
+// FUNCTION: GAME 0x3BAA68
+void func_003BAA68(int *a)
+{
+    func_003BA9F0(1);
+    a[0] = *(volatile int *)0x1000B410;
+    a[1] = *(volatile int *)0x1000B430;
+    a[2] = *(volatile int *)0x1000B420;
+    a[3] = *(volatile int *)0x1000B400;
+    while (*(volatile unsigned *)0x10002010 & 0xF0)
+        ;
+    func_003BA978(0);
+    a[4] = *(volatile int *)0x1000B010;
+    a[5] = *(volatile int *)0x1000B020;
+    a[6] = *(volatile int *)0x1000B000;
+    a[7] = *(volatile int *)0x10002020;
+    a[8] = *(volatile int *)0x10002010;
+}
+
+// FUNCTION: GAME 0x3BAB50
+void func_003BAB50(unsigned *o)
+{
+    unsigned v = o[7];
+    unsigned ch = v & 0x7F;
+    unsigned sum = ((v >> 16) & 3) + ((v >> 8) & 0xF);
+    unsigned b = o[0] - (sum << 4);
+    unsigned a = o[2] + sum;
+    if (o[4] && o[5]) {
+        *(volatile unsigned *)0x1000B010 = o[4];
+        *(volatile unsigned *)0x1000B020 = o[5];
+        func_003BA978(o[6] | 0x100);
+    }
+    while (*(volatile int *)0x10002010 < 0)
+        ;
+    *(volatile unsigned *)0x10002000 = ch;
+    while (*(volatile int *)0x10002010 < 0)
+        ;
+    if (b && a) {
+        *(volatile unsigned *)0x1000B410 = b;
+        *(volatile unsigned *)0x1000B430 = o[1];
+        *(volatile unsigned *)0x1000B420 = a;
+        func_003BA9F0(o[3] | 0x100);
+    }
+}

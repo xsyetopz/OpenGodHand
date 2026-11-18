@@ -6,7 +6,6 @@ extern int D_00460DA8;
 extern char D_004512B0[];
 void func_0031EEC8(void *, char *);
 void func_0038EB28(int, int);
-int **func_003892C0(int **);
 
 // FUNCTION: GAME 0x3202A8
 int func_003202A8(const char *a, const char *b, int c)
@@ -22,20 +21,6 @@ int *func_003218F8(void)
     if (!D_00460DA8)
         func_0031EEC8(&D_00460DA8, D_004512B0);
     return &D_00460DA8;
-}
-
-// FUNCTION: GAME 0x389400
-int **func_00389400(int **o)
-{
-    func_0038EB28(0, **o);
-    return o;
-}
-
-// FUNCTION: GAME 0x389438
-int **endl__FR7ostream(int **o)
-{
-    func_0038EB28(10, **o);
-    return func_003892C0(o);
 }
 
 extern int D_00451270[], D_00451288[];
@@ -88,3 +73,40 @@ void func_0031E2E0(struct A a, struct A b)
     y.w[1] ^= 1;
     func_0031DE78(func_0031E048(&x, &y, &z));
 }
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x321F48 (~10 words differ: original keeps a separate post-loop `n == 0` check, bnel, before the binary search)
+struct E { int a, b; unsigned base, size; };
+struct N { unsigned lo, hi; int p; struct E **arr; unsigned cnt; struct N *next; };
+extern struct N *D_00755C18;
+void func_00321E08();
+struct E *func_00321F48(unsigned a)
+{
+    struct N *n;
+    unsigned lo, hi, mid;
+    struct E *e;
+    for (n = D_00755C18; n; n = n->next) {
+        if (!n->lo)
+            func_00321E08(n);
+        if (a < n->lo)
+            continue;
+        if (a < n->hi)
+            break;
+    }
+    hi = n ? n->cnt : 0;
+    if (n && hi) {
+        lo = 0;
+        do {
+            mid = (lo + hi) >> 1;
+            e = n->arr[mid];
+            if (a < e->base)
+                hi = mid;
+            else if (a < e->base + e->size)
+                return e;
+            else
+                lo = mid + 1;
+        } while (lo < hi);
+    }
+    return 0;
+}
+#endif

@@ -157,3 +157,116 @@ extern "C" void func_00138648(ObjJ *self)
     func_0030A8C8(self->m140, a.v, p.v, q.v);
 }
 #endif
+
+extern "C" void func_002B6370(void *);
+extern "C" void *func_002B5E50(void *);
+extern "C" void *func_002B61B0(void *);
+void MtxInverse(cMatrix &, const cMatrix &);
+struct Mat16 { float m[16] __attribute__((aligned(16))); };
+// FUNCTION: GAME 0x2B5FC8
+extern "C" void func_002B5FC8(cNode *self, const float *p)
+{
+    Mat16 m;
+    Sv16 c;
+    Sv16 t;
+    float *tp;
+    func_002B6370(self);
+    void *r = func_002B5E50(self);
+    if (r) {
+        MtxInverse(*(cMatrix *)&m, *(const cMatrix *)func_002B61B0(r));
+        tp = t.v;
+    } else {
+        __asm__ volatile("vmove.xyzw $vf4,$vf0\n\tvmr32.xyzw $vf5,$vf4\n\tvmr32.xyzw $vf6,$vf5\n\tvmr32.xyzw $vf7,$vf6\n\t"
+                         "sqc2 $vf4,0x30(%0)\n\tsqc2 $vf5,0x20(%0)\n\tsqc2 $vf6,0x10(%0)\n\tsqc2 $vf7,0x0(%0)" : : "r"(&m) : "memory");
+        tp = t.v;
+    }
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)t.v) : "r"(p));
+    sceVu0ApplyMatrix(tp, m.m, tp);
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)c.v) : "r"(tp));
+    self->setLocalTranslation(*(const cVec *)&c);
+}
+
+#ifdef NONMATCHING
+extern "C" void func_001B6E90(void *);
+extern "C" char D_00422498[];
+struct QK { char b0, b1, b2, pa; int w4, w8; int arr[8]; int w2C; int w30, w34, w38, w3C; char pb[0x10]; Sv16 sv[14]; int w130, w134, w138, w13C; };
+struct ObjK {
+    char p0[0x214]; void *vt; char p1[0x600 - 0x218];
+    QK q;
+};
+#define SVZ(k) __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv *)self->q.sv[k].v))
+// DRAFT: GAME 0x17F4E0
+// diff: 22 words; vt/q register swap (v0/v1), loop counter in a1 and pointer in a0 instead of a0/v1
+extern "C" ObjK *func_0017F4E0(ObjK *self)
+{
+    func_001B6E90(self);
+    void *vt = D_00422498;
+    QK *q = &self->q;
+    self->vt = vt;
+    SVZ(0); SVZ(1); SVZ(2); SVZ(3); SVZ(4); SVZ(5); SVZ(6);
+    SVZ(7); SVZ(8); SVZ(9); SVZ(10); SVZ(11); SVZ(12); SVZ(13);
+    q->b0 = 0;
+    q->w13C = 0;
+    q->b1 = 0;
+    q->b2 = 0;
+    q->w4 = 0;
+    q->w8 = 0;
+    q->w30 = 0;
+    q->w34 = 0;
+    q->w38 = 0;
+    q->w3C = 0;
+    q->w130 = 0;
+    q->w134 = 0;
+    q->w138 = 0;
+    for (unsigned i = 0; i < 8; i++) q->arr[i] = 0;
+    return self;
+}
+#endif
+
+extern "C" void func_002B5D58(void *, void *);
+extern "C" char D_0044B310[];
+struct ObjL {
+    void *w0; int w4, w8, wC, w10; char b14, b15, b16, p0; char p1[8];
+    float one[4]; Sv16 s30, s40; char p2[0x90 - 0x50]; int w90; char p3[0xA0 - 0x94]; Sv16 sA0;
+    char p4[0xF0 - 0xB0]; void *vtF0;
+};
+#define IDENT(o) __asm__ volatile("vmove.xyzw $vf4,$vf0\n\tvmr32.xyzw $vf5,$vf4\n\tvmr32.xyzw $vf6,$vf5\n\tvmr32.xyzw $vf7,$vf6\n\t" \
+                                  "sqc2 $vf4,0x30(%0)\n\tsqc2 $vf5,0x20(%0)\n\tsqc2 $vf6,0x10(%0)\n\tsqc2 $vf7,0x0(%0)" : : "r"((char *)self + (o)) : "memory")
+// FUNCTION: GAME 0x2B5C20
+extern "C" ObjL *func_002B5C20(ObjL *self, void *a1, void *a2)
+{
+    self->w0 = a1;
+    self->vtF0 = D_0044B310;
+    float *o = self->one;
+    self->one[0] = 1.0f;
+    self->w4 = 0; self->w8 = 0; self->wC = 0; self->w10 = 0;
+    self->b14 = 0; self->b15 = 0; self->b16 = 0;
+    o[1] = 1.0f; o[2] = 1.0f; o[3] = 1.0f;
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv *)self->s30.v));
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv *)self->s40.v));
+    self->w90 = 0;
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv *)self->sA0.v));
+    func_002B5D58(self, a2);
+    IDENT(0x50);
+    IDENT(0xB0);
+    return self;
+}
+
+struct LenPosLineReslt;
+float LengthPositionToGivenLine(const cVec &, const cVec &, const cVec &, LenPosLineReslt *);
+extern "C" void func_00147C60(void *, float *);
+// FUNCTION: GAME 0x2BBCE0
+extern "C" int func_002BBCE0(void *a0, float *m, const float *p, float r)
+{
+    cVec z;
+    cVec c(*(const cVec *)p);
+    Sv16 u;
+    Sv16 t;
+    func_00147C60(&z, m);
+    float *cp = c.v;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)t.v) : "r"(cp));
+    sceVu0ApplyMatrix(t.v, m, t.v);
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)u.v) : "r"(t.v));
+    c.v[0] = u.v[0]; c.v[1] = u.v[1]; c.v[2] = u.v[2];
+    return LengthPositionToGivenLine(*(const cVec *)a0, z, c, 0) <= r;
+}

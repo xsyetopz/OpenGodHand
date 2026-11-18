@@ -183,34 +183,6 @@ int func_003999D0(void)
 int func_0038B168(struct SB *, int);
 int func_0038EAE0(struct SB *);
 
-// FUNCTION: GAME 0x387788
-struct Is *func_00387788(struct Is *s, int n, int delim)
-{
-    struct SB *sb;
-    s->cnt = 0;
-    if (ipfx(s)) {
-        sb = s->ios->sb;
-        if (delim == -1) {
-            s->cnt = func_0038B168(sb, n);
-        } else {
-            for (;;) {
-                int c;
-                if (--n < 0)
-                    break;
-                c = func_0038EAE0(sb);
-                if (c == -1) {
-                    s->ios->st |= 3;
-                    break;
-                }
-                s->cnt++;
-                if (c == delim)
-                    break;
-            }
-        }
-    }
-    return s;
-}
-
 int func_0038AB70(struct SB *, long *, char);
 
 // FUNCTION: GAME 0x38ACB0
