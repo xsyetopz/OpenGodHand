@@ -80,6 +80,29 @@ def read_sources() -> dict[Path, list[int]]:
     return found
 
 
+INCLUDE = re.compile(r'^\s*#\s*include\s+"([^"]+)"', re.M)
+
+
+def headers(src: Path) -> list[str]:
+    """Quoted includes reachable from `src`, searched like `-Iinclude -Isrc`.
+
+    The EE compilers cannot write depfiles through the Wine wrapper, so
+    configure scans includes itself; build.ninja depends on every source, so
+    a new include re-runs configure."""
+    seen: set[Path] = set()
+    todo = [ROOT / src]
+    while todo:
+        text = todo.pop().read_text(errors="replace")
+        for name in INCLUDE.findall(text):
+            for base in (ROOT / "include", ROOT / "src"):
+                h = base / name
+                if h.exists() and h not in seen:
+                    seen.add(h)
+                    todo.append(h)
+                    break
+    return sorted(str(h.relative_to(ROOT)) for h in seen)
+
+
 def unit_obj(unit_dir: str, vram: int) -> str:
     return f"build/{unit_dir}/{vram:08X}.o"
 
@@ -154,7 +177,8 @@ def main() -> int:
     cobjs = []
     for src in sources:
         o = "build/" + str(src.with_suffix(".o"))
-        n.append(f"build {o}: cc {src}")
+        hs = headers(src)
+        n.append(f"build {o}: cc {src}" + (" | " + " ".join(hs) if hs else ""))
         cobjs.append(o)
 
     script = f"build/{TARGET}.link.ld"
@@ -176,7 +200,7 @@ def main() -> int:
     n.append(f"build build/{TARGET}: pack config/elf_layout.json build/{TARGET}.elf assets/elf | tools/elfpack.py")
     n.append(f"build build/{TARGET}.ok: check build/{TARGET} | tools/check.py config/{TARGET}.sha1")
     n.extend(objdiff_config.emit(units, sources))
-    deps = " ".join(["tools/configure.py", "tools/objdiff_config.py", *(f"{row[4]}/units.tsv" for row in SECTIONS), *map(str, sources)])
+    deps = " ".join(["tools/configure.py", "tools/objdiff_config.py", *(f"{row[4]}/units.tsv" for row in SECTIONS), *map(str, sources), *sorted({h for src in sources for h in headers(src)})])
     n.append(f"build build.ninja: configure | {deps}")
     n.append(f"default build/{TARGET}.ok")
     (ROOT / "build.ninja").write_text("\n".join(n) + "\n")
