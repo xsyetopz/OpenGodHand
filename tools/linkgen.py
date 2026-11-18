@@ -40,7 +40,7 @@ import configure  # noqa: E402
 from elftools.elf.elffile import ELFFile  # noqa: E402
 from elftools.elf.relocation import RelocationSection  # noqa: E402
 import fncmp  # noqa: E402
-from linkdata import derived_addresses, find_symbol, jump_table, matches, positional_address, rodata_span  # noqa: E402
+from linkdata import derived_addresses, find_symbol, jump_table, matches, positional_address, redirect_calls, rodata_span, section_calls  # noqa: E402
 
 ROOT = configure.ROOT
 
@@ -130,6 +130,7 @@ def main() -> int:
     ro_units = [(v, sz) for row, units in sections if row[0] == ".rodata" for v, sz, _n in units]
     ro_names = {v: n for row, units in sections if row[0] == ".rodata" for v, _sz, n in units}
     absolute: dict[str, int] = {}
+    calls: dict[int, dict[str, str]] = {}
     unit_at = {v: n for _row, units in sections for v, _sz, n in units}
     taken = {e[2] for e in cfg["compiled"]}
     for entry in cfg["compiled"]:
@@ -148,6 +149,9 @@ def main() -> int:
         derived = derived_addresses(ROOT / obj, sym, vram, raw, known | compiled_defs)
         absolute.update(derived)
         refs[vram] = local_refs(ROOT / obj, sym, known | set(derived))
+        # An unannotated upstream function the original names elsewhere is called by name.
+        calls[vram] = section_calls(ROOT / obj, sym, known | set(derived))
+        refs[vram] -= set(calls[vram])
         # asm exception tables name `$LEH_<addr>` labels of this unit; each is its address.
         for label in re.findall(r"\$LEH_([0-9A-F]{8})", (ROOT / f"asm/text/{vram:08X}.s").read_text()):
             absolute[f"$LEH_{label}"] = int(label, 16)
@@ -205,7 +209,14 @@ def main() -> int:
 
     objcopy = os.environ.get("CROSS", "mipsel-linux-gnu-") + "objcopy"
     for obj, syms in weak.items():
-        subprocess.check_call([objcopy, *(f"--weaken-symbol={s}" for s in syms), obj, gated(obj)], cwd=ROOT)
+        # A static callee is made global so the script's pin can stand in for it.
+        glob = {x for v, o, _s in cfg["compiled"] if o == obj for x in calls[v].values() if x not in linked_syms}
+        subprocess.check_call([objcopy, *(f"--globalize-symbol={x}" for x in sorted(glob)),
+                               *(f"--weaken-symbol={s}" for s in sorted(set(syms) | glob)), obj, gated(obj)], cwd=ROOT)
+    for vram, obj, sym in cfg["compiled"]:
+        todo = {s: x for s, x in calls[vram].items() if x not in linked_syms}
+        if status[vram] == "match" and todo:
+            redirect_calls(ROOT / gated(obj), sym, todo)
     # A table section padded past its unit is cut to the unit's size.
     for vram, (_uv, name, cut, _units, _deps) in jtbl.items():
         if cut is not None and status[vram] == "match":

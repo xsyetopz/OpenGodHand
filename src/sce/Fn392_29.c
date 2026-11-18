@@ -27,3 +27,18 @@ int func_00392A80(_IO_FILE *fp, const char *data, _IO_size_t to_do)
     fp->_IO_write_end = ((fp->_flags & (_IO_LINE_BUF + _IO_UNBUFFERED)) ? fp->_IO_buf_base : fp->_IO_buf_end);
     return count != to_do ? EOF : 0;
 }
+
+// ostream operator<< / write thunks (a1/a2 pass through untouched)
+extern int __ls__7ostreamPCc();
+extern int write__7ostreamPCci();
+
+// FUNCTION: GAME 0x38A548
+int func_0038A548() { return __ls__7ostreamPCc(); }
+// FUNCTION: GAME 0x38A568
+int func_0038A568() { return __ls__7ostreamPCc(); }
+// FUNCTION: GAME 0x38A5C8
+int func_0038A5C8() { return write__7ostreamPCci(); }
+// FUNCTION: GAME 0x38A5E8
+int func_0038A5E8() { return write__7ostreamPCci(); }
+// FUNCTION: GAME 0x38A608
+int func_0038A608() { return write__7ostreamPCci(); }

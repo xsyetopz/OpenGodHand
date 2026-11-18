@@ -189,20 +189,22 @@ extern "C" void func_00305A68(char *self)
 
 extern "C" char *func_00306F88(char *);
 
-// FUNCTION: GAME 0x306D18
+#ifdef NONMATCHING
+// DRAFT: GAME 0x306D18 (19 words off: zero stores in the cVec init loop fold to $zero instead of the hoisted $f1)
 extern "C" void func_00306D18(char *self)
 {
     float c[4];
     float *v = (float *)(self + 0x380);
+    float fz = 0.0f;
     for (unsigned i = 0; i < 1000; i++, v += 4) {
         c[0] = 0.0f;
         c[1] = 0.0f;
         c[2] = 0.0f;
         c[3] = 1.0f;
         if (v != c) {
-            v[0] = 0.0f;
+            v[0] = fz;
             v[2] = c[0];
-            v[1] = 0.0f;
+            v[1] = fz;
         }
     }
     char *e = self;
@@ -233,5 +235,32 @@ extern "C" void func_00306D18(char *self)
     *(int *)(t + 0xC) = 0;
     *(short *)(t + 0x12) = 0;
     *(char **)(t + 4) = r;
-    *(char **)t = r;
+    *(char **)r = t;
 }
+#endif
+
+extern char g_CollScr[];
+extern "C" int func_0012ED60(void *, int, int, int, int, int, int, int **, int, unsigned *, int, int, int, int);
+extern "C" char *func_001333B8(void *, unsigned short);
+extern "C" int func_00308D68(char *, int);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x308DA8 (18 words off: original tests the hit count once before the loop and keeps the entry base in a0)
+extern "C" int func_00308DA8(char *self, int a1, int a2)
+{
+    int *hit[8];
+    unsigned n;
+    if (func_0012ED60(g_CollScr, a1, a2, 0, 0, 7, 300, hit, 8, &n, 0, 0, 0, 0) && n) {
+        for (unsigned i = 0; i < n; i++) {
+            char *d = func_001333B8(g_CollScr, *(unsigned short *)((char *)hit[i] + 8));
+            if (!*((unsigned char *)hit[i] + 10))
+                return 1;
+            for (int j = 0; j < *((unsigned char *)hit[i] + 10); j++, d += 8) {
+                if (!*(int *)d && *(int *)(d + 4) && !func_00308D68(self, *(int *)(d + 4)))
+                    return 1;
+            }
+        }
+    }
+    return 0;
+}
+#endif

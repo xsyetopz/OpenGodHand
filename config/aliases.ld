@@ -61,3 +61,5 @@ lseek = func_003B0390;
 sync_with_stdio__3iosi = func_0038AFB0;
 terminate__Fv = func_003211E0;
 __errno = func_003A4FB8;
+_IO_least_marker = func_0038C238;
+setbuf__7filebufPci = func_0038EF60;

@@ -166,7 +166,7 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: lis
     # The assembler pads the section to its alignment; zero bytes after the
     # last real byte are not content.
     used = min(len(data), len(data.rstrip(b"\0")) + 3 & ~3)
-    if not entries or used == 0 or max(entries | foreign) >= used:
+    if not (entries | foreign) or used == 0 or max(entries | foreign) >= used:
         return None
     word = lambda b, i: struct.unpack_from("<I", b, i)[0]
     for n, (uv, _size) in enumerate(units):
@@ -188,3 +188,48 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: lis
             covered = [v for v, _s in units[n:] if v < end]
             return uv, sec.name, data[:cut] if cut < len(data) else None, covered, deps
     return None
+
+
+def section_calls(obj: Path, sym: str, known: set[str]) -> dict[str, str]:
+    """Map each `.text.X` section that `sym` reaches through a section symbol
+    to X, when X is a name the link script pins and the section defines it.
+    ld cannot pin a section symbol, but it can pin the name X."""
+    out: dict[str, str] = {}
+    with obj.open("rb") as f:
+        elf = ELFFile(f)
+        symtab = elf.get_section_by_name(".symtab")
+        for rs in elf.iter_sections():
+            if not isinstance(rs, RelocationSection) or elf.get_section(rs["sh_info"]).name != f".text.{sym}":
+                continue
+            for r in rs.iter_relocations():
+                t = symtab.get_symbol(r["r_info_sym"])
+                if t["st_info"]["type"] != "STT_SECTION" or not isinstance(t["st_shndx"], int):
+                    continue
+                sec = elf.get_section(t["st_shndx"]).name
+                x = sec[len(".text."):]
+                if sec.startswith(".text.") and x != sym and x in known and any(
+                    s.name == x and s["st_shndx"] == t["st_shndx"] for s in symtab.iter_symbols()
+                ):
+                    out[sec] = x
+    return out
+
+
+def redirect_calls(path: Path, sym: str, calls: dict[str, str]) -> None:
+    """Point the section-symbol relocations of `sym` in the ELF at `path` that
+    name a key of `calls` at the symbol of that name (in place; the
+    instruction addends stay, a function starts its own section). The symbol
+    must be global already, see linkgen's objcopy step."""
+    with path.open("r+b") as f:
+        elf = ELFFile(f)
+        symtab = elf.get_section_by_name(".symtab")
+        index = {s.name: i for i, s in enumerate(symtab.iter_symbols()) if s["st_info"]["bind"] != "STB_LOCAL"}
+        for rs in elf.iter_sections():
+            if not isinstance(rs, RelocationSection) or elf.get_section(rs["sh_info"]).name != f".text.{sym}":
+                continue
+            for n, r in enumerate(rs.iter_relocations()):
+                t = symtab.get_symbol(r["r_info_sym"])
+                if t["st_info"]["type"] == "STT_SECTION" and isinstance(t["st_shndx"], int):
+                    new = calls.get(elf.get_section(t["st_shndx"]).name)
+                    if new is not None:
+                        f.seek(rs["sh_offset"] + n * rs["sh_entsize"] + 4)  # Elf32_Rel.r_info
+                        f.write(struct.pack("<I", (index[new] << 8) | r["r_info_type"]))

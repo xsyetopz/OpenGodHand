@@ -196,3 +196,102 @@ int func_0039B810(struct Pd *d)
     }
     return r;
 }
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x39EAA8
+// diff: 6 words, sw/lw/subu/srlv scheduling order only
+int func_0039EAA8(void *p, int n)
+{
+    struct Bs *s = p;
+    unsigned int v, m, w;
+    func_0039ECB8(s);
+    if (s->m_828 || s->m_84C < n) {
+        *(volatile unsigned int *)0x10002000 = 0x40000000;
+        s->m_828 = 0;
+        s->m_82C = 0x40000000;
+        s->m_848 = func_0039E928(s);
+    }
+    s->m_84C = 0x20;
+    v = n | 0x40000000;
+    w = s->m_848;
+    *(volatile unsigned int *)0x10002000 = v;
+    m = v & 0xF0000000;
+    s->m_82C = m;
+    n = w >> (0x20 - n);
+    if (m == 0x20000000 || m == 0x30000000 || m == 0x40000000)
+        s->m_828 = 0;
+    else
+        s->m_828 = 1;
+    s->m_848 = func_0039E928(s);
+    return n;
+}
+#endif
+
+extern int func_003B63A0(void);
+extern void func_003B63F0(int, int);
+
+// FUNCTION: GAME 0x39FDD8
+void func_0039FDD8(unsigned int a, int b)
+{
+    int r, c;
+    r = func_003B63A0();
+    if ((a >> 28) == 7) {
+        a &= 0xFFFFFFF;
+        a |= 0x80000000;
+    } else
+        a &= 0xFFFFFFF;
+    c = b >> 4;
+    *(volatile unsigned int *)0x1000B010 = a;
+    *(volatile unsigned int *)0x1000B020 = c;
+    *(volatile unsigned int *)0x1000B000 = 0x100;
+    if (r)
+        func_003B63F0(c, r);
+}
+
+// FUNCTION: GAME 0x3A05E0
+void func_003A05E0(struct Bs *s)
+{
+    *(int *)((char *)s + 0xFC) = 0;
+    *(int *)((char *)s + 0x864) = 1;
+    *(int *)((char *)s + 0x85C) = *(int *)((char *)s + 0x860) + 1;
+    func_0039EAA8(s, 1);
+    func_0039EAA8(s, 5);
+    func_0039EAA8(s, 6);
+    func_0039EAA8(s, 1);
+    func_0039EAA8(s, 6);
+    func_0039EAA8(s, 6);
+    *(int *)((char *)s + 0x1B4) = func_0039EAA8(s, 1);
+    *(int *)((char *)s + 0x1B8) = func_0039EAA8(s, 1);
+    func_003A0C18(s);
+}
+
+extern char D_0045E720[];
+
+// FUNCTION: GAME 0x39ECF8
+int func_0039ECF8(char *s, int *a1, int *a2, int *a3, int *p)
+{
+    int r = 1;
+    *(int *)(s + *(int *)(s + 0x820) * 0x140 + 0x6DC) = 1;
+    *(int *)(s + 0x1C0) = 1;
+    if (*(int *)(s + 0x160) == 2) {
+        a1[5] = 0;
+        a1[4] = 0;
+        a1[1] = 0;
+        a1[0] = 0;
+    }
+    if (*(int *)(s + 0x184) == 3) {
+        *a2 = 2;
+    } else {
+        int v;
+        *a2 = 1;
+        v = *(int *)(s + 0x184) == 2;
+        a3[1] = v;
+        a3[0] = v;
+    }
+    if (*(int *)(s + 0x160) == 1) {
+        func_0039C390((struct Pq *)s, D_0045E720);
+        r = 0;
+    }
+    *p &= -2;
+    return r;
+}

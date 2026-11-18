@@ -171,3 +171,60 @@ struct N *func_003224F8(int key)
     }
     abort();
 }
+
+// FUNCTION: GAME 0x320A50
+struct M { int first; char pad[0x298]; char t[1]; };
+extern int *func_00322570(int, int);
+extern char *func_00320948(int, struct M *, int);
+int *func_00320A50(int a0, struct M *m, int a2)
+{
+    int *p = func_00322570(a0, a2);
+    unsigned short i;
+    if (p == 0)
+        return 0;
+    i = *(unsigned short *)((char *)p + 0x298);
+    if (m->t[i]) {
+        long long v = *(long long *)func_00320948(i, m, 0);
+        p[0] = (int)v;
+    } else
+        p[0] = m->first;
+    p[0] += p[2];
+    return p;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x320948 (11 words differ: the original ends with a `b` to a shared epilogue and `jal abort` without a tail call; 2.9 places the abort block first)
+extern void abort(void);
+struct M2 { char *base; int pad[5]; long long v[80]; int pad2; char t[1]; };
+char *func_00320948(int a0, struct M2 *m, int a2)
+{
+    int i = a0;
+    char *r;
+    while (m->t[i] == 2)
+        i = (int)m->v[i];
+    if (m->t[i] == 1)
+        r = m->base + (int)m->v[i];
+    else
+        abort();
+    return r;
+}
+
+// DRAFT: GAME 0x3209D0 (14 words differ: 2.9 turns the final memcpy call into a tail `j`; the original keeps jal)
+extern void *memcpy(void *, const void *, unsigned);
+void func_003209D0(int x, char *a, char *b)
+{
+    char *s = func_00320948(x, (struct M2 *)a, 0);
+    char *d = func_00320948(x, (struct M2 *)b, 0);
+    memcpy(d, s, x < 31 ? 16 : (x > 63 ? 8 : 4));
+}
+
+// DRAFT: GAME 0x31DE10 (14 words differ: 64-bit multiply is matched in structure; the 0xFFFFFFFF mask constant is scheduled earlier than in the original)
+long long func_0031DE10(long long a, long long b)
+{
+    int al = a, bl = b;
+    int ah = a >> 32, bh = b >> 32;
+    unsigned long long p = (unsigned long long)(unsigned)al * (unsigned)bl;
+    int hi = (int)(p >> 32) + (bh * al + ah * bl);
+    return (p & 0xFFFFFFFF) | ((long long)hi << 32);
+}
+#endif

@@ -41,24 +41,58 @@ extern "C" void func_002B42F0(char *self)
 }
 #endif
 
-extern "C" void func_002D42E0(char *);
-extern unsigned D_00747A84;
-
-// FUNCTION: GAME 0x2B4DA8
-extern "C" void func_002B4DA8(char **self)
+// FUNCTION: GAME 0x2BA250
+extern "C" int func_002BA250(char *self)
 {
-    int a = 0;
-    int b = 0;
-    for (int n = 2; n >= 0; n--) {
-        char *base = *self;
-        unsigned char ok = *(int *)(base + a) != 0;
-        if (ok) {
-            func_002D42E0(base + b);
-            b += 0xAC;
-        } else {
-            b += 0xAC;
+    for (unsigned i = 0; i < *(unsigned *)(self + 4); i++) {
+        char *e = *(char **)self + *(int *)(self + 8) * i;
+        unsigned fl = *(unsigned *)e;
+        if (fl & 0x603) {
+            if (fl & 0x400) {
+                if (e) {
+                    char *vt = *(char **)(e + 8);
+                    ((void (*)(char *, int))(*(void **)(vt + 0xC)))(e + *(short *)(vt + 8), 3);
+                }
+                *(unsigned *)e = 0;
+            } else if (fl & 0x200) {
+                *(unsigned *)e = fl | 0x400;
+            }
         }
-        a += 0xAC;
     }
-    D_00747A84 &= ~0x2000u;
+    return 1;
+}
+
+float capVu0LengthSq(const float *);
+extern "C" float sqrtf_(float) __asm__("sqrtf");
+static inline float Sq(float a)
+{
+    float r;
+    __asm__("nop\n\tnop\n\tsqrt.s %0,%1" : "=f"(r) : "f"(a));
+    if (r != r) r = sqrtf_(a);
+    return r;
+}
+extern "C" void func_002BBDB8(char *, float, float, char *, float, float);
+extern "C" void func_002BCF28(char *, float, float, char *, float, float);
+
+// FUNCTION: GAME 0x2BCCC0
+extern "C" void func_002BCCC0(char *a, char *b, float x, float y, const float *v)
+{
+    func_002BBDB8(a, x, y, b, 0.0f, Sq(capVu0LengthSq(v)));
+}
+
+// FUNCTION: GAME 0x2BD340
+extern "C" void func_002BD340(char *a, char *b, float x, float y, const float *v)
+{
+    func_002BCF28(a, x, y, b, 0.0f, Sq(capVu0LengthSq(v)));
+}
+
+// FUNCTION: GAME 0x2BA998
+extern "C" void func_002BA998(char *self)
+{
+    float m = 0.0f;
+    for (unsigned i = 0; i < 8; i++) {
+        float l = Sq(capVu0LengthSq((float *)(self + 0x110 + i * 16)));
+        if (m < l) m = l;
+    }
+    *(float *)(self + 0xE4) = m;
 }

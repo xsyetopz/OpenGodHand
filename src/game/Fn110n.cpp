@@ -1,5 +1,6 @@
 #include "game/cEm00StateDecls.h"
 #include "game/cVec.h"
+struct Qv110 { float v[4] __attribute__((aligned(16))); };
 extern "C" {
 void func_00124540(void *, int);
 void func_00124E68(void *, float);
@@ -334,7 +335,6 @@ extern "C" void func_0011B3E8(char *self)
 extern "C" {
 void sceVu0ApplyMatrix(float *, void *, float *);
 }
-struct Qv110 { float v[4] __attribute__((aligned(16))); };
 extern "C" {
 void SetSpeedRate__9cEmManagef(void *, float);
 void func_0010A408(void *, int, int, int, int, int);
@@ -524,7 +524,8 @@ void func_0010A438(void *);
 void SetHeatMode__8cHeatSysUc(void *, int);
 float capVu0MagnitudeSqXZ__FPCfT0(const float *, const float *);
 }
-// FUNCTION: GAME 0x114120
+#ifdef NONMATCHING
+// DRAFT: GAME 0x114120 - 1 word: lb vs lbu on g_HeatSys[0x10] (unsigned char cast folds base differently)
 extern "C" void func_00114120(char *self)
 {
     *(float *)(self + 0x54C) = 15.0f;
@@ -551,7 +552,7 @@ extern "C" void func_00114120(char *self)
         ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
         ((cObjBase *)self)->addNullSpeed(1.0f);
     }
-    if ((*(unsigned short *)(self + 0x3AC) & 1) && !*(unsigned char *)(g_HeatSys + 0x10)) {
+    if ((*(unsigned short *)(self + 0x3AC) & 1) && !(unsigned char)g_HeatSys[0x10]) {
         SetHeatMode__8cHeatSysUc(g_HeatSys, 1);
         *(int *)(self + 0x15F4) = (*(int *)(self + 0x15F4) | 0x10) & ~0x20;
         func_0012AC28(self);
@@ -564,7 +565,9 @@ extern "C" void func_00114120(char *self)
     }
 }
 
-// FUNCTION: GAME 0x114AC0
+#endif
+#ifdef NONMATCHING
+// DRAFT: GAME 0x114AC0 - 42 words (460 vs 500 B): case0 store order; original keeps &self[0x1590]/&self[0x490] in s0/s1 (compare + copy), self in s2
 extern "C" void func_00114AC0(char *self)
 {
     switch (B(0x2F6)) {
@@ -581,11 +584,9 @@ extern "C" void func_00114AC0(char *self)
         *(float *)(self + 0x1594) = 99999.8984375f;
     }
     case 1: {
-        float *p = (float *)(self + 0x1590);
-        float *q = (float *)(self + 0x490);
         *(unsigned short *)(self + 0x434) |= 8;
         moveMotion((cObjBase *)self);
-        float m = capVu0MagnitudeSqXZ__FPCfT0(p, q);
+        float m = capVu0MagnitudeSqXZ__FPCfT0((float *)(self + 0x1590), (float *)(self + 0x490));
         float h = *(float *)(self + 0x1588) * 0.5f;
         if (m < h * h) {
             if (++*(int *)(self + 0x15B4) >= 2) {
@@ -594,8 +595,10 @@ extern "C" void func_00114AC0(char *self)
         } else {
             *(int *)(self + 0x15B4) = 0;
         }
-        if (p != q) {
-            p[0] = q[0]; p[1] = q[1]; p[2] = q[2];
+        if (self + 0x1590 != self + 0x490) {
+            *(float *)(self + 0x1590) = *(float *)(self + 0x490);
+            *(float *)(self + 0x1594) = *(float *)(self + 0x494);
+            *(float *)(self + 0x1598) = *(float *)(self + 0x498);
         }
         float d = capVu0MagnitudeSqXZ__FPCfT0(*(float **)(self + 0xF0), (float *)(self + 0x580));
         if (d < 4.0f) {
@@ -612,3 +615,102 @@ extern "C" void func_00114AC0(char *self)
     }
     }
 }
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x111010 - 10 words: base t lands in t2 with loads v0/v1 (offset-pair-in-branch regalloc idiom)
+extern "C" void func_00111010(char *self)
+{
+    *(float *)(self + 0x54C) = 3.0f;
+    switch (B(0x2F6)) {
+    case 0: {
+        *(short *)(self + 0x5E0) = 0;
+        *(short *)(self + 0x5E2) = 0;
+        func_00124E58(self);
+        char *t;
+        int a, b;
+        if (B(0x2F7)) {
+            t = *(char **)(self + 0x304);
+            a = (int)(t + *(int *)(t + 0x4BC));
+            b = (int)(t + *(int *)(t + 0x4C0));
+            func_0010A408(self, 0x32, 0x26, 0x1D, 0, 0x123);
+            func_0010A420(self, 0x32, 0x26, 0x1D, 0, 0x123);
+        } else {
+            t = *(char **)(self + 0x304);
+            a = (int)(t + *(int *)(t + 0x494));
+            b = (int)(t + *(int *)(t + 0x498));
+            func_0010A408(self, 0x32, 0x25, 0x1D, 0, 0x123);
+            func_0010A420(self, 0x32, 0x25, 0x1D, 0, 0x123);
+        }
+        B(0x1684) = 0;
+        func_002A8578(self, a, b, 0, 0.0f, 0, 0);
+        addGameLevelPoint__9cCoreSavei(&CoreSave, 100);
+        *(float *)(self + 0x54C) = 15.0f;
+        B(0x2F6)++;
+    }
+    case 1:
+        func_00124EC0(self);
+        if (moveMotion((cObjBase *)self)) {
+            clearMotionCam__4pl00UiUi(self, 1, 0);
+            B(0x2F4) = 0; B(0x2F5) = 0; B(0x2F6) = 0; B(0x2F7) = 0;
+        }
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+    }
+    func_0010A438(self);
+    if (*(unsigned short *)(self + 0x3AC) & 0x100) SetSpeedRate__9cEmManagef(g_EmManage, 0.05f);
+    if (func_00123938(self, 1)) clearMotionCam__4pl00UiUi(self, 1, 0);
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1156D8 - 9 words: case 2 vec copy has dest/src pointers in swapped v0/v1
+extern "C" void func_001156D8(char *self)
+{
+    *(float *)(self + 0x54C) = 5.0f;
+    switch (B(0x2F6)) {
+    case 0: {
+        *(short *)(self + 0x5E0) = 0;
+        *(short *)(self + 0x5E2) = 0;
+        func_001268F0(self);
+        func_00124E58(self);
+        char *t = *(char **)(self + 0x304);
+        *(float *)(self + 0x104) = *(float *)(self + 0x670);
+        func_002A8578(self, *(int *)(t + 0x4C4) + (int)t, *(int *)(t + 0x4C8) + (int)t, 0, 0.0f, 0, 0);
+        B(0x2F6)++;
+    }
+    case 1:
+        func_00124EC0(self);
+        *(int *)(self + 0x15F4) |= 0x80;
+        g_CollSolidManage.SetActive((cGameObj *)self, false);
+        if (moveMotion((cObjBase *)self)) B(0x2F6) = 2;
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+        break;
+    case 2: {
+        float *src = (float *)(self + 0x660);
+        float *d = *(float **)(self + 0xF0);
+        if (src != d) {
+            d[0] = src[0]; d[1] = src[1]; d[2] = src[2];
+        }
+        d = *(float **)(self + 0xF0);
+        float *o = (float *)(self + 0x490);
+        if (o != d) {
+            o[0] = d[0]; o[1] = d[1]; o[2] = d[2];
+        }
+        char *t = *(char **)(self + 0x304);
+        *(float *)(self + 0x104) = *(float *)(self + 0x670);
+        func_002A8578(self, *(int *)(t + 0x4D4) + (int)t, *(int *)(t + 0x4D8) + (int)t, 0, 0.0f, 0, 0);
+        B(0x2F6)++;
+    }
+    case 3:
+        func_00124EC0(self);
+        if (moveMotion((cObjBase *)self)) {
+            clearMotionCam__4pl00UiUi(self, 1, 0);
+            B(0x2F4) = 0; B(0x2F5) = 0; B(0x2F6) = 0; B(0x2F7) = 0;
+        }
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+    }
+}
+#endif
