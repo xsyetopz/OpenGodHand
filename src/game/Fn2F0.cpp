@@ -191,14 +191,6 @@ extern "C" void *NAME(void *self) \
     return self; \
 }
 
-// DRAFT: GAME 0x2FFA68
-WRAP(func_002FFA68, func_002FBCC8)
-
-// DRAFT: GAME 0x2FFB10
-WRAP(func_002FFB10, func_002E3480)
-
-// DRAFT: GAME 0x2FFBD0
-WRAP(func_002FFBD0, func_002E81D8)
 #endif
 
 #ifdef NONMATCHING

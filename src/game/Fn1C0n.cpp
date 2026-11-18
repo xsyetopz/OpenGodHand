@@ -51,20 +51,6 @@ extern "C" int func_001C24A0(char *self)
     return 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x001C8F80
-// diff: 7 differing words (72 vs 72 bytes)
-extern "C" void *func_001C8F80(char *self)
-{
-    func_001B6E90(self);
-    *(const char **)(self + 0x214) = D_00429EC8;
-    *(int *)(self + 0x600) = 5;
-    *(int *)(self + 0x604) = 0xE;
-    *(int *)(self + 0x608) = 0;
-    return self;
-}
-#endif
-
 // FUNCTION: GAME 0x001CD7A8
 extern "C" void func_001CD7A8(char *self)
 {
@@ -266,15 +252,3 @@ struct T5 {
 };
 extern const T5 D_0042B5D0;
 extern "C" void func_001DD258(void *, int);
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x001DDAB0
-// diff: 11 words, table-copy temps in a1/a2/a3 vs a1/a3/t0
-extern "C" void func_001DDAB0(void *self, unsigned char i)
-{
-    if (i < 5) {
-        T5 t = D_0042B5D0;
-        func_001DD258(self, t.a[i]);
-    }
-}
-#endif

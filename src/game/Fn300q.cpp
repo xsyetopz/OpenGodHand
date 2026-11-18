@@ -17,6 +17,10 @@ extern "C" void func_00300AE8(int, int);
 extern "C" void func_002FBB78(int, int, int, int);
 extern "C" void func_0030ECF8(int);
 extern "C" void *func_002A9538(cHeap *, unsigned, unsigned);
+extern char *D_003C3BF8[];
+extern char D_003C3C18[];
+struct SysT { char p0[0x270]; long q270; char p1[0x168]; long q3E0; char p2[0x224]; unsigned w60C; };
+extern SysT Sys;
 extern char D_0071B940[], D_00741940[], D_00741960[], D_00741980[];
 extern int D_00747A78, D_00752D00, g_iObjCnt;
 extern float D_00741DC0;
@@ -117,4 +121,50 @@ void *_MemoryAlloc(unsigned a, unsigned b, cHeap &h)
 {
     if (!D_003C3CFC) func_0030ECF8(0);
     return func_002A9538(&h, a, b);
+}
+
+// FUNCTION: GAME 0x307918
+char *FileNameFromObjId(char *d, eObjId id)
+{
+    char **t = &D_003C3BF8[id >> 8];
+    d[0] = (*t)[0];
+    d[1] = (*t)[1];
+    d[2] = '/';
+    d[3] = (*t)[0];
+    d[4] = (*t)[1];
+    d[5] = D_003C3C18[(id & 0xF0) >> 4];
+    d[6] = D_003C3C18[id & 0xF];
+    d[7] = '.';
+    d[8] = 'd';
+    d[9] = 'a';
+    d[10] = 't';
+    d[11] = 0;
+    return d;
+}
+
+// FUNCTION: GAME 0x309D40
+extern "C" int func_00309D40(int x)
+{
+    int i = 31;
+    if (x >= 0) {
+        while (--i > 0)
+            if ((x >> i) & 1) break;
+    }
+    return i + ((1 << i) < x);
+}
+
+// FUNCTION: GAME 0x30E5C0
+void Set_bg_mode(unsigned m, unsigned char a, unsigned char b, unsigned char c)
+{
+    switch (m) {
+    case 0:
+        Sys.q3E0 = (Sys.q3E0 & -0x8000L) | 0x10;
+        Sys.q270 = (Sys.q270 & -0x8000L) | 0x10;
+        break;
+    case 1:
+        Sys.q3E0 = (Sys.q3E0 & -0x8000L) | 0x16;
+        Sys.q270 = (Sys.q270 & -0x8000L) | 0x16;
+        Sys.w60C = a | (b << 8) | (c << 16);
+        break;
+    }
 }

@@ -147,21 +147,6 @@ void func_0036D280(int a, int b, unsigned int c)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x350048
-// diff: 37 words: compiler CSEs sp+4 into s2, frame 0x50 vs 0x40
-void func_00350048(int a, int *b, char *c)
-{
-    int buf[2];
-    int *s0 = (int *)(c + 0x30);
-    int s1 = *b;
-    int r1 = func_00366E18(s1, s0, s0[0x160 / 4], buf, buf + 1);
-    int r2 = func_00366E18(s1, c + 0xE0, s0[0x164 / 4], buf, buf + 1);
-    if (r1 || r2)
-        func_0034DD70(a, 0xFF000D0D);
-}
-#endif
-
-#ifdef NONMATCHING
 // DRAFT: GAME 0x35B0E8 constant 1 in v0 instead of v1 (2 words)
 void func_0035B0E8(int *a, int *b, int *c)
 {

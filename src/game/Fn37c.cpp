@@ -103,36 +103,126 @@ extern "C" int func_0037A6A8(Fn37S *s)
     return s->c25 != old;
 }
 
-#ifdef NONMATCHING
-struct Fn37E { unsigned short f; char _2[0xDE]; };
+struct Fn37E { unsigned short f; char _2[2]; int w4; char _8[0xD8]; };
+struct Fn37H { unsigned short f; short h2; char _4; unsigned char b5; unsigned short h6; int w8; char _c[4]; int w10; char _14[0x3C]; };
+struct Fn37A { char _0[4]; int w4; char _8[5]; unsigned char b0d; char _e[2]; short h10; };
+struct Fn37B { char _0[0x84]; };
+struct Fn37I { char _0[0xC]; int w0c; char _10[0x15]; signed char c25; };
+struct Fn37J { char _0[0xA]; short ha; char _c[2]; unsigned short he; char _10[0x16]; signed char c26; };
 extern Fn37E D_00770850[48];
+extern Fn37H D_0076CF20[];
+extern Fn37H D_0076C8C0[];
+extern Fn37B D_0076A600[];
 extern "C" {
-void func_00376400(Fn37E *);
-void func_00376438(Fn37E *);
-void func_00376720(Fn37E *);
-void func_003767B0(Fn37E *);
-void func_00376820(Fn37E *);
+int func_00375E78(int, int, int);
+void func_0037D8B8(void *, int);
+void func_00373430(void *);
+void func_003733C8(void *);
+void func_0037D148(Fn37H *);
+void func_0037D3B0(Fn37H *);
+int func_00375EF8(int);
+void func_00375CD0(int, void *);
 }
 
-// DRAFT: GAME 0x376370
-// diff: 8 words, andi register and delay-slot filling around the f & 0x1000 test
-extern "C" void func_00376370(void)
+// FUNCTION: GAME 0x375DE0
+extern "C" int func_00375DE0(short a, short b)
 {
     Fn37E *p = D_00770850;
     Fn37E *e = p + 48;
     do {
-        if (p->f) {
-            if (p->f & 0x1000) func_00376400(p);
-            else func_00376438(p);
-            if (p->f) {
-                func_00376720(p);
-                func_003767B0(p);
-                func_00376820(p);
-            }
-        }
-    } while ((int)(p += 1) < (int)e);
+        if (p->f && func_00375E78(p->w4, a, b) == -1) return -1;
+        p++;
+    } while ((int)p < (int)e);
+    return 0;
 }
 
+// FUNCTION: GAME 0x37C388
+extern "C" void func_0037C388(Fn37A *a)
+{
+    Fn37H *p = D_0076CF20;
+    Fn37H *e = (Fn37H *)((char *)p + 0xFF0);
+    do {
+        if (p->f && (p->b5 & a->b0d)) {
+            if (a->w4 == 0 || p->w10 == a->w4) {
+                func_0037D8B8(p, a->h10);
+                if (a->w4) break;
+            }
+        }
+        p++;
+    } while ((int)p < (int)e);
+}
+
+// FUNCTION: GAME 0x37C420
+extern "C" void func_0037C420(Fn37A *a)
+{
+    Fn37H *p = D_0076C8C0;
+    int i = 0;
+    do {
+        if (p->f && (p->b5 & a->b0d)) {
+            if (a->w4 == 0 || p->w10 == a->w4) {
+                func_0037D8B8((void *)p->w8, a->h10);
+                if (a->w4) break;
+            }
+        }
+        i++;
+        p = (Fn37H *)((char *)p + 0x20);
+    } while (i < 51);
+}
+
+// FUNCTION: GAME 0x37D820
+extern "C" void func_0037D820(Fn37H *s)
+{
+    if (s->b5 & 8) {
+        func_00373430(&D_0076A600[s->h2]);
+        func_003733C8(&D_0076A600[s->h2]);
+        func_0037D148(s);
+        func_0037D3B0(s);
+    } else {
+        func_0037D148(s);
+        s->w8 = 0;
+        s->f |= 0x10;
+    }
+}
+
+// FUNCTION: GAME 0x37D9B0
+extern "C" void func_0037D9B0(unsigned a, unsigned b)
+{
+    Fn37H *p = D_0076CF20;
+    Fn37H *e = (Fn37H *)((char *)p + 0xFF0);
+    unsigned char m = a;
+    unsigned short k = b;
+    do {
+        if (p->f && (p->b5 & m)) {
+            switch (k) {
+            case 1: p->h6 |= 9; break;
+            case 2: p->h6 |= 0xA; break;
+            }
+        }
+        p++;
+    } while ((int)p < (int)e);
+}
+
+// FUNCTION: GAME 0x37AB00
+extern "C" void func_0037AB00(Fn37I *s)
+{
+    Fn37J *t = (Fn37J *)((char *)s + 0x12C);
+    switch (s->c25) {
+    case 3:
+        if (s->w0c) {
+            if (func_00375EF8(s->w0c)) {
+                t->ha = 1;
+                func_00375CD0(s->w0c, t);
+            }
+        }
+        break;
+    case 10:
+        if (t->c26 == -1) t->he |= 1;
+        else t->he &= 0xFFFE;
+        break;
+    }
+}
+
+#ifdef NONMATCHING
 struct Fn37V { float a, b; };
 extern Fn37V D_0045A610[];
 

@@ -130,26 +130,6 @@ void func_0035D758(int n, int p)
 }
 #endif
 
-// DRAFT: GAME 0x35E968
-// 9 words: original uses movz for the byte > 1 test
-#ifdef NONMATCHING
-int func_0035E968(int a, int b)
-{
-    if (func_0035E9E8(a) == 0xC0) return (*(unsigned char *)(b + 0x20) != 0) & (*(unsigned char *)(b + 0x20) >= 2);
-    return 0;
-}
-#endif
-
-// DRAFT: GAME 0x35E9A8
-// 9 words: original uses movz for the byte > 1 test
-#ifdef NONMATCHING
-int func_0035E9A8(int a, int b)
-{
-    if (func_0035E9E8(a) == 0xE0) return (*(unsigned char *)(b + 0x20) != 0) & (*(unsigned char *)(b + 0x20) >= 2);
-    return 0;
-}
-#endif
-
 extern int D_003EE330;
 extern int D_003EE338[];
 extern int D_003EE800[];
@@ -227,21 +207,6 @@ int func_0035E0F0();
 int func_0035E9E8(int);
 int func_0035C380();
 int func_0035A1C8();
-
-// DRAFT: GAME 0x35E1B8
-// 6 words: original uses beq to the 0x19 test with a0=1 in the delay slot and a shared return-0 branch; 4 probes
-#ifdef NONMATCHING
-int func_0035E1B8(int a, unsigned char b, int *c)
-{
-    unsigned char *p;
-    *c = 0;
-    p = (unsigned char *)func_0035E0F0(a, b);
-    if (p == 0) return 0;
-    if (func_0035E9E8(b) != 0xC0 || p[0x19] != 1) return 0;
-    *c = p[0x1A];
-    return 1;
-}
-#endif
 
 // FUNCTION: GAME 0x3599B0
 int func_003599B0(int a, int *b, int *c)

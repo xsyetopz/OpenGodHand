@@ -171,16 +171,4 @@ extern "C" float func_0030F518()
     return r * 4.656613e-10f;
 }
 
-// DRAFT: GAME 0x309D40
-// 17 words differ: ceil-log2 loop; original shares the v0=1 exit, ours duplicates it
-extern "C" int func_00309D40(int a)
-{
-    int i = 31;
-    if (a >= 0) {
-        i--;
-        while (i > 0 && !((a >> i) & 1))
-            i--;
-    }
-    return i + ((1 << i) < a);
-}
 #endif

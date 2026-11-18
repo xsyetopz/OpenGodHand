@@ -149,33 +149,6 @@ extern void *memcpy(void *, const void *, unsigned int);
 
 #define TBE(a, b) (*(struct Tb *)((char *)D_0077C110 + (a) * 0x70 + (b) * 0x1C))
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x397D20
-// diff: 9 words, mult/mult1 pipe assignment and address-add order (2 variants tried)
-int func_00397D20(int a, int b, void *dst)
-{
-    char buf[0x80];
-    if (TBE(a, b).m_10 == 0)
-        return 0;
-    func_00397BC8(a, b, buf);
-    memcpy(dst, buf, *(int *)(buf + 0x60));
-    return *(int *)(buf + 0x60);
-}
-
-// DRAFT: GAME 0x397D98
-// diff: 9 words, mult/mult1 pipe assignment and address-add order (2 variants tried)
-int func_00397D98(int a, int b)
-{
-    unsigned char buf[0x80];
-    if (TBE(a, b).m_10 == 0)
-        return 0x63;
-    func_00397BC8(a, b, buf);
-    if (buf[0x70] == 6 && buf[0x71] == 2)
-        return 5;
-    return buf[0x70];
-}
-#endif
-
 extern int D_0077C300[];
 extern char D_0077C0C0[];
 extern int sceSifCallRpc(void *, int, int, void *, int, void *, int, void *, void *);

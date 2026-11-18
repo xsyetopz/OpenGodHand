@@ -82,3 +82,31 @@ extern "C" void func_001F33F8(char *self, int a, int b)
     func_001F29C0(self, 0x11, a);
     SetNumber__12CustomIDWorki(self + 0x728, b);
 }
+
+extern unsigned char D_00747A51;
+// FUNCTION: GAME 0x1FB2D8
+extern "C" void func_001FB2D8(char **self, unsigned short id)
+{
+    if (D_00747A51 && *self) {
+        char *p = *self + 0x28A;
+        unsigned i = 0;
+        unsigned short ff = 0xFFFF;
+        char *q = p;
+        do {
+            if (*(unsigned short *)(p + 6) == id) { *(unsigned short *)q = ff; return; }
+            i++; q += 0x10; p += 0x10;
+        } while (i < 0x80);
+    }
+}
+
+extern long D_00747640;
+// FUNCTION: GAME 0x1F6FA8
+extern "C" int func_001F6FA8(char *self)
+{
+    long l = D_00747640 & (0xEFE0L << 27);
+    if ((l & (0x8000L << 20)) && *(int *)(self + 0x20) == 0) return 1;
+    if ((l & (0x8000L << 17)) && *(int *)(self + 0x20) == 1) return 1;
+    if ((l & (0x8000L << 18)) && *(int *)(self + 0x20) == 2) return 1;
+    if ((l & (0x8000L << 19)) && *(int *)(self + 0x20) == 3) return 1;
+    return 0;
+}

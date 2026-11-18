@@ -222,37 +222,4 @@ extern "C" void func_00281D10(char *self)
     }
 }
 
-struct Sw2 {
-    char _pad[0x2F4];
-    unsigned char m_a, m_b, m_c, m_d;
-};
-
-// DRAFT: GAME 0x2832A0
-// diff: same shape as 0x281368 (v1 hoisted into the beq delay slot; original keeps it in the branch blocks)
-extern "C" void func_002832A0(Sw2 *s, int k)
-{
-    unsigned char c;
-    if (k == 1)
-        goto L1;
-    if (k == 0)
-        goto D;
-    if (k == 2)
-        goto L2;
-D:
-    s->m_b = 6;
-    s->m_a = 0;
-    s->m_c = 0;
-    s->m_d = 0;
-    return;
-L1:
-    c = 2;
-    goto T;
-L2:
-    c = 4;
-T:
-    s->m_b = 6;
-    s->m_c = c;
-    s->m_d = 0;
-    s->m_a = 0;
-}
 #endif

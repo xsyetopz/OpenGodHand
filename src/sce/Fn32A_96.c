@@ -22,6 +22,14 @@ extern int D_003D1414;
 extern int func_00329490();
 extern int func_00336BA8();
 extern int func_00326800();
+extern void *memset();
+extern int func_0032BC98();
+extern int func_0033FC70();
+extern int func_0033FC88();
+extern int func_0032D430();
+extern void func_0033FCB0();
+extern int func_0032ED48();
+extern char D_00452FB0[], D_00452FD8[];
 
 // FUNCTION: GAME 0x32ABB0
 void func_0032ABB0(char *o, int v)
@@ -81,4 +89,40 @@ void func_003292C0(int a, int b)
 int func_0032B4C8(char *o)
 {
     return func_00326800(*(int *)(o + 4));
+}
+
+// FUNCTION: GAME 0x32BD90
+int func_0032BD90(int a, int b)
+{
+    return func_0032BC98(a, b, 0, 0xFFFFF);
+}
+
+// FUNCTION: GAME 0x32D3A8
+int func_0032D3A8(int a, int b, int c, int d)
+{
+    int s[3];
+    int r;
+    memset(s, 0, 12);
+    s[0] = a;
+    s[1] = b;
+    s[2] = 0;
+    func_0033FC70();
+    r = func_0032D430(s, c, d);
+    func_0033FC88();
+    return r;
+}
+
+// FUNCTION: GAME 0x32ECD8
+int func_0032ECD8(char *o, int i, int v)
+{
+    if (!o) {
+        func_0033FCB0(D_00452FB0);
+        return;
+    }
+    if (i >= 0x21) {
+        func_0033FCB0(D_00452FD8);
+        return;
+    }
+    *(int *)(o + i * 4 + 0x1EC) = v;
+    return func_0032ED48(o, i, *(int *)(o + 0x1E8) + v);
 }
