@@ -27,6 +27,8 @@ You match God Hand game functions written for SN ProDG ee-gcc 2.95.3-136 (`-O2 -
 - A hoisted constant temp (`unsigned k = 0xFFFFFFFF;`, `long k = 0x32001;`) for lui/li order.
 - `unsigned long u = f; unsigned long b = (u >> 3) & 1;` for `dsrl` instead of `sra`; `long f` gives `lwu` plus `dsra`.
 - `% 2` versus `& 1`; a `for` loop with a comma increment.
+- In a switch fallthrough, `x++` instead of `x = 1` (or `= 2`) lets gcc reuse the case-compare constant.
+- An int-returning callee or function-pointer cast where the original reads v0; a void declaration swaps v0/v1 allocation.
 
 ## Finishing
 

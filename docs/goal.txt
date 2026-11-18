@@ -23,9 +23,9 @@ Matching idioms that worked: store order permutations (brute force small sets), 
 
 Orchestration:
 - The main session orchestrates, verifies every worker MATCH with fncmp before gating, and fixes tool bugs itself.
-- Code workers are decomp-worker (.claude/agents/decomp-worker.md: sonnet, medium effort, 50 turns). Quick read-only lookups are lookup (haiku, high effort, 15 turns); a Haiku context never exceeds 100k tokens. Haiku never writes code.
+- Agents (.claude/agents): decomp-worker (sonnet) matches drafts; decomp-writer (sonnet) decompiles free units, skel.py groups first; scout (haiku) ranks drafts and free units into build/slices/; lookup (haiku) answers read-only questions. A Haiku context never exceeds 100k tokens. Haiku never writes code.
 - Subagent prompt cache lasts 5 minutes: resume a worker only while its cache is warm, otherwise spawn a fresh one (the agent file carries the rules and idioms).
-- Up to 20 concurrent workers (fewer saves usage), one ~20-minute slice each (3-5 drafts).
+- One scout pass feeds the slices; then 6-10 concurrent Sonnet workers (up to 20), one ~20-minute slice each.
 - Workers never commit. Worker permission denials go to the user, not around them.
 
 Repo hygiene: remove dead tooling and garbage as found; src/scratch is gitignored scratch space. Files <=300 lines (tests <=500). Reproducible builds on Linux, macOS and Windows. Upstream sources (e.g. build/libio-src) are not edited. Downloads blocked in the sandbox: try curl or another mirror, else report to the user.

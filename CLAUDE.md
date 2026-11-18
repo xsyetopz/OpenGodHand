@@ -14,4 +14,4 @@ Byte-for-byte matching decompilation of God Hand (PS2, SLUS-21503); `SLUS_215.03
 - `$TMPDIR` differs inside and outside the sandbox; shared scratch goes in `src/scratch/` (gitignored) or `build/`.
 - Subagent foreground commands stop after 180 s. Long jobs start in the background; finished jobs send a notification, and `sleep` polling is blocked.
 - `git checkout -- FILE` discards other agents' edits and `rm -rf "$VAR"` is refused; revert with Edit and remove explicit paths.
-- Subagents: `decomp-worker` matches drafts, `lookup` answers read-only questions. Their prompt cache lasts 5 minutes; replace an idle worker instead of resuming it.
+- Subagents: `decomp-worker` (Sonnet) matches drafts, `decomp-writer` (Sonnet) decompiles free units, `scout` (Haiku) writes ranked slices to `build/slices/`, `lookup` (Haiku) answers read-only questions. Haiku contexts stay under 100k tokens. The prompt cache lasts 5 minutes; replace an idle worker instead of resuming it.
