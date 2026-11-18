@@ -1,2 +1,6 @@
+#ifndef _STUB_TYPES
+#define _STUB_TYPES
 #include <stddef.h>
-typedef int ssize_t; typedef long off_t; typedef int pid_t; typedef unsigned int uid_t;
+#include "_G_config.h"
+typedef int pid_t;
+#endif

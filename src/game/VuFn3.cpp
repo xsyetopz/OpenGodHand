@@ -44,3 +44,70 @@ extern "C" ObjN *func_002FFB80(ObjN *self)
     }
     return self;
 }
+
+void MtxMultiply(cMatrix &, const cMatrix &, const cMatrix &);
+struct ObjP { char p0[0x80]; cMatrix m80; float v[4]; };
+// FUNCTION: GAME 0x1503B8
+extern "C" void func_001503B8(ObjP *self, cMatrix *out)
+{
+    cMatrix m;
+    IDENT(m.m);
+    float x = self->v[0];
+    float y = self->v[1];
+    float z = self->v[2];
+    m.m[12] = x;
+    m.m[13] = y;
+    m.m[14] = z;
+    MtxMultiply(*out, self->m80, m);
+}
+
+extern "C" void *func_0028EB00(void *);
+extern "C" char D_00448E20[], D_00448DB0[], D_00448CA0[], D_00448A00[];
+struct ObjQ {
+    char p0[0x214]; void *vt214; char p1[0x4AC - 0x218]; void *vt4AC; char p2[0x1540 - 0x4B0];
+    Qv s1540; char p3[0x1561 - 0x1550]; unsigned char b1561; char p4[0x1570 - 0x1562];
+    Qv s1570, s1580, s1590, s15A0; char p5[0x15E0 - 0x15B0]; Qv s15E0, s15F0;
+};
+// FUNCTION: GAME 0x289728
+extern "C" ObjQ *func_00289728(ObjQ *self)
+{
+    func_0028EB00(self);
+    self->vt214 = D_00448E20;
+    unsigned char *c = (unsigned char *)self + 0x1530;
+    SVZ(self->s1540);
+    c[0x31] = 0xFF;
+    SVZ(self->s1570); SVZ(self->s1580); SVZ(self->s1590);
+    SVZ(self->s15E0);
+    self->vt4AC = D_00448DB0;
+    return self;
+}
+
+// FUNCTION: GAME 0x284A28
+extern "C" ObjQ *func_00284A28(ObjQ *self)
+{
+    func_0028EB00(self);
+    self->vt214 = D_00448CA0;
+    unsigned char *c = (unsigned char *)self + 0x1530;
+    SVZ(self->s1540);
+    c[0x31] = 0xFF;
+    SVZ(self->s1570); SVZ(self->s1580); SVZ(self->s1590); SVZ(self->s15A0);
+    SVZ(self->s15F0);
+    self->vt4AC = D_00448A00;
+    return self;
+}
+
+extern "C" void func_001FCDB8(void *);
+extern "C" char D_0042C4D8[], D_0042C4B8[];
+struct ObjR { int w0; Qv s10, s20; char p0[0x3C - 0x30]; int w3C; char p1[0x49 - 0x40]; unsigned char b49; char p2[0x50 - 0x4A]; void *vt50; };
+// FUNCTION: GAME 0x1FCE20
+extern "C" ObjR *func_001FCE20(ObjR *self)
+{
+    self->vt50 = D_0042C4D8;
+    self->w0 = 0;
+    SVZ(self->s10); SVZ(self->s20);
+    self->w3C = 0;
+    self->vt50 = D_0042C4B8;
+    self->b49 = 1;
+    func_001FCDB8(self);
+    return self;
+}
