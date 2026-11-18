@@ -18,7 +18,7 @@ extern "C" void func_002FA350(float *p)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2FA3E0 (30 words off: original reuses f0 for cvt.w.s and reloads *p; volatile reload and temp variants tried)
+// DRAFT: GAME 0x2FA3E0 (about 12 words off: target emits in-place cvt.w.s $f0,$f0, build emits cvt.w.s $f1,$f0; barrier/volatile/temp variants tried)
 extern "C" void func_002FA3E0(float *p)
 {
     float v = *p * 100.0f;
