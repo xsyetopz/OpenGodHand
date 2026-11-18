@@ -5,10 +5,14 @@ statements that build the objects objdiff compares. One objdiff unit exists per
 group, where a group approximates a translation unit: units are walked in link order and a
 new group opens whenever the class of a named function changes (GCC 2.x mangled
 name). Free and unnamed `func_*` functions join the preceding group. Groups are
-named after their class, `_2`, `_3` on repeats; `sdk` (sce*, Sde*, kernel calls)
-and `libc` (memcpy, __builtin_*, ...) are keys of their own, and every unit in the
-CRI middleware span forms `cri`. Categories: game, sdk, CRI middleware,
-libc/runtime, unknown (groups before the first named function).
+named after their class, `_2`, `_3` on repeats; `sdk` (sce*, kernel calls) and
+`libc` (memcpy, __builtin_*, ...) are keys of their own.
+
+The category comes from the unit address (`region`): units in the CRI span form
+`cri`, units in SDK_SPANS form `sdk`, units in GAME_SPANS or listed in
+config/game_units.txt are game code, and everything else is libc/runtime. Only
+the game category is a decompilation target (tools/progress.py counts nothing
+else); an unnamed unit never continues a group across a region edge.
 
 target_path  build/expected/<group>.o   all asm units of the group, assembled
                                         from a generated build/expected/<group>.s
@@ -44,8 +48,34 @@ KERNEL = set(
 # CRI ADX/Sofdec code carries few .sndata names, so it is placed by address
 # (docs/decomp.md, "CRI middleware") rather than by symbol.
 CRI_SPAN = (0x322978, 0x36D1A8)
-CATEGORY = {"class": "game", "sdk": "sdk", "cri": "cri", "libc": "libc", "none": "unknown"}
+# Only the game's own code is a decompilation target. It is placed by address
+# (docs/decomp.md, "SCE library regions"): the main span after crt0, the ProDG
+# islands inside the library span, and single units listed in
+# config/game_units.txt. Everything else is SDK, CRI, newlib or libio code
+# that comes from upstream or stays as original assembly.
+GAME_SPANS = ((0x100280, 0x31C000), (0x372CB0, 0x387430), (0x393FD8, 0x394F20))
+# libvu0 (sceVu0ApplyMatrix .. sceVu0CameraMatrix, NormalLightMatrix, ...) and
+# the VU0 reset that follows it sit inside the game span in libvu0.c order.
+SDK_SPANS = ((0x30A2B0, 0x30AC40),)
+CATEGORY = {"class": "game", "sdk": "sdk", "cri": "cri", "libc": "libc", "lib": "libc", "none": "unknown"}
 CATEGORY_NAMES = {"game": "Game", "sdk": "SDK", "cri": "CRI middleware", "libc": "libc/runtime", "unknown": "Unknown"}
+
+
+def game_units() -> set[int]:
+    path = ROOT / "config/game_units.txt"
+    lines = path.read_text().splitlines() if path.exists() else []
+    return {int(s.split()[0], 16) for s in lines if s.strip() and not s.startswith("#")}
+
+
+def region(addr: int, listed: set[int]) -> str:
+    """`game`, `cri`, `sdk` or `lib` (other library code) for a unit address."""
+    if CRI_SPAN[0] <= addr < CRI_SPAN[1]:
+        return "cri"
+    if any(lo <= addr < hi for lo, hi in SDK_SPANS):
+        return "sdk"
+    if addr in listed or any(lo <= addr < hi for lo, hi in GAME_SPANS):
+        return "game"
+    return "lib"
 
 
 def class_of(name: str) -> str | None:
@@ -64,7 +94,7 @@ def key_of(name: str) -> tuple[str, str] | None:
     """(kind, key) that opens or continues a group; None folds into the current group."""
     if name.startswith("func_"):
         return None
-    if name.startswith(("sce", "Sde")) or name in KERNEL:
+    if name.startswith("sce") or name in KERNEL:
         return "sdk", "sdk"
     if name in LIBC or name.startswith(LIBC_PREFIX):
         return "libc", "libc"
@@ -79,10 +109,20 @@ def group_units(units) -> dict[str, list[tuple[int, int, str]]]:
     groups: dict[str, list] = {}
     kinds: dict[str, str] = {}
     count: dict[str, int] = defaultdict(int)
-    cur_key, cur = None, None
+    cur_key, cur, cur_reg = None, None, None
+    listed = game_units()
     for u in units:
-        k = ("cri", "cri") if CRI_SPAN[0] <= u[0] < CRI_SPAN[1] else key_of(u[2])
-        if cur is None or (k is not None and k[1] != cur_key):
+        reg = region(u[0], listed)
+        k = key_of(u[2])
+        if reg in ("cri", "sdk"):
+            k = (reg, reg)
+        elif reg == "lib" and k is not None and k[0] == "class":
+            k = ("lib", k[1])  # libio classes (filebuf, istream) are runtime code
+        elif k is None and reg != cur_reg:
+            # Unnamed units never continue a group across a region edge.
+            k = ("lib", "lib") if reg == "lib" else ("class", "game")
+        cur_reg = reg
+        if cur is None or (k is not None and (k[1] != cur_key or k[0] != kinds[cur])):
             kind, key = k or ("none", "unknown")
             count[key] += 1
             cur = key if count[key] == 1 else f"{key}_{count[key]}"

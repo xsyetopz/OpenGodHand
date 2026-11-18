@@ -9,10 +9,12 @@ Usage:
 
 The report comes from `tools/bin/objdiff-cli report generate` (see
 tools/objdiff_config.py); a function counts as matched when objdiff reports a
-fuzzy match of 100%. Output is the self-contained build/progress.svg: one block
-per category (game, sdk, CRI middleware, libc/runtime, unknown), one labelled rectangle per group sized by code
-bytes, and one cell per function (green matched, grey not) in address order. The
-overall percentage is printed by code bytes and by function count.
+fuzzy match of 100%. Only the Game category counts: SDK, CRI middleware and
+libc/runtime groups are library code (tools/objdiff_config.py) and appear only
+as a function count on stdout. Output is the self-contained build/progress.svg:
+one labelled rectangle per game group sized by code bytes, and one cell per
+function (green matched, grey not) in address order. The game percentage is
+printed by code bytes and by function count.
 """
 
 from __future__ import annotations
@@ -27,6 +29,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TITLE = "God Hand"
+GAME = "Game"  # objdiff_config.CATEGORY_NAMES["game"]
 W, H, TOP = 1600, 900, 40
 GREEN, GREY, BG, EDGE = "#3fb950", "#4a4f57", "#14161a", "#0b0c0e"
 HEADER = 13  # label strip above a category's groups
@@ -99,7 +102,9 @@ def write_json(groups: list[dict], title: str, path: Path, recent_max: int = 40)
     if path.exists():
         try:
             prev = json.loads(path.read_text())
-            recent = prev.get("recent", [])
+            # Entries from groups no longer shown (library code) drop out.
+            shown = {g["name"] for g in groups}
+            recent = [r for r in prev.get("recent", []) if r.get("group") in shown]
             old = {(g["name"], f[0]) for g in prev["groups"] for f in g["fns"] if f[2]}
         except (ValueError, KeyError, IndexError):
             pass
@@ -192,20 +197,21 @@ def main() -> int:
     args = ap.parse_args()
     if not args.no_build:
         subprocess.run(["ninja", "-C", str(ROOT), str(args.report.relative_to(ROOT))], check=True)
-    groups = load(args.report)
+    every = load(args.report)
+    cats: dict[str, list[int]] = {}
+    for g in every:
+        c = cats.setdefault(g["cat"], [0, 0])
+        c[0] += sum(1 for f in g["fns"] if f[2])
+        c[1] += len(g["fns"])
+    # Only the game's own code is a decompilation target; SDK, CRI and runtime
+    # code comes from upstream or stays as original assembly (docs/decomp.md),
+    # so it is left out of the map, the totals and the recent-match feed.
+    groups = [g for g in every if g["cat"] == GAME]
     fns = [f for g in groups for f in g["fns"]]
     total_n, done_n = len(fns), sum(1 for f in fns if f[2])
     total_b, done_b = sum(f[1] for f in fns), sum(f[1] for f in fns if f[2])
     pct = 100.0 * done_n / total_n if total_n else 0.0
-    cats: dict[str, list[int]] = {}
-    for g in groups:
-        c = cats.setdefault(g["cat"], [0, 0])
-        c[0] += sum(1 for f in g["fns"] if f[2])
-        c[1] += len(g["fns"])
-    # The headline tracks the game's own code; SDK, CRI and runtime code stays
-    # as original assembly (docs/decomp.md) and is never a decompilation target.
-    gm, gt = cats.get("Game", [done_n, total_n])
-    title = f"{TITLE}: game {100.0 * gm / gt if gt else 0.0:.2f}% ({gm}/{gt})"
+    title = f"{TITLE}: {pct:.2f}% ({done_n}/{total_n})"
     args.out.parent.mkdir(parents=True, exist_ok=True)
     if args.json:
         args.out = args.out.with_suffix(".json")
@@ -213,10 +219,12 @@ def main() -> int:
     else:
         args.out.write_text(render(groups, title))
     print(f"{title}")
-    print(f"functions: {done_n}/{total_n} = {pct:.2f}%")
-    print(f"code bytes: {done_b}/{total_b} = {100.0 * done_b / total_b if total_b else 0.0:.2f}%")
+    print(f"game functions: {done_n}/{total_n} = {pct:.2f}%")
+    print(f"game code bytes: {done_b}/{total_b} = {100.0 * done_b / total_b if total_b else 0.0:.2f}%")
+    print("not counted (library code):")
     for cat, (m, t) in sorted(cats.items()):
-        print(f"  {cat}: {m}/{t} = {100.0 * m / t if t else 0.0:.2f}%")
+        if cat != GAME:
+            print(f"  {cat}: {t} functions, {m} built from upstream source")
     print(f"groups: {len(groups)}; wrote {args.out.relative_to(ROOT) if args.out.is_relative_to(ROOT) else args.out}")
     return 0
 
