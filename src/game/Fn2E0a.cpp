@@ -127,17 +127,16 @@ extern "C" int func_002EA908(char *self)
     return 1;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2EA798
-// 2 extra nops before the div.s in the original (1.0f load scheduled before the divide); rest of the body is the same
 #include "vu0.h"
 extern "C" float capVu0Length__FPCf(const float *);
-extern char *pCamWork;
+
+// FUNCTION: GAME 0x2EA798
+// DIVNOP: 2
 extern "C" float func_002EA798(char *self)
 {
     float v[4], w[4];
     func_002B6160((cVec *)v, self);
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)w) : "r"(pCamWork + 0x210));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)w) : "r"((char *)pCamWork + 0x210));
     float zero = 0.0f;
     if (*(float *)(self + 0x2C8) != zero) {
         v[0] = v[0] - w[0];
@@ -151,7 +150,6 @@ extern "C" float func_002EA798(char *self)
     }
     return 1.0f;
 }
-#endif
 
 // FUNCTION: GAME 0x2E9C30
 extern "C" void func_002E9C30(char *self)

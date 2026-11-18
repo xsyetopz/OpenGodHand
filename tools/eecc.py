@@ -38,6 +38,7 @@ import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import divnop  # noqa: E402
 import shortloop  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -174,9 +175,18 @@ def main() -> int:
         if exe[0] != "wine":
             steps[1] = ["wine", str(sn_as), *gsize, "-o", out, asm]
         prefix = cmd[: len(cmd) - len(exe) - len(gcc_args)]
+        src = next((Path(a) for a in argv if Path(a).suffix in (".c", ".cpp", ".cc")), None)
+        divs = divnop.spec(src) if src and src.exists() else {}
         script = " && ".join(" ".join(shlex.quote(a) for a in step) for step in steps)
         try:
-            rc = call([*prefix, "sh", "-c", script])
+            if divs:
+                # Divide padding goes in between compiling and assembling.
+                rc = call([*prefix, *steps[0]])
+                if rc == 0:
+                    Path(asm).write_text(divnop.pad(Path(asm).read_text(), divs))
+                    rc = call([*prefix, *steps[1]])
+            else:
+                rc = call([*prefix, "sh", "-c", script])
             # Loops shorter than the game's assembler allowed get nops before
             # their branch and are assembled again (see tools/shortloop.py).
             for _ in range(3):

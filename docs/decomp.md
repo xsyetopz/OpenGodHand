@@ -156,7 +156,7 @@ These source shapes reproduce patterns this compiler emits only one way:
   and reallocates registers (matched newlib `sprintf`, `fprintf`, 0x33B6E8,
   0x38AF78).
 
-## Open problem: `div.s` padding
+## `div.s` padding
 
 Most game `div.s` instructions follow two `nop`s, including some in the middle
 of straight-line code. None of the ProDG compilers (2.95.3-114, 2.95.2-273a,
@@ -173,8 +173,20 @@ padding when `add.s`, `sub.s`, `mul.s`, `cvt.s.w` or `div.s` directly precedes
 the divide and two nops otherwise; a label or a branch just before gives two
 nops in nearly every case. ee-gcc 2.96 pads two nops even after an FPU
 arithmetic op, so the game's tool used a different hazard model, most likely
-a later ProDG build than any decomp.me package. Functions whose `div.s` is
-padded stay in asm until that tool or an exact rule is found.
+a later ProDG build than any decomp.me package.
+
+The compiler's scheduling around the divide already matches, so the padding is
+recorded in the source and restored between compiling and assembling, the
+stage where SN's assembler added it. A `// DIVNOP:` line under a `FUNCTION`
+tag lists the nops before each `div.s` of that function in emission order, and
+tools/divnop.py inserts them into the compiler's assembly:
+
+    // FUNCTION: GAME 0x2EA798
+    // DIVNOP: 2
+
+`python tools/divnop.py 0xADDR` prints the tag from the original function. The
+counts include every nop before the divide, so a nop the compiler already
+emits there is subtracted from its entry.
 
 ## SCE library regions
 

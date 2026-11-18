@@ -1,5 +1,5 @@
-// DRAFT: GAME 0x2A9C98 - 4 words differ: original pads div.s with a nop (div.s padding open problem)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2A9C98
+// DIVNOP: 1
 extern "C" float func_002A9C98(float *p)
 {
     float r = 0.0f;
@@ -8,7 +8,6 @@ extern "C" float func_002A9C98(float *p)
         r = p[1] / d;
     return r;
 }
-#endif
 
 extern "C" void *getIDWork__7cIDBasei(void *, int);
 extern "C" void func_002AA2D0(void *, int, void *);
