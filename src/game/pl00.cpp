@@ -434,6 +434,7 @@ struct cVObj {
 class cGameObj {
 public:
     void SetTgtTurn(const cVec &v, float a);
+    int isClip() const;
 };
 
 // FUNCTION: GAME 0x124E68
@@ -545,13 +546,8 @@ extern "C" int func_001004C8(cModel *self)
     return self->isClip() != 0;
 }
 
-class cGameObjClip {
-public:
-    int isClip() const;
-};
-
 // FUNCTION: GAME 0x107F20
-extern "C" int func_00107F20(cGameObjClip *self)
+extern "C" int func_00107F20(cGameObj *self)
 {
     if (D_00747A80 < 0)
         return 1;

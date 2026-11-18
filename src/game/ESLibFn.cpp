@@ -723,6 +723,7 @@ VT_SET(2F3E18, D_0044EFA0, func_002FBE28)
 VT_SET(2F3E40, D_0044F078, func_002FBE28)
 
 #define VT_NEW(addr, vtsym)                                 \
+    extern "C" const char vtsym[];                          \
     extern "C" EsObj *func_00##addr(EsObj *self)            \
     {                                                       \
         if (self) {                                         \
@@ -751,3 +752,33 @@ VT_NEW(2FFCC8, D_0044EAB8)
 VT_NEW(2FFD08, D_0044EB70)
 // FUNCTION: GAME 0x2FFD48
 VT_NEW(2FFD48, D_0044EC68)
+
+// FUNCTION: GAME 0x2FFC88
+VT_NEW(2FFC88, D_0044EA10)
+// FUNCTION: GAME 0x2FFE10
+VT_NEW(2FFE10, D_0044EFA0)
+// FUNCTION: GAME 0x2FFE50
+VT_NEW(2FFE50, D_0044F078)
+// FUNCTION: GAME 0x2FFE90
+VT_NEW(2FFE90, D_0044F1C8)
+// FUNCTION: GAME 0x2FFED0
+VT_NEW(2FFED0, D_0044F270)
+// FUNCTION: GAME 0x2FFF50
+VT_NEW(2FFF50, D_0044F3A0)
+// FUNCTION: GAME 0x2FFC20
+VT_NEW(2FFC20, D_0044E820)
+struct EsObjZ : EsObj {
+    char pad1[0x2B0 - 0xF4];
+    int i2B0;
+};
+extern "C" const char D_0044EE38[];
+// FUNCTION: GAME 0x2FFD88
+extern "C" EsObj *func_002FFD88(EsObjZ *self)
+{
+    if (self) {
+        func_002FBCC8(self);
+        self->i2B0 = 0;
+        self->vt = D_0044EE38;
+    }
+    return self;
+}

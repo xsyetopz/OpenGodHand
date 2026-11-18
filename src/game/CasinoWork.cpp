@@ -159,3 +159,53 @@ extern "C" void func_001F7D20()
 {
     func_001F7A30(1, 0xFFFF);
 }
+
+extern "C" int sceOpen(const char *, int);
+extern const char D_0042C0E0[];
+extern int D_00568280;
+
+struct WarmRoom {
+    unsigned int m_flags;
+    int m_4;
+    float m_8;
+    short m_C;
+    unsigned short m_E;
+};
+struct ActionBtn {
+    char _pad[0x35];
+    unsigned char m_ok;
+};
+
+// FUNCTION: GAME 0x1F2990
+extern "C" void func_001F2990(SelfBlk *self)
+{
+    trans__7cIDBase((char *)self + 0x10);
+    trans__7cIDBase((char *)self + 0x930);
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1F6D18
+// store order differs (original 4,8,flags,C,E; compiled hoists last store to front)
+extern "C" void SetWarmUpRoom__10CasinoWorkifsUs(WarmRoom *self, int a, float f, short s, unsigned short u)
+{
+    self->m_flags |= 1;
+    self->m_4 = a;
+    self->m_8 = f;
+    self->m_C = s;
+    self->m_E = u;
+}
+#endif
+
+// FUNCTION: GAME 0x1F6E68
+extern "C" int func_001F6E68()
+{
+    D_00568280 = sceOpen(D_0042C0E0, 2);
+    return 1;
+}
+
+// FUNCTION: GAME 0x1F6EE0
+extern "C" void setOk__17cActionButtonUnit(ActionBtn *self)
+{
+    if (self->m_ok == 1)
+        *(unsigned int *)(Cockpit + 0xF30) |= 0x10000000;
+}

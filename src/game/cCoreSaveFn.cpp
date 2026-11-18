@@ -11,7 +11,7 @@ struct SaveSelf {
 extern "C" int setGameLevel__9cCoreSavei(SaveSelf *, int);
 extern "C" int SdeSystemOutModeGet();
 extern "C" void SdeSystemOutModeSet(int);
-extern const unsigned char D_005E85F8;
+extern unsigned char D_005E85F8;
 extern unsigned int D_00747A38;
 extern int D_00747A0C;
 
@@ -215,3 +215,110 @@ extern "C" int func_001FC360(SaveSelf *self, int b)
 }
 #endif
 
+
+struct WorldTimeT {
+    unsigned int m_0, m_4;
+};
+struct SysT {
+    char _pad[0x5B0];
+    unsigned short m_5B0;
+    char _5B2[4];
+    unsigned short m_5B6;
+};
+extern WorldTimeT WorldTime;
+struct TimeSelf {
+    WorldTimeT *m_save;
+};
+extern SysT Sys;
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1F9C30
+// original loads *self before WorldTime and uses addiu-based WorldTime+4; compiled reorders lui/lw
+extern "C" void func_001F9C30(TimeSelf *self)
+{
+    self->m_save->m_0 = WorldTime.m_0;
+    self->m_save->m_4 = WorldTime.m_4;
+}
+#endif
+
+// FUNCTION: GAME 0x1F9C58
+extern "C" void func_001F9C58(SaveSelf *self)
+{
+    char *s = self->m_save;
+    int v = AT(int, 8) + 1;
+    AT(int, 8) = v;
+    if ((unsigned)v >= 0x3E8) {
+        s = self->m_save;
+        AT(int, 8) = 0x3E7;
+    }
+}
+
+// FUNCTION: GAME 0x1F9C88
+extern "C" void func_001F9C88(SaveSelf *self)
+{
+    *(unsigned short *)(self->m_save + 0xC) = Sys.m_5B0;
+    *(unsigned short *)(self->m_save + 0xE) = Sys.m_5B6;
+}
+
+// FUNCTION: GAME 0x1F9DD0
+extern "C" void func_001F9DD0(SaveSelf *self)
+{
+    char *s = self->m_save;
+    if (s) {
+        if (D_005E85F8)
+            AT(int, 0x174) = 1;
+        else
+            AT(int, 0x174) = 0;
+    }
+}
+
+// FUNCTION: GAME 0x1F9E00
+extern "C" void func_001F9E00(SaveSelf *self)
+{
+    if (*(int *)(self->m_save + 0x174))
+        D_005E85F8 = 1;
+    else
+        D_005E85F8 = 0;
+}
+
+// FUNCTION: GAME 0x1FAD58
+extern "C" void func_001FAD58(SaveSelf *self, unsigned char v)
+{
+    char *s = self->m_save;
+    if (s) {
+        AT(unsigned char, 0x154) = v;
+        char *u = self->m_save;
+        if (*(unsigned char *)(u + 0x154) >= 0xE)
+            *(unsigned char *)(u + 0x154) = 0xD;
+    }
+}
+
+// FUNCTION: GAME 0x1FADC0
+extern "C" void func_001FADC0(SaveSelf *self, unsigned char v)
+{
+    char *s = self->m_save;
+    if (s) {
+        AT(unsigned char, 0x155) = v;
+        char *u = self->m_save;
+        if (*(unsigned char *)(u + 0x155) >= 6)
+            *(unsigned char *)(u + 0x155) = 5;
+    }
+}
+
+// FUNCTION: GAME 0x1FBDA0
+extern "C" void func_001FBDA0(SaveSelf *self, short v)
+{
+    if ((unsigned short)v < 1000)
+        *(short *)(self->m_save + 0x88) = v;
+}
+
+// FUNCTION: GAME 0x1FBF18
+extern "C" void func_001FBF18(SaveSelf *self)
+{
+    char *s = self->m_save;
+    if (s) {
+        AT(unsigned short, 0x12)++;
+        char *u = self->m_save;
+        *(unsigned short *)(u + 0xBB8) += 1;
+    }
+}

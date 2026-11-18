@@ -1,4 +1,4 @@
-extern "C" void func_002FBCC8(void *);
+extern "C" void *func_002FBCC8(void *);
 extern "C" void *func_002F7110(void *);
 extern "C" void *func_002F7CD8(void *);
 extern "C" void func_0030F5A0(void *);
@@ -18,8 +18,7 @@ struct EmFlag {
     unsigned int m_flags;
 };
 
-#ifdef NONMATCHING
-// NONMATCHING 0x300020: 3 words differ (vtable address built in v1 in the original, v0 in ours)
+// FUNCTION: GAME 0x300020
 extern "C" void *func_00300020(EmWork *p)
 {
     EmWork *r = p;
@@ -29,10 +28,8 @@ extern "C" void *func_00300020(EmWork *p)
     }
     return r;
 }
-#endif
 
-#ifdef NONMATCHING
-// NONMATCHING 0x3000B0: 3 words differ (vtable address built in v1 in the original, v0 in ours)
+// FUNCTION: GAME 0x3000B0
 extern "C" void *func_003000B0(EmWork *p)
 {
     EmWork *r = p;
@@ -42,7 +39,6 @@ extern "C" void *func_003000B0(EmWork *p)
     }
     return r;
 }
-#endif
 
 // FUNCTION: GAME 0x3028E8
 extern "C" void func_003028E8(EmWork *p, int a)
@@ -149,8 +145,7 @@ extern "C" int func_00304BB8(EmPos *p)
     return 1;
 }
 
-#ifdef NONMATCHING
-// NONMATCHING 0x304D70: same vtable-register pattern as 0x300020 (v1 vs v0)
+// FUNCTION: GAME 0x304D70
 extern "C" void *func_00304D70(EmWork *p)
 {
     EmWork *r = p;
@@ -161,7 +156,7 @@ extern "C" void *func_00304D70(EmWork *p)
     return r;
 }
 
-// NONMATCHING 0x304DB0: same pattern with D_0044FC98
+// FUNCTION: GAME 0x304DB0
 extern "C" void *func_00304DB0(EmWork *p)
 {
     EmWork *r = p;
@@ -171,4 +166,3 @@ extern "C" void *func_00304DB0(EmWork *p)
     }
     return r;
 }
-#endif

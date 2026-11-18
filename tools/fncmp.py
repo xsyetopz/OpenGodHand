@@ -40,7 +40,9 @@ def units() -> dict[int, tuple[int, str]]:
     return {v: (s, n) for v, s, n in configure.read_units()}
 
 
-LINKED = ROOT / "build/SLUS_215.03.elf"
+# Copy of the last link that passed the sha1 check; the link itself is
+# rewritten (and briefly empty) during every build.
+LINKED = ROOT / "build/SLUS_215.03.ok.elf"
 
 
 def linked_symbols() -> dict[str, int]:

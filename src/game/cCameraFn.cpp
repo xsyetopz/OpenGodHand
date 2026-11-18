@@ -194,3 +194,117 @@ extern "C" void *func_0013C758()
         func_0031EEC8(&D_00460D28, D_0041DD00);
     return &D_00460D28;
 }
+
+// FUNCTION: GAME 0x13E300
+extern "C" void func_0013E300(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x13E750
+extern "C" void func_0013E750(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x13EC50
+extern "C" void func_0013EC50(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x13F270
+extern "C" void func_0013F270(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x140B58
+extern "C" void func_00140B58(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x1434D0
+extern "C" void func_001434D0(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x143AF0
+extern "C" void func_00143AF0(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x144AD0
+extern "C" void func_00144AD0(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x146748
+extern "C" void func_00146748(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x146E70
+extern "C" void func_00146E70(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x146F98
+extern "C" void func_00146F98(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x1474A0
+extern "C" void func_001474A0(char *p, int f)
+{
+    *(char **)(p + 0x80) = D_0041DCC8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+extern char D_0041D5A8[];
+
+// FUNCTION: GAME 0x12D178
+extern "C" void func_0012D178(char *p, int f)
+{
+    *(char **)(p + 0x5C) = D_0041D5A8;
+    if (f & 1)
+        func_0030F5A0(p);
+}
+
+// FUNCTION: GAME 0x12DC88
+extern "C" void func_0012DC88(char *p, int f)
+{
+    *(char **)(p + 0x5C) = D_0041D5A8;
+    if (f & 1)
+        func_0030F5A0(p);
+}

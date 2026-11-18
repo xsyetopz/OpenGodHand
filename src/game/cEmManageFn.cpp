@@ -51,4 +51,33 @@ int func_00294970(char *self) { return *(float *)(self + 0x544) > 0.0f; }
 void func_002949C8(char *self) { if (B(0x53E)) { U(0x53E) = U(0x53E) - 1; } }
 // FUNCTION: GAME 0x294998
 int func_00294998(char *self) { if (B(0x53E) == 0) return 0; func_002949C8(self); return 1; }
+struct cSndFwd { int SeCall(int, short, short, short, unsigned, int) __asm__("SeCall__4cSnd6eSeBlksssUii"); };
+extern cSndFwd Snd;
+extern unsigned D_00747A30;
+extern char g_EmManage;
+int func_00292F08(char *);
+void func_00290090(void *);
+void *SetEffect(int, int, void *, void *, int, unsigned) __asm__("SetEffect__F12eEffDataType6eEffIdP4cObjP12tagEFF_PARAMiT2");
+void SetBigHitEffWait(char *, int) __asm__("SetBigHitEffWait__9cEmManagei");
+// FUNCTION: GAME 0x292E80
+void func_00292E80(char *self)
+{
+    if (!(D_00747A30 & 0x800) && !func_00292F08(self)) {
+        SetEffect(0, 15, 0, 0, -1, 0xFFFFFFFFu);
+        SetBigHitEffWait(self, 2);
+    }
+}
+// FUNCTION: GAME 0x294A88
+void func_00294A88(char *self)
+{
+    if (*(short *)(self + 0x542) == 0) {
+        *(short *)(self + 0x542) = 150;
+        Snd.SeCall(2, 164, -1, -1, 0, 0);
+    }
+}
+// FUNCTION: GAME 0x294AE0
+void func_00294AE0(void *a, int b)
+{
+    if (b == 0xFFFF && a) func_00290090(&g_EmManage);
+}
 }

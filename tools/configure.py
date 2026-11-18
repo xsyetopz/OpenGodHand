@@ -166,7 +166,7 @@ def main() -> int:
         "-T config/aliases.ld -T build/undefined_funcs_auto.txt -T build/undefined_syms_auto.txt -o $out\n  description = LD $out"
     )
     n.append(f"rule pack\n  command = {py} tools/elfpack.py pack $in $out\n  description = PACK $out")
-    n.append(f"rule check\n  command = {py} tools/check.py $in && touch $out\n  description = CHECK $in")
+    n.append(f"rule check\n  command = {py} tools/check.py $in && cp $elf $elf_ok && touch $out\n  description = CHECK $in")
     n.append(f"as = {tool('as')}\nld = {tool('ld')}\npy = {py}")
     n.append(f"rule linkgen\n  command = {py} tools/linkgen.py $in $script\n  description = LINKGEN")
     n.append(f"rule configure\n  command = {py} tools/configure.py\n  generator = 1\n  description = CONFIGURE")
@@ -201,7 +201,9 @@ def main() -> int:
     n.append(f"build build/{TARGET}.elf: ld | {script} config/aliases.ld " + " ".join(objs + gated))
     n.append(f"  script = {script}\n  map = build/{TARGET}.map")
     n.append(f"build build/{TARGET}: pack config/elf_layout.json build/{TARGET}.elf assets/elf | tools/elfpack.py")
-    n.append(f"build build/{TARGET}.ok: check build/{TARGET} | tools/check.py config/{TARGET}.sha1")
+    n.append(f"build build/{TARGET}.ok: check build/{TARGET} | tools/check.py config/{TARGET}.sha1 build/{TARGET}.elf")
+    # fncmp reads symbol addresses from a copy of the last link that passed.
+    n.append(f"  elf = build/{TARGET}.elf\n  elf_ok = build/{TARGET}.ok.elf")
     n.extend(objdiff_config.emit(units, sources))
     deps = " ".join(["tools/configure.py", "tools/objdiff_config.py", *(f"{row[4]}/units.tsv" for row in SECTIONS), *map(str, sources), *sorted({h for src in sources for h in headers(src)})])
     n.append(f"build build.ninja: configure | {deps}")

@@ -53,7 +53,8 @@ full build still reproduces `SLUS_215.03` byte for byte.
 4. Compare: `.venv/bin/python tools/fncmp.py src/game/<Class>.cpp 0x<VRAM>`.
    `MATCH` means identical bytes outside relocated fields, and each relocated
    field (`jal`, `%hi`, `%lo`) resolves to the original address under the
-   symbol table of the last full build (`build/SLUS_215.03.elf`); a wrong
+   symbol table of the last build that passed the sha1 check
+   (`build/SLUS_215.03.ok.elf`); a wrong
    symbol prints `sym (0xVAL) is not the original target`. Iterate on the
    source until it matches; don't change flags per function. The build gate
    (`linkgen.py`) runs before the link and masks relocated fields, so the
@@ -101,6 +102,10 @@ These source shapes reproduce patterns this compiler emits only one way:
 - Store order in source is not always the emitted order: delay-slot filling
   moves the last store first. When stores mismatch, permute them.
 - `if (p) g(p); return p;` matches only as `int r = a; if (a) r = g(a); return r;`.
+- A derived constructor `if (p) { base(p); p->vt = X; } return p;` builds
+  the vtable in `v1` only when `base` is declared returning `void *`; a `void`
+  declaration frees `v0` and the vtable lands there.
+- `andi; xori; beqz` on a flag comes from `unsigned char t = f ^ 1; if ((t & 1) == 0)`.
 - Lazy singletons: `if (!G) { ctor(); func_0031EEA8(&G, name, dtor); } return &G;`,
   where `name` is the rodata string extern.
 - Base destructor calls need `extern "C" void _$_7cPlBase(T *);`.

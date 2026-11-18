@@ -43,7 +43,8 @@ void cSceAtUnit::AtInit(eSceAt_id id, eAreaHitType hit, eAreaTrgType trg, eActTy
 // FUNCTION: GAME 0x2C0E78
 void cSceAtUnit::getCenterPos(cVec &out)
 {
-    if (m_flags & 1) {
+    unsigned char t = m_flags ^ 1;
+    if ((t & 1) == 0) {
         ((cArea *)((char *)this + 4))->AreaGetCenterPos(out);
         out.y = out.y + 0.4f;
     }
