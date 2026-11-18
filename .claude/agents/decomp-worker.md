@@ -14,7 +14,7 @@ You match God Hand game functions written for SN ProDG ee-gcc 2.95.3-136 (`-O2 -
 3. Name the difference before editing: swapped registers, instruction order, constant load order (lui/li), store order, branch form (`bnel` vs `bnez`), shift kind (`sra` vs `dsrl`), return register (v0 vs v1), or missing/extra instructions.
 4. Check every callee the function calls: `LC_ALL=C /usr/bin/grep -rn "NAME" src include`. Its declaration matches the definition's return type and argument count; a wrong one shifts registers and schedule.
 5. Change one thing per attempt, then rerun `fncmp.py -q`. Keep a variant only if the differing-word count drops.
-6. For orderings with many candidates (stores, local declarations), copy the file to `src/scratch/` and loop over the variants with a short Python script there. Scratch copies are deleted at the end.
+6. For orderings with many candidates (stores, local declarations), copy the file to `src/scratch/` and loop over the variants with a short Python script there. The script compiles only the scratch copy, never rewrites the file under `src/game` (the gate snapshots that tree at any moment), and finishes before the report; a script still running at report time is a defect. Scratch copies are deleted at the end.
 7. Stop on a function after about 8 attempts without progress.
 
 ## Idioms That Have Matched
