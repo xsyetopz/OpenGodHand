@@ -7,10 +7,11 @@ extern "C" void func_00145FC8(void *);
 extern "C" void func_00146190(void *);
 extern "C" void move__7cIDBase(char *);
 extern "C" char *getIDWork__7cIDBasei(char *, int);
-#ifdef NONMATCHING
-// DRAFT: GAME 0x145238 (DIVNOP: 1; 9 words off: self/a/b callee-saved registers s0/s2 swapped)
+// FUNCTION: GAME 0x145238
+// DIVNOP: 1
 extern "C" void func_00145238(char *self) {
   unsigned short i;
+  char *w0; // assigned before d: keeps self in s3 and a/b in s1/s2
   switch (*(short *)(self + 0x41E)) {
   case 0: func_00145410(self); break;
   case 1: func_00145460(self); break;
@@ -25,8 +26,9 @@ extern "C" void func_00145238(char *self) {
     if (*t < 0) *t = 0;
     char *a = self + 0x430;
     char *b = self + 0x480;
+    w0 = getIDWork__7cIDBasei(a, 0);
     float *d = D_0041E898;
-    char *w = getIDWork__7cIDBasei(a, 0);
+    char *w = w0;
     float x = d[0];
     *(float *)(w + 0x38) = x;
     char *w2 = getIDWork__7cIDBasei(a, 0);
@@ -40,4 +42,3 @@ extern "C" void func_00145238(char *self) {
     move__7cIDBase(b);
   }
 }
-#endif
