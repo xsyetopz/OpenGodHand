@@ -219,3 +219,46 @@ extern "C" void func_00383B60(unsigned char *o, Fn38U *p, unsigned char c)
     }
 }
 #endif
+
+#ifdef NONMATCHING
+extern "C" void *memset(void *, int, unsigned);
+struct Fn38A { char _p0[0x70 - 2]; short m_6E; };
+extern char D_0076E510[];
+extern char D_0076E590[];
+extern char D_0076E910[];
+
+// DRAFT: GAME 0x377D80
+// diff: 2 words; original keeps lui/addiu %lo and +offset separate for the second loop base (ours folds them)
+extern "C" void func_00377D80(void)
+{
+    int i;
+    memset(D_0076E510, 0, 0x80);
+    memset(D_0076E590, 0, 0x380);
+    memset(D_0076E910, 0, 0x140);
+    for (i = 7; i >= 0; i--)
+        *(short *)(D_0076E590 + 0x312 - (7 - i) * 0x70) = i;
+    for (i = 1; i >= 0; i--)
+        *(short *)(D_0076E910 + 0xA2 - (1 - i) * 0xA0) = i;
+}
+#endif
+
+#ifdef NONMATCHING
+extern "C" void *memset(void *, int, unsigned);
+extern char D_0076EA50[];
+extern char D_0076F050[];
+extern char D_00770850[];
+
+// DRAFT: GAME 0x377E28
+// diff: 2 words; original keeps lui/addiu %lo and +offset separate for the second loop base (ours folds them)
+extern "C" void func_00377E28(void)
+{
+    int i;
+    memset(D_0076EA50, 0, 0x600);
+    memset(D_0076F050, 0, 0x1800);
+    memset(D_00770850, 0, 0x2A00);
+    for (i = 0x5F; i >= 0; i--)
+        *(short *)(D_0076F050 + 0x17C2 - (0x5F - i) * 0x40) = i;
+    for (i = 0x2F; i >= 0; i--)
+        *(short *)(D_00770850 + 0x2922 - (0x2F - i) * 0xE0) = i;
+}
+#endif

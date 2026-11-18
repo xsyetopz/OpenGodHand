@@ -13,3 +13,6 @@
 #define _G_HAVE_PRINTF_FP 1
 #define _G_HAVE_SYS_CDEFS 0
 #endif
+#define _G_VTABLE_LABEL_HAS_LENGTH 1
+#define _G_VTABLE_LABEL_PREFIX "_vt$"
+#define _G_VTABLE_LABEL_PREFIX_ID _vt$

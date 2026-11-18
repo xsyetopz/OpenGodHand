@@ -34,8 +34,8 @@ extern char World_light_work[];
 extern char g_CasinoWork[];
 extern char g_CollisionManager[];
 extern void *_$_4cObj(char *);
-extern void *_$_8cGameObj(char *);
 extern void *_$_8cObjBase(char *);
+void _$_8cGameObj(char *);
 extern void *__7cCamera(char *);
 extern void *func_001B6E90(char *);
 extern void *func_001BD580(char *);
@@ -230,7 +230,7 @@ void _$_8cGameObj(char *self)
 // FUNCTION: GAME 0x2CC540
 void func_002CC540(char *self)
 {
-    *(const void **)(self + 0x214) = D_0044CEE8;
+    *(const void **)(self + 0x80) = D_0044CEE8;
     func_00372C80(self);
 }
 

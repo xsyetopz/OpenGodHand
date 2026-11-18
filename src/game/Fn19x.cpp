@@ -157,3 +157,121 @@ FW_TIMER(func_001A2E28, 0xD98)
 
 // FUNCTION: GAME 0x1BC6E8
 FW_TIMER(func_001BC6E8, 0x62C)
+
+// Mode-table dispatchers (anchor 0x1841E8).
+#define FW_DISP(NAME, TAB) \
+    extern cFnWPmf TAB[]; \
+    extern "C" void NAME(cFnW *self) \
+    { \
+        if (func_001B76B0(self)) { \
+            (self->*TAB[self->type])(); \
+            func_002A87E8(self, 0); \
+            func_001B76D8(self); \
+        } \
+    }
+
+// FUNCTION: GAME 0x171200
+FW_DISP(func_00171200, D_003BD9F0)
+
+// FUNCTION: GAME 0x17BA28
+FW_DISP(func_0017BA28, D_003BDA40)
+
+// FUNCTION: GAME 0x17ED00
+FW_DISP(func_0017ED00, D_003BDA88)
+
+// FUNCTION: GAME 0x182A18
+FW_DISP(func_00182A18, D_003BDB20)
+
+// FUNCTION: GAME 0x195F18
+FW_DISP(func_00195F18, D_003BDB68)
+
+// FUNCTION: GAME 0x1A85B8
+FW_DISP(func_001A85B8, D_003BDBD0)
+
+// FUNCTION: GAME 0x1A8A70
+FW_DISP(func_001A8A70, D_003BDBF0)
+
+// FUNCTION: GAME 0x1B3800
+FW_DISP(func_001B3800, D_003BDD20)
+
+// FUNCTION: GAME 0x1B6968
+FW_DISP(func_001B6968, D_003BDD78)
+
+// FUNCTION: GAME 0x1BD6B0
+FW_DISP(func_001BD6B0, D_003BDDC8)
+
+// FUNCTION: GAME 0x1BE950
+FW_DISP(func_001BE950, D_003BDE08)
+
+// FUNCTION: GAME 0x1BF518
+FW_DISP(func_001BF518, D_003BDE30)
+
+// Damage-check tails (anchor 0x173DE8): checkDamage(take at TOFF), then state change on a hit.
+class cDamageTake;
+class cOmBase { public: int checkDamage(cDamageTake *d); };
+struct sDmW {
+    char _p0[0x2F4];
+    unsigned char m_2f4, m_2f5, m_2f6, m_2f7;
+    char _p2f8[0x54A - 0x2F8];
+    short m_54a;
+    char _p54c[0x5B0 - 0x54C];
+    unsigned m_5b0;
+};
+#define FW_DMG(NAME, TOFF) \
+    extern "C" void NAME(sDmW *s) \
+    { \
+        int r = ((cOmBase *)s)->checkDamage(*(cDamageTake **)((char *)s + (TOFF))); \
+        if (r == 1) { \
+            if (s->m_54a <= 0) { \
+                s->m_2f4 = 2; \
+                s->m_5b0 |= 1; \
+                s->m_2f6 = 0; \
+                s->m_2f7 = 0; \
+                s->m_2f5 = 0; \
+            } else { \
+                s->m_2f4 = r; \
+                s->m_2f5 = 0; \
+                s->m_2f6 = 0; \
+                s->m_2f7 = 0; \
+            } \
+        } \
+    }
+
+// FUNCTION: GAME 0x181C20
+FW_DMG(func_00181C20, 0x650)
+
+// FUNCTION: GAME 0x186D90
+FW_DMG(func_00186D90, 0x650)
+
+// FUNCTION: GAME 0x188118
+FW_DMG(func_00188118, 0x604)
+
+// FUNCTION: GAME 0x18A988
+FW_DMG(func_0018A988, 0x600)
+
+// FUNCTION: GAME 0x18B6A0
+FW_DMG(func_0018B6A0, 0x650)
+
+// FUNCTION: GAME 0x18C4A8
+FW_DMG(func_0018C4A8, 0x650)
+
+// FUNCTION: GAME 0x18D298
+FW_DMG(func_0018D298, 0x650)
+
+// FUNCTION: GAME 0x18E050
+FW_DMG(func_0018E050, 0x650)
+
+// FUNCTION: GAME 0x1993C8
+FW_DMG(func_001993C8, 0x650)
+
+// FUNCTION: GAME 0x19B458
+FW_DMG(func_0019B458, 0x600)
+
+// FUNCTION: GAME 0x19C980
+FW_DMG(func_0019C980, 0x650)
+
+// FUNCTION: GAME 0x19F4B0
+FW_DMG(func_0019F4B0, 0x650)
+
+// FUNCTION: GAME 0x1C2B08
+FW_DMG(func_001C2B08, 0x600)

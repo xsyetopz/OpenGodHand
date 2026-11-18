@@ -411,6 +411,7 @@ int func_003BA708(struct IoObj *o)
 }
 #endif
 
+#ifdef NONMATCHING
 extern char D_00460978[];
 extern char D_004609A8[];
 extern char D_004609D8[];
@@ -418,7 +419,8 @@ extern int D_003FC518[];
 extern int D_003FC528[];
 extern int D_003FC5C8[][40];
 
-// FUNCTION: GAME 0x3BA3D8
+// DRAFT: GAME 0x3BA3D8
+// 1 word differs at +0xFC: lui v1 vs lw v1 (table base hoist); matched only with a preceding live 0x3BA708
 int func_003BA3D8(int *o, unsigned char *p)
 {
     unsigned c, i;
@@ -449,6 +451,7 @@ int func_003BA3D8(int *o, unsigned char *p)
     o[13] = D_003FC5C8[c][i] << 1;
     return 0;
 }
+#endif
 
 struct IoObj2 {
     char pad0[8];

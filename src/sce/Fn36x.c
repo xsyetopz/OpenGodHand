@@ -373,7 +373,8 @@ void func_0035C3A0(char *a)
 extern char D_0045A060[], D_0045A068[], D_0045A070[];
 int func_0033ADF8();
 
-// FUNCTION: GAME 0x360000
+#ifdef NONMATCHING
+// DRAFT: GAME 0x360000 store order in the zero branch and s2 setup order (4 words at best)
 void func_00360000(char *a)
 {
     int buf[2];
@@ -383,12 +384,12 @@ void func_00360000(char *a)
     int *v = (int *)(a + 8);
     int t = v[1];
     if (t == 0) {
-        s3[1] = 0;
-        s3[0] = 1;
         s3[2] = 0;
+        s3[0] = 1;
+        s3[1] = 0;
+        s4[0] = 1;
         s4[2] = 0;
         s4[1] = 0;
-        s4[0] = 1;
     } else {
         buf[0] = t;
         buf[1] = v[2];
@@ -402,3 +403,4 @@ void func_00360000(char *a)
         s4[2] = out[1];
     }
 }
+#endif

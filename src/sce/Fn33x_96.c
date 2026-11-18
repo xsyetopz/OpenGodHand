@@ -259,3 +259,38 @@ void func_00338638(void) {
     func_0033B200();
 }
 #endif
+
+// FUNCTION: GAME 0x33F5B8
+extern int D_003EB844;
+void func_0033E678(void); void func_0033E690(void); void func_00331AD8(void); void func_00328C30(void); void func_00328B88(void); void func_003241D0(void); void func_00328C70(void);
+void func_0033F5B8(void) {
+    func_0033E678();
+    if (D_003EB844 != 0) { func_0033E690(); return; }
+    D_003EB844 = 1; func_0033E690();
+    D_003EB844 = 2; func_00331AD8();
+    D_003EB844 = 3; func_00328C30();
+    D_003EB844 = 4; func_00328B88();
+    D_003EB844 = 5; func_003241D0();
+    D_003EB844 = 6; func_00328B88();
+    D_003EB844 = 7; func_00328C30();
+    D_003EB844 = 8; func_00331AD8();
+    D_003EB844 = 9; func_00328C70();
+    D_003EB844 = 0;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x335E60
+// diff: 2 words (s1 = 31 and s2 = 1 are loaded in swapped order)
+extern int D_003DA5F0; extern char D_003DA5F8[];
+void func_00335500(char *); void func_00335DD8(void); void func_00335D18(int, int);
+void func_00335E60(void) {
+    char *p; int i;
+    if (--D_003DA5F0 == 0) {
+        p = D_003DA5F8;
+        for (i = 31; i >= 0; i--, p += 0x238) if (*p == 1) func_00335500(p);
+        memset(D_003DA5F8, 0, 0x4700);
+        func_00335DD8();
+        func_00335D18(0, 0);
+    }
+}
+#endif

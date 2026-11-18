@@ -200,8 +200,7 @@ struct LNode {
     int flags;
 };
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2CA5D8 - bit test gets dsll32/dsra32 after the dsrl+andi; loop-exit layout differs (16 words)
+// FUNCTION: GAME 0x2CA5D8
 extern "C" void func_002CA5D8(char *self)
 {
     unsigned a = *(unsigned *)(self + 0xB0);
@@ -216,13 +215,13 @@ extern "C" void func_002CA5D8(char *self)
     if (*(unsigned *)(self + 0xAC) & 0x4000000) {
         for (p = *(LNode **)(self + 0x1C); p; p = p->next) {
             unsigned long f = (unsigned long)p->flags;
-            if ((f >> 2) & 1) {
+            unsigned long b = (f >> 2) & 1;
+            if (b) {
                 func_002CE430(p);
             }
         }
     }
 }
-#endif
 
 extern char Sys[];
 extern char WorldTime[];
@@ -259,19 +258,21 @@ extern "C" void func_002C3440(char *self)
     }
 }
 
-extern unsigned D_00747A24;
+extern int D_00747A24;
 extern char Door[];
 extern void *g_Sce;
 extern "C" int getJumpData__5cDoorUcUcUcbUc(void *, int, int, int, int, int);
 extern "C" void setDoorJump__5cDoor(void *);
 extern "C" void func_002C4DD0(void *, int, int);
 
-// FUNCTION: GAME 0x2C2078
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2C2078 - 20 words differ; bit test and frame/branch layout
 extern "C" int func_002C2078(char *self)
 {
     char *p = self + 0x5C;
-    long f = (unsigned)D_00747A24;
-    if ((f >> 3) & 1) {
+    unsigned long f = D_00747A24;
+    unsigned long b = (f >> 3) & 1;
+    if (b) {
         return 0;
     }
     if (!getJumpData__5cDoorUcUcUcbUc(Door, (unsigned char)p[0x1D], (unsigned char)p[2], 2, 0, 0)) {
@@ -290,3 +291,4 @@ extern "C" int func_002C2078(char *self)
     setDoorJump__5cDoor(Door);
     return 0;
 }
+#endif

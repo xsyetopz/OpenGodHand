@@ -73,7 +73,7 @@ int func_003228C0();
 int func_003234D0(void);
 int func_00323568(int, int, int);
 int func_00323840(int, int, int);
-void func_00323F18();
+int func_00323F18();
 void func_00328018();
 void func_00327D90();
 int func_0033D190();
