@@ -142,10 +142,10 @@ extern "C" void func_0037D148(char *a)
 {
     char *p = *(char **)(a + 8);
     if (p) {
-        *(int *)(p + 8) = 0;
         *(short *)p = 0;
         *(int *)(p + 0x10) = 0;
         *(int *)(p + 0x14) = 0;
+        *(int *)(p + 8) = 0;
     }
 }
 
@@ -182,4 +182,53 @@ extern "C" void func_00374148(void **o)
 {
     if (*o)
         func_00336D08(*o);
+}
+
+// FUNCTION: GAME 0x3737C8
+extern "C" int func_003737C8(Fn37Obj *o, int m)
+{
+    int r = 0; if (func_00373A50(o)) { unsigned t = o->m_4C & m; r = t != 0; } return r;
+}
+
+// FUNCTION: GAME 0x373810
+extern "C" void func_00373810(Fn37Obj *o, int m)
+{
+    if (func_00373A50(o))
+        o->m_4C |= m;
+}
+
+// FUNCTION: GAME 0x373858
+extern "C" void func_00373858(Fn37Obj *o, int m)
+{
+    if (func_00373A50(o))
+        o->m_4C &= ~m;
+}
+
+extern "C" int func_00373B20(Fn37Obj *o);
+extern "C" void func_00374318(Fn37Obj *o);
+extern "C" void func_00373D48(Fn37Obj *o);
+extern "C" void func_00374548(Fn37Obj *o);
+extern "C" void *memset(void *, int, unsigned);
+
+// FUNCTION: GAME 0x373430
+extern "C" void func_00373430(Fn37Obj *o)
+{
+    if (func_00373A50(o)) {
+        if (func_00373B20(o) == 1)
+            func_00374548(o);
+        else
+            func_00373F78((void **)o);
+    }
+}
+
+// FUNCTION: GAME 0x3733C8
+extern "C" void func_003733C8(Fn37Obj *o)
+{
+    if (func_00373A50(o)) {
+        if (func_00373B20(o) == 1)
+            func_00374318(o);
+        else
+            func_00373D48(o);
+        memset(o, 0, 0x84);
+    }
 }

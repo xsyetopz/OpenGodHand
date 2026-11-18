@@ -172,3 +172,91 @@ extern "C" void func_003AEC80(void *self, int a)
     r->m_14 = a;
 }
 #endif
+
+// Round 24.
+extern "C" void func_003A8048(void *);
+extern "C" void func_003A80A8(void *);
+extern "C" void func_003ACA28(void *, void *);
+extern "C" void *func_003AC2F8(void *, unsigned);
+extern "C" int GetThreadId(void);
+extern "C" int WaitSema(int);
+extern "C" int SignalSema(int);
+extern "C" int func_003A6AA8(void *);
+extern "C" void func_003A61F0(void *);
+extern "C" int func_003B0388(int);
+extern int D_003FA990;
+extern int D_003FA994;
+extern int D_003FAF18;
+extern int D_0077DB88;
+
+// FUNCTION: GAME 0x3A7CC0
+extern "C" void free(void *p)
+{
+    func_003A8048(D_003FA62C);
+    func_003ACA28(D_003FA62C, p);
+    func_003A80A8(D_003FA62C);
+}
+
+// FUNCTION: GAME 0x3A7C70
+extern "C" void *malloc(unsigned n)
+{
+    func_003A8048(D_003FA62C);
+    void *r = func_003AC2F8(D_003FA62C, n);
+    func_003A80A8(D_003FA62C);
+    return r;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3A93A8
+// diff: original loops lb/bnez with lbu in delay slot and movz after xor; ours emits bnel and different schedule
+extern "C" char *strrchr(char *s, int c)
+{
+    char ch = c;
+    char *r = 0;
+    if (*s) {
+        do {
+            unsigned char u = *(unsigned char *)s;
+            if ((char)u == ch)
+                r = s;
+            s++;
+        } while (*s);
+    }
+    return *s == ch ? s : r;
+}
+#endif
+
+// FUNCTION: GAME 0x3A80A8
+extern "C" void func_003A80A8(void *)
+{
+    if (--D_003FA994 == 0) {
+        D_003FA990 = -1;
+        SignalSema(D_003FAF18);
+    }
+}
+
+// FUNCTION: GAME 0x3A8048
+extern "C" void func_003A8048(void *)
+{
+    int tid = GetThreadId();
+    if (D_003FA990 == tid) {
+        D_003FA994++;
+        return;
+    }
+    WaitSema(D_003FAF18);
+    D_003FA990 = tid;
+    D_003FA994++;
+}
+
+struct Fio {
+    unsigned char *m_ptr;
+    int m_cnt;
+};
+
+// FUNCTION: GAME 0x3A6C10
+extern "C" int func_003A6C10(Fio *f)
+{
+    if (func_003A6AA8(f))
+        return -1;
+    f->m_cnt--;
+    return *f->m_ptr++;
+}

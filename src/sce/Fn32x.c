@@ -341,3 +341,122 @@ void func_0033FCA8(void)
 {
 }
 
+
+// Tail-call wrappers (ee-gcc 3.2 framed sibcall), 0x31C000-0x327FFF.
+void func_00323050();
+void func_00325C98();
+void func_00335A18();
+void func_00336E88();
+void func_00337728();
+void func_00337C00();
+void func_00337C88();
+void func_00337D20();
+void func_00337DE0();
+void func_0033B658();
+void func_0033B670();
+void func_0033E6A8();
+void func_0033E6B0();
+void func_0033F690();
+void func_003AFBC0();
+
+// FUNCTION: GAME 0x323038
+void func_00323038() 
+{
+    func_00323050();
+}
+
+// FUNCTION: GAME 0x324880
+void func_00324880() 
+{
+    func_0033E6A8();
+}
+
+// FUNCTION: GAME 0x324898
+void func_00324898() 
+{
+    func_0033E6B0();
+}
+
+// FUNCTION: GAME 0x324C78
+void func_00324C78() 
+{
+    func_00335A18();
+}
+
+// FUNCTION: GAME 0x3252E0
+void func_003252E0() 
+{
+    func_003AFBC0();
+}
+
+// FUNCTION: GAME 0x325C60
+void func_00325C60() 
+{
+    func_0033B658();
+}
+
+// FUNCTION: GAME 0x325C78
+void func_00325C78() 
+{
+    func_0033B670();
+}
+
+// FUNCTION: GAME 0x325DC0
+void func_00325DC0() 
+{
+    func_00325C98();
+}
+
+// FUNCTION: GAME 0x325DD8
+void func_00325DD8() 
+{
+    func_0033F690();
+}
+
+// FUNCTION: GAME 0x326148
+void func_00326148() 
+{
+    func_00336E88();
+}
+
+// FUNCTION: GAME 0x3261F0
+void func_003261F0() 
+{
+    func_00337C00();
+}
+
+// FUNCTION: GAME 0x326208
+void func_00326208() 
+{
+    func_00337C88();
+}
+
+// FUNCTION: GAME 0x326288
+void func_00326288() 
+{
+    func_00337728();
+}
+
+// FUNCTION: GAME 0x3262A0
+void func_003262A0() 
+{
+    func_00337D20();
+}
+
+// FUNCTION: GAME 0x3262C0
+void func_003262C0() 
+{
+    func_00337DE0();
+}
+
+void func_00338338(int, int);
+void func_003382A0(int, int);
+void func_003381B0(int);
+
+// FUNCTION: GAME 0x3262D8
+void func_003262D8(int a)
+{
+    func_00338338(a, 0);
+    func_003382A0(a, 0);
+    func_003381B0(a);
+}

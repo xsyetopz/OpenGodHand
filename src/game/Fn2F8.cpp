@@ -1,4 +1,6 @@
-// Small functions in 0x2E0000-0x2FFFFF.
+// Small functions in 0x2D0000-0x2FFFFF.
+
+#include "cSnd.h"
 
 extern "C" {
 void func_002F1AA0(int, unsigned);
@@ -23,7 +25,7 @@ void func_002F1B40() { func_002F1AA0(1, 0xFFFF); }
 void func_002F29E0(void *p) { func_002FBED0(p); }
 
 void func_002FBE50(void *);
-void func_002FBE28(char *);
+void func_002FBE28(char *, int);
 void func_002FBDD8(void *);
 void *func_002E9B68(void *);
 void *func_002EBF08(void *);
@@ -50,28 +52,28 @@ void func_002F5448(void *p) { func_002FBED0(p); }
 void func_002FEBB8(void *p) { func_002FBE50(p); }
 
 // FUNCTION: GAME 0x2EBC28
-void func_002EBC28(char *p)
+void func_002EBC28(char *p, int f)
 {
     *(char **)(p + 0xF0) = D_0044E820;
-    func_002FBE28(p);
+    func_002FBE28(p, f);
 }
 
 // FUNCTION: GAME 0x2EFC80
-void func_002EFC80(char *p)
+void func_002EFC80(char *p, int f)
 {
     *(char **)(p + 0xF0) = D_0044EA10;
-    func_002FBE28(p);
+    func_002FBE28(p, f);
 }
 
 // FUNCTION: GAME 0x2FA070
-void func_002FA070(char *p)
+void func_002FA070(char *p, int f)
 {
     *(char **)(p + 0xF0) = D_0044F880;
-    func_002FBE28(p);
+    func_002FBE28(p, f);
 }
 
 // FUNCTION: GAME 0x2FBE28
-void func_002FBE28(char *p)
+void func_002FBE28(char *p, int)
 {
     *(char **)(p + 0xF0) = D_0044FAD0;
     func_002FBDD8(p);
@@ -194,9 +196,9 @@ extern int D_007863F8; extern const char D_0044E9F8[]; extern char D_007863C8[];
 extern int D_007864C8; extern const char D_0044F030[];
 
 // FUNCTION: GAME 0x2D22B0
-char *func_002D22B0(char *p, int a, int b)
+void *func_002D22B0(cSnd *self, int a, int b)
 {
-    char *n = *(char **)(p + 0x18);
+    char *n = *(char **)((char *)self + 0x18);
     while (n) {
         if (*(int *)(n + 0x8C) - 0x80 == a && *(int *)(n + 0x90) == b)
             return n;
@@ -319,7 +321,6 @@ void *func_002F7090()
     return &D_00786558;
 }
 
-void Base2FBE28(char *, int) __asm__("func_002FBE28");
 void func_002EBC50(char *, int);
 void DelLight(void *, unsigned short, unsigned) __asm__("Del_LightData__11cWorldLightUsUi");
 void HeapFree(void *, void *) __asm__("free__5cHeapPv");
@@ -343,7 +344,7 @@ void func_002E76F8(char *p, int f)
 {
     *(const char **)(p + 0xF0) = D_0044E640;
     DelLight(World_light_work, *(unsigned short *)(p + 0x2B2), *(unsigned *)(p + 0x2B4));
-    Base2FBE28(p, f);
+    func_002FBE28(p, f);
 }
 
 // FUNCTION: GAME 0x2F5730
@@ -362,7 +363,7 @@ void func_002F4B30(char *p, int f)
     *(const char **)(p + 0xF0) = D_0044F1C8;
     if (*(void **)(p + 0x2B0))
         ReleaseObj(*(void **)(p + 0x2B0));
-    Base2FBE28(p, f);
+    func_002FBE28(p, f);
 }
 }
 
@@ -379,18 +380,12 @@ void CustomIDWork::SetNoDisp(bool b)
             *(unsigned *)(t + 0x2C) &= 0xF7FFFFFF;
     }
 }
-class cBgmData {
-public:
-    char *GetTblPtr(int i);
-};
-extern "C" int func_002CFF68(cBgmData *);
-
 // FUNCTION: GAME 0x2D0528
-char *cBgmData::GetTblPtr(int i)
+sBgmTbl *cBgmData::GetTblPtr(int i)
 {
-    char *r;
+    sBgmTbl *r;
     if (func_002CFF68(this))
-        r = *(char **)((char *)this + 0x10) + i * 32;
+        r = (sBgmTbl *)(*(char **)((char *)this + 0x10) + i * 32);
     else
         r = 0;
     return r;

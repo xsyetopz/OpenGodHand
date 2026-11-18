@@ -221,6 +221,133 @@ extern "C" void func_002FDD10(ObjB *self)
     self->pos[0] = v[0]; self->pos[1] = v[1]; self->pos[2] = v[2];
 }
 
+// FUNCTION: GAME 0x2DAF68
+extern "C" int func_002DAF68(const float *a, const float *b, float r1, float r2, float *dist, float *out)
+{
+    float t[4] __attribute__((aligned(16)));
+    Sv d;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)d.v) : "r"(a), "r"(b));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)t) : "r"(d.v));
+    register float l __asm__("$f0") = t[0] * t[0];
+    l += t[1] * t[1];
+    l += t[2] * t[2];
+    // The two nops ahead of sqrt.s are hazard padding of the original inline template.
+    __asm__ volatile("nop\n\tnop\n\tsqrt.s %0,%0" : "+f"(l));
+    if (l < r1 + r2) {
+        if (dist) *dist = l;
+        if (out) { if (out != a) { out[0] = a[0]; out[1] = a[1]; out[2] = a[2]; } }
+        return 1;
+    }
+    return 0;
+}
+
+struct cVec { float x, y, z; };
+class cNode { public: void setLocalTranslation(const cVec &); };
+struct Sv16 { float v[4] __attribute__((aligned(16))); };
+extern "C" void func_002B6310(void *, cNode *);
+extern "C" void func_002B6160(void *, cNode *);
+
+// Same body twice: the original has one copy per node type.
+// FUNCTION: GAME 0x2F6258
+extern "C" Sv16 *func_002F6258(Sv16 *ret, cNode *n, const float *delta)
+{
+    Sv16 a;
+    Sv16 tmp;
+    Sv16 b;
+    func_002B6310(&a, n);
+    Sv16 *bp = &b;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)b.v) : "r"(&a));
+    __asm__ volatile("lqc2 $vf4,%0\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "+m"(*(Qv *)b.v) : "r"(delta));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)tmp.v) : "r"(bp));
+    n->setLocalTranslation(*(const cVec *)&tmp);
+    func_002B6160(bp, n);
+    n->setLocalTranslation(*(const cVec *)&a);
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,0(%0)" : : "r"(ret), "r"(bp) : "memory");
+    return ret;
+}
+
+// FUNCTION: GAME 0x2F71A0
+extern "C" Sv16 *func_002F71A0(Sv16 *ret, cNode *n, const float *delta)
+{
+    Sv16 a;
+    Sv16 tmp;
+    Sv16 b;
+    func_002B6310(&a, n);
+    Sv16 *bp = &b;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)b.v) : "r"(&a));
+    __asm__ volatile("lqc2 $vf4,%0\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "+m"(*(Qv *)b.v) : "r"(delta));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)tmp.v) : "r"(bp));
+    n->setLocalTranslation(*(const cVec *)&tmp);
+    func_002B6160(bp, n);
+    n->setLocalTranslation(*(const cVec *)&a);
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,0(%0)" : : "r"(ret), "r"(bp) : "memory");
+    return ret;
+}
+
+extern "C" void func_002B6370(void *);
+extern "C" void *func_002B5E50(void *);
+extern "C" void func_002B60D0(void *, void *);
+extern "C" void func_002B6230(void *, void *);
+// FUNCTION: GAME 0x2B5F28
+extern "C" void func_002B5F28(void *self, const float *p)
+{
+    func_002B6370(self);
+    Sv s;
+    Sv16 tmp;
+    void *r = func_002B5E50(self);
+    if (r) {
+        func_002B60D0(&tmp, r);
+        s = tmp.v;
+    }
+    Sv d;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)d.v) : "r"(p), "r"(s.v));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)tmp.v) : "r"(d.v));
+    func_002B6230(self, &tmp);
+}
+
+extern "C" void func_002F5588(void *, cNode *);
+extern "C" void func_002B5FC8(cNode *, void *);
+extern "C" void func_002FEB18(cNode *);
+// FUNCTION: GAME 0x2F5468
+extern "C" void func_002F5468(cNode *self)
+{
+    Sv16 a;
+    Sv16 t;
+    Sv16 b;
+    Sv16 c;
+    Sv16 sum;
+    func_002B6160(&a, self);
+    func_002F5588(&b, self);
+    func_002B6160(&c, self);
+    Sv16 *sp = &sum;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)sum.v) : "r"(&b));
+    __asm__ volatile("lqc2 $vf4,%0\n\tlqc2 $vf5,0(%1)\n\tvadd.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "+m"(*(Qv *)sum.v) : "r"(&c));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)t.v) : "r"(sp));
+    func_002B5FC8(self, &t);
+    func_002FEB18(self);
+    func_002B5FC8(self, &a);
+}
+
+struct ObjD { char p0[0xF0]; float *pos; char p1[0x10]; float dir; };
+float capVu0Atan2(float, float);
+float Adjust_theta(float);
+// FUNCTION: GAME 0x14E818
+extern "C" void func_0014E818(ObjD *self, float lim, const float *p)
+{
+    float t[4] __attribute__((aligned(16)));
+    const float *pp = self->pos;
+    Sv d;
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tlqc2 $vf5,0(%2)\n\tvsub.xyz $vf4,$vf4,$vf5\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)d.v) : "r"(p), "r"(pp));
+    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)t) : "r"(d.v));
+    float a = Adjust_theta(capVu0Atan2(t[0], t[2]) - self->dir);
+    float c;
+    if (a < -lim) c = -lim;
+    else if (lim < a) c = lim;
+    else c = a;
+    self->dir += c;
+    self->dir = Adjust_theta(self->dir);
+}
+
 #ifdef NONMATCHING
 struct v4f { float f[4]; };
 struct V4 {

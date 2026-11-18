@@ -220,7 +220,7 @@ extern "C" void func_002B6600();
 extern "C" void execute__12cTaskManagerRFv_vi(void *, void (*)(), int);
 
 // FUNCTION: GAME 0x2B65B0
-extern "C" void func_002B65B0()
+extern "C" void executeTask__11cNowLoading()
 {
     if (!D_003C2554) {
         D_003C2554 = 1;
@@ -247,14 +247,22 @@ extern "C" SceRoom *func_002C5028(int a, unsigned short id)
     return 0;
 }
 
-// FUNCTION: GAME 0x2C9060
+// near-miss: 8 differing words, 56 vs 64 bytes; original has two separate return-0 blocks
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2C9060
 extern "C" char *func_002C9060(int *self, unsigned idx)
 {
-    if (!self[0] || !self[3] || !(idx < (unsigned)self[3])) {
+    char *items = (char *)self[0];
+    unsigned n;
+    if (!items || !(n = self[3])) {
         return 0;
     }
-    return (char *)self[0] + idx * 0x24;
+    if (idx < n) {
+        return items + idx * 0x24;
+    }
+    return 0;
 }
+#endif
 
 // FUNCTION: GAME 0x2CD740
 extern "C" void func_002CD740(char *self)
@@ -269,11 +277,45 @@ extern "C" void func_002CD740(char *self)
     (*(int **)(self + 0x380))[5] = 0;
 }
 
-extern int D_003C23B0[];
+struct Row5 { int v[5]; };
+extern Row5 D_003C23B0[];
 // FUNCTION: GAME 0x2B0480
 extern "C" void func_002B0480(int *self, float *out)
 {
     out[0] = 1.0f;
-    out[1] = *(float *)&D_003C23B0[self[0x13] * 5 + self[0x14]];
-    out[2] = 0;
+    ((int *)out)[1] = D_003C23B0[self[0x13]].v[self[0x14]];
+    ((int *)out)[2] = 0;
 }
+
+// near-miss: 7 differing words, same size; original keeps the count in $v1 and the mask in $a0, mine reuses $a2/$v1
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2C3000
+extern "C" void func_002C3000(int a, unsigned *p, int n)
+{
+    int k = n - 1;
+    p[0] = 0xFFFFFFFF;
+    if (k > 0) {
+        do {
+            p[1] = (unsigned)p & 0x7FFFFFFF;
+            p++;
+        } while (--k);
+    }
+}
+#endif
+
+extern "C" int func_002B4F98();
+extern "C" void func_002D42E0(int);
+extern unsigned D_00747A84[];
+
+// near-miss: 11 differing words, 68 vs 64 bytes; original rebuilds the %hi in $a0 on both paths, mine uses $v0 and a longer constant
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2B4D68
+extern "C" void Stop__6cMovieUi()
+{
+    int r = func_002B4F98();
+    if (r) {
+        func_002D42E0(r);
+    }
+    D_00747A84[0] &= ~0x2000u;
+}
+#endif

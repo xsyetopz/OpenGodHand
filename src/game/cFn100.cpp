@@ -509,17 +509,17 @@ CAM_SET(setPartsCamera__11cCamManagerUc, 0x40, 0x920)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x138EB8
-// diff: 2 words; original sets a0 (daddu) before the 0x102C store, compiled swaps them.
+// diff: 2 words; original emits daddu a0 before the 0x102C store; all 6 store permutations and local placements tried.
 extern "C" void setSubScrCamera__11cCamManagerUc(char *self, unsigned char a)
 {
     int st = *(int *)(self + 0x1028);
     if (st != 0x80 && st != 0x10) {
-        char *c = self + 0xC90;
         if (a) {
-            func_00138CA8(self, c, pCamWork, a);
+            func_00138CA8(self, self + 0xC90, pCamWork, a);
             st = *(int *)(self + 0x1028);
         }
         *(int *)(self + 0x102C) = st;
+        char *c = self + 0xC90;
         *(char **)(self + 0xFF0) = pCamWork;
         pCamWork = c;
         reset__7cCamera(c);

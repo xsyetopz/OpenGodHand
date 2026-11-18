@@ -386,17 +386,51 @@ extern "C" void func_001678B8(char *self)
 }
 
 extern "C" void func_0013C618(void *p);
+extern unsigned short D_00747A50;
 // FUNCTION: GAME 0x146F18
 extern "C" void func_00146F18(float *self)
 {
     func_0013C618(self);
-    unsigned short *m = (unsigned short *)0x747A50;
-    int k = 0x20;
-    if (*m == k) {
+    if (D_00747A50 == 0x20) {
         self[0x18] = -130.0f;
         self[0x19] = 5.0f;
     } else {
         self[0x18] = 0;
         self[0x19] = 0;
     }
+}
+
+struct D747BA0 { char _pad[0x14]; int key; char _pad2[0xB0 - 0x18]; };
+extern D747BA0 D_00747BA0[];
+// FUNCTION: GAME 0x150D78
+extern "C" int func_00150D78(int unused, int key)
+{
+    int n = 0x100;
+    int i = 0;
+    if (!key)
+        return 0;
+    int *b = (int *)D_00747BA0;
+    int *p = b + 5;
+    do {
+        if (*p == key)
+            return (short)i;
+        p += 0x2C;
+        n--;
+        i++;
+    } while (n);
+    return -1;
+}
+
+// FUNCTION: GAME 0x151630
+extern "C" int func_00151630(char *s)
+{
+    if (s[0] == 0x54) {
+        if (s[3] == 0x33)
+            return s[5] == 6;
+        if (s[3] == 0x32)
+            return 0;
+        if (s[1] == 0x4D)
+            return 3;
+    }
+    return 2;
 }
