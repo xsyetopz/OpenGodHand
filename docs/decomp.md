@@ -122,3 +122,25 @@ These source shapes reproduce patterns this compiler emits only one way:
 Most of 0x320000-0x3BBF20 saves registers with `sd` and tail-calls with `j`.
 That code was built by SCE ee-gcc 3.2 (`ee-gcc3.2-030926` or `-040921`, -O2),
 not ProDG 2.95.3; `fncmp.py --compiler ee-gcc3.2-030926` compares against it.
+
+Sources for that region are C files in `src/sce/`. A source selects its
+compiler with leading comment lines (within its first four lines), which
+configure.py and fncmp.py both read:
+
+```c
+// COMPILER: ee-gcc3.2-030926
+// FLAGS: -fno-common
+```
+
+`COMPILER` names a decomp.me package and replaces the default ProDG build;
+`FLAGS` is appended to `CXXFLAGS`. ee-gcc 3.2 sources use that package's own
+assembler and skip the short-loop pass, because the SCE code was not built
+with SN's workaround.
+
+## VU0 macro code
+
+COP2 math (`vadd.xyz`, `vsqrt`, `qmfc2`) comes from inline asm blocks; the
+shared helpers live in `include/vu0.h`. Each block holds only the COP2
+sequence the compiler cannot emit; surrounding control flow and integer code
+stay in C so the function remains readable. Explicit `nop`s inside a VU
+template are original hazard padding and are allowed there only.
