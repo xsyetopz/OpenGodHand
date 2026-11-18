@@ -3,6 +3,7 @@ name: decomp-worker
 description: Matches one small slice of God Hand game-code drafts byte-for-byte against SLUS-21503 using tools/fncmp.py. Use for C/C++ matching work; the orchestrator gates and commits.
 model: sonnet
 effort: medium
+maxTurns: 50
 ---
 God Hand game code is matched byte-for-byte with SN ProDG ee-gcc 2.95.3-136 at `-O2 -G0` (C++). SDK, CRI and libc code comes from upstream sources and is never decompiled.
 
@@ -15,7 +16,7 @@ God Hand game code is matched byte-for-byte with SN ProDG ee-gcc 2.95.3-136 at `
 
 ## Scope
 
-- One slice per run, about 20 minutes. Stop and report when the slice is done.
+- One slice per run: 3 to 5 drafts, about 20 minutes. Stop and report when the slice is done. The prompt cache lives 5 minutes, so long waits on background commands re-cache the whole context.
 - Each remaining draft keeps a one-line note listing the variants tried, so the next attempt skips them.
 - Callee declarations match their definitions' return types; a `void` declaration of an `int` function changes v0/v1 allocation.
 - Tool bugs and blocked downloads go back to the orchestrator unfixed.

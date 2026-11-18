@@ -1,0 +1,31 @@
+Byte-for-byte matching decompilation of God Hand (PS2, NTSC-U, SLUS-21503). Done when `ninja` rebuilds original/extracted/SLUS_215.03 with the original sha1 (SLUS OK) and every game-code function in the progress report is built from C/C++ source, not asm.
+
+Inputs: the user supplies original/SLUS-21503.iso; .sndata debug symbols are extracted from it. The ISO and extracted assets are never committed. PCSX2.app runs a rebuilt disc; the user runs it.
+
+Scope: only the game's own code is decompiled. SDK (sce*, libvu0, kernel), CRI ADX/Sofdec (CRIWARE), newlib and libio come from upstream or archived sources (internet archive, PS2 homebrew scene, community SDK copies) or stay as original asm. Code is decompiled only when no external source exists. tools/objdiff_config.py region() and tools/progress.py count only the Game category; keep it that way.
+
+Compilers (tools/compilers, tools/eecc.py):
+- game: SN ProDG ee-gcc 2.95.3-136, -O2 -G0, C++
+- libraries: 2.9-991111, 2.96 (CRI), 3.2
+- newlib libm: ee-gcc2.9-991111 -fno-builtin -Wa,-mips4
+
+Workflow:
+- Check one function: .venv/bin/python tools/fncmp.py -q FILE 0xADDR (exit 0 = MATCH). Tags: // FUNCTION: GAME 0xADDR when matched, // DRAFT: GAME 0xADDR under #ifdef NONMATCHING otherwise, with a one-line note of variants tried.
+- tools/claimed.py prints nothing (one owner per address).
+- bash tools/gate.sh (background) builds a snapshot in a worktree, requires SLUS OK, then commits "Worker matches batch"; reword it with git commit --amend --only. Commit in small slices so bad changes revert cleanly.
+- fncmp does not target-check relocations against section symbols (.rodata literals); a draft can report MATCH yet still differ in rodata.
+- Re-run the draft scan (fncmp over every DRAFT) periodically and work nearest-first.
+- `just live` serves the progress feed; objdiff.json and build/progress.svg give the decomp.dev-style treemap.
+
+Matching idioms that worked: store order permutations (brute force small sets), separate early returns or duplicated tails, int-returning callee declarations matching their definitions, correct callee arity, *(T*)((int)p+(i<<k)) for addu order, dropping wrong volatile or __asm__ barriers, hoisted constant temps for lui/li order, unsigned long copies for dsrl vs sra, % 2 vs & 1, comma-increment for loops, indexed copies instead of pointer increments. Unsolved: original emits slti; xori 1 joined via a1 plus andi 0xFF for range tests (0x2DDDF8, 0x1B8030, 0x291AC8); six bool forms failed.
+
+Orchestration:
+- The main session orchestrates, verifies every worker MATCH with fncmp before gating, and fixes tool bugs itself.
+- Code workers are decomp-worker (.claude/agents/decomp-worker.md: sonnet, medium effort, 50 turns). Quick read-only lookups are lookup (haiku, high effort, 15 turns); a Haiku context never exceeds 100k tokens. Haiku never writes code.
+- Subagent prompt cache lasts 5 minutes: resume a worker only while its cache is warm, otherwise spawn a fresh one (the agent file carries the rules and idioms).
+- Up to ~6 concurrent workers, one ~20-minute slice each (3-5 drafts).
+- Workers never commit. Worker permission denials go to the user, not around them.
+
+Repo hygiene: remove dead tooling and garbage as found; src/scratch is gitignored scratch space. Files <=300 lines (tests <=500). Reproducible builds on Linux, macOS and Windows. Upstream sources (e.g. build/libio-src) are not edited. Downloads blocked in the sandbox: try curl or another mirror, else report to the user.
+
+Docs: README and docs/decomp.md describe setup (bring your own ISO), tools and the matching workflow; update them when behavior changes.
