@@ -82,21 +82,6 @@ extern "C" void func_001D4F48(char *self)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1C7E08
-// diff: store/and schedule differs (orig sb 2F4, and, sb 2F5, sw 5B8, sb 2F6, sb 2F7)
-extern "C" int func_001C7E08(OmS *self)
-{
-    unsigned f = self->m_f;
-    self->m_a = 0;
-    self->m_b = 0;
-    self->m_f = f & ~0x40;
-    self->m_c = 0;
-    self->m_d = 0;
-    return 1;
-}
-#endif
-
 // Vtable-setting destructor wrappers in 0x190000-0x19FFFF.
 extern "C" void func_001BBF00(void *self, int flag);
 extern const char D_00424128[];

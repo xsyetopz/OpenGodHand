@@ -113,46 +113,6 @@ extern "C" void func_00249960(char *self)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x24AA68
-// diff: 17 words; original fills the shared `b` with the 2F7 store (344 bytes vs our 348)
-extern "C" void func_0024AA68(char *self)
-{
-    *(unsigned *)(self + 0x16D0) |= 0x30400;
-    switch (B(0x2F6)) {
-    case 0:
-        B(0x1864) = 0;
-        {
-            unsigned short r = func_00276468(self);
-            char *o = *(char **)(self + 0x304);
-            func_002A8578(self, *(int *)(o + 0x3D94) + (int)o, *(int *)(o + 0x3D98) + (int)o, 0xA, 0.0f, r, 0);
-        }
-        if (*(void **)(self + 0x748))
-            func_00281338(*(void **)(self + 0x748));
-        if (*(void **)(self + 0x74C))
-            func_00283170(*(void **)(self + 0x74C));
-        if (*(void **)(self + 0x750))
-            func_00283170(*(void **)(self + 0x750));
-        *(float *)(self + 0x600) = 30.0f;
-        B(0x2F6)++;
-    case 1:
-        if (*(float *)(self + 0x600) > 0.0f) {
-            *(unsigned *)(self + 0x16D0) |= 0x800000;
-            *(float *)(self + 0x600) = *(float *)(self + 0x600) - *(float *)(self + 0x5A8);
-        }
-        if (moveMotion((cObjBase *)self)) {
-            B(0x2F5) = 0xA1;
-            B(0x2F6) = 0;
-            B(0x2F7) = 0;
-            B(0x2F4) = 0;
-        } else {
-            ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
-            ((cObjBase *)self)->addNullSpeed(1.0f);
-        }
-    }
-}
-#endif
-
-#ifdef NONMATCHING
 // DRAFT: GAME 0x247588
 // diff: 81 words; original keeps self in s1, player in s2, CamManager in s0 (ours: 0x50 frame, self in s0)
 extern "C" void func_00247588(char *self)
