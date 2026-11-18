@@ -20,7 +20,6 @@ struct VT { char _p[0xA8]; short off; short _q; void (*fn)(char *, int, char *, 
 
 // DRAFT: GAME 0x239240 - 6 words differ: the vtable pointer sits in v1 and the slot in v0 in the original; mine swaps them in the m_3AC & 1 virtual call
 #ifdef NONMATCHING
-// FUNCTION: GAME 0x239240
 extern "C" void func_00239240(char *self)
 {
     char *pl = (char *)Getplayer__Fv();

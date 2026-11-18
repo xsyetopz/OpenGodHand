@@ -144,3 +144,45 @@ extern "C" void func_00305E88(char *self, int idx)
     *(int *)(p + 0x78) = 0;
     SetEffect__F12eEffDataType6eEffIdP4cObjP12tagEFF_PARAMiT2(3, idx, 0, p, idx + 0x2200, 0xFFFFFFFF);
 }
+
+extern "C" {
+void EmitterAllKill__Fv();
+void EspAllKill__Fv();
+void func_003057A0(char *);
+void func_00305BC0(char *);
+void func_00306A88(char *);
+void func_00305C10(char *, void *);
+void func_00305C18(char *, void *);
+void func_00306D18(char *);
+void effDataRegist__6espSys12eEffDataTypePv(char *, int, void *);
+void *SearchData__FPUiPCcUi(void *, const char *, unsigned);
+extern char Sys[], D_00741DC8[], D_00743250[], D_00450068[], D_00450070[], D_00450078[];
+}
+
+// FUNCTION: GAME 0x305A68
+extern "C" void func_00305A68(char *self)
+{
+    *(char *)(self + 0x41C) = 0;
+    EmitterAllKill__Fv();
+    EspAllKill__Fv();
+    func_003057A0(self);
+    func_00305BC0(self);
+    func_00306A88(D_00741DC8);
+    char *s = Sys;
+    char *p = *(char **)(s + 0x550);
+    effDataRegist__6espSys12eEffDataTypePv(self, 0, (void *)(*(int *)(p + 0x14) + (int)p));
+    p = *(char **)(s + 0x550);
+    effDataRegist__6espSys12eEffDataTypePv(self, 0x58, (void *)(*(int *)(p + 0x1C) + (int)p));
+    p = *(char **)(s + 0x550);
+    effDataRegist__6espSys12eEffDataTypePv(self, 4, (void *)(*(int *)(p + 0x14) + (int)p));
+    void *r = SearchData__FPUiPCcUi(*(void **)(s + 0x5AC), D_00450068, 0);
+    if (r)
+        effDataRegist__6espSys12eEffDataTypePv(self, 1, r);
+    r = SearchData__FPUiPCcUi(*(void **)(s + 0x5AC), D_00450070, 0);
+    if (r)
+        func_00305C10(self, r);
+    r = SearchData__FPUiPCcUi(*(void **)(s + 0x5AC), D_00450078, 0);
+    if (r)
+        func_00305C18(self, r);
+    func_00306D18(D_00743250);
+}

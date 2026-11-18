@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 from elftools.elf.elffile import ELFFile
+from elftools.elf.relocation import RelocationSection
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import fncmp  # noqa: E402
@@ -120,3 +121,62 @@ def derived_addresses(obj: Path, sym: str, vram: int, raw: bytes, skip: set[str]
             lo = (word(want, off) & 0xFFFF) - (word(got, off) & 0xFFFF)
             found.setdefault(name, set()).add(((his[name][-1] << 16) + (lo if lo < 0x8000 else lo - 0x10000)) & 0xFFFFFFFF)
     return {n: next(iter(a)) for n, a in found.items() if len(a) == 1}
+
+
+def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: list[tuple[int, int]]) -> tuple[int, str, bytes | None, list[int]] | None:
+    """Return (first unit address, input section, trimmed bytes or None, covered
+    unit addresses) when `sym`'s only data reference is one `.rodata` section
+    made of jump tables, possibly beside strings, over consecutive original
+    units.
+
+    The section must be aligned to its first unit and end inside the last
+    covered unit, with only zero padding after it. Each relocated word (a
+    section-relative offset into `.text.<sym>`) plus `vram` must equal the
+    original table word; other words must equal the original bytes. The
+    original bytes between the section's end and the unit's end must be zero.
+    Anything else makes the section differ and returns None, so the function
+    stays gated as before."""
+    with obj.open("rb") as f:
+        elf = ELFFile(f)
+        symtab = elf.get_section_by_name(".symtab")
+        names = set()
+        for rs in elf.iter_sections():
+            if not isinstance(rs, RelocationSection) or elf.get_section(rs["sh_info"]).name != f".text.{sym}":
+                continue
+            for r in rs.iter_relocations():
+                t = symtab.get_symbol(r["r_info_sym"])
+                if isinstance(t["st_shndx"], int):
+                    n = elf.get_section(t["st_shndx"]).name
+                    if t["st_info"]["type"] == "STT_SECTION" and n.startswith(".rodata"):
+                        names.add(n)
+        if len(names) != 1:
+            return None
+        sec = elf.get_section_by_name(names.pop())
+        data, align = sec.data(), max(sec["sh_addralign"], 1)
+        rel = elf.get_section_by_name(f".rel{sec.name}")
+        entries = {r["r_offset"] for r in rel.iter_relocations()} if rel else set()
+    # The assembler pads the section to its alignment; zero bytes after the
+    # last real byte are not content.
+    used = len(data.rstrip(b"\0")) + 3 & ~3
+    if not entries or used == 0 or max(entries) >= used:
+        return None
+    word = lambda b, i: struct.unpack_from("<I", b, i)[0]
+    for n, (uv, _size) in enumerate(units):
+        if uv % align:
+            continue
+        end = next((v + s for v, s in units[n:] if v + s >= uv + used), None)
+        if end is None:
+            continue
+        cut = min(len(data), end - uv)
+        base = uv + fncmp.TEXT_OFF
+        want = raw[base : base + max(end - uv, len(data))]
+        if cut < used or any(want[cut:end - uv]) or any(data[cut:]):
+            continue
+        if all(
+            (word(data, i) + vram == word(want, i) and 0 <= word(data, i) < span)
+            if i in entries else data[i : i + 4] == want[i : i + 4]
+            for i in range(0, cut - cut % 4, 4)
+        ):
+            covered = [v for v, _s in units[n:] if v < end]
+            return uv, sec.name, data[:cut] if cut < len(data) else None, covered
+    return None

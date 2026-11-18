@@ -52,15 +52,16 @@ int func_0035F3C8(int a, int b, int c)
 }
 
 // DRAFT: GAME 0x35DC10
-// 3 words: prologue save order s0/s1 swapped
+// 2 words: sw zero/lw order swapped (local `int *d = b` declared first narrows 3 to 2)
 #ifdef NONMATCHING
 int func_0035DC10(int a, int *b)
 {
+    int *d = b;
     int s;
-    *b = 0;
     s = *(int *)(a + 4) + 0x80;
+    *d = 0;
     if (func_0035D7B8(a)) {
-        *b = *(int *)s;
+        *d = *(int *)s;
         return 1;
     }
     return 0;
@@ -148,3 +149,47 @@ int func_0035E9A8(int a, int b)
     return 0;
 }
 #endif
+
+extern int D_003EE330;
+extern int D_003EE338;
+extern int D_003EE800[];
+void func_0035FEE8(void);
+void func_0036CAA8(void);
+void func_0035FE78(void);
+void func_00360CC8(void);
+void func_0035FFB0(int);
+void func_0036CB98(int);
+void func_00360710(int);
+extern void *memset(void *, int, unsigned);
+
+// FUNCTION: GAME 0x35F900
+void func_0035F900(void)
+{
+    if (D_003EE330 > 0) {
+        func_0035FEE8();
+        func_0036CAA8();
+        func_0035FE78();
+        func_00360CC8();
+        D_003EE330--;
+    }
+}
+
+// FUNCTION: GAME 0x35FB88
+void func_0035FB88(int *a)
+{
+    if (a) {
+        int s = a[0x30 / 4];
+        a[0] = 0;
+        func_0035FFB0(a[0x24 / 4]);
+        func_0036CB98(s);
+        D_003EE338--;
+    }
+}
+
+// FUNCTION: GAME 0x35FEA8
+void func_0035FEA8(void)
+{
+    memset(D_003EE800, 0, 0x26C);
+    D_003EE800[2] = 8;
+    func_00360710(0);
+}

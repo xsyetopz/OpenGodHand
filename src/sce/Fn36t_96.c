@@ -66,3 +66,35 @@ void func_0036E2B8(int *p)
     else
         p[0x38 / 4] = 2;
 }
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x36EB58
+// diff: 70 words (204 vs 288 bytes). The original keeps all 8 bytes loaded and merged with a non-folded 96-bit constant; mine folds it.
+unsigned char *func_0036EB58(char *p, unsigned char *s)
+{
+    int *q = (int *)(p + 0x160);
+    unsigned char *a;
+    int sh;
+    unsigned w1, w2, v;
+    q[0x420 / 4] = 1;
+    q[0x430 / 4]++;
+    if (q[0x308 / 4] == 0 || q[0x308 / 4] == 0x80) {
+        if (q[0x30C / 4])
+            q[0x494 / 4]++;
+    } else {
+        q[0x494 / 4]++;
+    }
+    a = (unsigned char *)((unsigned)s & ~3);
+    sh = (s - a) * 8;
+    w1 = ((signed char)a[0] << 24) | (a[1] << 16) | (a[2] << 8) | a[3];
+    w2 = ((signed char)a[4] << 24) | (a[5] << 16) | (a[6] << 8) | a[7];
+    v = (w1 << sh) | (w2 >> (32 - sh));
+    if (sh == 0)
+        q[0x2C / 4] = w1;
+    else
+        q[0x2C / 4] = v;
+    q[0x30C / 4] = 0;
+    q[0x308 / 4] = 0;
+    return s + 4;
+}
+#endif
