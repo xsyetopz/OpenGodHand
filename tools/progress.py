@@ -197,7 +197,15 @@ def main() -> int:
     total_n, done_n = len(fns), sum(1 for f in fns if f[2])
     total_b, done_b = sum(f[1] for f in fns), sum(f[1] for f in fns if f[2])
     pct = 100.0 * done_n / total_n if total_n else 0.0
-    title = f"{TITLE}: {pct:.2f}% ({done_n}/{total_n})"
+    cats: dict[str, list[int]] = {}
+    for g in groups:
+        c = cats.setdefault(g["cat"], [0, 0])
+        c[0] += sum(1 for f in g["fns"] if f[2])
+        c[1] += len(g["fns"])
+    # The headline tracks the game's own code; SDK, CRI and runtime code stays
+    # as original assembly (docs/decomp.md) and is never a decompilation target.
+    gm, gt = cats.get("Game", [done_n, total_n])
+    title = f"{TITLE}: game {100.0 * gm / gt if gt else 0.0:.2f}% ({gm}/{gt})"
     args.out.parent.mkdir(parents=True, exist_ok=True)
     if args.json:
         args.out = args.out.with_suffix(".json")
@@ -207,6 +215,8 @@ def main() -> int:
     print(f"{title}")
     print(f"functions: {done_n}/{total_n} = {pct:.2f}%")
     print(f"code bytes: {done_b}/{total_b} = {100.0 * done_b / total_b if total_b else 0.0:.2f}%")
+    for cat, (m, t) in sorted(cats.items()):
+        print(f"  {cat}: {m}/{t} = {100.0 * m / t if t else 0.0:.2f}%")
     print(f"groups: {len(groups)}; wrote {args.out.relative_to(ROOT) if args.out.is_relative_to(ROOT) else args.out}")
     return 0
 
