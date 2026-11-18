@@ -117,7 +117,6 @@ extern "C" void func_002D0068(char *s) {
         }
     }
 }
-
 extern "C" void func_0030A4D0(float *, char *, int);
 // FUNCTION: GAME 0x2D8008
 extern "C" void func_002D8008(char *a, char *b, char *c, int d, int e) {
@@ -127,7 +126,6 @@ extern "C" void func_002D8008(char *a, char *b, char *c, int d, int e) {
     float *dst = (float *)(c + 0x30);
     for (int i = 3; i != -1; i--) dst[3 - i] = t[3 - i];
 }
-
 extern "C" int func_002D3110(int *, int, int, int, int);
 extern "C" int func_002D3190(int *);
 extern "C" void func_002D3240(int, int, int, int, int, int);
@@ -139,4 +137,114 @@ extern "C" int func_002D2F78(int *s, int a, int b, int c, int d) {
     func_002D3240(h, a, b, c, d, r);
     if (!*s) *s = h;
     return r;
+}
+struct SysT { char pad[0x5B0]; unsigned short m; };
+extern "C" SysT Sys;
+extern "C" int func_002D0D70(int, int);
+extern "C" void func_002CD4A8(char *, float);
+// FUNCTION: GAME 0x2D0850
+extern "C" void func_002D0850(char *s) {
+    int r = func_002D0D70((int)s, Sys.m);
+    for (char *p = *(char **)(s + 0x18); p; p = *(char **)(p + 0x88)) {
+        if (*(int *)(p + 0xB0) == 2) continue;
+        if (*(int *)(p + 0x90) == r) continue;
+        func_002CD4A8(p, 15.0f);
+    }
+    unsigned short m = Sys.m;
+    if (m != 0x20 && m != 0x23) {
+        *(int *)(s + 0x128) = -2;
+        *(int *)(s + 0xB0) |= 0x200000;
+        *(int *)(s + 0xAC) |= 0x200000;
+    }
+    *(int *)(s + 0x44) = 0;
+    *(int *)(s + 0x138) = 3;
+    *(int *)(s + 0x48) = 0;
+}
+struct VT5 { char pad[0x10]; short adj; short pad2; int (*fn)(char *, int); };
+extern "C" void func_002D58E8(char *, int, int);
+extern "C" void func_002D5440(char *, int);
+// FUNCTION: GAME 0x2D5580
+extern "C" int func_002D5580(char *s, int a, int b, int c) {
+    VT5 *vt = *(VT5 **)(s + 0x30);
+    int r = vt->fn(s + vt->adj, c);
+    if (r != -1) func_002D58E8(*(char **)s + r * 0x58, a, b);
+    func_002D5440(s, r);
+    return r;
+}
+struct Q5 { char pad[0x28]; int w28; };
+struct T5 { Q5 *w0; int w4; char pad[4]; unsigned short hC, hE; };
+extern "C" int CreateThread(void *);
+extern "C" void StartThread(int, void *);
+extern "C" void func_003AFBD0(int);
+extern "C" void WaitSema(int);
+extern "C" void kill__9cTaskWork(void *);
+// FUNCTION: GAME 0x2D57C8
+extern "C" void func_002D57C8(T5 *s) {
+    switch (s->hC) {
+    case 2:
+        s->w4 = CreateThread((char *)s + 0x20);
+        StartThread(s->w4, s);
+        goto L;
+    case 1:
+        if (--s->hE == 0) { func_003AFBD0(s->w4); goto L; }
+        break;
+    case 4:
+    L: {
+        Q5 *q = s->w0;
+        s->hC = 0x7F;
+        WaitSema(q->w28);
+        break; }
+    }
+    if (s->hC == 0x7F) kill__9cTaskWork(s);
+}
+struct Hp;
+extern "C" Hp D_00754200;
+extern "C" char *_MemoryAlloc__FUiUiR5cHeap(unsigned, unsigned, Hp &);
+extern "C" void *memset(void *, int, unsigned);
+extern "C" void func_002D5768(char *, int, unsigned short, void *);
+extern "C" int CreateSema(void *);
+struct T2 { char *w0; int w4, w8; unsigned short hC, hE; char pad[4]; int w14, w18; char pad2[0xC]; int w28; };
+// FUNCTION: GAME 0x2D50E8
+extern "C" void func_002D50E8(T2 *s, int n, int a, int b) {
+    s->hC = n;
+    s->hE = b;
+    s->w0 = _MemoryAlloc__FUiUiR5cHeap(n * 0x58, 0x10, D_00754200);
+    memset(s->w0, 0, n * 0x58);
+    for (unsigned i = 0; i < s->hC; i++)
+        func_002D5768(s->w0 + i * 0x58, a, s->hE + i, s);
+    s->w14 = 1;
+    s->w18 = 0;
+    s->w28 = CreateSema((char *)s + 0x10);
+}
+extern "C" void getEffTypeString__FPc12eEffDataType(char *, int);
+extern "C" int sprintf(char *, const char *, ...);
+extern "C" char D_0044D3B0[];
+// FUNCTION: GAME 0x2D9F68
+extern "C" void func_002D9F68(char *self, int a, ...) {
+    char buf[0x100];
+    char t[0x40];
+    getEffTypeString__FPc12eEffDataType(t, *(short *)(self + 0x23A));
+    sprintf(buf, D_0044D3B0, t, *(unsigned short *)(self + 0x23C) - 1, a);
+}
+extern "C" void func_002D34A8(char *);
+extern "C" int func_002D3210(char *);
+// FUNCTION: GAME 0x2D2E38
+extern "C" void func_002D2E38(char **s) {
+    int i;
+    if (*s) {
+    L:
+        func_002D34A8(*s);
+        if (!func_002D3210(*s)) {
+            i = 1;
+            char *end = (char *)s + 0xC40;
+            char *base = (char *)s + 0x40;
+            do {
+                *s = *s + 0xC0;
+                if (!(*s < end)) *s = base;
+                if (func_002D3210(*s) == 1) { i++; goto L; }
+                i++;
+            } while (i < 16);
+            *s = 0;
+        }
+    }
 }

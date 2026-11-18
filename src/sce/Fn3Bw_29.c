@@ -158,3 +158,33 @@ void func_003B7B40(void)
     D_003FC238 = func_003B7B20(3);
 }
 #endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3B7898
+// diff: 42 words; original pops the free node without jump threading (beqz then a separate bnez) and keeps only %hi(D_00784040) in s2 (1 variant tried)
+int func_003B7898(int a, int cb, int arg)
+{
+    struct Cell *n;
+    int idx;
+    if (cb == 0)
+        return 0x80000016;
+    n = D_00784040;
+    if (n)
+        D_00784040 = n->next;
+    if (n == 0)
+        return 0x80008005;
+    idx = func_003B7200();
+    if (idx < 0) {
+        n->next = D_00784040;
+        D_00784040 = n;
+        n->x = 0;
+        return idx;
+    }
+    n->fn = (int (*)())cb;
+    n->arg = arg;
+    n->x = idx;
+    func_003B7400(idx, a, func_003B7708, n);
+    func_003B72D0(idx);
+    return ((int)n << 4) | (idx & 0xFE) | 1;
+}
+#endif

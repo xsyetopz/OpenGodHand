@@ -26,6 +26,39 @@ void func_0034BFA8(char *, int, int);
 void func_0034BFC8(char *);
 int func_0034FEE0(int);
 int func_0034DD70(char *, int);
+extern char D_00458088[], D_004573D8[], D_00457410[], D_00458168[], D_00458628[], D_00458FD8[], D_00458C68[];
+int func_00346828(int *);
+void func_00345DF0(int *);
+void func_00347E58(int *, int);
+void func_00335950(int);
+int func_00329438(int, int, int);
+void func_003B9998(int, int, int);
+int func_00358968(int);
+int func_0034DE20(int, void *, int *);
+int func_00345848();
+void func_00345750(int);
+void func_00343AE8(int *);
+int func_003245B0(int, int, int, int *, int *, int *);
+void func_0036CA38(char *, int);
+void func_003485B0(char *, int);
+void func_00347908(int *, int);
+void func_00347AA8(int *);
+void func_00349738(int, int);
+void func_00325F20(void);
+int func_003472E8(int *);
+int func_003395A0(int, int, int);
+void func_003443C8(int *);
+int func_0035C338(char *, int);
+int func_0034CA30(char *, int);
+void func_0035C320(char *, int, int);
+int func_0035C368(char *, int);
+int func_0034CA98(char *, int);
+void func_0035C350(char *, int, int);
+int func_0035A1C8(char *, int);
+void func_0032AB70(int, int);
+int func_00358A38(int *);
+int func_0034AFE0(void);
+void func_0032AF40(int, int);
 
 // FUNCTION: GAME 0x340920
 void func_00340920(int a, int b, int c)
@@ -109,3 +142,109 @@ void func_00344680(char *a, int b)
     func_00344780(a);
 }
 #endif
+// FUNCTION: GAME 0x345EE0
+void func_00345EE0(int *a)
+{
+    if (func_00346828(a) != 1) {
+        func_00348BE0(D_00458088);
+        return;
+    }
+    func_00345DF0(a);
+    func_00347E58(a, 0);
+    a[0x74 / 4] = 0;
+    func_00335950(a[0x48 / 4]);
+}
+
+// FUNCTION: GAME 0x343D68
+int func_00343D68(int *a)
+{
+    int s = a[0x3C / 4];
+    a[0x3C / 4] = 0;
+    if (func_00358968(s)) {
+        func_00348BE0(D_004573D8);
+        return -1;
+    }
+    a[0x3C / 4] = s;
+    if (func_0034DE20(s, func_00345848, a)) {
+        func_00345750(-0x12F);
+        func_00348BE0(D_00457410);
+        return -1;
+    }
+    func_00343AE8(a);
+    return 0;
+}
+
+// FUNCTION: GAME 0x346A48
+void func_00346A48(char *a, int b)
+{
+    if (func_00346828((int *)a) != 1) {
+        func_00348BE0(D_00458628);
+        return;
+    }
+    func_0036CA38(a, b);
+    func_003485B0(a + 0x284, b);
+    func_003485B0(a + 0x2A4, b);
+}
+
+// FUNCTION: GAME 0x347A40
+void func_00347A40(int *a)
+{
+    if (func_00346828(a) != 1) {
+        func_00348BE0(D_00458FD8);
+        return;
+    }
+    func_00347908(a, 0);
+    func_00347AA8(a);
+    a[0x2E8 / 4] = 4;
+}
+
+// FUNCTION: GAME 0x348CE0
+void func_00348CE0(int a)
+{
+    int i = 0;
+    while (i < 10) {
+        i++;
+        func_00349738(a, 1);
+        func_00325F20();
+        func_00349738(a, 0);
+        if (*(int *)(a + 0x60) != 1) break;
+    }
+}
+
+// FUNCTION: GAME 0x347310
+int func_00347310(int *a)
+{
+    if (func_003472E8(a + 2) == 1) {
+        int r = func_003395A0(a[0x180 / 4], a[0x184 / 4], 0);
+        if (r) return r;
+        func_00348BE0(D_00458C68);
+        func_003443C8(a);
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x34B7A8
+void func_0034B7A8(char *a)
+{
+    if (func_0035C338(a, 7) != 1)
+        if (func_0034CA30(a, *(int *)(a + 0x211C)) == 1) func_0035C320(a, 7, 1);
+}
+
+// FUNCTION: GAME 0x34B818
+void func_0034B818(char *a)
+{
+    if (func_0035C368(a, 7) != 1)
+        if (func_0034CA98(a, *(int *)(a + 0x211C)) == 1) func_0035C350(a, 7, 1);
+}
+
+// FUNCTION: GAME 0x34ABF8
+void func_0034ABF8(char *a)
+{
+    int *p = *(int **)(a + 0x2004);
+    int h = *p;
+    int v = func_0035A1C8(a, 0x1B);
+    if (p[0x44 / 4] != v) {
+        p[0x44 / 4] = v;
+        func_0032AB70(h, v);
+    }
+}

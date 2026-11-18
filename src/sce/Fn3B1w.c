@@ -219,3 +219,36 @@ struct E *func_003B9F60(void)
     return i != 1 ? p : 0;
 }
 #endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3B52F0
+// diff: 30 words; original keeps p in s2 and r in s1 and reloads %hi(D_003FAEE8) in s0 per branch, mine hoists the full address (2 variants tried)
+extern int D_003FAEDC;
+extern void func_003B3EC8(int);
+extern void func_003B3F50(void);
+extern void func_003B3EF8(void);
+extern int func_003B5120(int, int);
+int sceDopen(int a)
+{
+    int *p;
+    int r;
+    func_003B3EC8(9);
+    if (D_003FAEDC == 0)
+        func_003B3F50();
+    func_003B3EF8();
+    p = func_003B38D0();
+    if (p == 0)
+        return -0x13;
+    r = func_003B5120(a, 9);
+    if (r < 0) {
+        WaitSema(D_003FAEE8);
+        p[1] = 0;
+    } else {
+        WaitSema(D_003FAEE8);
+        p[0] = r;
+        r = ((char *)p - D_007814C0) >> 4;
+    }
+    SignalSema(D_003FAEE8);
+    return r;
+}
+#endif

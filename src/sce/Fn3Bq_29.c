@@ -152,3 +152,79 @@ int func_003B72D0(int h)
     }
     return 1;
 }
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3B3400
+// diff: 8 words; the store of e->m_3C lands in the bnez delay slot in mine, the original stores m_3C first and m_40 in the delay slot (5 variants tried)
+struct RpcEv {
+    int m_0;
+    int m_4;
+    int m_8;
+    int _pC;
+    int m_10;
+    int m_14;
+    char _p18[0x20];
+    struct RpcEv *m_38;
+    int m_3C;
+    struct RpcQ *m_40;
+};
+struct RpcQ {
+    int _p0[2];
+    struct RpcEv *m_8;
+};
+extern int func_003B63A0(void);
+extern void func_003B63F0(void);
+void sceSifRegisterRpc(struct RpcEv *e, int a, int b, int c, int d, int f, struct RpcQ *q)
+{
+    struct RpcEv *p;
+    func_003B63A0();
+    e->m_3C = 0;
+    e->m_38 = 0;
+    e->m_0 = a;
+    e->m_4 = b;
+    e->m_8 = c;
+    e->m_10 = d;
+    e->m_14 = f;
+    e->m_40 = q;
+    if (q->m_8 == 0) {
+        q->m_8 = e;
+    } else {
+        for (p = q->m_8; p->m_38; p = p->m_38)
+            ;
+        p->m_38 = e;
+    }
+    func_003B63F0();
+}
+#endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3B2080
+// diff: 2 words; original loads D_0077E520 after the addiu of D_00460040 (3 variants tried)
+struct RpcEnt {
+    int m_0;
+    int m_4;
+    int m_8;
+    int m_C;
+};
+extern void *memcpy(void *, const void *, unsigned);
+extern int D_0077E520;
+extern char D_00460040[];
+extern int func_003B0060();
+extern int func_003B0070();
+int func_003B2080(void *src, int n, int flag)
+{
+    struct RpcEnt buf[32];
+    if (n < 0x20) {
+        memcpy(buf, src, n << 4);
+        buf[n].m_0 = (int)D_00460040;
+        buf[n].m_4 = D_0077E520;
+        buf[n].m_8 = 0x10;
+        buf[n].m_C = 0x44;
+        n++;
+        if (flag == 0)
+            return func_003B0060(buf, n);
+        return func_003B0070(buf, n);
+    }
+    return 0;
+}
+#endif

@@ -119,3 +119,68 @@ extern "C" int setWorkFromData__7cIDBasePUi(int *self, int *d)
     }
     return 0;
 }
+
+extern "C" void *getMessageAddr__C8cMessageUs(void *, unsigned short);
+extern "C" void *getRubyAddr__C8cMessageUs(void *, unsigned short);
+extern "C" void setBodyData__13cMessDrawFontPCUsN21(void *, void *, void *, int);
+extern "C" void setRubyData__13cMessDrawFontPCUsT1(void *, void *, void *);
+extern "C" void setDrawCounter__13cMessDrawFontii(void *, int, int);
+
+// FUNCTION: GAME 0x2AF590
+extern "C" void func_002AF590(void *self, unsigned short no)
+{
+    void *a = getMessageAddr__C8cMessageUs(Message, no);
+    void *r = getRubyAddr__C8cMessageUs(Message, no);
+    setBodyData__13cMessDrawFontPCUsN21(self, a, a, 0);
+    setRubyData__13cMessDrawFontPCUsT1(self, r, r);
+    setDrawCounter__13cMessDrawFontii(self, 0, 0xFFFFFFF);
+}
+
+extern "C" int func_002B2318(int *);
+extern "C" void func_002B2080(int *);
+extern "C" void func_002B22E8(int *, int *, int *, int, unsigned short);
+
+// FUNCTION: GAME 0x2AEE40
+extern "C" int *func_002AEE40(char *self, short key)
+{
+    int *p = *(int **)(self + 0x14);
+    if (!p) return 0;
+    *(int *)(self + 0x14) = func_002B2318(p);
+    func_002B2080(p);
+    int *prev = 0;
+    int *c = *(int **)(self + 0x10);
+    while (c && key < *(short *)((char *)c + 2)) {
+        prev = c;
+        c = (int *)prev[2];
+    }
+    *(unsigned short *)(self + 0xBD8) += 1;
+    if (*(unsigned short *)(self + 0xBD8) == 0xFFFF) *(unsigned short *)(self + 0xBD8) = 0;
+    func_002B22E8(p, prev, c, key, *(unsigned short *)(self + 0xBD8));
+    if (!prev) *(int **)(self + 0x10) = p;
+    return p;
+}
+
+extern "C" void KillEffect__FPC4cObji13eEspEraseMode(char *, int, int);
+
+// FUNCTION: GAME 0x2A8718
+extern "C" void func_002A8718(char *self)
+{
+    char *p = *(char **)(self + 0x42C);
+    if (p) {
+        char *e = p + *(unsigned short *)(p + 0x14);
+        for (unsigned i = 0; i < *(unsigned short *)(p + 0x16); i++, e += 12) {
+            int id = *(int *)e;
+            if (id != -1) {
+                if (*(unsigned char *)(e + 0xA) & 2)
+                    KillEffect__FPC4cObji13eEspEraseMode(self, id, 2);
+                else
+                    KillEffect__FPC4cObji13eEspEraseMode(self, id, 0);
+            }
+        }
+    }
+    int s = *(short *)(self + 0x570);
+    if (s != -1) KillEffect__FPC4cObji13eEspEraseMode(self, s, *(int *)(self + 0x574));
+    *(short *)(self + 0x570) = -1;
+    *(int *)(self + 0x574) = 2;
+}
+

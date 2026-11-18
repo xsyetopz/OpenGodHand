@@ -120,3 +120,112 @@ extern "C" void func_001FF4D0(char *self, unsigned id)
     }
 }
 #endif
+
+struct Sce { char pad[0x20]; void *task; };
+extern "C" void start__9classFADEUiUiUiUiUiUi(void *, unsigned, unsigned, unsigned, unsigned, unsigned, unsigned);
+extern "C" void sleep__9cTaskWorkUs(void *, unsigned short);
+extern char Fade[];
+extern Sce *g_Sce;
+
+// FUNCTION: GAME 0x1F6078
+extern "C" void func_001F6078(char *self)
+{
+    start__9classFADEUiUiUiUiUiUi(Fade, 0, 10, 0, 0, 0xFF000000, 10);
+    sleep__9cTaskWorkUs(g_Sce->task, 10);
+    self[4] = 1;
+}
+
+struct Ent { short off; short pad; void (*fn)(char *); };
+extern Ent D_003BF0E0[];
+extern "C" void move__7cIDBase(char *);
+extern "C" void trans__7cIDBase(char *);
+extern short D_005CAE40;
+
+// FUNCTION: GAME 0x1F5E90
+extern "C" void func_001F5E90(unsigned char *self)
+{
+    char *p = (char *)self + 0x30;
+    int o = self[0] << 3;
+    short off = *(short *)((char *)D_003BF0E0 + o);
+    (*(void (**)(char *))((char *)D_003BF0E0 + o + 4))((char *)self + off);
+    D_005CAE40 = 10;
+    move__7cIDBase(p);
+    trans__7cIDBase(p);
+}
+
+extern "C" void __7cIDBase(char *);
+extern "C" void __12CustomIDWork(char *);
+
+// FUNCTION: GAME 0x1F45D8
+extern "C" char *func_001F45D8(char *self)
+{
+    *(int *)self = 0;
+    __7cIDBase(self + 0x10);
+    char *p = self + 0x60;
+    for (int i = 0x6E; i != -1; i--, p += 0x7C)
+        __12CustomIDWork(p);
+    return self;
+}
+
+extern "C" void restartAnim__7cIDBase(char *);
+// FUNCTION: GAME 0x1F5EF8
+extern "C" void func_001F5EF8(unsigned char *self)
+{
+    restartAnim__7cIDBase((char *)self + 0x30);
+    self[3] = 0;
+    self[2] = 0;
+    self[0] = 1;
+    self[1] = 1;
+    start__9classFADEUiUiUiUiUiUi(Fade, 0, 10, 0, 0xFF000000, 0, 10);
+    sleep__9cTaskWorkUs(g_Sce->task, 10);
+}
+
+
+extern "C" void func_001FF2E0(char *, int);
+// FUNCTION: GAME 0x1FED78
+extern "C" void func_001FED78(char *self, int id, int a)
+{
+    for (int i = 0; i < *(int *)(self + 4); i++) {
+        char *e = (char *)(i * 0x5C) + *(int *)(self + 8);
+        if (*(int *)(e + 0x20) == id)
+            func_001FF2E0(e, a);
+    }
+}
+
+extern "C" int func_001FC210(char **);
+extern "C" void func_001FC170(char **, unsigned char, int);
+
+// FUNCTION: GAME 0x1FB8B8
+extern "C" void setGodReel__9cCoreSave10eCommandNo(char **self, int n)
+{
+    char *d = *self;
+    if (d && n < 0x1F) {
+        *(int *)(d + 0x130) |= 1 << n;
+        int r = func_001FC210(self);
+        if (r != -1)
+            func_001FC170(self, r, n);
+    }
+}
+
+#ifdef NONMATCHING
+extern "C" void BgmEventFade__4cSnd9eBgmReqNofff(void *, int, float, float, float);
+extern "C" void release__7cIDBase(char *);
+extern "C" void free__5cHeapPv(void *, void *);
+extern int D_007474B0;
+extern char Snd[];
+extern char *IDManager;
+
+// DRAFT: GAME 0x1F5C48 (6 words: store order of D_007474B0 and IDManager+0xF0/0xF4 loads)
+extern "C" void func_001F5C48(char *self)
+{
+    D_007474B0 = 0;
+    BgmEventFade__4cSnd9eBgmReqNofff(Snd, *(int *)(self + 0x24), 20.0f, 0.0f, -1.0f);
+    release__7cIDBase(self + 0x30);
+    char *m = IDManager;
+    *(int *)(m + 0xF0) = 0;
+    *(int *)(m + 0xF4) = 0;
+    char *p = *(char **)(self + 0x80);
+    if (p)
+        free__5cHeapPv(*(void **)(p - 0x20), p);
+}
+#endif

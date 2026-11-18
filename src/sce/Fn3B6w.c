@@ -209,3 +209,36 @@ int func_003B7200(void)
     return ((int)n << 4) | n->id;
 }
 #endif
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3B68B8
+// diff: 2 words; original loads a0 (p[2]) before a1 (p[3]) for the second func_003B6850 call (3 variants tried)
+extern int D_003FBE50[];
+extern char D_003FB6E8[];
+extern char D_003FBE28[];
+extern void func_003B6850(int, int);
+extern void func_003B6860(int, void *, int);
+extern int func_003B68A8(int);
+extern void FlushCache(int);
+void func_003B68B8(void)
+{
+    int *p;
+    int *q;
+    unsigned i;
+    if ((*(volatile unsigned int *)0x10001810 & 0x100) == 0) {
+        p = D_003FBE50;
+        func_003B6850(p[0], p[1]);
+        q = p + 4;
+        func_003B6860(0x80076000, D_003FB6E8, 0x740);
+        func_003B6860(0x82000, D_003FBE28, 0x28);
+        FlushCache(0);
+        FlushCache(2);
+        func_003B6850(p[2], p[3]);
+        for (i = 2; i < 8; i++) {
+            int v = func_003B68A8(q[0]);
+            func_003B6850(q[0], v);
+            q += 2;
+        }
+    }
+}
+#endif

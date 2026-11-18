@@ -260,7 +260,7 @@ extern "C" void func_002CD9A0(int on, int id)
 }
 
 #ifdef NONMATCHING
-// FUNCTION: GAME 0x2C0DA8
+// DRAFT: GAME 0x2C0DA8
 extern "C" void AreaSet__10cSceAtUnitR4cVecff9eAreaType(char *self, void *v, float a, float b, int t)
 {
     func_001F88A8(self + 4, v, t, a, a, b);

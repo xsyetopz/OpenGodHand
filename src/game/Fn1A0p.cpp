@@ -89,7 +89,7 @@ extern "C" float GetSpeedRate__9cEmManage(void *);
 extern "C" void SetDamageCollActive__11cDamageUnitb(void *, int);
 extern "C" void func_0012EC58(void *, void *);
 extern "C" void func_001FE278(void *, void *);
-extern "C" void ReleaseDamageGive__13cDamageManageP11cDamageGive(void *, void *);
+extern "C" int ReleaseDamageGive__13cDamageManageP11cDamageGive(void *, void *);
 struct V16 {
     float x, y, z, w;
 };
