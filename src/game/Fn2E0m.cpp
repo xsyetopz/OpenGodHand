@@ -66,7 +66,102 @@ extern "C" int func_002F00E0(char *self)
     if (!(*(unsigned char *)(self + 0x2E0) < 3))
         func_002D9F68(self, D_0044EB50, *(unsigned char *)(self + 0x2E0));
     F(self, 0x2B8) = F(self, 0x2B0);
-    F(self, 0x2D4) = F(self, 0x2D0);
     F(self, 0x2BC) = F(self, 0x2B4);
+    F(self, 0x2D4) = F(self, 0x2D0);
     return 1;
+}
+
+extern int D_00741DB8;
+extern "C" void *func_002B5E50();
+extern "C" void func_002FBFB0(void *);
+extern "C" void func_002FBE50(void *);
+
+// FUNCTION: GAME 0x2FBED0
+extern "C" void func_002FBED0(char *self)
+{
+    if (func_002B5E50() && *(char **)(self + 0x114) && *(int *)(*(char **)(self + 0x114) + 0x250) < 0)
+        func_002FBE50(self);
+    func_002FBFB0(self);
+    if (*(unsigned *)(*(char **)(self + 0x110) + 4) & 0x800) {
+        if (!D_00741DB8)
+            *(unsigned *)(self + 0x11C) |= 0x800000;
+        else
+            *(unsigned *)(self + 0x11C) &= 0xFF7FFFFF;
+    }
+    if (*(unsigned *)(*(char **)(self + 0x110) + 4) & 0x400) {
+        if (D_00741DB8)
+            *(unsigned *)(self + 0x11C) |= 0x800000;
+        else
+            *(unsigned *)(self + 0x11C) &= 0xFF7FFFFF;
+    }
+}
+
+struct Qv2 { float f[4]; };
+extern char D_0044FAD0[];
+extern "C" void *func_002FBD98(void *);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2FBCC8 (6 words off: scheduler orders the 0x240/0x246/0x210/0x23E/0x23F/0x245 stores differently)
+extern "C" void *func_002FBCC8(void *p)
+{
+    char *self = (char *)p;
+    func_002FBD98(self);
+    *(char **)(self + 0xF0) = D_0044FAD0;
+    float *v = (float *)(self + 0x188);
+    float *u = (float *)(self + 0x1F8);
+    v[0] = 1.0f;
+    v[1] = 1.0f;
+    v[2] = 1.0f;
+    v[3] = 1.0f;
+    u[0] = 1.0f;
+    u[1] = 1.0f;
+    u[2] = 1.0f;
+    u[3] = 1.0f;
+    *(short *)(self + 0x238) = -1;
+    F(self, 0x240) = 1.0f;
+    *(char *)(self + 0x246) = 1;
+    *(char *)(self + 0x23E) = 1;
+    *(char *)(self + 0x23F) = 1;
+    *(char *)(self + 0x245) = 1;
+    F(self, 0x210) = 1.0f;
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv2 *)(self + 0x280)));
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(Qv2 *)(self + 0x290)));
+    *(unsigned *)(self + 0x11C) |= 0x4000000;
+    *(unsigned *)(self + 0x11C) |= 0x2000000;
+    *(int *)(self + 0x280) = 0;
+    *(int *)(self + 0x284) = 0;
+    *(int *)(self + 0x288) = 0;
+    *(int *)(self + 0x290) = 0;
+    *(int *)(self + 0x294) = 0;
+    *(int *)(self + 0x298) = 0;
+    *(char *)(self + 0x2A1) = 0;
+    *(char *)(self + 0x2A0) = 0;
+    *(short *)(self + 0x276) = 0;
+    return self;
+}
+#endif
+
+typedef int TI128 __attribute__((mode(TI)));
+extern "C" void sceVu0ApplyMatrix(float *, float *, float *);
+extern "C" void sceVu0DivVector(float *, float *, float);
+extern "C" void func_0030A570(int *, float *);
+
+// FUNCTION: GAME 0x2FDDA8
+extern "C" int func_002FDDA8(float *m, int *out)
+{
+    float v[4] __attribute__((aligned(16)));
+    float u[4] __attribute__((aligned(16)));
+    int s[4] __attribute__((aligned(16)));
+    *(TI128 *)u = 0;
+    u[3] = 1.0f;
+    sceVu0ApplyMatrix(v, m, u);
+    float w = v[3];
+    *out = (int)(w * 10.0f) + 50;
+    sceVu0DivVector(v, v, w);
+    func_0030A570(s, v);
+    if (s[2] >= 0 && (unsigned)(s[0] - 0xA0) <= 0xFEC0) {
+        unsigned char bad = (unsigned)(s[1] - 0xA0) > 0xFEC0;
+        return bad ? -1 : 0;
+    }
+    return -1;
 }

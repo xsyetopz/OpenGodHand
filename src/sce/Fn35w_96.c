@@ -3,7 +3,7 @@
 int func_0036C568(int, int, int);
 int func_0034DEC8(int);
 int func_0034DD70();
-void func_00350528(int, int, int, int);
+void func_00350528(int, int);
 int func_00355508(int);
 int func_00350BE8(int, int);
 void func_00350C58(int, int);
@@ -30,17 +30,14 @@ int func_00350390(int *a, int *b, unsigned c) {
 }
 #endif
 
-// DRAFT: GAME 0x3504A0
-// diff: 7 words; orig's 0x350528 tail call takes only (a,b) and reuses a2/a3 set before the branch
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x3504A0
 void func_003504A0(int a, int b, int c, int d) {
     if (func_0034DEC8(a) != 0) {
         func_0034DD70(0, 0xFF000185, c, d);
         return;
     }
-    func_00350528(a, b, c, d);
+    func_00350528(a, b);
 }
-#endif
 
 // DRAFT: GAME 0x350B60
 // diff: 8 words; orig shares the return block and tail-calls 0x35A000 after bnez; ours differs in block layout
@@ -70,15 +67,13 @@ int func_0034CAD0(int, int);
 
 // FUNCTION: GAME 0x350718
 int func_00350718(int a) {
-    int r = 0;
-    if (func_0035A1C8(a, 5)) {
-        if (func_003508C0(a) != 1) {
-            func_003507B0(a);
-            if (*(int *)(a + 0x48) == 2) func_00350820(a);
-            r = func_00350C78(a);
-            func_003508D8(a);
-        }
-    }
+    int r;
+    if (!func_0035A1C8(a, 5)) return 0;
+    if (func_003508C0(a) == 1) return 0;
+    func_003507B0(a);
+    if (*(int *)(a + 0x48) == 2) func_00350820(a);
+    r = func_00350C78(a);
+    func_003508D8(a);
     func_00350B60(a);
     return r;
 }
@@ -92,11 +87,9 @@ int func_00350C78(int a) {
         if (r != 0) break;
         r = func_003514B8(a, l[0], l[1], l[2], &l[3]);
         if (r != 0) break;
-        if (l[3] == 0) {
-            func_003545F8(a);
-            break;
-        }
+        if (l[3] == 0) break;
     }
+    func_003545F8(a);
     return r;
 }
 

@@ -129,27 +129,3 @@ extern "C" int func_003AE730(Fq *fp)
     return 0;
 }
 #endif
-
-struct Bg {
-    char _pad[0x10];
-    int m_10;
-};
-
-extern "C" long _b2d(Bg *, int *);
-extern "C" long func_0031E5F0(long, long);
-
-
-struct Bn {
-    Bn *m_next;
-};
-
-struct Rm {
-    char _pad[0x48];
-    Bn *m_48;
-};
-
-extern int D_0045FCD8[];
-extern "C" Bn *_multadd(Rm *, Bn *, int, int);
-extern "C" Bn *_i2b(Rm *, int);
-extern "C" Bn *_multiply(Rm *, Bn *, Bn *);
-extern "C" void _Bfree(Rm *, Bn *);

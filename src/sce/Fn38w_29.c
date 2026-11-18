@@ -73,9 +73,15 @@ int func_0038F8C0(unsigned int *y)
     return k;
 }
 
-#define word0(x) ((unsigned int *)&x)[1]
-#define word1(x) ((unsigned int *)&x)[0]
-#define setwords(D, W0, W1) (word0(D) = (W0), word1(D) = (W1))
+union doubleword {
+    double d;
+    unsigned int u[2];
+};
+#define HIWORD 1
+#define LOWORD 0
+#define word0(x) ({ union doubleword _du; _du.d = (x); _du.u[HIWORD]; })
+#define setwords(D, W0, W1) ({ union doubleword _du; \
+    _du.u[HIWORD] = (W0); _du.u[LOWORD] = (W1); (D) = _du.d; })
 
 // FUNCTION: GAME 0x38FFE0
 double func_0038FFE0(double x)
@@ -96,4 +102,92 @@ double func_0038FFE0(double x)
         }
     }
     return a;
+}
+
+#define addword0(D, W) \
+    ({ union doubleword _du; _du.d = (D); _du.u[HIWORD] += (W); (D) = _du.d; })
+
+typedef struct Bigint {
+    struct Bigint *next;
+    int k;
+    int maxwds;
+    short on_stack;
+    short sign;
+    int wds;
+    unsigned int x[1];
+} Bigint;
+
+extern Bigint *func_0038F5B8(Bigint *, int);
+extern double func_00390078(Bigint *, int *);
+
+// multadd
+// FUNCTION: GAME 0x38F630
+Bigint *func_0038F630(Bigint *b, int m, int a)
+{
+    int i, wds;
+    unsigned int *x, y, xi, z;
+
+    wds = b->wds;
+    x = b->x;
+    i = 0;
+    do {
+        xi = *x;
+        y = (xi & 0xffff) * m + a;
+        z = (xi >> 16) * m + (y >> 16);
+        a = (int)(z >> 16);
+        *x++ = (z << 16) + (y & 0xffff);
+    } while (++i < wds);
+    if (a) {
+        if (wds >= b->maxwds)
+            b = func_0038F5B8(b, b->k + 1);
+        b->x[wds++] = a;
+        b->wds = wds;
+    }
+    return b;
+}
+
+// s2b
+// FUNCTION: GAME 0x38F700
+Bigint *func_0038F700(Bigint *result, const char *s, int nd0, int nd, unsigned int y9)
+{
+    int i, k;
+    int x, y;
+
+    x = (nd + 8) / 9;
+    for (k = 0, y = 1; x > y; y <<= 1, k++)
+        ;
+    result = func_0038F5B8(result, k);
+    result->x[0] = y9;
+    result->wds = 1;
+    i = 9;
+    if (9 < nd0) {
+        s += 9;
+        do
+            result = func_0038F630(result, 10, *s++ - '0');
+        while (++i < nd0);
+        s++;
+    } else
+        s += 10;
+    for (; i < nd; i++)
+        result = func_0038F630(result, 10, *s++ - '0');
+    return result;
+}
+
+// ratio
+// FUNCTION: GAME 0x390318
+double func_00390318(Bigint *a, Bigint *b)
+{
+    double da, db;
+    int k, ka, kb;
+
+    da = func_00390078(a, &ka);
+    db = func_00390078(b, &kb);
+    k = ka - kb + 32 * (a->wds - b->wds);
+    if (k > 0)
+        addword0(da, k * 0x100000);
+    else {
+        k = -k;
+        addword0(db, k * 0x100000);
+    }
+    return da / db;
 }

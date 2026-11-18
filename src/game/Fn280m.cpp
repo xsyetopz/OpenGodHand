@@ -72,12 +72,67 @@ extern "C" void func_002884E0(char *self)
     }
 }
 
-#ifdef NONMATCHING
 extern char g_EmManage[];
 extern "C" void ReleaseEm__9cEmManageP7cEmBase(void *, void *);
 extern "C" void func_0028FB08(void *);
 
-// FUNCTION: GAME 0x288C98
+extern "C" void *Getplayer__Fv();
+extern "C" int func_0031ED08(float);
+
+// FUNCTION: GAME 0x289610
+extern "C" void func_00289610(char *self, float a, float b)
+{
+    void *p = Getplayer__Fv();
+    char *t = *(char **)(self + 0x304);
+    int x = *(int *)(t + 0x160) + (int)t;
+    int y = *(int *)(t + 0x164) + (int)t;
+    func_002A8578(p, x, y, func_0031ED08(a), b, 0, 0);
+}
+
+extern char g_CollSolidManage[];
+extern "C" void SetActive__21cCollisionSolidManageP8cGameObjb(void *, void *, int);
+
+// FUNCTION: GAME 0x2880C8
+extern "C" void func_002880C8(char *self)
+{
+    *(unsigned *)(self + 0x15B0) |= 0x10020;
+    *(float *)(self + 0x54C) = 3.0f;
+    SetActive__21cCollisionSolidManageP8cGameObjb(g_CollSolidManage, self, 0);
+    switch (*(unsigned char *)(self + 0x2F6)) {
+    case 0: {
+        char *t = *(char **)(self + 0x304);
+        func_002A8578(self, *(int *)(t + 0x168) + (int)t, *(int *)(t + 0x16C) + (int)t, 3, 0.0f, 0, 0);
+        self[0x2F6]++;
+    }
+    case 1:
+        moveMotion__FP8cObjBase(self);
+    }
+}
+
+#ifdef NONMATCHING
+extern char *g_Sce;
+extern unsigned D_00747A84;
+extern "C" void startSoftEvent__9cScenario14eSoftEventType(void *, int);
+extern "C" int taskExec__9cScenarioPvT1i(void *, void *, void *, int);
+extern "C" void func_0028E858(void *);
+
+static inline void markTask(int id)
+{
+    if (id >= 0)
+        *(unsigned char *)(*(char **)(g_Sce + 0x1C) + id * 0x58 + 0x50) |= 1;
+}
+
+// DRAFT: GAME 0x28E7C8
+// diff: register numbering (s0/s1 swapped) and id copied to a0 before bltz
+extern "C" void func_0028E7C8(void *self)
+{
+    startSoftEvent__9cScenario14eSoftEventType(g_Sce, 2);
+    D_00747A84 &= 0xFFFEFFFF;
+    markTask(taskExec__9cScenarioPvT1i(g_Sce, (void *)func_0028E858, self, 1));
+}
+
+// DRAFT: GAME 0x288C98
+// diff: final state++ uses v0 (original v1)
 extern "C" void func_00288C98(char *self)
 {
     *(float *)(self + 0x54C) = 3.0f;
@@ -97,7 +152,8 @@ extern "C" void func_00288C98(char *self)
     }
 }
 
-// FUNCTION: GAME 0x28AB48
+// DRAFT: GAME 0x28AB48
+// diff: final state++ uses v0 (original v1)
 extern "C" void func_0028AB48(char *self)
 {
     *(float *)(self + 0x54C) = 3.0f;
@@ -166,5 +222,39 @@ extern "C" void func_00281D10(char *self)
     case 1:
         moveMotion__FP8cObjBase(self);
     }
+}
+
+struct Sw2 {
+    char _pad[0x2F4];
+    unsigned char m_a, m_b, m_c, m_d;
+};
+
+// DRAFT: GAME 0x2832A0
+// diff: same shape as 0x281368 (v1 hoisted into the beq delay slot; original keeps it in the branch blocks)
+extern "C" void func_002832A0(Sw2 *s, int k)
+{
+    unsigned char c;
+    if (k == 1)
+        goto L1;
+    if (k == 0)
+        goto D;
+    if (k == 2)
+        goto L2;
+D:
+    s->m_b = 6;
+    s->m_a = 0;
+    s->m_c = 0;
+    s->m_d = 0;
+    return;
+L1:
+    c = 2;
+    goto T;
+L2:
+    c = 4;
+T:
+    s->m_b = 6;
+    s->m_c = c;
+    s->m_d = 0;
+    s->m_a = 0;
 }
 #endif

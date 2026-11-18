@@ -108,25 +108,28 @@ struct Sw {
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x281368
-// diff: original has the default (k not 1 or 2) stores inline and cases 1/2 sharing one tail via v1; ours duplicates or reorders the tail blocks
+// diff: goto form matches test order and default body; original fills the beq delay slots with v0=7 and keeps v1=2/4 in the branch blocks, ours hoists v1 into the delay slot (10 words)
 extern "C" void func_00281368(Sw *s, int k)
 {
-    unsigned char c = 0;
-    switch (k) {
-    case 1:
-        c = 2;
-        break;
-    case 2:
-        c = 4;
-        break;
-    }
-    if (c == 0) {
-        s->m_d = 0;
-        s->m_b = 7;
-        s->m_a = 0;
-        s->m_c = 0;
-        return;
-    }
+    unsigned char c;
+    if (k == 1)
+        goto L1;
+    if (k == 0)
+        goto D;
+    if (k == 2)
+        goto L2;
+D:
+    s->m_b = 7;
+    s->m_a = 0;
+    s->m_c = 0;
+    s->m_d = 0;
+    return;
+L1:
+    c = 2;
+    goto T;
+L2:
+    c = 4;
+T:
     s->m_b = 7;
     s->m_c = c;
     s->m_d = 0;

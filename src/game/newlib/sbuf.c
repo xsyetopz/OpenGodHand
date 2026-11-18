@@ -5,9 +5,6 @@ extern char *D_003FA9C4;
 extern char D_0077DA88[];
 int func_003B0268(void *, char *, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x3A9C80
-// diff: 2 words, D_003FA9C0 reloaded into a1 instead of v0 (orig keeps count in v0)
 int func_003A9C80(void *h, char *buf, unsigned int n, int flush)
 {
     unsigned int i;
@@ -22,12 +19,13 @@ int func_003A9C80(void *h, char *buf, unsigned int n, int flush)
     }
     for (i = 0; i < n; i++) {
         *D_003FA9C4 = buf[i];
+        q = D_003FA9C4;
         k = D_003FA9C0 + 1;
-        q = D_003FA9C4 + 1;
+        q = q + 1;
         D_003FA9C0 = k;
         D_003FA9C4 = q;
         if (k >= 0x80) {
-            int r = func_003B0268(h, D_0077DA88, D_003FA9C0);
+            int r = func_003B0268(h, D_0077DA88, k);
             D_003FA9C4 = D_0077DA88;
             D_003FA9C0 = 0;
             if (!r)
@@ -36,4 +34,3 @@ int func_003A9C80(void *h, char *buf, unsigned int n, int flush)
     }
     return i;
 }
-#endif

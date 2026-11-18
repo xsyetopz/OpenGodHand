@@ -89,6 +89,7 @@ extern "C" void func_0017B010(char *self)
         func_001B7EE0(self, 2.0f);
 }
 
+#ifdef NONMATCHING
 struct V4 {
     float x, y, z, w;
 };
@@ -118,19 +119,22 @@ extern "C" int AddDamageCollCylinder__11cDamageUnitRC7cMatrixRC4cVecT2ff(void *,
             pd->w = 1.0f;                                                                                  \
             AddDamageCollCylinder__11cDamageUnitRC7cMatrixRC4cVecT2ff(t, self + 0x80, &c, &d, 4.0f, 0.8f); \
         }                                                                                                  \
+        *(short *)(self + 0x5F4) = -1;                                                                     \
+        *(unsigned char *)(self + 0x60C) = 8;                                                              \
+        *(void **)(self + 0x608) = self + 0x620;                                                           \
+        *(short *)(self + 0x548) = 1;                                                                      \
+        *(short *)(self + 0x54A) = 1;                                                                      \
         *(int *)(self + 0x5E8) = 0;                                                                        \
         *(int *)(self + 0x5E4) = 0;                                                                        \
         *(int *)(self + 0x5F0) = 0;                                                                        \
         *(int *)(self + 0x5EC) = 0;                                                                        \
         *(short *)(self + 0x5F6) = 0;                                                                      \
-        *(short *)(self + 0x54A) = 1;                                                                      \
-        *(void **)(self + 0x608) = self + 0x620;                                                           \
-        *(unsigned char *)(self + 0x60C) = 8;                                                              \
-        *(short *)(self + 0x548) = 1;                                                                      \
-        *(short *)(self + 0x5F4) = -1;                                                                     \
         func_001C28A0(self);                                                                               \
         return 1;                                                                                          \
     }
 
-// FUNCTION: GAME 0x170050
+// DRAFT: GAME 0x170050
+// Diff: body matches through the call; 12 words differ in the tail (constant register choice and store scheduling after AddDamageCollCylinder)
 FN170_INIT(func_00170050)
+
+#endif

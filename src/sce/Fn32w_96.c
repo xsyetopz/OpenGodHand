@@ -1,6 +1,13 @@
 // COMPILER: ee-gcc2.96
 extern char D_00452D10[];
 extern char D_00454CD8[];
+extern char D_00452038[];
+void func_0033F130(char *);
+void func_00329ED8(void);
+void func_0033E678(void);
+void func_0033E690(void);
+void func_00329B60(char *, char *);
+void func_0032B6A0(char *, int);
 void *memset(void *, int, unsigned);
 int func_00328098(int);
 int func_00335AA0(int);
@@ -33,20 +40,6 @@ void func_0032CEB0(char *a)
             a[1] = 6;
         }
     }
-}
-
-// FUNCTION: GAME 0x32D3A8
-int func_0032D3A8(int a, int b, int c, int d)
-{
-    int r[3];
-    memset(r, 0, 12);
-    r[0] = a;
-    r[1] = b;
-    func_0033FC70(r);
-    r[2] = 0;
-    func_0032D430(r, c, d);
-    b = func_0033FC88();
-    return b;
 }
 
 // FUNCTION: GAME 0x32DD70
@@ -102,4 +95,19 @@ void func_00335980(char *a)
         func_00335848(a);
         *(int *)(a + 0x34) = 0;
     }
+}
+
+// FUNCTION: GAME 0x329D78
+void func_00329D78(char *a, char *b)
+{
+    if (a == 0 || b == 0) {
+        func_0033F130(D_00452038);
+        return;
+    }
+    func_00329ED8();
+    func_0033E678();
+    a[2] = 3;
+    func_00329B60(a, b);
+    func_0032B6A0(a, 1);
+    func_0033E690();
 }

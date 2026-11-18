@@ -196,15 +196,20 @@ istream& istream::operator>>(TYPE& i)\
 
 // FUNCTION: GAME 0x387F78
 READ_INT(short)
+// FUNCTION: GAME 0x387FD8
 READ_INT(unsigned short)
 // FUNCTION: GAME 0x388038
 READ_INT(int)
+// FUNCTION: GAME 0x388098
 READ_INT(unsigned int)
 // FUNCTION: GAME 0x3880F8
 READ_INT(long)
+// FUNCTION: GAME 0x388158
 READ_INT(unsigned long)
 #if defined(__GNUC__) && !defined(__STRICT_ANSI__)
+// FUNCTION: GAME 0x3881B8
 READ_INT(long long)
+// FUNCTION: GAME 0x388218
 READ_INT(unsigned long long)
 #endif
 
