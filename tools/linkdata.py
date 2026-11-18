@@ -54,7 +54,7 @@ def positional_address(name: str, unit_at: dict[int, str]) -> int | None:
 def matches(obj: Path, vram: int, sym: str, span: int, raw: bytes) -> bool:
     try:
         got, relocs, _names = fncmp.compiled(obj, sym)
-    except SystemExit:
+    except (SystemExit, FileNotFoundError):
         return False
     off = vram + fncmp.TEXT_OFF
     want = raw[off : off + span]
@@ -88,3 +88,35 @@ def find_symbol(obj: Path, vram: int, sym: str, span: int, raw: bytes, taken: se
         ]
     hits = [n for n in found if matches(obj, vram, n, span, raw)]
     return hits[0] if hits else sym
+
+
+def derived_addresses(obj: Path, sym: str, vram: int, raw: bytes, skip: set[str]) -> dict[str, int]:
+    """Original addresses of the named symbols that `sym` calls or addresses,
+    read from the original instructions at the compiled relocation sites
+    (`jal` targets, `lui`/`addiu`/load pairs), less the addend the compiled
+    word carries. A name whose sites disagree, or that is in `skip`, is left out.
+    Defining such a name at that address in the link lets a function that
+    references data or code of the asm units link without compiled copies."""
+    try:
+        got, relocs, names = fncmp.compiled(obj, sym)
+    except (SystemExit, FileNotFoundError):
+        return {}
+    want = raw[vram + fncmp.TEXT_OFF : vram + fncmp.TEXT_OFF + len(got)]
+    his: dict[str, list[int]] = {}
+    found: dict[str, set[int]] = {}
+
+    def word(buf: bytes, off: int) -> int:
+        return struct.unpack_from("<I", buf, off)[0]
+
+    for off, kind in sorted(relocs.items()):
+        name = names.get(off)
+        if name is None or name in skip or off + 4 > len(want):
+            continue
+        if kind == 4:  # R_MIPS_26
+            found.setdefault(name, set()).add((((word(want, off) & 0x3FFFFFF) - (word(got, off) & 0x3FFFFFF)) << 2) | (vram & 0xF0000000))
+        elif kind == 5:  # R_MIPS_HI16
+            his.setdefault(name, []).append(((word(want, off) & 0xFFFF) - (word(got, off) & 0xFFFF)) & 0xFFFF)
+        elif kind == 6 and name in his:  # R_MIPS_LO16 after its HI16
+            lo = (word(want, off) & 0xFFFF) - (word(got, off) & 0xFFFF)
+            found.setdefault(name, set()).add(((his[name][-1] << 16) + (lo if lo < 0x8000 else lo - 0x10000)) & 0xFFFFFFFF)
+    return {n: next(iter(a)) for n, a in found.items() if len(a) == 1}

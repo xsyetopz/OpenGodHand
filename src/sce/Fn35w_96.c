@@ -39,20 +39,6 @@ void func_003504A0(int a, int b, int c, int d) {
     func_00350528(a, b);
 }
 
-// DRAFT: GAME 0x350B60
-// diff: 8 words; orig shares the return block and tail-calls 0x35A000 after bnez; ours differs in block layout
-#ifdef NONMATCHING
-void func_00350B60(int a) {
-    int *p = (int *)(a + 0x950);
-    int r = func_00355508(a);
-    if (r == -1) return;
-    if (func_00350BE8(a, r) == 0) return;
-    func_00350C58(a, 1);
-    if (*p != 0) return;
-    func_0035A000(a, 5, 0);
-}
-#endif
-
 int func_0035A1C8(int, int);
 int func_003508C0(int);
 void func_003507B0(int);

@@ -13,7 +13,7 @@ extern "C" int func_002B8A30(void *self, unsigned id)
     case 4:
     case 6:
     case 8:
-    default:
         return 0;
     }
+    return 0;
 }

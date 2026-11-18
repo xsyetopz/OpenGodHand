@@ -1,9 +1,22 @@
 // Phase reset keyed on the state byte at 0xA4; sole switch of 0x2B3AD0.
-// FUNCTION: GAME 0x2B3AD0
+// DRAFT: GAME 0x2B3AD0 - original keeps four unmerged 'b; addiu 3' arms for cases 0-3; gcc merges identical arms (20 words differ)
+#ifdef NONMATCHING
 extern "C" int func_002B3AD0(char *self)
 {
     int v;
     switch (*(unsigned char *)(self + 0xA4)) {
+    case 0:
+        v = 3;
+        break;
+    case 1:
+        v = 3;
+        break;
+    case 2:
+        v = 3;
+        break;
+    case 3:
+        v = 3;
+        break;
     case 4:
         v = 4;
         break;
@@ -20,3 +33,4 @@ extern "C" int func_002B3AD0(char *self)
     self[0xE] = 0;
     return 2;
 }
+#endif

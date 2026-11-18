@@ -28,6 +28,7 @@ struct Ef {
     char _pad4[0x5F0 - 0x5AC];
     int m_5F0;
     int m_5F4;
+    char _pad5[4];
     int m_5FC;
     char _pad6[0x16D0 - 0x600];
     unsigned m_16D0;
@@ -91,9 +92,9 @@ extern "C" void func_00226450(Ef *self)
             func_002705D8(self);
         addNullSpeed_Rotation__8cObjBasef(self, 1.0f);
         addNullSpeed__8cObjBasef(self, 1.0f);
-        func_002609A8(self, 0, 0x10, 0x4B, -1, 0);
         break;
     }
+    func_002609A8(self, 0, 0x10, 0x4B, -1, 0);
     func_00260B30(self);
     if ((self->m_3AC & 0x10) && func_00262AA8(self))
         return;

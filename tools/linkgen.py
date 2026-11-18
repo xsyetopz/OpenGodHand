@@ -40,7 +40,7 @@ import configure  # noqa: E402
 from elftools.elf.elffile import ELFFile  # noqa: E402
 from elftools.elf.relocation import RelocationSection  # noqa: E402
 import fncmp  # noqa: E402
-from linkdata import find_symbol, matches, positional_address, rodata_span  # noqa: E402
+from linkdata import derived_addresses, find_symbol, matches, positional_address, rodata_span  # noqa: E402
 
 ROOT = configure.ROOT
 
@@ -196,9 +196,16 @@ def main() -> int:
         if found != entry[2]:  # the compiler mangled a name the original lacks
             absolute[entry[2]] = entry[0]
             entry[2] = found
+    compiled_defs: set[str] = set()
+    for obj in {e[1] for e in cfg["compiled"] if (ROOT / e[1]).exists()}:
+        compiled_defs |= text_symbols(ROOT / obj)
     for vram, obj, sym in cfg["compiled"]:
         status[vram] = "match" if matches(ROOT / obj, vram, sym, spans[vram], raw) else "differ"
-        refs[vram] = local_refs(ROOT / obj, sym, known)
+        # Names defined by no compiled function take the address the original
+        # instructions use, so asm data and code stay where they are.
+        derived = derived_addresses(ROOT / obj, sym, vram, raw, known | compiled_defs)
+        absolute.update(derived)
+        refs[vram] = local_refs(ROOT / obj, sym, known | set(derived))
         for name in sorted(refs[vram]):
             addr = positional_address(name, unit_at)
             if addr is not None:  # the original names this unit differently

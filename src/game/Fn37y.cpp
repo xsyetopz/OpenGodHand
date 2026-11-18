@@ -184,22 +184,6 @@ void func_0037D680(void *);
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x377998
-// diff: original tests at loop bottom with bnel delay-slot reuse; ours 56 vs 52 bytes (extra beqz/nop entry test)
-extern "C" unsigned short *func_00377998()
-{
-    int p = (int)D_0076E590;
-    int e = p + 0x380;
-    do {
-        if (*(unsigned short *)p == 0)
-            return (unsigned short *)p;
-        p += 0x70;
-    } while (p < e);
-    return 0;
-}
-#endif
-
-#ifdef NONMATCHING
 // DRAFT: GAME 0x37D170
 // diff: original tests at loop bottom with bnel delay-slot reuse; ours 56 vs 52 bytes (extra beqz/nop entry test)
 extern "C" unsigned short *func_0037D170()

@@ -102,15 +102,15 @@ extern "C" void func_00302E48(char *self)
     float a[4] __attribute__((aligned(16)));
     float b[4] __attribute__((aligned(16)));
     func_002B62F8(a, self);
-    char *o = *(char **)(self + 0x100);
+    char *o;
     float t;
-    int n = *(int *)(o + 0x1A0);
+    int n = *(int *)(*(char **)(self + 0x100) + 0x1A0);
     if (n) {
         t = (*(float *)(self + 0x180) - (float)*(short *)(self + 0x186)) / (float)n;
-        o = *(char **)(self + 0x100);
     } else {
         t = 0.0f;
     }
+    o = *(char **)(self + 0x100);
     if (*(float *)(o + 0x1C0) <= t) {
         *(float *)(self + 0x128) = *(float *)(self + 0x128) * *(float *)(o + 0x1C4);
         *(float *)(self + 0x12C) = *(float *)(self + 0x12C) * *(float *)(o + 0x1C8);

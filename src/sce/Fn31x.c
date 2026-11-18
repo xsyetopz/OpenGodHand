@@ -159,3 +159,57 @@ void func_0031DA48(void)
     }
 }
 #endif
+
+extern int strcmp(const char *, const char *);
+
+// FUNCTION: GAME 0x31EE40
+int func_0031EE40(char **a, char **b)
+{
+    int r = 0;
+    if (b == a || strcmp(*a, *b) == 0)
+        r = 1;
+    return r;
+}
+
+extern int func_003201F0(void);
+extern int func_0031F4A0(void);
+
+// FUNCTION: GAME 0x31F9D0
+int func_0031F9D0(char *o)
+{
+    int r = 0;
+    if (o) {
+        char *vt = *(char **)(o + 4);
+        r = func_0031FAE8(*(char *(**)(void))(vt + 4), func_003201F0, 1, (int)(o + *(short *)vt), func_0031F4A0, (int)o);
+    }
+    return r != 0;
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x31EDD0 (2 words differ: original stores ra before the float argument; 2.9 emits swc1 first)
+struct U2 { int cls, sign, exp; unsigned frac; };
+extern void func_0031EC48(float *, struct U2 *);
+extern void func_0031EAB0(int, int, int, unsigned long long);
+void func_0031EDD0(float f)
+{
+    struct U2 u;
+    func_0031EC48(&f, &u);
+    func_0031EAB0(u.cls, u.sign, u.exp, ((unsigned long long)u.frac << 32) >> 2);
+}
+
+// DRAFT: GAME 0x31EAE0 (6 words differ: the original builds t|1 first and selects with movz, this emits movn with the t|1 copy in v1)
+struct D2 { int cls, sign, exp, pad; long long frac; };
+extern void func_0031DFA8(double *, struct D2 *);
+extern void func_0031EDA0(int, int, int, int);
+void func_0031EAE0(double d)
+{
+    struct D2 u;
+    int t, j;
+    func_0031DFA8(&d, &u);
+    t = (int)((u.frac << 2) >> 32);
+    j = t | 1;
+    if ((u.frac & 0x3FFFFFFF) == 0)
+        j = t;
+    func_0031EDA0(u.cls, u.sign, u.exp, j);
+}
+#endif

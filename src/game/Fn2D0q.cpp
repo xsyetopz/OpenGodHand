@@ -142,3 +142,69 @@ extern "C" int func_002DB7E0(const float *arg)
     return a < 0.2617994f;
 }
 #endif
+
+struct ObjQ { char _p[0x2FE]; unsigned short m_2fe; };
+struct ObjVecQ { int m_0; ObjQ **m_4; ObjQ **m_8; };
+extern ObjVecQ *volatile objbaseArray;
+extern "C" int func_001B8030(ObjQ *);
+
+// DRAFT: GAME 0x2DDDF8
+// diff: 37 words, range test (v>=0x300 ? v<0x500 : 0) compiles to movn form, not slti/xori/andi; same idiom as unmatched 0x1B8030
+#ifdef NONMATCHING
+int getItemNumInRoom()
+{
+    int n = 0;
+    ObjVecQ *s = objbaseArray;
+    ObjQ **p = s->m_4;
+    if (p == s->m_8)
+        return 0;
+    do {
+        ObjQ *o = *p;
+        int v = o->m_2fe;
+        int in = v >= 0x300 ? v < 0x500 : 0;
+        if ((unsigned char)in) {
+            if (!func_001B8030(o))
+                n++;
+        }
+        p++;
+    } while (p != objbaseArray->m_8);
+    return n;
+}
+#endif
+
+struct QvQ { float f[4]; };
+struct VecQ { float x, y, z, w; };
+extern int ChkLine__FRC4cVecT0P4cVecT2UiUiPP11AK_HIT_INFOUiPUiPP8cGameObjUiT8b(const VecQ &, const VecQ &, VecQ *, VecQ *, unsigned, unsigned, void *, unsigned, unsigned *, void *, unsigned, unsigned, bool);
+
+static inline void cpvQ(VecQ *d, const VecQ *s, float y)
+{
+    if (d != s) {
+        float x = s->x;
+        float z = s->z;
+        d->x = x;
+        d->z = z;
+        d->y = y;
+    }
+}
+
+// FUNCTION: GAME 0x2DDD18
+extern "C" float func_002DDD18(VecQ *pos)
+{
+    VecQ a, b, c;
+    VecQ *pa = &a;
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(QvQ *)pa));
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(QvQ *)&b));
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(QvQ *)&c));
+    float y = pos->y;
+    cpvQ(pa, pos, y);
+    if (&b != pos) {
+        b.x = pos->x;
+        b.y = pos->y;
+        b.z = pos->z;
+    }
+    a.y += 0.5f;
+    b.y -= 20.0f;
+    if (ChkLine__FRC4cVecT0P4cVecT2UiUiPP11AK_HIT_INFOUiPUiPP8cGameObjUiT8b(a, b, &c, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1) == 1)
+        y = c.y;
+    return y;
+}
