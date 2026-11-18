@@ -123,6 +123,21 @@ def normalize_symtab(obj: Path) -> None:
     subprocess.check_call([objcopy, str(obj)])
 
 
+def call(cmd: list[str]) -> int:
+    """Run cmd, retrying when Wine's server connection drops.
+
+    Under heavy parallel load the Wine client can lose its server
+    ("wine client error ... Connection reset by peer"); that failure says
+    nothing about the source, so the step is simply run again.
+    """
+    for _ in range(3):
+        p = subprocess.run(cmd, stderr=subprocess.PIPE)
+        sys.stderr.buffer.write(p.stderr)
+        if p.returncode == 0 or b"wine client error" not in p.stderr:
+            break
+    return p.returncode
+
+
 def main() -> int:
     argv = sys.argv[1:]
     name = os.environ.get("EECC_COMPILER", DEFAULT)
@@ -161,7 +176,7 @@ def main() -> int:
         prefix = cmd[: len(cmd) - len(exe) - len(gcc_args)]
         script = " && ".join(" ".join(shlex.quote(a) for a in step) for step in steps)
         try:
-            rc = subprocess.call([*prefix, "sh", "-c", script])
+            rc = call([*prefix, "sh", "-c", script])
             # Loops shorter than the game's assembler allowed get nops before
             # their branch and are assembled again (see tools/shortloop.py).
             for _ in range(3):
@@ -171,11 +186,11 @@ def main() -> int:
                 if not fixes:
                     break
                 Path(asm).write_text(shortloop.pad(Path(asm).read_text(), fixes, totals))
-                rc = subprocess.call([*prefix, *steps[1]])
+                rc = call([*prefix, *steps[1]])
         finally:
             Path(asm).unlink(missing_ok=True)
     else:
-        rc = subprocess.call(cmd)
+        rc = call(cmd)
     if rc == 0 and "-o" in argv and argv[argv.index("-o") + 1].endswith(".o"):
         normalize_symtab(Path(argv[argv.index("-o") + 1]))
     return rc
