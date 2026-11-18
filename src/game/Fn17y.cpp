@@ -268,3 +268,37 @@ extern "C" void func_001793D0(sTy *s)
         break;
     }
 }
+
+class cFnY;
+typedef void (cFnY::*cFnYPmf)();
+class cFnY {
+public:
+    virtual void v();
+    char pad[0x2F4];
+    unsigned char type;
+};
+extern "C" {
+int func_001B76B0(cFnY *self);
+void func_001B76D8(cFnY *self);
+}
+
+#define FN17_MODE(NAME, TAB)                          \
+    extern cFnYPmf TAB[];                              \
+    extern "C" void NAME(cFnY *self)                   \
+    {                                                  \
+        if (func_001B76B0(self)) {                     \
+            (self->*TAB[self->type])();                \
+            func_001B76D8(self);                       \
+        }                                              \
+    }
+
+// FUNCTION: GAME 0x17ADE0
+FN17_MODE(func_0017ADE0, D_003BDA20)
+// FUNCTION: GAME 0x17E230
+FN17_MODE(func_0017E230, D_003BDA68)
+// FUNCTION: GAME 0x17EED8
+FN17_MODE(func_0017EED8, D_003BDA98)
+// FUNCTION: GAME 0x17F5F0
+FN17_MODE(func_0017F5F0, D_003BDAB0)
+// FUNCTION: GAME 0x17FCB8
+FN17_MODE(func_0017FCB8, D_003BDAD0)

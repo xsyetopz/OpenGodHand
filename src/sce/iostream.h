@@ -11,9 +11,11 @@ struct SB {
 struct Ios {
     struct SB *sb;
     struct Ios *tie;
-    char pad0[8];
+    int width;
+    int m0C;
     unsigned long long fl;
-    char pad[2];
+    char fill;
+    char pad;
     unsigned char st;
 };
 

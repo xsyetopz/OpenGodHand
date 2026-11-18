@@ -1,9 +1,6 @@
 // Small accessors in 0x2D8000-0x2DFFFF.
 
-class cWorldLight {
-public:
-    void Gaibu_set_off();
-};
+#include "cWorldLight.h"
 
 // FUNCTION: GAME 0x002D8DE0
 void cWorldLight::Gaibu_set_off() {

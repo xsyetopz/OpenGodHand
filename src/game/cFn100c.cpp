@@ -115,13 +115,8 @@ extern "C" void func_0012BB38(char *self)
     }
 }
 
-class cPlSt {
-public:
-    virtual void vf();
-    char _pad[0x2F5];
-    unsigned char st;
-};
-typedef void (cPlSt::*PlStFn)();
+#include "PlStDispatch.h"
+
 extern "C" PlStFn D_003BC770[];
 
 // FUNCTION: GAME 0x102728

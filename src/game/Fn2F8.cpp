@@ -2,18 +2,11 @@
 
 #include "cSnd.h"
 #include "cTaskWork.h"
+#include "cHeap.h"
+#include "cWorldLight.h"
 
 struct cObj;
 void ReleaseObj(cObj *);
-class cHeap {
-public:
-    void free(void *p);
-};
-class cWorldLight {
-public:
-    void Del_LightData(unsigned short id, unsigned a);
-};
-extern cWorldLight World_light_work;
 
 extern "C" {
 void func_002F1AA0(int, unsigned);

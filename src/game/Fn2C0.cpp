@@ -183,12 +183,16 @@ extern "C" void func_002B33D8(char *self)
 {
     if (*(int *)(self + 0x1C)) {
         unsigned char v = func_002A4C00(Font, **(unsigned short **)(self + 0x8C));
-        unsigned long f = *(unsigned *)(self + 0x14);
-        if (!((f >> 1) & 1) || ((f >> 2) & 1) || (v & 1)) {
-            *(unsigned *)(self + 0x14) |= 2;
-        } else {
-            func_002B3460(self);
+        unsigned long f = *(unsigned long *)(self + 0x14);
+        if ((f >> 1) & 1) {
+            if (!((f >> 2) & 1)) {
+                if (!(v & 1)) {
+                    func_002B3460(self);
+                    return;
+                }
+            }
         }
+        *(unsigned *)(self + 0x14) |= 2;
     }
 }
 #endif
@@ -207,4 +211,61 @@ extern "C" SeData12 Motion_seq_readSeData__FPvUc(void *src, unsigned char flag)
         memcpy(&t, src, 12);
     }
     return t;
+}
+
+struct VtEnt {
+    short off;
+    short pad;
+    void *(*fn)(void *, ...);
+};
+struct VtBase {
+    char _p[0x10];
+    short off0;
+    short pad0;
+    void *(*fn0)(void *, int);
+    char _q[8];
+    short off1;
+    short pad1;
+    void (*fn1)(void *, void *, int);
+};
+extern "C" void func_002A7280(void *, unsigned);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x2BA1C8 - prologue schedules daddu s0,a0 before sq s1 (2 words)
+extern "C" int func_002BA1C8(char *self, int n)
+{
+    char *p = self;
+    int k = n;
+    func_002A7280(self, n);
+    self = p;
+    n = k;
+    VtBase *vt = *(VtBase **)(self + 0x18);
+    void *v = vt->fn0(self + vt->off0, *(int *)(self + 8) * n);
+    *(int *)(self + 4) = n;
+    *(void **)self = v;
+    if (n) {
+        VtBase *vt2 = *(VtBase **)(self + 0x18);
+        vt2->fn1(self + vt2->off1, v, *(int *)(self + 8) * n);
+    }
+    return 1;
+}
+#endif
+
+extern "C" unsigned func_002BEDD8(void *);
+extern "C" char *func_002BEF08(void *, unsigned);
+
+// FUNCTION: GAME 0x2BF078
+extern "C" int clearEmDeadFlag__9cRoomSaveUi(void *self, unsigned id)
+{
+    unsigned i;
+    int ret = 0;
+    for (i = 0; i < func_002BEDD8(self);) {
+        char *r = func_002BEF08(self, i++);
+        if (r && (unsigned char)r[0x13] == id) {
+            r[0x14] = 0;
+            ret = 1;
+            break;
+        }
+    }
+    return ret;
 }

@@ -59,7 +59,7 @@ extern "C" long func_003AE128(int *self, int a1, int a2, int a3)
 // Round 26.
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3A93F8
-// diff: original indexes t[j]/s[j] with addu a3 (no strength reduction); ours strength-reduces to a pointer (124 vs 116 bytes)
+// diff: original indexes t[j]/s[j] with addu a3 (no strength reduction); ours strength-reduces to a pointer (124 vs 116 bytes); unsigned index and s[i+j] forms also fail
 extern "C" char *func_003A93F8(char *s, char *t)
 {
     if (!*s)
@@ -87,7 +87,7 @@ extern "C" char *func_003A93F8(char *s, char *t)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3A95A8
-// diff: 3 words, the i=0 / q=s+n / p=s setup instructions are scheduled in a different order
+// diff: 3 words, the i=0 / q=s+n / p=s setup instructions are scheduled in a different order; p,q,i declaration order and plain initialisers tried
 extern "C" char *func_003A95A8(char *s)
 {
     int n = 0;

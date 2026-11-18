@@ -142,3 +142,29 @@ int func_0038A040(struct Is *s)
         return func_00389398(s);
     return 1;
 }
+
+struct VTb {
+    char pad[0x34];
+    int (*fn)(void *, char *, int);
+};
+int func_0038C9E8(const char *, char *, int);
+void func_00389548(struct Is *);
+
+// FUNCTION: GAME 0x388FB0
+struct Is *func_00388FB0(struct Is *s, const char *str)
+{
+    if (opfx(s)) {
+        struct SB *sb = s->ios->sb;
+        char buf[0x400];
+        int n;
+        while ((n = func_0038C9E8(str, buf, 0x400)) != 0) {
+            if ((*(struct VTb **)((char *)sb + 0x50))->fn(sb, buf, n) != n) {
+                s->ios->st |= 4;
+                break;
+            }
+        }
+        if (s->ios->fl & 0x6000)
+            func_00389548(s);
+    }
+    return s;
+}

@@ -275,14 +275,12 @@ extern "C" void func_00376820(Fn38Evt *o)
     o->m_12 = 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x376A90
-// diff: 16 words; original compares the pointer against base+0x2A00 (slt), ours keeps an int counter (slti)
+// FUNCTION: GAME 0x376A90
 extern "C" Fn38Ev2 *func_00376A90(int key)
 {
     int i;
-    Fn38Ev2 *e = D_00770850;
-    for (i = 0; i < 0x30; i++, e++) {
+    for (i = 0; i < 0x30; i++) {
+        Fn38Ev2 *e = &D_00770850[i];
         if (e->m_00 == 0)
             continue;
         if (key == 0)
@@ -292,4 +290,79 @@ extern "C" Fn38Ev2 *func_00376A90(int key)
     }
     return 0;
 }
-#endif
+
+struct Fn38Ch {
+    unsigned short m_00;
+    char _pad02[8];
+    short m_0A;
+    short m_0C;
+};
+
+struct Fn38Rec {
+    unsigned short m_00;
+    char _pad02[0x14];
+    short m_16;
+    char _pad18[0x88];
+};
+extern Fn38Rec D_0076E910[];
+
+extern "C" void func_00377378(Fn38Rec *, Fn38Ch *);
+extern "C" void func_00377428(Fn38Rec *, Fn38Ch *);
+
+// FUNCTION: GAME 0x3772D8
+extern "C" int func_003772D8(Fn38Ch *o)
+{
+    Fn38Rec *e = &D_0076E910[o->m_0C];
+    if (e->m_00 == 0)
+        return -1;
+    switch (o->m_0A) {
+    case 0:
+        func_00377378(e, o);
+        return 0;
+    case 1:
+        func_00377428(e, o);
+        return 0;
+    case 2:
+        e->m_16 = 1;
+        return 0;
+    default:
+        return 0;
+    }
+}
+
+struct Fn38Tk {
+    unsigned short m_00;
+    char _pad02[2];
+    int m_04;
+    char _pad08[0xC];
+    unsigned short m_14;
+};
+
+struct Fn38Tk2 {
+    unsigned short m_00;
+    char _pad02[3];
+    unsigned char m_05;
+    char _pad06[0xE];
+    int m_14;
+    char _pad18[0x38];
+};
+extern Fn38Tk2 D_0076CF20[];
+extern "C" void func_0037D8B8(Fn38Tk2 *, int);
+
+// FUNCTION: GAME 0x377A28
+extern "C" void func_00377A28(Fn38Tk *o)
+{
+    int i;
+    for (i = 0; i < 0x30; i++) {
+        Fn38Tk2 *e = &D_0076CF20[i];
+        if (e->m_00 == 0)
+            continue;
+        if ((e->m_05 & 2) == 0)
+            continue;
+        if (e->m_14 != o->m_04)
+            continue;
+        func_0037D8B8(e, -1);
+    }
+    o->m_14 = 3;
+    o->m_00 |= 0x28;
+}
