@@ -18,6 +18,7 @@ named by `EECC_DOCKER`). Packages are downloaded on first use into
 tools/compilers/ and verified by SHA-256.
 
 Usage: eecc.py [--compiler NAME] [ee-gcc options] -c -o OUT.o IN.cpp
+       eecc.py --serve BOX   (then EECC_CONTAINER=BOX reuses that container)
 NAME is a decomp.me compiler package (default ee-gcc2.96); packages listed in
 PINNED are verified by SHA-256. Paths must be inside the repository, which is
 mounted at the same location.
@@ -139,8 +140,30 @@ def call(cmd: list[str]) -> int:
     return p.returncode
 
 
+def serve(box: str) -> int:
+    """Start a long-lived compiler container named box with a persistent wineserver.
+
+    Each `docker run` boots Wine afresh (about 1 s per process, three processes
+    per compile); with EECC_CONTAINER=box set, eecc execs into this container
+    instead, where the running wineserver cuts a Wine start to about 0.2 s.
+    Batch users such as decomp-permuter depend on that.
+    """
+    docker = os.environ.get("EECC_DOCKER") or shutil.which("docker") or shutil.which("podman")
+    if not docker:
+        raise SystemExit("eecc: --serve needs Docker or Podman")
+    ensure_image(docker)
+    subprocess.call([docker, "rm", "-f", box], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.check_call([
+        docker, "run", "-d", "--name", box, "--platform", "linux/386", "-v", f"{ROOT}:{ROOT}",
+        "-e", "WINEDEBUG=-all", IMAGE, "sleep", "infinity",
+    ], stdout=subprocess.DEVNULL)
+    return subprocess.call([docker, "exec", box, "wineserver", "-p"])
+
+
 def main() -> int:
     argv = sys.argv[1:]
+    if argv[:1] == ["--serve"]:
+        return serve(argv[1])
     name = os.environ.get("EECC_COMPILER", DEFAULT)
     if argv[:1] == ["--compiler"]:
         name, argv = argv[1], argv[2:]
@@ -160,10 +183,13 @@ def main() -> int:
         if not docker:
             raise SystemExit("eecc: the EE compilers need x86 Linux (and Wine) or Docker/Podman")
         ensure_image(docker)
-        cmd = [
-            docker, "run", "--rm", "--platform", "linux/386", "-v", f"{ROOT}:{ROOT}", "-w", str(cwd),
-            "-e", "WINEDEBUG=-all", IMAGE, *exe, *gcc_args,
-        ]
+        if box := os.environ.get("EECC_CONTAINER"):
+            cmd = [docker, "exec", "-w", str(cwd), "-e", "WINEDEBUG=-all", box, *exe, *gcc_args]
+        else:
+            cmd = [
+                docker, "run", "--rm", "--platform", "linux/386", "-v", f"{ROOT}:{ROOT}", "-w", str(cwd),
+                "-e", "WINEDEBUG=-all", IMAGE, *exe, *gcc_args,
+            ]
     sn_as = ensure_toolchain(SN_AS[0]) / SN_AS[1] if gcc.suffix == ".exe" else None
     if sn_as and "-c" in argv and "-o" in argv:
         out = argv[argv.index("-o") + 1]

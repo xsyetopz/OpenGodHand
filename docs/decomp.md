@@ -67,6 +67,18 @@ full build still reproduces `SLUS_215.03` byte for byte.
 5. Integration: `.venv/bin/python tools/configure.py && ninja` must end with
    `build/SLUS_215.03: OK`.
 
+A draft that differs only in register allocation or scheduling is searched
+mechanically with decomp-permuter, cloned into `tools/ext/decomp-permuter`:
+
+    .venv/bin/python tools/permute.py src/game/Fn145238.cpp 0x145238
+    .venv/bin/python tools/eecc.py --serve eecc-perm
+    EECC_CONTAINER=eecc-perm .venv/bin/python tools/ext/decomp-permuter/permuter.py -j4 build/permuter/00145238
+
+The permuter parses C only, so drafts that use references, classes or
+`cvecop.h` asm cannot be permuted. Off x86 Linux each compile otherwise starts
+Wine in a fresh container; the served container keeps one wineserver running
+and cuts a compile from about 2.5 s to 1 s.
+
 ## Source conventions
 
 - Class layouts use the original member offsets; unknown regions are
