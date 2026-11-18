@@ -45,30 +45,6 @@ void func_0036D630(int idx, int v)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x36D528
-// diff: 3 words: original stores *p after `ld ra` (sw between ld ra and ld s0)
-int func_0036D528(int *p)
-{
-    if (func_0036D688(p))
-        return func_0036D8E8(0, 0xFF030201);
-    *(volatile int *)p = 1;
-    return 1;
-}
-#endif
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x36DA30
-// diff: 3 words: same store ordering as 0x36D528
-int func_0036DA30(int *p)
-{
-    if (func_0036D688(p))
-        return func_0036D8E8(0, 0xFF030210);
-    *(volatile int *)(p + 0x118 / 4) = 1;
-    return 1;
-}
-#endif
-
 extern void func_0036D938();
 extern int D_003F2048[];
 

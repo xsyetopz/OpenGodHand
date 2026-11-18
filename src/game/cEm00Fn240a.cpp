@@ -84,43 +84,6 @@ extern "C" void func_00247708(char *self)
     }
 }
 
-// func_00247218 @ 0x247218: near-miss, 7 words differ. The original keeps the
-// cEmParam base in v0 and the two offsets in v1/a0 across the branch; every
-// source form tried allocates the base in a0 and the sums in a1/a2.
-#ifdef NONMATCHING
-extern "C" void func_00247218(char *self)
-{
-    B(0x617) = 1;
-    switch (B(0x2F6)) {
-    case 0: {
-        unsigned short m = func_00276468(self);
-        char *t;
-        int a, b;
-        if (*(int *)(self + 0x564) == 0x24F) {
-            t = *(char **)(self + 0x304);
-            a = *(int *)(t + 0x1F70); b = *(int *)(t + 0x1F74);
-        } else {
-            t = *(char **)(self + 0x304);
-            a = *(int *)(t + 0x1F78); b = *(int *)(t + 0x1F7C);
-        }
-        func_002A8578(self, a + (int)t, b + (int)t, 10, 0.0f, m, 0);
-        *(short *)(self + 0x568) = 10;
-        B(0x623) = 1;
-        B(0x2F6)++;
-    }
-    case 1:
-        if (moveMotion((cObjBase *)self))
-            func_002705D8(self);
-        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
-        ((cObjBase *)self)->addNullSpeed(1.0f);
-        if (*(short *)(self + 0x568) > 0)
-            (*(short *)(self + 0x568))--;
-        else
-            B(0x623) = 0;
-    }
-}
-#endif
-
 // FUNCTION: GAME 0x244610
 extern "C" void func_00244610(char *self)
 {
@@ -164,46 +127,6 @@ extern "C" void func_00246F40(char *self)
         *(unsigned int *)(self + 0x16D0) |= 0x20000;
         if (moveMotion((cObjBase *)self))
             func_00270C78(self);
-        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
-        ((cObjBase *)self)->addNullSpeed(1.0f);
-    }
-}
-#endif
-
-// func_002461F0 @ 0x2461F0: near-miss, 16 words differ. Same cause as
-// func_00247218: the original keeps the cEmParam base in v0 and the raw offsets
-// in v1/a0 across the branch; the pointer-sum forms tried spill the sums to s1/s2
-// before the call or use a2 for the base.
-#ifdef NONMATCHING
-extern "C" void func_002461F0(char *self)
-{
-    switch (B(0x2F6)) {
-    case 0: {
-        char *a, *b;
-        int c = *(int *)(self + 0x564) == 0x256;
-        B(0x1864) = 0;
-        char *t = *(char **)(self + 0x304);
-        if (c) {
-            *(float *)(self + 0x600) = 45.0f;
-            a = (char *)*(int *)(t + 0x2B7C) + (int)t;
-            b = (char *)*(int *)(t + 0x2B80) + (int)t;
-        } else {
-            *(float *)(self + 0x600) = 60.0f;
-            a = (char *)*(int *)(t + 0x2C30) + (int)t;
-            b = (char *)*(int *)(t + 0x2C34) + (int)t;
-        }
-        unsigned short m = func_00276468(self);
-        func_002A8578(self, (int)a, (int)b, 10, 0.0f, m, 0);
-        B(0x2F6)++;
-    }
-    case 1:
-        if (*(float *)(self + 0x600) > 0.0f) {
-            *(float *)(self + 0x600) -= *(float *)(self + 0x5A8);
-            *(unsigned int *)(self + 0x16D0) |= 0x800000;
-        }
-        ((cGameObj *)self)->SetTgtTurn(*Getplayer()->m_pPos, *(float *)(self + 0x5A8) * 0.19634955f);
-        if (moveMotion((cObjBase *)self) || (*(unsigned short *)(self + 0x3AC) & 0x10))
-            func_002705D8(self);
         ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
         ((cObjBase *)self)->addNullSpeed(1.0f);
     }

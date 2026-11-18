@@ -136,3 +136,46 @@ extern "C" void func_002CFF90(char *self)
     *(int *)(self + 0x18) = -1;
     *(unsigned char *)(self + 0x24) = D_0044D070;
 }
+
+extern "C" int func_002D2EE8(char *, int);
+extern char D_0044CEE8[];
+extern "C" int func_00372C68(char *);
+extern "C" void func_002CC578(char *);
+
+// FUNCTION: GAME 0x2C97C8
+extern "C" int func_002C97C8(int a, int c)
+{
+    switch (c) {
+    case 0x20: case 0x1A: case 0x5C: case 0x5D: return 1;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x2CC500
+extern "C" char *func_002CC500(char *s)
+{
+    func_00372C68(s);
+    *(char **)(s + 0x80) = D_0044CEE8;
+    func_002CC578(s);
+    return s;
+}
+
+// FUNCTION: GAME 0x2CF9A8
+extern "C" int func_002CF9A8(char *s)
+{
+    char *d = D_00603A40;
+    if (!func_002D2EE8(d, *(int *)(s + 0x30)) || !func_002D2EE8(d, *(int *)(s + 0x34))) return 0;
+    return 1;
+}
+
+extern "C" int func_002CC568(char *);
+extern "C" int func_00373770(char *);
+
+// FUNCTION: GAME 0x2CCA78
+extern "C" int func_002CCA78(char *s)
+{
+    if (!func_002CC568(s) || (*(int *)(s + 0x98) & 1)) return 1;
+    int r = func_00373770(s);
+    int k = 2;
+    return k < r;
+}

@@ -115,15 +115,6 @@ struct E5 *func_00369020(void)
     return 0;
 }
 
-// DRAFT: GAME 0x36A070
-// diff: 18 words off: orig reuses a2=2 for the 0x35C compare, ours loads a second 2 into a3 (2 probes)
-int func_0036A070(char *a)
-{
-    if (func_0036C5F8()) return func_00369F20(0, 0xFF030211, 2);
-    *(int *)(a + 0x408) = 1;
-    if (*(int *)(a + 0x35C) == 2) func_0036C8D0(a);
-}
-
 // DRAFT: GAME 0x36CB08
 // diff: 10 words, original loop keeps the table base in v0 and tests with bnez+nop where ours uses bnel (3 probes)
 int *func_0036CB08(void)

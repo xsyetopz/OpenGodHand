@@ -56,28 +56,6 @@ char *func_00365EB0(void)
     return D_003EEA98;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x366D78
-// diff: 4 words, orig s1=a2/s2=a1 and stores [0xF0] before [0xEC]; ours swaps them (4 probes)
-void func_00366D78(int *a, int b, int c)
-{
-    if (func_00368FC0() == 0) {
-        a[0x3C] = c;
-        a[0x3B] = b;
-    }
-}
-
-// DRAFT: GAME 0x366DC8
-// diff: 4 words, same pattern as 0x366D78 with offsets 0xF8/0xF4
-void func_00366DC8(int *a, int b, int c)
-{
-    if (func_00368FC0() == 0) {
-        a[0x3E] = c;
-        a[0x3D] = b;
-    }
-}
-#endif
-
 extern int D_003F1FF0;
 extern char D_0045A478[];
 

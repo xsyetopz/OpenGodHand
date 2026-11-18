@@ -110,3 +110,31 @@ void func_0035D2E0(int a)
         return;
     func_0035C350(a, 6, 1);
 }
+
+// FUNCTION: GAME 0x366D78
+void func_00366D78(char *a, int b, int c)
+{
+    if (func_00368FC0(a) == 0) {
+        *(int *)(a + 0xEC) = b;
+        *(int *)(a + 0xF0) = c;
+    }
+}
+
+// FUNCTION: GAME 0x366DC8
+void func_00366DC8(char *a, int b, int c)
+{
+    if (func_00368FC0(a) == 0) {
+        *(int *)(a + 0xF4) = b;
+        *(int *)(a + 0xF8) = c;
+    }
+}
+
+// FUNCTION: GAME 0x36A070
+int func_0036A070(int *a)
+{
+    if (func_0036C5F8())
+        return func_00369F20(0, 0xFF030211);
+    a[0x102] = 1;
+    if (a[0xD7] == 2)
+        func_0036C8D0(a);
+}

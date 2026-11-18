@@ -129,3 +129,75 @@ extern "C" void func_001DF278(char *s, unsigned char k)
         break;
     }
 }
+// FUNCTION: GAME 0x1DE7C8
+extern "C" void func_001DE7C8(char *s, unsigned char k)
+{
+    switch (k) {
+    default:
+    case 0:
+        SetOffsetPosX__12CustomIDWorki(s + 0x994, -0xDC);
+        break;
+    case 1:
+        SetOffsetPosX__12CustomIDWorki(s + 0x994, 0);
+        break;
+    case 2:
+        SetMoveOffsetPosX__12CustomIDWorkiiUs(s + 0x994, -0xDC, 0, 10);
+        break;
+    case 3:
+        SetMoveOffsetPosX__12CustomIDWorkiiUs(s + 0x994, 0, -0xDC, 10);
+        break;
+    }
+}
+extern "C" void func_001D51B8(char *, int, int);
+#define TRI3(name, x, y, z) \
+extern "C" void name(char *s, unsigned char k) \
+{ \
+    switch (k) { \
+    case 0: \
+        func_001D51B8(s, x, 1); \
+        func_001D51B8(s, y, 1); \
+        func_001D51B8(s, z, 1); \
+        break; \
+    case 1: \
+        func_001D51B8(s, x, 0); \
+        func_001D51B8(s, y, 1); \
+        func_001D51B8(s, z, 1); \
+        break; \
+    case 2: \
+        func_001D51B8(s, x, 0); \
+        func_001D51B8(s, y, 0); \
+        func_001D51B8(s, z, 1); \
+        break; \
+    } \
+}
+// FUNCTION: GAME 0x1D5360
+TRI3(func_001D5360, 0xB, 0xC, 0x23)
+// FUNCTION: GAME 0x1D5430
+TRI3(func_001D5430, 9, 0xA, 0x24)
+// FUNCTION: GAME 0x1D5500
+TRI3(func_001D5500, 0xD, 0xE, 0xF)
+// FUNCTION: GAME 0x1D5690
+TRI3(func_001D5690, 0x10, 0x11, 0x12)
+extern "C" void SetOffsetPosX__12CustomIDWorki(void *, int);
+extern "C" void SetMoveOffsetPosX__12CustomIDWorkiiUs(void *, int, int, unsigned short);
+// FUNCTION: GAME 0x1D6030
+extern "C" void func_001D6030(char *s, unsigned short k)
+{
+    switch (k) {
+    default:
+    case 0:
+        SetOffsetPosX__12CustomIDWorki(s + 0x3C4, -0x140);
+        break;
+    case 1:
+        SetOffsetPosX__12CustomIDWorki(s + 0x3C4, 0);
+        break;
+    case 2:
+        SetMoveOffsetPosX__12CustomIDWorkiiUs(s + 0x3C4, -0x140, 0, 10);
+        break;
+    case 3:
+        SetMoveOffsetPosX__12CustomIDWorkiiUs(s + 0x3C4, 0, -0x140, 10);
+        break;
+    }
+    func_001D51B8(s, 7, 0);
+    func_001D51B8(s, 8, k != 0);
+}

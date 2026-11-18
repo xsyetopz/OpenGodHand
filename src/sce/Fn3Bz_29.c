@@ -232,18 +232,6 @@ int func_003B26C8(int a, int b, int c, int d, int e, int f)
     return func_003B2550(a, 1, b, c, d, e, f);
 }
 
-// DRAFT: GAME 0x3B3328
-// diff: original keeps separate return-0/return-1 exits (60 bytes); 2.9 merges them (44 bytes)
-#ifdef NONMATCHING
-int func_003B3328(int *p)
-{
-    int *q = (int *)p[0];
-    if (q && p[1] == q[6] && (q[4] & 1))
-        return 1;
-    return 0;
-}
-#endif
-
 extern int func_003B35F8();
 extern void func_003B3650();
 extern void func_003AFBC0();

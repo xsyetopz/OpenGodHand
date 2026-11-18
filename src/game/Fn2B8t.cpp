@@ -18,6 +18,22 @@ set:
     p[0x68 / 4] = p[0x90 / 4];
 }
 
+extern "C" float func_001F7E28(char *);
+// why: C++ name sqrtf collides with the compiler builtin; the asm names the symbol sqrtf.
+extern "C" float sqrtf_(float) __asm__("sqrtf");
+static inline float Sq(float a)
+{
+    float r;
+    __asm__("nop\n\tnop\n\tsqrt.s %0,%1" : "=f"(r) : "f"(a));
+    if (r != r) r = sqrtf_(a);
+    return r;
+}
+// FUNCTION: GAME 0x2BA878
+extern "C" void func_002BA878(char *self)
+{
+    *(float *)(self + 0xE4) = Sq(func_001F7E28(self + 0x110));
+}
+
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2BE458
 // diff: 2 words, sw 0x4C0(s1) scheduled before a3=sp

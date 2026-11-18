@@ -24,20 +24,6 @@ extern "C" void func_002AA3D8(void *self, int n)
 struct VcObj { char _p[0x18]; short m_18; short _q; void (*m_1C)(void *); };
 struct VcHold { int m_0; int _4[5]; VcObj *m_18; };
 
-// DRAFT: GAME 0x2A7280 - 2 words differ: original keeps m_0 in a1 instead of v0
-#ifdef NONMATCHING
-extern "C" int func_002A7280(VcHold *self, int m)
-{
-    m = self->m_0;
-    if (!m)
-        return 0;
-    VcObj *v = self->m_18;
-    v->m_1C((char *)self + v->m_18);
-    self->m_0 = 0;
-    return 1;
-}
-#endif
-
 struct OffTab { int _0; int m_4; int _8[3]; int m_14; };
 
 // FUNCTION: GAME 0x2A9860

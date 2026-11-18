@@ -147,23 +147,6 @@ void func_0036D280(int a, int b, unsigned int c)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x35B0E8 constant 1 in v0 instead of v1 (2 words)
-void func_0035B0E8(int *a, int *b, int *c)
-{
-    int i = a[0];
-    int j = a[1];
-    int o = D_00459920[i];
-    void (*fn)() = D_00459948[i * 2 + j];
-    if (!fn) {
-        func_0034DD70(0, 0xFF000221, b, c);
-        *b = 0;
-        *c = 1;
-    } else
-        fn(o, a);
-}
-#endif
-
-#ifdef NONMATCHING
 // DRAFT: GAME 0x352008 31 words, frame/arg order
 void func_00352008(char *a, int b, int c, long long *d, long long *e, long long *f)
 {

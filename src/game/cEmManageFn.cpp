@@ -137,17 +137,4 @@ void func_00295600(char *self)
         *(int *)(self + 4) = 0xFFFF;
     }
 }
-#ifdef NONMATCHING
-// dsrl at 0x296304 compiles as srl (lbu then 64-bit shift not reproduced)
-// DRAFT: GAME 0x2962F0
-void func_002962F0(char *self)
-{
-    if ((*(unsigned char *)(self + 8)) >> 7)
-        unlinkNoFree__7cRelSysQ27cRelSys8eRelType(&RelSys, 2);
-    char *p = *(char **)(self + 0x10);
-    if (p) free__5cHeapPv(*(void **)(p - 0x20), p);
-    *(int *)(self + 0x10) = 0;
-    func_00297660(self);
-}
-#endif
 }

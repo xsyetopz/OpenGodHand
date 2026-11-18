@@ -89,3 +89,48 @@ extern "C" void func_002832A0(M *s, unsigned int m)
     case 2: s->a = 0; s->b = 6; s->c = 4; s->d = 0; break;
     }
 }
+
+extern char D_00448E10[], D_00448E18[];
+extern "C" int GetEm00CharIndex__F6eObjIdT0(int, int);
+extern "C" void func_001595E8(void *, int);
+extern "C" unsigned SearchData__FPUiPCcUi(unsigned *, const char *, unsigned);
+extern "C" void setTextureExchange__6cModelPCUiPCvi(void *, unsigned, const void *, int);
+extern "C" int setupModel__6cModelPC10SCR_HEADERUibT3(void *, unsigned, unsigned, int, int);
+// FUNCTION: GAME 0x28AC58
+extern "C" int func_0028AC58(char *self)
+{
+    int idx = GetEm00CharIndex__F6eObjIdT0(*(unsigned short *)(self + 0x2FE), *(int *)(self + 0x564));
+    func_001595E8(self, 0);
+    unsigned a = SearchData__FPUiPCcUi(*(unsigned **)(self + 0x304), D_00448E10, idx);
+    unsigned b = SearchData__FPUiPCcUi(*(unsigned **)(self + 0x304), D_00448E18, idx);
+    switch (*(int *)(self + 0x564)) {
+    case 0x2A7:
+        if (*(int *)(self + 0x155C) & 1) {
+            *(unsigned *)(self + 0x254) |= 0x10000000;
+            char *t = *(char **)(self + 0x304);
+            setTextureExchange__6cModelPCUiPCvi(self, b, (char *)(*(int *)(t + 0x44) + (int)t), 0);
+        }
+        break;
+    case 0x2A9:
+        if (*(int *)(self + 0x155C) & 1) {
+            *(unsigned *)(self + 0x254) |= 0x10000000;
+            char *t = *(char **)(self + 0x304);
+            setTextureExchange__6cModelPCUiPCvi(self, b, (char *)(*(int *)(t + 0x48) + (int)t), 0);
+        }
+        break;
+    case 0x2AB:
+        if (*(int *)(self + 0x155C) & 1) {
+            *(unsigned *)(self + 0x254) |= 0x10000000;
+            char *t = *(char **)(self + 0x304);
+            setTextureExchange__6cModelPCUiPCvi(self, b, (char *)(*(int *)(t + 0x4C) + (int)t), 0);
+        }
+        if (*(int *)(self + 0x155C) & 2) {
+            *(unsigned *)(self + 0x254) |= 0x10000000;
+            char *t = *(char **)(self + 0x304);
+            setTextureExchange__6cModelPCUiPCvi(self, b, (char *)(*(int *)(t + 0x4C) + (int)t), 1);
+        }
+        break;
+    }
+    if (b) return setupModel__6cModelPC10SCR_HEADERUibT3(self, a, b, 0, 0);
+    return 0;
+}

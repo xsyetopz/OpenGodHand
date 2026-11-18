@@ -132,3 +132,135 @@ void func_0033D378(struct R *p, int x)
     func_0033FAD0(s, q->m0, x, a3, a3 + q->m1C * 2);
     func_0033FB00(s);
 }
+
+extern void func_003302E0(void *);
+extern char D_00453310[], D_00453330[];
+extern char D_00453348[], D_00453368[];
+extern char D_00453380[], D_004533A0[];
+extern char D_00453430[], D_00453450[];
+struct VT {
+    char _0[0x18];
+    int (*m18)(int);
+    int (*m1C)(int);
+    int (*m20)(int);
+    char _24[8];
+    int (*m2C)(int);
+};
+struct O { struct VT *vt; int m4; };
+struct B {
+    char _0[0xC]; int mC; int m10; char _14[0x24];
+    int (*m38)(int, int); int m3C;
+};
+struct C {
+    char _0[0xC]; int mC; char _10[0xC];
+    int (*m1C)(int, int); int m20;
+};
+
+// FUNCTION: GAME 0x338F30
+int func_00338F30(struct C *o, int sel)
+{
+    int (*f)(int, int);
+    if (sel == 1) {
+        return o->mC;
+    }
+    if (sel == 0) {
+        return 0;
+    }
+    f = o->m1C;
+    if (f) {
+        f(o->m20, -3);
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x339848
+int func_00339848(struct B *o, int sel)
+{
+    int (*f)(int, int);
+    if (sel == 1) {
+        return o->mC;
+    }
+    if (sel == 0) {
+        return o->m10;
+    }
+    f = o->m38;
+    if (f) {
+        f(o->m3C, -3);
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x330B48
+int func_00330B48(struct O *o)
+{
+    int r;
+    int (*f)(int);
+    if (o == 0) {
+        func_003302E0(D_00453310);
+        return 0;
+    }
+    f = o->vt->m1C;
+    if (f) {
+        r = f(o->m4);
+    } else {
+        r = 0;
+        func_003302E0(D_00453330);
+    }
+    return r;
+}
+
+// FUNCTION: GAME 0x330BB0
+int func_00330BB0(struct O *o)
+{
+    int r;
+    int (*f)(int);
+    if (o == 0) {
+        func_003302E0(D_00453348);
+        return 0;
+    }
+    f = o->vt->m18;
+    if (f) {
+        r = f(o->m4);
+    } else {
+        r = 0;
+        func_003302E0(D_00453368);
+    }
+    return r;
+}
+
+// FUNCTION: GAME 0x330C18
+int func_00330C18(struct O *o)
+{
+    int r;
+    int (*f)(int);
+    if (o == 0) {
+        func_003302E0(D_00453380);
+        return 0;
+    }
+    f = o->vt->m20;
+    if (f) {
+        r = f(o->m4);
+    } else {
+        r = 0;
+        func_003302E0(D_004533A0);
+    }
+    return r;
+}
+
+// FUNCTION: GAME 0x330CF0
+int func_00330CF0(struct O *o)
+{
+    int r = 3;
+    int (*f)(int);
+    if (o == 0) {
+        func_003302E0(D_00453430);
+        return 3;
+    }
+    f = o->vt->m2C;
+    if (f) {
+        r = f(o->m4);
+    } else {
+        func_003302E0(D_00453450);
+    }
+    return r;
+}

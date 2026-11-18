@@ -111,6 +111,90 @@ extern "C" void func_0037B338(Fn37Q *s)
     if (r & 2) func_002E0DE8(0xC, 4, 0xC, D_0045BDB8);
 }
 
+struct Fn37K { unsigned char b0; char _1[3]; char b4; };
+extern "C" {
+int func_0037E200(Fn37K *, Fn37K *);
+int func_0037E368(Fn37K *, Fn37K *);
+int func_003808A0(Fn37K *, Fn37K *);
+int func_00381940(Fn37K *, Fn37K *);
+int func_00382D30(Fn37K *, Fn37K *);
+int func_00384CA0(Fn37K *, Fn37K *);
+}
+// FUNCTION: GAME 0x37E128
+extern "C" void func_0037E128(Fn37K *a, Fn37K *b)
+{
+    int r = 1;
+    switch (a->b0) {
+    case 0: r = func_0037E200(a, b); break;
+    case 1: r = func_0037E368(a, b); break;
+    case 2: r = func_003808A0(a, b); break;
+    case 3: r = func_00381940(a, b); break;
+    case 4: r = func_00382D30(a, b); break;
+    case 5: r = func_00384CA0(a, b); break;
+    }
+    if (!r) b->b4 = 1;
+}
+struct Fn37L { char _0[7]; signed char c7; char _8[0xE]; short h16[3]; short h1c[3]; char _22[0x12]; int w34; };
+extern "C" int func_0037A0F0(Fn37L *, short, int);
+// FUNCTION: GAME 0x37A020
+extern "C" int func_0037A020(Fn37L *s)
+{
+    short cur = s->h16[s->c7];
+    int v = cur;
+    if (s->w34 & 0x20000000) v = func_0037A0F0(s, cur - 1, -1);
+    if (s->w34 & 0x10000000) v = func_0037A0F0(s, cur + 1, 1);
+    if (v != cur) {
+        s->h16[s->c7] = v;
+        s->h1c[s->c7] = 0;
+        return 1;
+    }
+    return 0;
+}
+struct Fn37M { char _0[7]; signed char c7; };
+struct Fn37N { void *p; char _4[4]; signed char b8; };
+extern "C" {
+int func_0037A8F8(Fn37M *, Fn37N *, int);
+
+void func_0037A9C8(Fn37M *, Fn37N *);
+void func_0037AAB0(Fn37M *, Fn37N *);
+void func_0037AB00(Fn37M *, Fn37N *);
+}
+// FUNCTION: GAME 0x37A818
+extern "C" void func_0037A818(Fn37M *a, Fn37N *b)
+{
+    if (b->b8 == 0) *(signed char *)b->p = func_0037A8F8(a, b, *(signed char *)b->p);
+    if (b->b8 == 1) *(short *)b->p = func_0037A8F8(a, b, *(short *)b->p);
+    switch (a->c7) {
+    case 0: func_0037A9C8(a, b); break;
+    case 1: func_0037AAB0(a, b); break;
+    case 2: func_0037AB00(a, b); break;
+    }
+}
+struct Fn37O { char _0[6]; signed char c6; signed char c7; char _8[6]; unsigned short he; char _10[8]; short h18; short h1a; char _1c[2]; signed char c1e; };
+struct Fn37V { char _0[0x25]; signed char c25; char _26[0x76]; Fn37O e; };
+// FUNCTION: GAME 0x37A9C8
+extern "C" void func_0037A9C8(Fn37M *a, Fn37N *)
+{
+    Fn37V *v = (Fn37V *)a;
+    Fn37O *e = &v->e;
+    switch (v->c25) {
+    case 1:
+        if (e->c1e == -1) e->he |= 1;
+        else e->he &= 0xFFFE;
+        break;
+    case 7:
+        if (e->h18 > e->h1a) e->h1a = e->h18;
+        break;
+    case 8:
+        if (e->h1a < e->h18) e->h18 = e->h1a;
+        break;
+    case 9:
+        if (e->c6 + e->c7 >= 0x30) e->c7 = 0x2F - (unsigned char)e->c6;
+    case 10:
+        if (e->c6 + e->c7 >= 0x30) e->c6 = 0x2F - (unsigned char)e->c7;
+        break;
+    }
+}
 #ifdef NONMATCHING
 struct Fn37R { char _0[0x18]; short h18; short h1a; };
 extern "C" int func_00377FA0(void);

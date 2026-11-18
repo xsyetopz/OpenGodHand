@@ -91,49 +91,6 @@ extern "C" void func_00246088(char *self)
     }
 }
 
-// DRAFT: GAME 0x246370 - many words differ: orig keeps self in s0 with t/o1/o2 in v0/v1/a0 and a1/a2 in s2/s1 before the call; here the a1/a2 adds sink into the call delay slot and regs shift.
-#ifdef NONMATCHING
-extern "C" void func_00246370(char *self)
-{
-    switch (B(0x2F6)) {
-    case 0: {
-        B(0x1864) = 0;
-        char *t;
-        int o1;
-        int o2;
-        if (*(int *)(self + 0x564) == 0x256) {
-            t = *(char **)(self + 0x304);
-            o1 = *(int *)(t + 0x2B84);
-            o2 = *(int *)(t + 0x2B88);
-        } else {
-            t = *(char **)(self + 0x304);
-            o1 = *(int *)(t + 0x2C38);
-            o2 = *(int *)(t + 0x2C3C);
-        }
-        int a1 = o1 + (int)t;
-        int a2 = o2 + (int)t;
-        unsigned m = func_00276468(self) & 0xFFFF;
-        func_002A8578(self, a1, a2, 10, 0.0f, m, 0);
-        *(float *)(self + 0x600) = 30.0f;
-        B(0x2F6)++;
-    }
-    case 1: {
-        float f = *(float *)(self + 0x600);
-        if (0.0f < f) {
-            *(unsigned int *)(self + 0x16D0) |= 0x800000;
-            *(float *)(self + 0x600) = f - *(float *)(self + 0x5A8);
-        }
-        cGameObj *pl = Getplayer();
-        ((cGameObj *)self)->SetTgtTurn(*pl->m_pPos, *(float *)(self + 0x5A8) * 0.19634955f);
-        if (moveMotion((cObjBase *)self) || (*(unsigned short *)(self + 0x3AC) & 0x10))
-            func_002705D8(self);
-        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
-        ((cObjBase *)self)->addNullSpeed(1.0f);
-    }
-    }
-}
-#endif
-
 // FUNCTION: GAME 0x24B218
 extern "C" void func_0024B218(char *self)
 {

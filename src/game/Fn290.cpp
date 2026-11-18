@@ -61,18 +61,6 @@ extern "C" int func_002975D0(char *self)
     return Check__4cDvd6eDvdId(Dvd, *(int *)(self + 0xC)) == 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2974F0
-// diff: ld ra is scheduled before the final and/sw (orig restores sq s0 first, then ld ra); all else equal
-extern "C" void func_002974F0(char *self)
-{
-    unsigned long f = *(unsigned char *)(self + 8);
-    if (f >> 7)
-        unlinkNoFree__7cRelSysQ27cRelSys8eRelType(&RelSys, 2);
-    *(int *)(self + 8) &= ~0x80;
-}
-#endif
-
 // FUNCTION: GAME 0x297C50
 extern "C" void getObjPtr__6cEvent6eObjIdUc(int, unsigned short a, unsigned char b)
 {

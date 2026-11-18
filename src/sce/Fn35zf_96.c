@@ -9,6 +9,7 @@ extern int func_0035C2D0();
 extern int func_0035BA58();
 extern int (*D_003EE304)();
 extern int D_00459920[];
+extern void (*D_00459948[])();
 extern int D_003EE2C4[];
 extern int func_0035A6A8();
 extern int D_003EE270[];
@@ -128,4 +129,20 @@ int func_00350048(int a, int *b, char *c)
     if (r1 || r2)
         return func_0034DD70(a, 0xFF000D0D);
     return r2;
+}
+
+// FUNCTION: GAME 0x35B0E8
+void func_0035B0E8(int *a, int *b, int *c)
+{
+    int i = a[0];
+    int j = a[1];
+    int o = D_00459920[i];
+    void (*fn)() = D_00459948[i * 2 + j];
+    if (!fn) {
+        func_0034DD70(0, 0xFF000221, b, c);
+        *b = 0;
+        *c = 1;
+        return;
+    }
+    fn(o, a);
 }

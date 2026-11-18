@@ -89,15 +89,6 @@ extern "C" void func_00161480(int a, int b)
         func_001612C8(D_00566E50);
 }
 
-// DRAFT: GAME 0x151368
-// diff: original adds the 0x3DC88 base to a0 first, then a0 += (flag<<3)+(i<<4); compiled folds into a1 (ld via a1)
-#ifdef NONMATCHING
-extern "C" long func_00151368(char *p, int i)
-{
-    return *(long *)(p + 0x3DC88 + (D_007476B0 & 1) * 8 + i * 16);
-}
-#endif
-
 // FUNCTION: GAME 0x140C58
 extern "C" int func_00140C58(char *self)
 {
