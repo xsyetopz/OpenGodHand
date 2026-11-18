@@ -178,3 +178,95 @@ unsigned short F32toF16(float f)
     return (unsigned short)(sign | (a >> 13));
 }
 #endif
+
+// FUNCTION: GAME 0x15FBA8
+extern "C" void func_001538F0();
+extern "C" void func_002C54E8(char *);
+extern "C" void func_0030F650();
+extern "C" void func_002C3818(char *);
+extern "C" void func_002AF028(char *);
+extern "C" void func_002FB310();
+extern "C" void func_001410A8(char *);
+extern "C" void func_00160B90(char *);
+extern char *ScrDraw;
+extern char *g_Sce;
+extern char *Message;
+extern char *Cockpit;
+extern char *SubScr;
+void Trans(void)
+{
+    func_001538F0();
+    func_002C54E8(ScrDraw);
+    func_0030F650();
+    func_002C3818(g_Sce);
+    func_002AF028(Message);
+    func_002FB310();
+    func_001410A8(Cockpit);
+    func_00160B90(SubScr);
+}
+
+// FUNCTION: GAME 0x156918
+struct cVec { float x, y, z, w; };
+struct V2N { float x, y; };
+int chack_point_line(const cVec &p, const cVec &a, const cVec &b)
+{
+    V2N u, v;
+    __asm__ volatile(".word 0xFBA00000" : : : "memory");
+    __asm__ volatile(".word 0xFBA00010" : : : "memory");
+    u.x = a.x - p.x;
+    u.y = a.y - p.y;
+    v.x = b.x - p.x;
+    v.y = b.y - p.y;
+    float c = u.x * v.y - u.y * v.x;
+    int r;
+    if (c > 0.0f)
+        r = 1;
+    else if (c < 0.0f)
+        r = -1;
+    else
+        r = 0;
+    return r;
+}
+
+// FUNCTION: GAME 0x15FC10
+extern int D_00566E30;
+extern int D_00752D08;
+extern unsigned int D_00747A2C[];
+extern char cFilter_tag[];
+extern "C" int func_003950F8(int, int);
+extern "C" void func_00299368(char *);
+extern "C" void func_002A0940(char *);
+extern "C" void func_0015FC10(void)
+{
+    D_00566E30 = 1;
+    do {
+        D_00566E30 = func_003950F8(1, 0);
+    } while (D_00566E30);
+    int t = *(volatile int *)0x10000800;
+    unsigned f = D_00747A2C[1] & 0x4000000;
+    D_00752D08 = t;
+    if (!f) {
+        func_00299368(cFilter_tag);
+        func_002A0940(cFilter_tag);
+    }
+    D_00752D08 = D_00752D08 - *(volatile int *)0x10000800;
+}
+
+// DRAFT: GAME 0x157178
+// diff: fp schedule/reg alloc (30 words); logic is projection of c onto line a-b, out.w=1
+#ifdef NONMATCHING
+void GetPointCalcPointLine(const cVec &a, const cVec &b, const cVec &c, cVec *out)
+{
+    float dx = b.x - a.x;
+    float dy = b.y - a.y;
+    float ex = c.x - a.x;
+    float ey = c.y - a.y;
+    float dz = b.z - a.z;
+    float ez = c.z - a.z;
+    float t = (dx * ex + dy * ey + dz * ez) / (dx * dx + dy * dy + dz * dz);
+    out->x = a.x + dx * t;
+    out->y = a.y + dy * t;
+    out->z = a.z + dz * t;
+    out->w = 1.0f;
+}
+#endif

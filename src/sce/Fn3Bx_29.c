@@ -224,3 +224,152 @@ int func_003B66D0(void)
     func_003AFD40(&v[0]);
     return ((v[1] >> 13) & 7) == 0;
 }
+
+extern int memcmp(const void *, const void *, unsigned);
+extern int func_003B2080();
+extern int func_003B0060();
+extern int D_003FAE50;
+extern char D_003FAE3C[];
+extern char D_007816E8[];
+extern char *D_003FAEF0;
+extern char D_00781BA8[];
+extern char *D_003FAEFC;
+extern void func_003B6A10();
+extern int func_003B7130();
+extern void func_003B6C28();
+
+struct SifNode {
+    int a, b, c, d, e;
+    struct SifNode *next;
+};
+struct SifHead {
+    char pad[0x28];
+    struct SifNode *head;
+};
+extern struct SifHead D_0077FF40;
+struct SifNode2 {
+    int a[14];
+    struct SifNode2 *next;
+};
+struct SifList {
+    int pad[2];
+    struct SifNode2 *head;
+};
+
+// FUNCTION: GAME 0x3B2148
+int func_003B2148(int a, int b)
+{
+    int ie = func_003B63A0();
+    if (D_003FAE50) {
+        if (ie)
+            func_003B63F0();
+        return func_003B2080(a, b, 0);
+    }
+    if (ie)
+        func_003B63F0();
+    return func_003B0060(a, b);
+}
+
+// FUNCTION: GAME 0x3B3368
+void sceSifSetRpcQueue(struct SifNode *n, int b)
+{
+    struct SifNode *p, *h;
+    func_003B63A0();
+    n->a = b;
+    n->b = 0;
+    h = D_0077FF40.head;
+    n->c = 0;
+    n->d = 0;
+    n->e = 0;
+    n->next = 0;
+    if (!h) {
+        D_0077FF40.head = n;
+    } else {
+        p = h;
+        while (p->next)
+            p = p->next;
+        p->next = n;
+    }
+    func_003B63F0();
+}
+
+// FUNCTION: GAME 0x3B34D0
+struct SifNode2 *sceSifRemoveRpc(struct SifNode2 *n, struct SifList *l)
+{
+    struct SifNode2 *p;
+    func_003B63A0();
+    p = l->head;
+    if (p == n) {
+        l->head = p->next;
+    } else {
+        for (; p; p = p->next) {
+            if (p->next == n) {
+                p->next = n->next;
+                break;
+            }
+        }
+    }
+    func_003B63F0();
+    return p;
+}
+
+// FUNCTION: GAME 0x3B3568
+struct SifNode *sceSifRemoveRpcQueue(struct SifNode *n)
+{
+    struct SifNode *p;
+    func_003B63A0();
+    p = D_0077FF40.head;
+    if (p == n) {
+        D_0077FF40.head = p->next;
+    } else {
+        for (; p; p = p->next) {
+            if (p->next == n) {
+                p->next = n->next;
+                break;
+            }
+        }
+    }
+    func_003B63F0();
+    return p;
+}
+
+// FUNCTION: GAME 0x3B4158
+int func_003B4158(void)
+{
+    char *b = D_003FAE3C;
+    char *a = D_007816E8;
+    int r = 0;
+    if (memcmp(a, b, 4))
+        if (memcmp(a, D_003FAEF0, 4))
+            r = memcmp(b, D_003FAEF0, 4) != 0;
+    return r;
+}
+
+// FUNCTION: GAME 0x3B5B80
+int func_003B5B80(void)
+{
+    char *b = D_003FAE3C;
+    char *a = D_00781BA8;
+    int r = 0;
+    if (memcmp(a, b, 4))
+        if (memcmp(a, D_003FAEFC, 4))
+            r = memcmp(b, D_003FAEFC, 4) != 0;
+    return r;
+}
+
+// FUNCTION: GAME 0x3B6B90
+int func_003B6B90(void)
+{
+    int ie = func_003B63A0();
+    unsigned v = *(volatile unsigned *)0x10001010;
+    if (v & 0x80) {
+        if (ie)
+            func_003B63F0();
+        return 1;
+    }
+    func_003B6A10((v & 0xFFFFF3FF) | 0x80);
+    func_003B6C28(func_003B7130());
+    if (ie)
+        func_003B63F0();
+    return 0;
+}

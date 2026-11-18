@@ -158,6 +158,7 @@ FN17_VEC(func_00170F60, 4.0f, 4.1f, 4.2f)
 // FUNCTION: GAME 0x17EAF8
 FN17_VEC(func_0017EAF8, 5.78f, 5.5f, 5.6f)
 
+#ifdef NONMATCHING
 struct sK1 {
     char _p0[0xF0];
     const float *m_f0;
@@ -193,8 +194,10 @@ struct V16Y {
         s->m_2f7 = 0;                                                           \
     }
 
-// FUNCTION: GAME 0x1746B0
+// DRAFT: GAME 0x1746B0
+// diff: vsub temp and its copy land in swapped stack slots and store order differs (17 words)
 FN17_STOP(func_001746B0)
+#endif
 
 struct vtQ {
     char _p[0x80];
@@ -247,7 +250,9 @@ struct cSndY {
 };
 extern cSndY Snd;
 
-// FUNCTION: GAME 0x1793D0
+#ifdef NONMATCHING
+// DRAFT: GAME 0x1793D0
+// diff: li order of 0xF/1 swaps and clear-store order differs (8 words); all 24 clear orders tried
 extern "C" void func_001793D0(sTy *s)
 {
     switch (s->m_2f5) {
@@ -268,6 +273,7 @@ extern "C" void func_001793D0(sTy *s)
         break;
     }
 }
+#endif
 
 class cFnY;
 typedef void (cFnY::*cFnYPmf)();

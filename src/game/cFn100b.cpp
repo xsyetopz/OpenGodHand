@@ -270,17 +270,16 @@ extern "C" int func_001365B8(void *a, void *b, void *c, void *d, float *e)
     return 1;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x12CA60
-// diff: original branches on the lbu register before the stack store; mine reloads c from the stack (6 words)
+static inline int IsSet(const int &v) { return v != 0; }
+static inline int Gt(const int &v, int n) { return v > n; }
+
+// FUNCTION: GAME 0x12CA60
 extern "C" int func_0012CA60(char *self)
 {
-    volatile int c;
     int *o;
     if (*(unsigned *)(self + 0x15F4) & 0x200000)
         return 1;
-    c = *(unsigned char *)(self + 0x2B4);
-    if (c)
+    if (IsSet(*(unsigned char *)(self + 0x2B4)))
         o = **(int ***)(self + 0x278);
     else
         o = 0;
@@ -294,4 +293,61 @@ extern "C" int func_0012CA60(char *self)
     }
     return 0;
 }
+
+extern char CamManager[];
+extern "C" void setPartsCamera__11cCamManagerUc(void *, unsigned char);
+extern "C" void SetParts__12cPartsCameraP6cPartsN21(void *, void *, void *, void *);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x124EC0
+// diff: IsSet/Gt idiom matches the stack stores; only s0/s1 are swapped (self vs CamManager, 29 words)
+extern "C" void func_00124EC0(char *self)
+{
+    void *a, *b;
+    char *cm = CamManager;
+    setPartsCamera__11cCamManagerUc(cm, 0);
+    if (Gt(*(unsigned char *)(self + 0x2B4), 0x1B))
+        a = *(void **)(*(char **)(self + 0x278) + 0x6C);
+    else
+        a = 0;
+    if (Gt(*(unsigned char *)(self + 0x2B4), 0x1C))
+        b = *(void **)(*(char **)(self + 0x278) + 0x70);
+    else
+        b = 0;
+    SetParts__12cPartsCameraP6cPartsN21(cm + 0x920, self, a, b);
+    *(unsigned *)(self + 0x15F4) |= 2;
+}
 #endif
+
+extern unsigned D_00747A78;
+
+static inline char *Tgt(char *self)
+{
+    if (Gt(*(unsigned char *)(self + 0x2B4), 1))
+        return *(char **)(*(char **)(self + 0x278) + 4);
+    return 0;
+}
+
+// FUNCTION: GAME 0x1BF2F0
+extern "C" void func_001BF2F0(char *self)
+{
+    switch (*(unsigned char *)(self + 0x2F5)) {
+    case 0:
+    {
+        if (Tgt(self)) {
+            *(float *)(Tgt(self) + 0x100) += 0.17453292f;
+            if (*(float *)(Tgt(self) + 0x100) > 0.0f) {
+                *(int *)(Tgt(self) + 0x100) = 0;
+                (*(unsigned char *)(self + 0x2F5))++;
+            }
+        }
+    }
+        break;
+    case 1:
+        D_00747A78 &= 0xFDFFFFFF;
+        self[0x2F4] = 0;
+        self[0x2F5] = 0;
+        *(int *)(self + 0x600) &= -2;
+        break;
+    }
+}

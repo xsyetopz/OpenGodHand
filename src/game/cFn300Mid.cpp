@@ -163,3 +163,157 @@ extern "C" void func_00309028(S309028 *p)
     p->sA8 = 0;
 }
 #endif
+
+// ---- Round 27 ----
+extern "C" void func_002FB6C8(void *);
+extern "C" void func_002FB7B0(void *);
+extern "C" void func_00300AE8(void *, int);
+extern "C" void func_00300C00(void *, int);
+extern "C" void *func_00305FB0(char *self, int id);
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x305FB0
+// 20 words differ: original keeps t in a2 and the loop counter in a0 (self is dead after the load)
+extern "C" void *func_00305FB0(char *self, int id)
+{
+    char *t = *(char **)(self + 0x400);
+    if (!t)
+        return 0;
+    char *t0 = t + (*(int *)(t + 0x10) + 0x10);
+    char *t2 = t + (*(int *)(t + 0x14) + 0x10);
+    unsigned n = *(unsigned *)(t0 + 4);
+    int *p = (int *)(t0 + 0x10);
+    for (unsigned i = 0; i < n; i++, p++) {
+        if (*(unsigned short *)(*p + t0 + 0x10) == id)
+            return t2 + (*(int *)(t2 + i * 4 + 0x10) + 0x10);
+    }
+    return 0;
+}
+#endif
+
+// FUNCTION: GAME 0x306030
+extern "C" void *func_00306030(char *self, int type, int idx)
+{
+    if (type == 3)
+        return func_00305FB0(self, idx);
+    int *e = (int *)func_003058D8(self, type);
+    if (!e)
+        return 0;
+    int *a = (int *)e[1];
+    if (!a || !(idx - 1 < a[0]))
+        return 0;
+    int v = a[idx];
+    return v ? (void *)(v + (int)a) : 0;
+}
+
+// FUNCTION: GAME 0x3062A8
+extern "C" void func_003062A8(void *self, int k)
+{
+    switch (k) {
+    case 0:
+        func_00300AE8(self, 0);
+        break;
+    case 1:
+        func_002FB6C8(self);
+        break;
+    case 2:
+        func_002FB6C8(self);
+        func_00300AE8(self, 0);
+        break;
+    }
+}
+
+// FUNCTION: GAME 0x306330
+extern "C" void func_00306330(void *self, int k)
+{
+    switch (k) {
+    case 0:
+        func_00300C00(self, 1);
+        break;
+    case 1:
+        func_002FB7B0(self);
+        break;
+    case 2:
+        func_002FB7B0(self);
+        func_00300C00(self, 1);
+        break;
+    }
+}
+
+extern char D_00747BA0[];
+extern "C" void func_00397550(unsigned, int, int);
+extern "C" void func_003973E8(unsigned, int);
+
+// FUNCTION: GAME 0x30A200
+extern "C" void func_0030A200(int i)
+{
+    unsigned char *s = (unsigned char *)D_00747BA0 + i * 0xB0;
+    if (s[1] == 1) {
+        func_00397550(0x1000A000, 0, 0);
+        func_003973E8(0x1000A000, *(int *)(s + 8));
+        func_00397550(0x1000A000, 0, 0);
+        func_003973E8(0x1000A000, *(int *)(s + 0xC));
+    }
+}
+
+extern unsigned D_00747A24;
+extern char D_00754C80[];
+extern char D_007476C0[];
+extern char GlobalTask[];
+extern void *g_Sce;
+extern "C" void func_0031A0E8(void *);
+extern "C" void func_002C3280(void *);
+extern "C" void func_002D50E8(void *, int, int, int);
+extern "C" void func_002D51C0(void *, int, int);
+extern "C" void func_002D51F0(void *);
+extern "C" void func_002E1348();
+extern "C" void func_0030B870(int);
+extern "C" void func_003AFF50(int);
+extern "C" void FlushCache(int);
+extern "C" void func_00396440(void *, int);
+extern "C" void func_0030CB30();
+
+// FUNCTION: GAME 0x30B698
+extern "C" void func_0030B698()
+{
+    D_00747A24 |= 0x4000;
+    func_0031A0E8(D_00754C80);
+    func_002C3280(g_Sce);
+    func_002D50E8(GlobalTask, 4, 0x3000, 0x20);
+    func_002D51C0(GlobalTask, 0, 0x8000);
+    func_002D51C0(GlobalTask, 1, 0x8000);
+    func_002D51F0(GlobalTask);
+    func_002E1348();
+}
+
+// FUNCTION: GAME 0x30CAA0
+extern "C" void func_0030CAA0()
+{
+    if (D_00747A24 & 0x10000000)
+        func_0030B870(1);
+    else
+        func_0030B870(0);
+    if (D_00747A24 & 0x20000000)
+        func_003AFF50(0);
+    else
+        FlushCache(0);
+    func_00396440(D_007476C0, *(int *)(D_007476C0 - 0x10));
+    func_0030CB30();
+}
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x31A6B0
+// 6 words differ: f0/f1/f2 register assignment and pCamWork load order
+extern "C" void sceVu0ApplyMatrix(float *, float *, float *);
+extern char *pCamWork;
+extern "C" unsigned func_0031A6B0(char *self, float *v)
+{
+    float t[4];
+    sceVu0ApplyMatrix(t, (float *)pCamWork, v);
+    float f = t[3] * 10.0f;
+    unsigned r = 0;
+    if (!(f < 0.0f))
+        r = (int)f;
+    return r >> *(unsigned char *)(self + 0xB58);
+}
+#endif
