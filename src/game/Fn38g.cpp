@@ -45,14 +45,22 @@ struct Fn38Msg {
     short m_0A;
 };
 
-extern "C" void *func_00376A90(int);
-extern "C" void func_00376260(void *, Fn38Msg *);
-extern "C" void func_003762D8(void *, Fn38Msg *);
+struct Fn38Ev2 {
+    unsigned short m_00;
+    char _pad02[2];
+    int m_04;
+    char _pad08[0xD8];
+};
+extern Fn38Ev2 D_00770850[];
+
+extern "C" Fn38Ev2 *func_00376A90(int);
+extern "C" void func_00376260(Fn38Ev2 *, Fn38Msg *);
+extern "C" void func_003762D8(Fn38Ev2 *, Fn38Msg *);
 
 // FUNCTION: GAME 0x376200
 extern "C" int func_00376200(Fn38Msg *o)
 {
-    void *x = func_00376A90(o->m_04);
+    Fn38Ev2 *x = func_00376A90(o->m_04);
     if (!x)
         return -1;
     if (o->m_0A == 0)
@@ -191,7 +199,9 @@ struct Fn38Mgr {
 
 extern "C" void func_00376B80(Fn38Mgr *, Fn38Slot *);
 
-// FUNCTION: GAME 0x376720
+#ifdef NONMATCHING
+// DRAFT: GAME 0x376720
+// diff: 19 words; original rotates the loop (counter decrement at bottom, bgezl) and ours hoists it
 extern "C" void func_00376720(Fn38Mgr *o)
 {
     Fn38Slot *p = o->m_40;
@@ -208,6 +218,7 @@ extern "C" void func_00376720(Fn38Mgr *o)
         p = (Fn38Slot *)((char *)p + 0x14);
     } while (--i >= 0);
 }
+#endif
 
 struct Fn38Evt {
     unsigned short m_00;
@@ -228,7 +239,9 @@ extern "C" void func_00378070(short *);
 extern "C" short func_003780B0(int, int);
 extern "C" void func_00376D28(Fn38Evt *, int);
 
-// FUNCTION: GAME 0x3767B0
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3767B0
+// diff: 9 words; branch/delay-slot layout differs after the a==b test
 extern "C" void func_003767B0(Fn38Evt *o)
 {
     unsigned h = o->m_00;
@@ -245,6 +258,7 @@ extern "C" void func_003767B0(Fn38Evt *o)
         }
     }
 }
+#endif
 
 // FUNCTION: GAME 0x376820
 extern "C" void func_00376820(Fn38Evt *o)
@@ -259,4 +273,20 @@ extern "C" void func_00376820(Fn38Evt *o)
     if (o->m_12 & 4)
         func_00376D28(o, 4);
     o->m_12 = 0;
+}
+
+// FUNCTION: GAME 0x376A90
+extern "C" Fn38Ev2 *func_00376A90(int key)
+{
+    int i;
+    Fn38Ev2 *e = D_00770850;
+    for (i = 0; i < 0x2A00 / 0xE0; i++, e++) {
+        if (e->m_00 == 0)
+            continue;
+        if (key == 0)
+            return e;
+        if (e->m_04 == key)
+            return e;
+    }
+    return 0;
 }
