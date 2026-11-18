@@ -155,3 +155,84 @@ int func_00393878(int *o, int a)
     }
 }
 #endif
+
+/* istream/ostream thunks and state setters in 0x389000-0x38B100 */
+extern int func_0038F1A0();
+extern int func_0038F140();
+extern int __rs__7istreamRc();
+extern int func_00387B78();
+extern int func_00387890();
+extern int get__7istreamRc();
+extern int __ls__7ostreami();
+extern int __ls__7ostreamUi(void *, unsigned int);
+extern int _IO_switch_to_get_mode();
+extern int _IO_free_backup_area();
+
+struct St {
+    char pad[0x10];
+    unsigned long long st;
+};
+
+// FUNCTION: GAME 0x3897A8
+struct St *func_003897A8(struct St *o) { o->st = (o->st & ~0x70) | 0x20; return o; }
+
+// FUNCTION: GAME 0x3897C8
+struct St *func_003897C8(struct St *o) { o->st = (o->st & ~0x70) | 0x40; return o; }
+
+// FUNCTION: GAME 0x3897E8
+struct St *func_003897E8(struct St *o) { o->st = (o->st & ~0x70) | 0x10; return o; }
+
+// FUNCTION: GAME 0x389808
+int func_00389808(void *o) { return func_0038F1A0(o); }
+
+// FUNCTION: GAME 0x389960
+int func_00389960(void *o) { return func_0038F140(o); }
+
+// FUNCTION: GAME 0x389D50
+int func_00389D50(void *o, int (*f)(void *)) { return f(o); }
+
+// FUNCTION: GAME 0x389D70
+void *func_00389D70(void **o, void (*f)(void *))
+{
+    f(*o);
+    return o;
+}
+
+// FUNCTION: GAME 0x389DA0
+int func_00389DA0(void *o) { return __rs__7istreamRc(o); }
+
+// FUNCTION: GAME 0x389DC0
+int func_00389DC0(void *o) { return __rs__7istreamRc(o); }
+
+// FUNCTION: GAME 0x389DE0
+int func_00389DE0(void *o) { return func_00387B78(o); }
+
+// FUNCTION: GAME 0x389E00
+int func_00389E00(void *o) { return func_00387B78(o); }
+
+// FUNCTION: GAME 0x38A178
+int func_0038A178(void *o) { return func_00387890(o); }
+
+// FUNCTION: GAME 0x38A198
+int func_0038A198(void *o) { return func_00387890(o); }
+
+// FUNCTION: GAME 0x38A1B8
+int func_0038A1B8(void *o) { return func_00387890(o); }
+
+// FUNCTION: GAME 0x38A218
+int func_0038A218(void *o) { return get__7istreamRc(o); }
+
+// FUNCTION: GAME 0x38A258
+int func_0038A258(void *o) { return get__7istreamRc(o); }
+
+// FUNCTION: GAME 0x38A4E8
+int func_0038A4E8(void *o) { return __ls__7ostreami(o); }
+
+// FUNCTION: GAME 0x38A508
+int func_0038A508(void *o, unsigned short v) { return __ls__7ostreamUi(o, v); }
+
+// FUNCTION: GAME 0x38B070
+int func_0038B070(void *o) { return _IO_switch_to_get_mode(o); }
+
+// FUNCTION: GAME 0x38B090
+int func_0038B090(void *o) { return _IO_free_backup_area(o); }

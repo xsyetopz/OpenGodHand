@@ -173,3 +173,153 @@ void func_0035C480(int a)
     *(int *)(a + 0x14) = 0;
     *(int *)(a + 0x19C) += 1;
 }
+
+int func_0035CFC8(int);
+int func_0035D0D8(int);
+int func_0035D050(int);
+int func_0035B9B0(int);
+extern int D_00766C9C;
+extern int D_00766C90;
+void func_0035D708(int *);
+int func_0035CAC8(int);
+
+// FUNCTION: GAME 0x35CF80
+int func_0035CF80(int a)
+{
+    int r;
+    func_0035CFC8(a);
+    r = func_0035D0D8(a);
+    func_0035D050(a);
+    return r;
+}
+
+// DRAFT: GAME 0x35D360
+// branch layout inverted (6 words)
+#ifdef NONMATCHING
+int func_0035D360(int a)
+{
+    if (func_0035A1C8(a, 0xF) != 0) return func_0035B9B0(a) != 0;
+    return 1;
+}
+#endif
+
+// FUNCTION: GAME 0x35D5C8
+void func_0035D5C8(void)
+{
+    if (--D_00766C9C <= 0) func_0035D708(&D_00766C90);
+}
+
+// FUNCTION: GAME 0x35CA68
+void func_0035CA68(int *a, int b)
+{
+    int i;
+    for (i = 0; i < a[4]; i++) a[6 + i] -= b;
+    a[0x1A8 / 4] = func_0035CAC8((int)a);
+}
+
+int func_0035D800(int);
+
+// FUNCTION: GAME 0x35D7B8
+int func_0035D7B8(int a)
+{
+    int v;
+    if (func_0035D800(a) == 0) return 0;
+    v = *(int *)(a + 0xC);
+    if (v == 0x6B || v >= 0x6E) return 1;
+    return 0;
+}
+
+// FUNCTION: GAME 0x35DC10
+int func_0035DC10(int a, int *b)
+{
+    int s;
+    *b = 0;
+    s = *(int *)(a + 4) + 0x80;
+    if (func_0035D7B8(a)) {
+        *b = *(int *)s;
+        return 1;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x35DC60
+int func_0035DC60(int a, int *b)
+{
+    int s;
+    *b = -1;
+    s = *(int *)(a + 4) + 0x80;
+    if (func_0035D7B8(a)) {
+        *b = *(unsigned char *)(s + 4);
+        return 1;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x35DCB0
+int func_0035DCB0(int a, int *b)
+{
+    int s;
+    *b = 0;
+    s = *(int *)(a + 4) + 0x80;
+    if (func_0035D7B8(a)) {
+        *b = *(short *)(s + 8);
+        return 1;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x35DD00
+int func_0035DD00(int a, int *b)
+{
+    int s;
+    *b = 0;
+    s = *(int *)(a + 4) + 0x80;
+    if (func_0035D7B8(a)) {
+        *b = *(int *)(s + 0xC);
+        return 1;
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x35DA58
+int func_0035DA58(int a, int b)
+{
+    int r = 0;
+    int i;
+    for (i = 0; i < 0x1A; i++) {
+        int p = a + i * 64 + 0x180;
+        if (*(unsigned char *)(p + 0x18) == b) {
+            r = p;
+            break;
+        }
+    }
+    return r;
+}
+
+void func_0035D728(int);
+int func_0035E9E8(int);
+
+// FUNCTION: GAME 0x35D758
+void func_0035D758(int n, int p)
+{
+    if (n > 0) {
+        do {
+            func_0035D728(p);
+            p += 0x10;
+        } while (--n != 0);
+    }
+}
+
+// FUNCTION: GAME 0x35E968
+int func_0035E968(int a, int b)
+{
+    if (func_0035E9E8(a) == 0xC0) return (*(unsigned char *)(b + 0x20) != 0) & (*(unsigned char *)(b + 0x20) >= 2);
+    return 0;
+}
+
+// FUNCTION: GAME 0x35E9A8
+int func_0035E9A8(int a, int b)
+{
+    if (func_0035E9E8(a) == 0xE0) return (*(unsigned char *)(b + 0x20) != 0) & (*(unsigned char *)(b + 0x20) >= 2);
+    return 0;
+}

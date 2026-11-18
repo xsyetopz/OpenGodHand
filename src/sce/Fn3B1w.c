@@ -170,3 +170,10 @@ void func_003B3098(int *a)
     if (c[0] >= 0 && c[1] == 0)
         func_003B0A40(c[0]);
 }
+
+// FUNCTION: GAME 0x3B5A50
+void func_003B5A50(void)
+{
+    func_003B59D8();
+    __asm__ volatile("");
+}

@@ -190,3 +190,53 @@ void func_0039C228(void)
     REG(0x1000B420) = 0;
     REG(0x10002010) = 0x40000000;
 }
+
+extern int func_003AFFC0(void);
+extern void func_003AFFE0(int);
+
+// FUNCTION: GAME 0x396008
+int func_00396008(int a)
+{
+    int r = func_003AFFC0();
+    func_003AFFE0(a);
+    return r;
+}
+
+extern void func_00397028(unsigned int *, int);
+
+// FUNCTION: GAME 0x397550
+int func_00397550(unsigned int *p, int n)
+{
+    if (n == 1)
+        return (*p >> 8) & 1;
+    func_00397028(p, n);
+    return 0;
+}
+
+struct Ent {
+    char _pad[0x10];
+    int m_10;
+    char _pad2[0x1C - 0x14];
+};
+struct Grp {
+    struct Ent e[4];
+};
+extern struct Grp D_0077C110[];
+extern unsigned char *func_00397BC8(int, int, int);
+extern int func_003982C8(int, int, int);
+
+// FUNCTION: GAME 0x397ED0
+unsigned char func_00397ED0(int a, int b)
+{
+    if (D_0077C110[a].e[b].m_10 == 0)
+        return 0;
+    return func_00397BC8(a, b, 0)[0x71];
+}
+
+// FUNCTION: GAME 0x3983F8
+int func_003983F8(int a, int b)
+{
+    if (D_0077C110[a].e[b].m_10 == 0)
+        return 0;
+    return func_003982C8(a, b, 0xFFF);
+}

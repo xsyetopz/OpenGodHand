@@ -129,3 +129,135 @@ extern "C" void func_00302E48(char *self)
     }
     func_002B6230(self, a);
 }
+
+extern "C" int func_002F3E68(char *);
+extern "C" void func_002FBE50(char *);
+extern char *pCamWork;
+
+// FUNCTION: GAME 0x2F40C0
+extern "C" void func_002F40C0(char *self)
+{
+    func_002FBED0(self);
+    int c = 0;
+    if (*(short *)(self + 0x2B0) == -1) {
+        if (func_002F3E68(self)) {
+            unsigned char o = *(unsigned char *)(pCamWork + 0x278);
+            *(unsigned char *)(pCamWork + 0x278) = 2;
+            c = o != 1;
+        }
+    }
+    if (*(short *)(self + 0x2B2) == -1) {
+        if (func_002F3E68(self)) {
+            unsigned char o = *(unsigned char *)(pCamWork + 0x264);
+            *(unsigned char *)(pCamWork + 0x264) = 2;
+            if (o != 1)
+                c = 1;
+        }
+    }
+    if (c) {
+        if (*(short *)(self + 0x2B0) == -1) {
+            *(float *)(pCamWork + 0x268) = *(float *)(*(char **)(self + 0x110) + 0x13C);
+            *(float *)(pCamWork + 0x26C) = *(float *)(*(char **)(self + 0x110) + 0x140);
+            *(float *)(pCamWork + 0x270) = *(float *)(*(char **)(self + 0x110) + 0x144);
+            *(float *)(pCamWork + 0x274) = *(float *)(*(char **)(self + 0x110) + 0x148);
+        }
+        if (*(short *)(self + 0x2B2) == -1) {
+            *(float *)(pCamWork + 0x254) = *(float *)(*(char **)(self + 0x110) + 0x14C);
+            *(float *)(pCamWork + 0x258) = *(float *)(*(char **)(self + 0x110) + 0x150);
+            *(float *)(pCamWork + 0x25C) = *(float *)(*(char **)(self + 0x110) + 0x154);
+            *(float *)(pCamWork + 0x260) = *(float *)(*(char **)(self + 0x110) + 0x158);
+        }
+    }
+    if (*(short *)(self + 0x2B0) != -1 && *(short *)(self + 0x2B2) != -1)
+        func_002FBE50(self);
+}
+
+extern "C" void func_002B6160(float *, char *);
+extern "C" void func_002FEB18(char *);
+
+// FUNCTION: GAME 0x2F6F48
+extern "C" void func_002F6F48(char *self)
+{
+    float t0 = *(float *)(self + 0x2B8);
+    float lim = t0 - *(float *)(self + 0x2BC);
+    float g = *(float *)(self + 0x194);
+    float pos[4] __attribute__((aligned(16)));
+    float d[4] __attribute__((aligned(16)));
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(float (*)[4])pos));
+    float *c = (float *)(pCamWork + 0x210);
+    if (pos != c) {
+        pos[0] = c[0];
+        pos[1] = c[1];
+        pos[2] = c[2];
+    }
+    func_002B6160(d, self);
+    float f = 1.0f;
+    float x = __builtin_fabsf(pos[0] - d[0]);
+    if (lim < x) {
+        if (x < t0)
+            f = 1.0f - (x - lim) / *(float *)(self + 0x2BC);
+        else
+            f = 0.0f;
+    }
+    float z = __builtin_fabsf(pos[2] - d[2]);
+    if (lim < z) {
+        if (z < t0)
+            f = f * (1.0f - (z - lim) / *(float *)(self + 0x2BC));
+        else
+            f = 0.0f;
+    }
+    *(float *)(self + 0x194) = *(float *)(self + 0x194) * f;
+    func_002FEB18(self);
+    *(float *)(self + 0x194) = g;
+}
+
+extern "C" void func_002B5FC8(char *, float *);
+
+// FUNCTION: GAME 0x2F6E20
+extern "C" void func_002F6E20(char *self)
+{
+    float pos[4] __attribute__((aligned(16)));
+    float d[4] __attribute__((aligned(16)));
+    float w[4] __attribute__((aligned(16)));
+    __asm__ volatile("sqc2 $vf0,%0" : "=m"(*(float (*)[4])pos));
+    float *c = (float *)(pCamWork + 0x210);
+    if (pos != c) {
+        pos[0] = c[0];
+        pos[1] = c[1];
+        pos[2] = c[2];
+    }
+    func_002B6160(d, self);
+    {
+        float p = pos[0];
+        float r = *(float *)(self + 0x2B8);
+        float lo = p - r;
+        float hi = p + r;
+        if (d[0] < lo)
+            d[0] = hi;
+        else if (hi < d[0])
+            d[0] = lo;
+    }
+    {
+        float p = pos[1];
+        float r = *(float *)(self + 0x2B8);
+        float lo = p - r;
+        float hi = p + r;
+        if (d[1] < lo)
+            d[1] = hi;
+        else if (hi < d[1])
+            d[1] = lo;
+    }
+    {
+        float p = pos[2];
+        float r = *(float *)(self + 0x2B8);
+        float lo = p - r;
+        float hi = p + r;
+        if (d[2] < lo)
+            d[2] = hi;
+        else if (hi < d[2])
+            d[2] = lo;
+    }
+    __asm__ volatile("lqc2 $vf4,%1\n\tsqc2 $vf4,%0" : "=m"(*(float (*)[4])w) : "m"(*(float (*)[4])d));
+    func_002B5FC8(self, w);
+    func_002FBED0(self);
+}

@@ -209,3 +209,91 @@ extern "C" float func_002DDD18(VecQ *pos)
         y = c.y;
     return y;
 }
+
+struct SlotQ { char _p[0xC]; unsigned short m_c; char _p2[0x58 - 0xE]; };
+struct SlotSetQ { SlotQ *m_0; char _p[8]; unsigned short m_c; };
+
+// FUNCTION: GAME 0x2D5B30
+extern "C" int func_002D5B30(SlotSetQ *self, int idx)
+{
+    if (idx < 0) {
+        for (idx = 2; idx < self->m_c; idx++) {
+            if (self->m_0[idx].m_c == 0)
+                return idx;
+        }
+        return -1;
+    }
+    if (idx < self->m_c)
+        return self->m_0[idx].m_c == 0 ? idx : -1;
+    return -1;
+}
+
+struct EntQ { unsigned short m_0; unsigned short _p; int m_4, m_8, m_c, m_10, m_14; };
+extern EntQ D_003C3138[];
+extern EntQ D_003C3120;
+
+// DRAFT: GAME 0x2D0B88
+// diff: 31 words, original keeps the last match via beql plus daddu in the slot; ours emits xor/movz
+#ifdef NONMATCHING
+extern "C" EntQ *func_002D0B88(unsigned id)
+{
+    unsigned short key = id;
+    EntQ *r = 0;
+    EntQ *p = D_003C3138;
+    do {
+        if (p->m_0 == key)
+            r = p;
+        p++;
+    } while (p < D_003C3138 + 44);
+    if (!r) {
+        unsigned hi = key >> 8;
+        int v = (unsigned char)(hi - 1) > 7 ? 2 : hi + 1;
+        r = &D_003C3120;
+        r->m_0 = key;
+        r->m_4 = v;
+        r->m_8 = v;
+        r->m_c = v;
+        r->m_10 = v;
+        r->m_14 = v;
+    }
+    return r;
+}
+#endif
+
+extern unsigned D_00747A84;
+
+// FUNCTION: GAME 0x2D8E18
+extern "C" void func_002D8E18(char *self, int a1, short a2)
+{
+    if (!(*(unsigned *)(self + 0x16284) & 0x10)) {
+        short v = (D_00747A84 & 0x20000000) ? 0 : a2;
+        *(char *)(self + 0x16168) = a1;
+        *(short *)(self + 0x16280) = 0;
+        *(short *)(self + 0x16282) = v;
+        if (v <= 0)
+            *(float *)(self + 0x1616C) = 1.0f;
+        else
+            *(int *)(self + 0x1616C) = 0;
+        *(unsigned *)(self + 0x16284) = (*(unsigned *)(self + 0x16284) | 0x10) & ~0x20u;
+    }
+}
+
+extern "C" int func_002D3210(char *);
+
+// FUNCTION: GAME 0x2D2EE8
+extern "C" int func_002D2EE8(char *self, int key)
+{
+    if (key == 0)
+        return 1;
+    char *first = *(char **)self;
+    if (first == 0)
+        return 1;
+    if (*(int *)(first + 0x80) == key)
+        return 0;
+    char *p = self + 0x40;
+    for (int i = 0; i < 16; i++, p += 0xC0) {
+        if (func_002D3210(p) && *(int *)(p + 0x80) == key)
+            return 0;
+    }
+    return 1;
+}

@@ -207,8 +207,9 @@ def main() -> int:
         derived = derived_addresses(ROOT / obj, sym, vram, raw, known | compiled_defs)
         absolute.update(derived)
         refs[vram] = local_refs(ROOT / obj, sym, known | set(derived))
-        if "$LEH_" in (ROOT / f"asm/text/{vram:08X}.s").read_text():
-            refs[vram].add("$LEH")  # exception tables in asm still name labels of this unit
+        # asm exception tables name `$LEH_<addr>` labels of this unit; each is its address.
+        for label in re.findall(r"\$LEH_([0-9A-F]{8})", (ROOT / f"asm/text/{vram:08X}.s").read_text()):
+            absolute[f"$LEH_{label}"] = int(label, 16)
         for name in sorted(refs[vram]):
             addr = positional_address(name, unit_at)
             if addr is not None:  # the original names this unit differently
