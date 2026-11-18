@@ -96,7 +96,11 @@ def main() -> int:
     # splat 0.50.1 runs no binutils during `split` (only create_config does).
     py = sys.executable
     run(py, "-m", "splat", "split", "config/SLUS_215.03.yaml")
-    run(py, "tools/splitfuncs.py", "asm/text.s", "asm/text")
+    sys.path.insert(0, str(ROOT / "tools"))
+    from configure import SECTIONS
+
+    for _name, _vram, end, src, unit_dir in SECTIONS:
+        run(py, "tools/splitfuncs.py", src, unit_dir, hex(end))
     run(py, "tools/elfpack.py", "assets", "config/elf_layout.json", exe, "assets/elf")
     print("setup complete: run `just configure build`")
     return 0

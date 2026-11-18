@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
 """Generate build.ninja for the SLUS_215.03 rebuild.
 
-Every `.text` unit from `asm/text/units.tsv` is placed at its original address
-by an explicit `. = ADDR;` in the generated linker script, so a unit whose
-replacement compiles to the same bytes leaves the rest of the image untouched.
-A decompiled function replaces its asm unit when a source file under `src/`
-carries the annotation `// FUNCTION: GAME 0xADDR` above it.
+Every section is split into per-symbol units (`<unit dir>/units.tsv`), each
+placed at its original address by an explicit `. = OFFSET;` in the generated
+linker script, so a unit whose replacement compiles to the same bytes leaves
+the rest of the image untouched.
+A source file under `src/` claims a function with the annotation
+`// FUNCTION: GAME 0xADDR` above it. tools/linkgen.py writes the linker script
+at build time and links a claimed function only when its compiled bytes match
+the original, so a work-in-progress annotation falls back to the asm unit.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import shlex
@@ -22,20 +26,22 @@ import objdiff_config  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 TARGET = "SLUS_215.03"
-TEXT_BASE = 0x100000
 
 ASFLAGS = "-EL -march=r5900 -mabi=o64 -mno-pdr -G0 -Iinclude"
 # SN Systems ProDG ee-gcc 2.95.3 (build 136), selected by tools/eecc.py.
 CXXFLAGS = "-O2 -G0 -ffunction-sections -fno-common -Iinclude -Isrc"
 
-# Sections outside .text keep a single unit each; order matches the original link.
-DATA_UNITS = [
-    (".data", 0x3BBF80, "asm/data/data.data.s", ".data"),
-    (".sndata", 0x40A400, "asm/data/sndata.data.s", ".data"),
-    (".rodata", 0x41B580, "asm/data/rodata.rodata.s", ".rodata"),
-    (".gcc_except_table", 0x460C00, "asm/data/gcc_except_table.gcc_except_table.s", ".gcc_except_table"),
-    (".sbss", 0x460D00, "asm/data/sbss.sbss.s", ".sbss"),
-    (".bss", 0x460E00, "asm/data/bss.bss.s", ".bss"),
+# Output sections in link order: (name, vram, end, splat output, unit dir).
+# splat extends each section to the next one's start; elfpack trims to the original sizes.
+# Every section is split into per-symbol units placed at their original offsets.
+SECTIONS = [
+    (".text", 0x100000, 0x3BBF20, "asm/text.s", "asm/text"),
+    (".data", 0x3BBF80, 0x40A400, "asm/data/data.data.s", "asm/data/data"),
+    (".sndata", 0x40A400, 0x41B580, "asm/data/sndata.data.s", "asm/data/sndata"),
+    (".rodata", 0x41B580, 0x460C00, "asm/data/rodata.rodata.s", "asm/data/rodata"),
+    (".gcc_except_table", 0x460C00, 0x460D00, "asm/data/gcc_except_table.gcc_except_table.s", "asm/data/gcc_except_table"),
+    (".sbss", 0x460D00, 0x460E00, "asm/data/sbss.sbss.s", "asm/data/sbss"),
+    (".bss", 0x460E00, 0x7867B4, "asm/data/bss.bss.s", "asm/data/bss"),
 ]
 NOLOAD = {".sbss", ".bss"}
 ANNOT = re.compile(r"^//\s*FUNCTION:\s*GAME\s+0x([0-9A-Fa-f]+)")
@@ -48,8 +54,8 @@ def tool(name: str) -> str:
     return prefix + name
 
 
-def read_units() -> list[tuple[int, int, str]]:
-    path = ROOT / "asm/text/units.tsv"
+def read_units(unit_dir: str = "asm/text") -> list[tuple[int, int, str]]:
+    path = ROOT / unit_dir / "units.tsv"
     if not path.exists():
         raise SystemExit(f"{path.relative_to(ROOT)} missing; run `just setup` first")
     units = []
@@ -74,22 +80,24 @@ def read_sources() -> dict[Path, list[int]]:
     return found
 
 
-def linker_script(units, replaced: dict[int, tuple[str, str]]) -> str:
-    """`replaced` maps a unit address to (object path, input section) supplied by compiled code."""
-    out = ["ENTRY(func_00100008)", "SECTIONS", "{", f"  .text 0x{TEXT_BASE:X} :", "  {"]
-    # Inside an output section `.` is an offset from the section start.
-    for vram, _size, _name in units:
-        at = f"0x{vram - TEXT_BASE:X}"
-        if vram in replaced:
-            obj, sec = replaced[vram]
-            out.append(f'    . = {at}; "{obj}"("{sec}")')
-        else:
-            out.append(f"    . = {at}; build/asm/text/{vram:08X}.o(.text.unit)")
-    out.append("  }")
-    for name, vram, src, sec in DATA_UNITS:
+def unit_obj(unit_dir: str, vram: int) -> str:
+    return f"build/{unit_dir}/{vram:08X}.o"
+
+
+def linker_script(sections, replaced: dict[int, tuple[str, str]]) -> str:
+    """`sections` pairs each SECTIONS row with its units; `replaced` maps a unit
+    address to (object path, input section) supplied by compiled code."""
+    out = ["ENTRY(func_00100008)", "SECTIONS", "{"]
+    for (name, base, _end, _src, unit_dir), units in sections:
         noload = " (NOLOAD)" if name in NOLOAD else ""
-        obj = "build/" + src[:-2] + ".o"
-        out.append(f"  {name} 0x{vram:X}{noload} : {{ {obj}({sec}) }}")
+        # splitfuncs names unit sections after splat's input section; .sndata's is .data.
+        insec = (".data" if name == ".sndata" else name) + ".unit"
+        out += [f"  {name} 0x{base:X}{noload} :", "  {"]
+        # Inside an output section `.` is an offset from the section start.
+        for vram, _size, _name in units:
+            obj, sec = replaced.get(vram) or (unit_obj(unit_dir, vram), insec)
+            out.append(f'    . = 0x{vram - base:X}; "{obj}"({sec})')
+        out.append("  }")
     out += ["  /DISCARD/ : { *(*) }", "}", ""]
     return "\n".join(out)
 
@@ -109,7 +117,8 @@ def main() -> int:
     ap.add_argument("--cc", default=f"{shlex.quote(sys.executable)} tools/eecc.py", help="compiler driver command")
     args = ap.parse_args()
 
-    units = read_units()
+    sections = [(row, read_units(row[4])) for row in SECTIONS]
+    units = sections[0][1]
     units_by_addr = {v: n for v, _s, n in units}
     sources = read_sources()
     replaced: dict[int, tuple[str, str]] = {}
@@ -133,38 +142,45 @@ def main() -> int:
     n.append(f"rule pack\n  command = {py} tools/elfpack.py pack $in $out\n  description = PACK $out")
     n.append(f"rule check\n  command = {py} tools/check.py $in && touch $out\n  description = CHECK $in")
     n.append(f"as = {tool('as')}\nld = {tool('ld')}\npy = {py}")
+    n.append(f"rule linkgen\n  command = {py} tools/linkgen.py $in $script\n  description = LINKGEN")
     n.append(f"rule configure\n  command = {py} tools/configure.py\n  generator = 1\n  description = CONFIGURE")
 
     objs = []
-    for vram, _size, _name in units:
-        if vram in replaced:
-            continue
-        o = f"build/asm/text/{vram:08X}.o"
-        n.append(f"build {o}: as asm/text/{vram:08X}.s")
-        objs.append(o)
-    for _name, _vram, src, _sec in DATA_UNITS:
-        o = "build/" + src[:-2] + ".o"
-        n.append(f"build {o}: as {src}")
-        objs.append(o)
+    for (_name, _base, _end, _src, unit_dir), sec_units in sections:
+        for vram, _size, _name in sec_units:
+            o = unit_obj(unit_dir, vram)
+            n.append(f"build {o}: as {unit_dir}/{vram:08X}.s")
+            objs.append(o)
+    cobjs = []
     for src in sources:
         o = "build/" + str(src.with_suffix(".o"))
         n.append(f"build {o}: cc {src}")
-        objs.append(o)
+        cobjs.append(o)
 
     script = f"build/{TARGET}.link.ld"
     (ROOT / "build").mkdir(exist_ok=True)
-    (ROOT / script).write_text(linker_script(units, replaced))
+    compiled = sorted([v, o, s[len(".text."):]] for v, (o, s) in replaced.items())
+    link_json = {"sections": [list(row) for row in SECTIONS], "compiled": compiled}
+    text = json.dumps(link_json, indent=1) + "\n"
+    if not (ROOT / "build/link.json").exists() or (ROOT / "build/link.json").read_text() != text:
+        (ROOT / "build/link.json").write_text(text)
+    gated = [o[: -len(".o")] + ".gated.o" for o in cobjs]
+    n.append(
+        f"build {script} {' '.join(gated)} build/linkgen.tsv: linkgen build/link.json | "
+        + " ".join(["tools/linkgen.py", "tools/fncmp.py", "original/extracted/SLUS_215.03", *cobjs])
+    )
+    n.append(f"  script = {script}")
 
-    n.append(f"build build/{TARGET}.elf: ld | {script} " + " ".join(objs))
+    n.append(f"build build/{TARGET}.elf: ld | {script} " + " ".join(objs + gated))
     n.append(f"  script = {script}\n  map = build/{TARGET}.map")
     n.append(f"build build/{TARGET}: pack config/elf_layout.json build/{TARGET}.elf assets/elf | tools/elfpack.py")
     n.append(f"build build/{TARGET}.ok: check build/{TARGET} | tools/check.py config/{TARGET}.sha1")
     n.extend(objdiff_config.emit(units, sources))
-    deps = " ".join(["tools/configure.py", "tools/objdiff_config.py", "asm/text/units.tsv", *map(str, sources)])
+    deps = " ".join(["tools/configure.py", "tools/objdiff_config.py", *(f"{row[4]}/units.tsv" for row in SECTIONS), *map(str, sources)])
     n.append(f"build build.ninja: configure | {deps}")
     n.append(f"default build/{TARGET}.ok")
     (ROOT / "build.ninja").write_text("\n".join(n) + "\n")
-    print(f"{len(units) - len(replaced)} asm units, {len(replaced)} compiled functions, {len(sources)} sources")
+    print(f"{len(units)} asm units, {len(replaced)} annotated functions, {len(sources)} sources")
     return 0
 
 

@@ -13,6 +13,9 @@ public:
     cSceAtUnit *getUnit(unsigned int id);
 };
 
+extern "C" cSceAtUnit *func_002C30C0(cSceAtManager *);
+extern "C" cSceAtUnit *func_002C30C8(cSceAtManager *);
+
 struct cSceAtExecEntry {
     void (*m_fn)(cSceAtUnit *, int);
     int m_unk4;

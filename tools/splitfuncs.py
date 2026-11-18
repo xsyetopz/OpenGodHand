@@ -1,9 +1,19 @@
 #!/usr/bin/env python3
-"""Split splat's single `.text` disassembly into one file per function.
+"""Split one splat section disassembly into one file per symbol ("unit").
 
-Each unit becomes `<out>/<VRAM>.s` so the linker script can place every
-function at its original address and a decompiled function can replace its
-unit independently. `<out>/units.tsv` lists `vram  size  name` in address order.
+    splitfuncs.py SECTION_S OUTDIR END_VRAM
+
+Each unit becomes `<OUTDIR>/<VRAM>.s` in its own `<section>.unit` section, so
+the linker script can place it at its original address and compiled code can
+replace it independently. `<OUTDIR>/units.tsv` lists `vram  size  name` in
+address order; the size is splat's symbol size when given, else the span to
+the next unit.
+
+splat's `.align` directives are relative to the start of the section, which is
+wrong once a unit starts off an aligned boundary, and gas would pad a plain
+`.text` section to 16 bytes. Every `.align` is therefore rewritten as an
+`.org` to the address of the next item, and each unit ends with an `.org` to
+the next unit, which reproduces the original padding exactly.
 """
 
 from __future__ import annotations
@@ -13,32 +23,21 @@ import re
 import sys
 from pathlib import Path
 
-# gas pads `.text` itself to 16 bytes on MIPS, which would shift the next unit;
-# a named section keeps each unit at its exact size.
-SECTION = ".text.unit"
-HEADER = f'.include "macro.inc"\n\n.set noat\n.set noreorder\n\n.section {SECTION}, "ax"\n\n'
-INSN = re.compile(r"^\s+/\* [0-9A-F]+ ([0-9A-F]{8}) ")
-# Data-in-text blocks carry no size; their span runs to the next unit.
+# `/* ROM VRAM [BYTES] */` on text/data lines, `/* VRAM */` on bss lines.
+ADDR = re.compile(r"^\s+/\* (?:[0-9A-F]+ )?([0-9A-F]{8}) ")
 MARK = re.compile(r"^nonmatching (\S+)(?:, 0x([0-9A-F]+))?$")
-TEXT_END = 0x3BBF20
+SECTION = re.compile(r"^\.section (\.\w+)(.*)$")
+WIDE = re.compile(r"^\s+/\*[^*]*\*/ \.(?:word|half|short|float|double|dword)\b")
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("text_s", type=Path)
-    ap.add_argument("out", type=Path)
-    args = ap.parse_args()
-
-    lines = args.text_s.read_text().splitlines(keepends=True)
+def unit_starts(lines: list[str]) -> list[int]:
     starts = []
     for i, line in enumerate(lines):
         if line.startswith("nonmatching "):
             s = i
-            while s > 0 and (lines[s - 1].startswith(".align") or lines[s - 1].startswith("/* Handwritten")):
+            while s > 0 and lines[s - 1].startswith((".align", "/* Handwritten")):
                 s -= 1
             starts.append(s)
-    if not starts:
-        raise SystemExit(f"{args.text_s}: no functions found")
     # A function that runs past an embedded data block ends (endlabel) inside the
     # next block; keep such blocks together so `.size` stays a local expression.
     defined: set[str] = set()
@@ -52,29 +51,60 @@ def main() -> int:
             continue
         defined = own
         merged.append(s)
-    starts = merged
+    return merged
 
-    args.out.mkdir(parents=True, exist_ok=True)
-    units = []
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("section_s", type=Path)
+    ap.add_argument("out", type=Path)
+    ap.add_argument("end", type=lambda s: int(s, 0), help="address one past the section's last byte")
+    args = ap.parse_args()
+
+    lines = args.section_s.read_text().splitlines(keepends=True)
+    name, flags = next((m.group(1), m.group(2)) for l in lines if (m := SECTION.match(l)))
+    header = f'.include "macro.inc"\n\n.set noat\n.set noreorder\n\n.section {name}.unit{flags}\n\n'
+    starts = unit_starts(lines)
+    if not starts:
+        raise SystemExit(f"{args.section_s}: no units found")
+
+    bodies = []
     for n, s in enumerate(starts):
         e = starts[n + 1] if n + 1 < len(starts) else len(lines)
         body = lines[s:e]
-        # Lines before the first unit (header, leading padding) belong to the first unit.
         if n == 0:
-            body = [l for l in lines[:s] if INSN.match(l)] + body
-        vram = next(int(m.group(1), 16) for l in body if (m := INSN.match(l)))
-        m = next(m for l in body if (m := MARK.match(l)))
-        # Every padding word is disassembled explicitly, so `.align` adds nothing and
-        # would be wrong relative to a section that starts off an 8-byte boundary.
-        body = [l for l in body if not l.startswith(".align")]
-        (args.out / f"{vram:08X}.s").write_text(HEADER + "".join(body))
-        units.append([vram, int(m.group(2), 16) if m.group(2) else None, m.group(1)])
-    for n, u in enumerate(units):
-        if u[1] is None:
-            u[1] = (units[n + 1][0] if n + 1 < len(units) else TEXT_END) - u[0]
-    index = units
-    (args.out / "units.tsv").write_text("".join(f"{v:08X}\t{z:X}\t{name}\n" for v, z, name in units))
-    print(f"split {len(index)} units into {args.out}", file=sys.stderr)
+            # Lines before the first unit (leading padding) belong to it.
+            body = [l for l in lines[:s] if ADDR.match(l)] + body
+        start = next(int(m.group(1), 16) for l in body if (m := ADDR.match(l)))
+        # gas aligns .word/.half to the unit's own start, so a unit that begins
+        # off a word boundary and holds such data stays with the previous unit.
+        if bodies and start % 4 and any(WIDE.match(l) for l in body):
+            bodies[-1] += body
+            continue
+        bodies.append(body)
+    vrams = [next(int(m.group(1), 16) for l in b if (m := ADDR.match(l))) for b in bodies]
+
+    args.out.mkdir(parents=True, exist_ok=True)
+    for stale in args.out.glob("*.s"):
+        stale.unlink()
+    rows = []
+    for n, body in enumerate(bodies):
+        start = vrams[n]
+        end = vrams[n + 1] if n + 1 < len(vrams) else args.end
+        out = []
+        for i, line in enumerate(body):
+            if line.startswith(".align"):
+                nxt = next((int(m.group(1), 16) for l in body[i + 1 :] if (m := ADDR.match(l))), end)
+                out.append(f".org 0x{nxt - start:X}\n")
+            else:
+                out.append(line)
+        out.append(f".org 0x{end - start:X}\n")
+        mark = next(m for l in body if (m := MARK.match(l)))
+        size = int(mark.group(2), 16) if mark.group(2) else end - start
+        (args.out / f"{start:08X}.s").write_text(header + "".join(out))
+        rows.append(f"{start:08X}\t{size:X}\t{mark.group(1)}\n")
+    (args.out / "units.tsv").write_text("".join(rows))
+    print(f"split {len(rows)} units into {args.out}", file=sys.stderr)
     return 0
 
 

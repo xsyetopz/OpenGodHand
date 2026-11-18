@@ -20,7 +20,7 @@ public:
 };
 
 extern "C" cMessageNode *func_002AED40(cMessage *, unsigned short);
-void func_002B2400(cMessageNode *);
-cMessageNode *func_002AEF10(cMessage *, cMessageNode *);
+extern "C" void func_002B2400(cMessageNode *);
+extern "C" cMessageNode *func_002AEF10(cMessage *, cMessageNode *);
 
 #endif

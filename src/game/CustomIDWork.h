@@ -4,12 +4,14 @@
 struct cIDWork {
     char _pad0[0x2B];
     unsigned char m_unk2B;
-    unsigned int m_flags;
+    int m_flags;
     float m_offsetX;
     float m_offsetY;
     float m_posX;
     float m_posY;
-    char _pad40[0xC];
+    float m_scaleX;
+    float m_scaleY;
+    char _pad48[4];
     int m_unk4C;
     char _pad50[0x34];
     int m_number;
@@ -29,6 +31,12 @@ public:
     void SetLocalPosXY(int, int);
     void ResetMoveOffsetPos();
     void ResetColorAnim();
+    void SetLocalPosY(int);
+    void SetOffsetPosX(int);
+    void SetOffsetPosY(int);
+    void SetOffsetPosXY(int, int);
+    void SetScaleAnimNormal(float, float, unsigned short);
+    void ResetScaleAnim();
 
     int m_unk0;
     cIDWork *m_work;
@@ -42,7 +50,13 @@ public:
     int m_unk4C;
     char _pad50[0xC];
     int m_unk5C;
-    char _pad60[0x18];
+    float m_unk60;
+    float m_unk64;
+    float m_unk68;
+    float m_unk6C;
+    float m_unk70;
+    unsigned short m_unk74;
+    unsigned short m_unk76;
     unsigned char m_unk78;
 };
 
