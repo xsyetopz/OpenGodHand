@@ -24,39 +24,42 @@ extern "C" int **func_003BB468(int **src, int **end, int **dst)
     return dst;
 }
 
-// FUNCTION: GAME 0x3BB058
+#ifdef NONMATCHING
+// DRAFT: GAME 0x3BB058 (compiler folds tot=0x20 and allocates s3; original keeps cap+16 unfolded in 3 s-regs)
 extern "C" int *func_003BB058(int *s)
 {
     unsigned cap = 16;
-    int *p = (int *)(cap + 16);
-    int *r;
+    unsigned tot = cap + 16;
+    int *p;
     if (cap < (unsigned)(s[0] + 1)) {
         do {
             cap <<= 1;
         } while (cap < (unsigned)(s[0] + 1));
-        p = (int *)(cap + 16);
+        tot = cap + 16;
     }
-    if ((unsigned)p > 0x80) {
-        p = (int *)malloc((unsigned)p);
+    if (tot > 0x80) {
+        p = (int *)malloc(tot);
         if (!p)
-            p = func_0031D6E8((int)p);
+            p = func_0031D6E8(tot);
     } else {
         int **slot = (int **)((char *)D_003C4030 + ((((cap + 23) >> 3) - 1) << 2));
-        p = *slot;
-        if (p)
-            *slot = *(int **)p;
-        else
+        int *h = *slot;
+        if (h) {
+            p = h;
+            *slot = *(int **)h;
+        } else {
             p = func_0031D928((cap + 23) & ~7);
+        }
     }
     p[1] = cap;
     p[2] = 1;
     p[3] = 0;
-    r = p + 4;
     if (s[0])
-        memcpy(r, s + 4, s[0]);
+        memcpy(p + 4, s + 4, s[0]);
     p[0] = s[0];
-    return r;
+    return p + 4;
 }
+#endif
 
 struct Ent8 {
     int *p;

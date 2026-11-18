@@ -125,7 +125,7 @@ def main() -> int:
     known = known_symbols(cfg)
     status: dict[int, str] = {}
     refs: dict[int, set[str]] = {}
-    jtbl: dict[int, tuple[int, str, bytes | None, list[int]]] = {}
+    jtbl: dict[int, tuple[int, str, bytes | None, list[int], set[str]]] = {}
     ro_span: dict[int, tuple[str, list[int]]] = {}
     ro_units = [(v, sz) for row, units in sections if row[0] == ".rodata" for v, sz, _n in units]
     ro_names = {v: n for row, units in sections if row[0] == ".rodata" for v, _sz, n in units}
@@ -161,6 +161,7 @@ def main() -> int:
             if jt:
                 jtbl[vram] = jt
                 refs[vram].discard(jt[1])
+                refs[vram] |= jt[4]
             elif len(refs[vram]) == 1 and next(iter(refs[vram])).startswith(".rodata"):
                 name = next(iter(refs[vram]))
                 span_units = rodata_span(ROOT / obj, name, raw, ro_units)
@@ -186,7 +187,7 @@ def main() -> int:
         if status[vram] == "match":
             placed[vram] = (gated(obj), f".text.{sym}")
             if vram in jtbl:  # the jump tables replace their asm .rodata units
-                first, name, _cut, covered = jtbl[vram]
+                first, name, _cut, covered, _deps = jtbl[vram]
                 placed[first] = (gated(obj), name)
                 placed.update({u: configure.DROP for u in covered[1:]})
                 absolute.update({ro_names[u]: u for u in covered})
@@ -206,7 +207,7 @@ def main() -> int:
     for obj, syms in weak.items():
         subprocess.check_call([objcopy, *(f"--weaken-symbol={s}" for s in syms), obj, gated(obj)], cwd=ROOT)
     # A table section padded past its unit is cut to the unit's size.
-    for vram, (_uv, name, cut, _units) in jtbl.items():
+    for vram, (_uv, name, cut, _units, _deps) in jtbl.items():
         if cut is not None and status[vram] == "match":
             obj = next(o for v, o, _s in cfg["compiled"] if v == vram)
             shrink_section(ROOT / gated(obj), name, len(cut))

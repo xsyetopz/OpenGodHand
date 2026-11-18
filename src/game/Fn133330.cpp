@@ -1,11 +1,13 @@
-// FUNCTION: GAME 0x133330
+#ifdef NONMATCHING
+// DRAFT: GAME 0x133330
+// diff: loop counter/offset/mask registers (t3/t2/t1) allocated in a different order, 7 words
 extern "C" void SetLayerCollEnable__16cCollisionScrollUcb(char *self, unsigned char layer, int on)
 {
     if (!*(char **)self || !*(unsigned short *)(*(char **)self + 0x28))
         return;
-    unsigned i = 0;
     unsigned mask = ~2u;
     unsigned off = 0;
+    unsigned i = 0;
     do {
         char *e = (char *)(off + *(unsigned *)(self + 0x14));
         char *m = (char *)(*(unsigned short *)(e + 0xC) * 16 + *(unsigned *)(self + 8));
@@ -19,3 +21,4 @@ extern "C" void SetLayerCollEnable__16cCollisionScrollUcb(char *self, unsigned c
         off += 0x14;
     } while (i < *(unsigned short *)(*(char **)self + 0x28));
 }
+#endif

@@ -123,16 +123,16 @@ def derived_addresses(obj: Path, sym: str, vram: int, raw: bytes, skip: set[str]
     return {n: next(iter(a)) for n, a in found.items() if len(a) == 1}
 
 
-def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: list[tuple[int, int]]) -> tuple[int, str, bytes | None, list[int]] | None:
+def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: list[tuple[int, int]]) -> tuple[int, str, bytes | None, list[int], set[str]] | None:
     """Return (first unit address, input section, trimmed bytes or None, covered
-    unit addresses) when `sym`'s only data reference is one `.rodata` section
+    unit addresses, other function sections the table points at) when `sym`'s only data reference is one `.rodata` section
     made of jump tables, possibly beside strings, over consecutive original
     units.
 
     The section must be aligned to its first unit and end inside the last
-    covered unit, with only zero padding after it. Each relocated word (a
-    section-relative offset into `.text.<sym>`) plus `vram` must equal the
-    original table word; other words must equal the original bytes. The
+    covered unit, with only zero padding after it. Each word relocated against `.text.<sym>` (a
+    section-relative offset) plus `vram` must equal the original table word;
+    words relocated against named symbols (vtable slots) are the linker's; other words must equal the original bytes. The
     original bytes between the section's end and the unit's end must be zero.
     Anything else makes the section differ and returns None, so the function
     stays gated as before."""
@@ -154,11 +154,19 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: lis
         sec = elf.get_section_by_name(names.pop())
         data, align = sec.data(), max(sec["sh_addralign"], 1)
         rel = elf.get_section_by_name(f".rel{sec.name}")
-        entries = {r["r_offset"] for r in rel.iter_relocations()} if rel else set()
+        entries, foreign, deps = set(), set(), set()
+        for r in rel.iter_relocations() if rel else ():
+            t = symtab.get_symbol(r["r_info_sym"])
+            other = elf.get_section(t["st_shndx"]).name if t["st_info"]["type"] == "STT_SECTION" else ""
+            if other and not other.startswith(".text."):
+                return None  # a pointer into compiled data has no original address
+            if other and other != f".text.{sym}":
+                deps.add(other)  # a vtable slot: valid only while that function is linked
+            (entries if other == f".text.{sym}" else foreign).add(r["r_offset"])
     # The assembler pads the section to its alignment; zero bytes after the
     # last real byte are not content.
     used = len(data.rstrip(b"\0")) + 3 & ~3
-    if not entries or used == 0 or max(entries) >= used:
+    if not entries or used == 0 or max(entries | foreign) >= used:
         return None
     word = lambda b, i: struct.unpack_from("<I", b, i)[0]
     for n, (uv, _size) in enumerate(units):
@@ -174,9 +182,9 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: lis
             continue
         if all(
             (word(data, i) + vram == word(want, i) and 0 <= word(data, i) < span)
-            if i in entries else data[i : i + 4] == want[i : i + 4]
+            if i in entries else i in foreign or data[i : i + 4] == want[i : i + 4]
             for i in range(0, cut - cut % 4, 4)
-        ):
+        ) and data[cut - cut % 4 : cut] == want[cut - cut % 4 : cut]:
             covered = [v for v, _s in units[n:] if v < end]
-            return uv, sec.name, data[:cut] if cut < len(data) else None, covered
+            return uv, sec.name, data[:cut] if cut < len(data) else None, covered, deps
     return None
