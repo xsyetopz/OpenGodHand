@@ -127,3 +127,45 @@ void cSceAtManager::delUnitData(cSceAtUnit *unit)
     if (unit)
         func_002C3058(this, (char *)this + 0x5C, unit);
 }
+
+// FUNCTION: GAME 0x2C29A0
+int cSceAtManager::SetDisable(cSceAtUnit *unit)
+{
+    if (!m_unk0)
+        return 0;
+    if (!unit)
+        return 0;
+    if (func_002C0E68(unit))
+        unit->SetDisable(0);
+    return 1;
+}
+
+// FUNCTION: GAME 0x2C29F8
+int cSceAtManager::SetDisable(unsigned short id)
+{
+    if (!m_unk0)
+        return 0;
+    cSceAtUnit *unit = getUnit(id);
+    if (!unit)
+        return 0;
+    return SetDisable(unit);
+}
+
+// FUNCTION: GAME 0x2C2A98
+int cSceAtManager::isHit(unsigned int id, eScehitType t)
+{
+    cSceAtUnit *unit = getUnit(id);
+    if (unit)
+        return func_002C0ED0(unit, t);
+    return 0;
+}
+
+// FUNCTION: GAME 0x2C2AE0
+cSceAtUnit *cSceAtManager::getJumpPointAt(unsigned int id)
+{
+    for (cSceAtUnit *u = func_002C30C0(this); u; u = func_002C30C8(this)) {
+        if (u->m_type == 1 && u->m_unk79 == id)
+            return u;
+    }
+    return 0;
+}

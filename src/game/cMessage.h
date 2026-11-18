@@ -7,6 +7,8 @@ struct cMessageNode {
     cMessageNode *m_next;
 };
 
+class cObj;
+
 class cMessage {
 public:
     char *getMessageAddr(unsigned short no) const;
@@ -17,6 +19,7 @@ public:
     int deleteWorkId(unsigned short id);
     int deleteMessNo(unsigned short no);
     int closeMessNo(unsigned short no);
+    unsigned short create(unsigned int no, cObj *obj, unsigned char a, short b);
     char *getRubyAddr(unsigned short no) const;
 
     char *m_table[4];

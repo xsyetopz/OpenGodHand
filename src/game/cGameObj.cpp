@@ -38,3 +38,34 @@ void cGameObj::setRot(const cVec &rot)
 {
     m_rot = rot;
 }
+
+// FUNCTION: GAME 0x2A9350
+void cGameObj::setSuspend(bool suspend)
+{
+    if (suspend == 1)
+        m_flags250 |= 0x8000;
+    else
+        m_flags250 &= ~0x8000;
+    if (suspend == 1)
+        m_flags5A0 |= 8;
+    else
+        m_flags5A0 &= ~8;
+}
+
+// FUNCTION: GAME 0x2A7498
+void cGameObj::SetTgtTurn(const cVec &tgt, float speed)
+{
+    m_rot.y = Adjust_theta(m_rot.y + Turn_dest((const float *)m_pPos, m_rot.y, (const float *)&tgt, speed * D_007479FC));
+}
+
+extern int cModel_isClip(const void *) __asm__("isClip__C6cModel");
+
+// FUNCTION: GAME 0x2A7448
+bool cGameObj::isClip() const
+{
+    if (m_f0)
+        return true;
+    if (m_f1)
+        return true;
+    return cModel_isClip(this) != 0;
+}

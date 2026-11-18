@@ -39,3 +39,12 @@ void cSceAtUnit::AtInit(eSceAt_id id, eAreaHitType hit, eAreaTrgType trg, eActTy
     m_unk54 = 0x31;
 }
 #endif
+
+// FUNCTION: GAME 0x2C0E78
+void cSceAtUnit::getCenterPos(cVec &out)
+{
+    if (m_flags & 1) {
+        ((cArea *)((char *)this + 4))->AreaGetCenterPos(out);
+        out.y = out.y + 0.4f;
+    }
+}

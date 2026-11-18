@@ -181,3 +181,118 @@ int cEmWrap::CkActive()
     return (func_00295978(this) && strcmp(D_0044A870, m_em->m_name) == 0) ? func_0026ECC0(m_em) : 0;
 }
 #endif
+
+extern "C" void setGoto__5cEm00RC4cVec14EM00_GOTO_TYPEUif(cEmBase *, const cVec *, EM00_GOTO_TYPE, unsigned, float);
+extern "C" int func_0026EA28(cEmBase *);
+extern "C" void func_0026E7A8(cEmBase *, const cVec *);
+extern "C" void func_0026E7A0(cEmBase *, float);
+extern "C" void func_002736F8(cEmBase *);
+extern "C" void func_00289028(cEmBase *);
+extern "C" void SetEscPos__5cEma2RC4cVec(cEmBase *, const cVec *);
+extern "C" void setAlphaMode__5cEm00b(cEmBase *, int);
+extern char D_0044A878[];
+
+// FUNCTION: GAME 0x295BC0
+void cEmWrap::setSuspend(bool b)
+{
+    if (func_00295978(this)) {
+        m_em->vcallI(0x60, b);
+    }
+}
+
+// FUNCTION: GAME 0x295F80
+void cEmWrap::setGoto(const cVec &p, EM00_GOTO_TYPE t, unsigned u, float f)
+{
+    if (func_00295978(this)) {
+        if (m_em->m_vital > 0) {
+            if (strcmp(D_0044A870, m_em->m_name) == 0) {
+                setGoto__5cEm00RC4cVec14EM00_GOTO_TYPEUif(m_em, &p, t, u, f);
+            }
+        }
+    }
+}
+
+#ifdef NONMATCHING
+// 0x296018: 12 words differ (88 vs 84 bytes), same pattern as CkActive
+// FUNCTION-NONMATCH 0x296018
+int cEmWrap::ckGoto()
+{
+    if (func_00295978(this)) {
+        if (strcmp(D_0044A870, m_em->m_name) == 0) {
+            return func_0026EA28(m_em);
+        }
+        return 0;
+    }
+    return 0;
+}
+#endif
+
+// FUNCTION: GAME 0x296070
+void cEmWrap::SetKeepPos(const cVec &p)
+{
+    if (func_00295978(this)) {
+        if (strcmp(D_0044A870, m_em->m_name) == 0) {
+            func_0026E7A8(m_em, &p);
+        }
+    }
+}
+
+// FUNCTION: GAME 0x2960D0
+void cEmWrap::SetKeepLength(float f)
+{
+    if (func_00295978(this)) {
+        if (strcmp(D_0044A870, m_em->m_name) == 0) {
+            func_0026E7A0(m_em, f);
+        }
+    }
+}
+
+// FUNCTION: GAME 0x296130
+void cEmWrap::clearNoMove()
+{
+    if (func_00295978(this)) {
+        if (strcmp(D_0044A870, m_em->m_name) == 0) {
+            func_002736F8(m_em);
+        }
+    }
+}
+
+// FUNCTION: GAME 0x296180
+void cEmWrap::StartEscape()
+{
+    if (func_00295978(this)) {
+        if (strcmp(D_0044A878, m_em->m_name) == 0) {
+            func_00289028(m_em);
+        }
+    }
+}
+
+// FUNCTION: GAME 0x2961D0
+void cEmWrap::SetEscPos(const cVec &p)
+{
+    if (func_00295978(this)) {
+        if (strcmp(D_0044A878, m_em->m_name) == 0) {
+            SetEscPos__5cEma2RC4cVec(m_em, &p);
+        }
+    }
+}
+
+#ifdef NONMATCHING
+// 0x296230: 13 words differ (116 vs 112 bytes): original loads m_em into v1 in the bnez delay slot and shares one sh store; ours reloads
+// FUNCTION-NONMATCH 0x296230
+void cEmWrap::setAlphaMode(bool b)
+{
+    if (func_00295978(this)) {
+        if (strcmp(D_0044A870, m_em->m_name) == 0) {
+            setAlphaMode__5cEm00b(m_em, b);
+            short t;
+            if (b) {
+                t = 0x258;
+            } else {
+                t = 0x1770;
+            }
+            m_em->m_alphaTimer = t;
+        }
+    }
+}
+#endif

@@ -1,7 +1,7 @@
 #include "game/cSnd.h"
 
 // FUNCTION: GAME 0x2CC4B8
-sSeData *cSnd::GetSeData(int i)
+cSeData *cSnd::GetSeData(int i)
 {
     return m_seData + i;
 }
@@ -153,9 +153,6 @@ void cSnd::BgmFadeOutAll(float f, eBgmPt a, eBgmReqNo b)
     }
 }
 
-#ifdef NONMATCHING
-// 0x2D1768 near-miss: missing the nop between `mtc1 $zero,$f0` and `c.le.s`
-// (compiled has the nop only after c.le.s), 4 bytes short; rest identical.
 // FUNCTION: GAME 0x2D1768
 void cSnd::BgmEventFade(eBgmReqNo r, float a, float b, float c)
 {
@@ -165,6 +162,88 @@ void cSnd::BgmEventFade(eBgmReqNo r, float a, float b, float c)
             func_00373560(p, -1, func_00373938(p, 0) * c);
         }
         func_002CD4E0(p, b, a);
+    }
+}
+
+// FUNCTION: GAME 0x2CA718
+void cSnd::DieDemoStart()
+{
+    for (sBgmNode *n = m_bgmList; n; n = n->m_next) {
+        n->m_flags |= 0x10000;
+        func_002CD4A8(n, 180.0f);
+    }
+    m_flagsB0 |= 0x100000;
+    m_flagsAC |= 0x100000;
+}
+
+#ifdef NONMATCHING
+// 0x2CB418 near-miss (200 vs 208 bytes): original keeps param id in $s0 and a
+// copy in $s3 (set before the call, movn after); compiled merges them and uses
+// slti/movz, different saved-register assignment.
+// FUNCTION: GAME 0x2CB418
+int cSnd::EmSeCheck(eObjId id)
+{
+    int want = id;
+    int t = func_002CB3A8(this, id);
+    if (t > 0)
+        want = t;
+    for (unsigned i = 0; i < 12; i++) {
+        if (GetSeData(D_0044CE48[i])->IsAlive()
+            && GetSeData(D_0044CE48[i])->m_unk3C == want
+            && func_002CFC88(GetSeData(D_0044CE48[i])) != 1)
+            return D_0044CE48[i];
+    }
+    return -1;
+}
+#endif
+
+// FUNCTION: GAME 0x2D1D00
+int cSnd::BgmEvStart(eBgmPt a, eBgmReqNo b, int c)
+{
+    sBgmNode *p = (sBgmNode *)func_002D22B0(this, a, b);
+    if (p) {
+        if (p->m_flags & 1)
+            func_002CCAC8(p);
+        return 1;
+    }
+    p = (sBgmNode *)func_002D2228(this);
+    if (p && func_002CC900(p, a, b, 4, 0xFFFFFFFFu, 0, 0)) {
+        func_00373A18(p, c);
+        return 1;
+    }
+    return 0;
+}
+
+#ifdef NONMATCHING
+// 0x2D1610 near-miss (336 vs 340 bytes): saved-register assignment of the loop
+// constants differs (orig mask=$s4,1=$s3,2=$s2; compiled mask=$s3) and the
+// original has one extra nop before the loop head.
+// FUNCTION: GAME 0x2D1610
+void cSnd::BgmEventStart(eBgmReqNo r, int a, int b)
+{
+    sBgmNode *p = (sBgmNode *)func_002D22B0(this, 0, r);
+    if (p && (p->m_flags & 1)) {
+        func_002CCAC8(p);
+    } else {
+        p = (sBgmNode *)func_002D2228(this);
+        if (!p) {
+            BgmEventStop(false);
+            return;
+        }
+        func_002CC900(p, 0, r, 5, 0xFFFFFFFFu, a, b);
+    }
+    m_flagsB0 |= 0x10000000;
+    m_flagsAC |= 0x10000000;
+    if (p->m_unk5E == 0) {
+        for (sBgmNode *n = m_bgmList; n; n = n->m_next) {
+            if (!(n->m_flags & 0x180000)) {
+                if (n != p && (n->m_flags & 1) != 1) {
+                    n->m_flags |= 0x1000;
+                    if (n->m_state != 2)
+                        func_002CD4A8(n, 10.0f);
+                }
+            }
+        }
     }
 }
 #endif

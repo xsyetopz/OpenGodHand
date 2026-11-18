@@ -2,6 +2,8 @@
 
 extern unsigned int D_00747A34;
 extern unsigned int D_00747A3C;
+extern unsigned int D_00747A38;
+extern unsigned int D_00747A2C;
 extern int D_003BF160[5];
 
 // FUNCTION: GAME 0x1FA620
@@ -182,7 +184,7 @@ int cCoreSave::GetOliviaCostumeNo()
 }
 
 #ifdef NONMATCHING
-// FUNCTION: GAME 0x1FA010
+// NONMATCHING 0x1FA010
 // Remaining diff (4 words): the clamp `i < 3 ? i : 4` is emitted as
 // `addiu 4; slti; movz a1; addiu` instead of `slti; addiu v0,4; movn v0,a1,v1; addiu +1`.
 int cCoreSave::getGameLevel()
@@ -201,7 +203,7 @@ int cCoreSave::getGameLevel()
 #endif
 
 #ifdef NONMATCHING
-// FUNCTION: GAME 0x1FA6C0
+// NONMATCHING 0x1FA6C0
 // Remaining diff (4 words): original loads clear in the beqz delay slot and uses
 // `beql r,0 -> 1`; compiler emits `movz` instead.
 int cCoreSave::getClearNum()
@@ -299,16 +301,12 @@ void cCoreSave::addReelItem(unsigned char n)
         m_save->m_reelItem += n;
 }
 
-#ifdef NONMATCHING
 // FUNCTION: GAME 0x1FAB28
-// Remaining diff (5 words): the loop-back `bnez` delay slot is a nop and the sb stays
-// before it (44 vs 40 bytes); original fills the delay slot with the sb.
 void cCoreSave::clearGodItem()
 {
     for (int i = 0; i < 6; i++)
         m_save->m_godItem[i] = 0;
 }
-#endif
 
 // FUNCTION: GAME 0x1FBDD0
 void cCoreSave::clearKillEmNum()
@@ -424,7 +422,7 @@ int cCoreSave::getAllKillEmNum(int n)
 }
 
 #ifdef NONMATCHING
-// FUNCTION: GAME 0x1FBF90
+// NONMATCHING 0x1FBF90
 // Remaining diff (7 words): original loop has no nop before the back-branch `beqz` (60 bytes); ours adds a delay-slot nop (64).
 void cCoreSave::setClearStage(unsigned short n)
 {
@@ -441,7 +439,7 @@ void cCoreSave::setClearStage(unsigned short n)
 #endif
 
 #ifdef NONMATCHING
-// FUNCTION: GAME 0x1FB868
+// NONMATCHING 0x1FB868
 // Remaining diff (17 words): original copies v to $a3 right after the null check and clamps in $a3; ours schedules the clamp differently (68 vs 68 bytes).
 void cCoreSave::setComboMax(unsigned int i, int v)
 {
@@ -457,3 +455,100 @@ void cCoreSave::setComboMax(unsigned int i, int v)
     }
 }
 #endif
+
+// FUNCTION: GAME 0x1FAEE0
+int cCoreSave::getReelItem()
+{
+    if (m_save == 0)
+        return 0;
+    if (D_00747A38 & 0x8000000)
+        m_save->m_reelItem = 6;
+    return m_save->m_reelItem;
+}
+
+// FUNCTION: GAME 0x1FBFD0
+int cCoreSave::ckClearStage(unsigned short n)
+{
+    if (m_save == 0)
+        return 0;
+    if (n >= 9)
+        return 0;
+    if (D_00747A3C & 0x80000)
+        return 1;
+    return (m_save->m_clearStage & (1 << n)) != 0;
+}
+
+#ifdef NONMATCHING
+// NONMATCHING 0x1FB928
+// Remaining diff (14 words, 76 vs 80 bytes): original has two nops before the flag test and
+// reads the flag as `dsrl v0,1; andi 1` (64-bit shift of the lw'd word); ours emits `andi 2`/`srl`.
+int cCoreSave::ckGodReel(eCommandNo n)
+{
+    if (m_save == 0)
+        return 0;
+    if (n >= 0x1F)
+        return 0;
+    if ((D_00747A34 >> 1) & 1)
+        return 1;
+    return (m_save->m_godReel & (1 << n)) != 0;
+}
+#endif
+
+// FUNCTION: GAME 0x1FAF20
+void cCoreSave::setSkill(PL_SKILL i, signed char v)
+{
+    if (m_save) {
+        if (i < 0x80) {
+            if (i < 0x72)
+                m_save->m_skill[i] = v;
+        }
+    }
+}
+
+// FUNCTION: GAME 0x1FAF58
+signed char cCoreSave::getSkill(PL_SKILL i)
+{
+    if (m_save == 0)
+        return -1;
+    if (i >= 0x80)
+        return -1;
+    if (i >= 0x72)
+        return -1;
+    if (D_00747A34 & 0x800000)
+        return 0;
+    return m_save->m_skill[i];
+}
+
+// FUNCTION: GAME 0x1FABB0
+int cCoreSave::getGodItemNum()
+{
+    unsigned i;
+    int n = 0;
+    for (i = 0; i < 6 && i < m_save->m_reelItem; i++) {
+        if (m_save->m_godItem[i])
+            n++;
+    }
+    return n;
+}
+
+// FUNCTION: GAME 0x1FAB50
+int cCoreSave::addGodItem(unsigned char c)
+{
+    for (unsigned i = 0; i < 6 && i < m_save->m_reelItem; i++) {
+        if (m_save->m_godItem[i] == 0) {
+            m_save->m_godItem[i] = c;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// FUNCTION: GAME 0x1FAC00
+void cCoreSave::useGodItem()
+{
+    if (!(D_00747A2C & 0x80000)) {
+        for (unsigned i = 0; i < 5; i++)
+            m_save->m_godItem[i] = m_save->m_godItem[i + 1];
+        m_save->m_godItem[5] = 0;
+    }
+}

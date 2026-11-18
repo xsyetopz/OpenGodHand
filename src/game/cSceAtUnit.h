@@ -10,6 +10,11 @@ enum eAreaHitType { AHT_0 };
 enum eAreaTrgType { ATT_0 };
 enum eScehitType { SHT_0 };
 
+class cArea {
+public:
+    void AreaGetCenterPos(cVec &out);
+};
+
 class cSceAtUnit {
 public:
     void getCenterPos(cVec &out);
@@ -35,7 +40,9 @@ public:
     char _pad55[0x70 - 0x55];
     void *m_unk70;
     void *m_unk74;
-    char _pad78[0x9C - 0x78];
+    char _pad78[1];
+    unsigned char m_unk79;
+    char _pad7A[0x9C - 0x7A];
 };
 
 extern "C" void *memset(void *, int, unsigned int);

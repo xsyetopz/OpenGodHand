@@ -189,3 +189,69 @@ int cScenario::isOmBreak(unsigned short room, const char *name)
     }
     return func_002BED60(rs, room, h);
 }
+
+extern unsigned int D_00747A78;
+extern cCamManager CamManager;
+
+// FUNCTION: GAME 0x2C3FC0
+void cScenario::resetCam()
+{
+    D_00747A78 &= 0xFFDFFFFF;
+    cCamManager *cm = &CamManager;
+    cPlCamera *pc = cm;
+    if (pc)
+        pc->setCamUpdate(0);
+    cm->setPlCamera(0);
+    ((pl00 *)Getplayer__Fv())->clearMotionCam(0, 1);
+    m_camWait = 0;
+}
+
+// 0x2C5068 near-miss: object-array global is addressed as addiu+reload (not hi + lo-folded loads),
+// isOm test is scheduled differently (original: slti/slti into a2), and m_flags2>>6 uses dsll32/dsrl32
+// instead of lwu+dsra. 38 words differ.
+#ifdef NONMATCHING
+// FUNCTION: GAME 0x2C5068
+void cScenario::setOmSuspend(bool on)
+{
+    for (cOmBase **p = objbaseArray.m_vec->m_begin; p < objbaseArray.m_vec->m_end; p++) {
+        cOmBase *om = *p;
+        int isOm = om->m_kind >= 0x300 && om->m_kind < 0x500;
+        if (isOm) {
+            if (on == 1) {
+                long f = om->m_flags2;
+                if (!((f >> 6) & 1))
+                    om->m_f250 |= 0x8000;
+            } else {
+                om->m_f250 &= 0xFFFF7FFF;
+            }
+        }
+    }
+}
+#endif
+
+extern sSaveManager *g_SaveManager;
+extern unsigned int D_00747A24;
+extern "C" void func_002BFC80(sSaveManager *);
+
+// 0x2C4868 near-miss: all calls and fields right, but original loads g_SaveManager/g_Sce earlier
+// (hoisted before the branch, sltiu in the func_002BFC80 delay slot) and branches on s0 differently;
+// 50 words differ, mostly scheduling.
+#ifdef NONMATCHING
+// FUNCTION: GAME 0x2C4868
+void cScenario::endExtraGame()
+{
+    if (m_jumpPending == 1) {
+        m_jumpPending = 0;
+        unsigned short room = m_jumpRoom;
+        sVec4 pos = m_jumpPos;
+        float ang = m_jumpAng;
+        int first = ((pl00 *)Getplayer__Fv())->m_x54A == 0;
+        func_002BFC80(g_SaveManager);
+        if (!first)
+            g_Sce->beginRoomJump(room, *(cVec *)&pos, ang, 0, 2, 1);
+        else
+            g_Sce->beginRoomJump(room, *(cVec *)&pos, ang, 0, 0, 1);
+        D_00747A24 = (D_00747A24 | 0x1000000) & 0xF7FFFFFF;
+    }
+}
+#endif

@@ -1,6 +1,8 @@
 #ifndef CCORESAVE_H
 #define CCORESAVE_H
 
+enum PL_SKILL { PL_SKILL_NONE = -1, PL_SKILL_0 = 0 };
+enum eCommandNo { eCommandNo_NONE = -1, eCommandNo_0 = 0 };
 enum eDifficulty { DIFFICULTY_0, DIFFICULTY_1, DIFFICULTY_2 };
 
 struct sSaveData {
@@ -29,7 +31,10 @@ struct sSaveData {
     unsigned char m_godItem[6];
     unsigned char m_costumeNo;
     unsigned char m_prevCostumeNo;
-    char _padB0[0xA4];
+    signed char m_skill[0x72];
+    char _pad122[0xE];
+    unsigned int m_godReel;
+    char _pad134[0x20];
     unsigned char m_vitalItem;
     unsigned char m_tensionItem;
     unsigned char m_reelItem;
@@ -56,6 +61,14 @@ public:
     void addVitalItem(unsigned char);
     void addKillEmNum();
     int getGameLevelPoint();
+    int getReelItem();
+    int ckClearStage(unsigned short);
+    int ckGodReel(eCommandNo);
+    void setSkill(PL_SKILL, signed char);
+    signed char getSkill(PL_SKILL);
+    int getGodItemNum();
+    int addGodItem(unsigned char);
+    void useGodItem();
     void setKeyCardNum(int);
     void setKeyNum(int);
     void addTensionItem(unsigned char);

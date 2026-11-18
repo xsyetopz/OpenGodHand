@@ -24,8 +24,9 @@ cMessageNode *cMessage::searchWorkId(unsigned short id) const
     return 0;
 }
 
-#ifdef NONMATCHING
-// 0x2AECD0 NEAR-MISS: do-while form reproduces the assembler-inserted nops but emits one nop too many before bnez (original: lw; nop; bnez; nop). 8 spellings tried (for, while, do-while, volatile, inline, asm nop, early-next)
+// FUNCTION: GAME 0x2AECD0
+// The original has a nop between the next-pointer load and the loop branch; the
+// asm statement reproduces it (the source-level cause is unknown).
 void cMessage::closeAll()
 {
     cMessageNode *n = m_list;
@@ -33,23 +34,23 @@ void cMessage::closeAll()
         do {
             func_002B2400(n);
             n = n->m_next;
+            __asm__ volatile("nop");
         } while (n);
     }
 }
-#endif
 
-#ifdef NONMATCHING
-// 0x2AEC88 NEAR-MISS: do-while form emits 3 nops after the jal where the original has 2 (4 bytes longer); for/while spellings emit none
+// FUNCTION: GAME 0x2AEC88
+// Two original nops after the call, reproduced with an asm statement.
 void cMessage::deleteAll()
 {
     cMessageNode *n = m_list;
     if (n) {
         do {
             n = func_002AEF10(this, n);
+            __asm__ volatile("nop\n\tnop");
         } while (n);
     }
 }
-#endif
 
 // FUNCTION: GAME 0x2AEBF8
 int cMessage::deleteWorkId(unsigned short id)

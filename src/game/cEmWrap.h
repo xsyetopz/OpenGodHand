@@ -4,6 +4,7 @@
 #include "game/cVec.h"
 
 enum eObjId { EOBJID_DUMMY };
+enum EM00_GOTO_TYPE { EM00_GOTO_DUMMY };
 
 struct cVEnt {
     short delta;
@@ -19,6 +20,11 @@ public:
         cVEnt *e = (cVEnt *)((char *)m_vt + off);
         e->fn((char *)this + e->delta, arg);
     }
+    void vcallI(int off, int arg)
+    {
+        cVEnt *e = (cVEnt *)((char *)m_vt + off);
+        ((void (*)(void *, int))e->fn)((char *)this + e->delta, arg);
+    }
     void vcall0(int off)
     {
         cVEnt *e = (cVEnt *)((char *)m_vt + off);
@@ -31,7 +37,9 @@ public:
     cVec m_rot;
     char _pad10C[0x214 - 0x10C];
     cVEnt *m_vt;
-    char _pad218[0x4AC - 0x218];
+    char _pad218[0x2AE - 0x218];
+    short m_alphaTimer;
+    char _pad2B0[0x4AC - 0x2B0];
     const char *m_name;
     char _pad4B0[0x531 - 0x4B0];
     signed char m_raderType;
@@ -59,6 +67,15 @@ public:
     void StartAction();
     void setScrCollEnable(bool b);
     int CkActive();
+    void setSuspend(bool b);
+    void setGoto(const cVec &p, EM00_GOTO_TYPE t, unsigned u, float f);
+    int ckGoto();
+    void SetKeepPos(const cVec &p);
+    void SetKeepLength(float f);
+    void clearNoMove();
+    void StartEscape();
+    void SetEscPos(const cVec &p);
+    void setAlphaMode(bool b);
 
     const cVec *getPos();
     const cVec *getRot();
