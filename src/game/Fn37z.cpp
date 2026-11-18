@@ -61,6 +61,9 @@ extern "C" int func_00373F38(void *o)
     func_00373FC8(o);
     return r;
 }
+extern "C" int func_00373F38_x(void *o)
+{
+}
 #endif
 
 #ifdef NONMATCHING

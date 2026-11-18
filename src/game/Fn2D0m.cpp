@@ -16,14 +16,12 @@ extern ScrVec2D *scrArray;
 
 extern "C" {
 
-// DRAFT: GAME 0x2DB518
-// diff: 7 words, original keeps the scrArray load in v0 and fills the beq slot with the a0 move; ours schedules the move first
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2DB518
 void SetSuspendScrollLayerAll__FPCUi(const unsigned *mask)
 {
     ScrVec2D *s = scrArray;
     ScrObj2D **p = s->m_4;
-    if (s->m_8 == p)
+    if (p == s->m_8)
         return;
     do {
         ScrObj2D *o = *p;
@@ -35,15 +33,12 @@ void SetSuspendScrollLayerAll__FPCUi(const unsigned *mask)
         p++;
     } while (p != scrArray->m_8);
 }
-#endif
 
-// DRAFT: GAME 0x2DB620
-// diff: 7 words, same prologue as 0x2DB518: the a0 move precedes the loads in ours and sits in the beq slot in the original
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2DB620
 void SetViewScrollIdAll__FPCUi(const unsigned *mask)
 {
-    ScrVec2D *s = scrArray;
-    for (ScrObj2D **p = s->m_4; p != s->m_8; p++) {
+    ScrObj2D **p = scrArray->m_4;
+    while (p != scrArray->m_8) {
         ScrObj2D *o = *p;
         unsigned id = o->m_2fd;
         if (id < 0x100) {
@@ -52,10 +47,9 @@ void SetViewScrollIdAll__FPCUi(const unsigned *mask)
             else
                 SCRU(o, 0x250) &= 0xFFFFFFFD;
         }
-        s = scrArray;
+        p++;
     }
 }
-#endif
 
 }
 
