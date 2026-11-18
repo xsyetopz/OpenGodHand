@@ -155,7 +155,7 @@ extern char g_DmgManage[];
 extern const char D_00426F88[];
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1A2630 - 4 words: s3/s4 swapped (g_DmgManage hi vs d register order)
+// DRAFT: GAME 0x1A2630 - 4 words (void*/unsigned d, no dd temp, p!=e loop, local g tried): s3/s4 swapped (g_DmgManage hi vs d register order)
 extern "C" void func_001A2630(char *self, int d)
 {
     *(const void **)(self + 0x214) = D_00426F88;

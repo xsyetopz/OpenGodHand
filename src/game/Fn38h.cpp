@@ -178,24 +178,23 @@ extern "C" void func_00377AC0(Fn38Pr *o, unsigned short kind)
     }
 }
 
-#ifdef NONMATCHING
 struct Fn38Q { unsigned short m_00; short _p02; short m_04; short m_06; short m_08; short m_0A; unsigned m_0C; int m_10; short m_14; char _p16[10]; };
 extern Fn38Q D_0076A7D4[];
 extern "C" int func_00374AE0(int);
 
-// DRAFT: GAME 0x377CB8
-// diff: 4 words; hoisted constant order (lui s4 vs addiu s3) differs
+// FUNCTION: GAME 0x377CB8
 extern "C" void func_00377CB8(void)
 {
-    unsigned v = 0x1FFFFF;
+    unsigned short h = 0x80; // declaration order h, i, v sets the hoisted-constant order
     int i = 0;
+    unsigned v = 0x1FFFFF;
     Fn38Q *e = D_0076A7D4;
     do {
         e->m_0C = v;
         e->m_00 = 1;
         v += 0xFFFE0000u;
-        e->m_04 = 0x80;
-        e->m_06 = 0x80;
+        e->m_04 = h;
+        e->m_06 = h;
         e->m_08 = 0;
         e->m_0A = 0;
         int r = func_00374AE0(1);
@@ -205,7 +204,6 @@ extern "C" void func_00377CB8(void)
         e++;
     } while (i < 2);
 }
-#endif
 
 struct Fn38Y { char _p0[3]; unsigned char m_03; unsigned char m_04; char _p05[0x5F]; int m_64; char _p68[0x6C]; int m_D4; };
 struct Fn38X { char _p0[8]; int m_08; char _p0C[0x14]; int m_20; };

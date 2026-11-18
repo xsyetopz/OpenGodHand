@@ -216,7 +216,7 @@ extern int D_007474B0;
 extern char Snd[];
 extern char *IDManager;
 
-// DRAFT: GAME 0x1F5C48 (6 words: store order of D_007474B0 and IDManager+0xF0/0xF4 loads)
+// DRAFT: GAME 0x1F5C48 (6 words: store order of D_007474B0 and IDManager+0xF0/0xF4 loads; tried F4/F0 source order (6), IDManager direct (15), hoisted id (9))
 extern "C" void func_001F5C48(char *self)
 {
     D_007474B0 = 0;

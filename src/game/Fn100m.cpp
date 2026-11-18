@@ -20,7 +20,7 @@ struct cFn100mSnd {
 };
 extern cFn100mSnd Snd;
 
-// DRAFT: GAME 0x114CB8 - addu s1/s0 placement vs addiu a2,0x29 / daddu a3,s2 arg setup (5 words)
+// DRAFT: GAME 0x114CB8 - addu s1/s0 placement vs addiu a2,0x29 / daddu a3,s2 arg setup (5 words); tried late-add of a/b, reorderings, char*/unsigned types, no change
 #ifdef NONMATCHING
 extern "C" void func_00114CB8(char *self)
 {

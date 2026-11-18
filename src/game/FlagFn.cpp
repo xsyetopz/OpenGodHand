@@ -29,7 +29,7 @@ extern char *SaveLoad;
 extern "C" void openLoad__9cSaveLoad(void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x160F38 - flag test ok (lw/dsrl/andi); shared return-1 tail, switch/beql layout and D_00747A24 base reg differ
+// DRAFT: GAME 0x160F38 - flag test ok (lw/dsrl/andi); shared return-1 tail, switch/beql layout and D_00747A24 base reg differ; tried int w copy / unsigned long u = w (35-40 words, worse)
 extern "C" int func_00160F38(char *self)
 {
     int *g = (int *)D_00747A2C;

@@ -5,19 +5,16 @@ extern const char D_00429EC8[];
 extern "C" void func_001B6E90(void *);
 extern "C" int moveMotion__FP8cObjBase(void *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1CA1F8
-// diff: 6 differing words (60 vs 60 bytes)
+// FUNCTION: GAME 0x1CA1F8
 extern "C" void func_001CA1F8(char *self)
 {
-    unsigned char v = *(unsigned char *)(self + 0x2F6);
-    if (v == 0)
-        *(unsigned char *)(self + 0x2F6) = 1;
-    else if (v != 1)
-        return;
-    moveMotion__FP8cObjBase(self);
+    switch (*(unsigned char *)(self + 0x2F6)) {
+    case 0:
+        (*(unsigned char *)(self + 0x2F6))++; // ++ reuses the constant 1 held from the case compare
+    case 1:
+        moveMotion__FP8cObjBase(self);
+    }
 }
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1C2328

@@ -30,7 +30,7 @@ extern "C" int func_0012C4F0(char *self)
 }
 #endif
 
-// DRAFT: GAME 0x12BAF0 - 6 words: original range test is slti+beqz then bltz sharing one 'return 0'; mine folds to slti/xori
+// DRAFT: GAME 0x12BAF0 - 5 words: original range test is slti+beqz then bltz sharing one 'return 0'; mine duplicates return 0; tried uchar a=m<4 (6), result var r (6), nested m<4/m>=0 (5, kept)
 #ifdef NONMATCHING
 extern "C" int func_0012BAF0(char *self)
 {
@@ -39,12 +39,11 @@ extern "C" int func_0012BAF0(char *self)
     if (*(unsigned char *)(self + 0x2F4))
         return 0;
     int m = *(unsigned char *)(self + 0x2F5);
-    unsigned char a = m < 4;
-    if (a == 0)
-        return 0;
-    if (m < 0)
-        return 0;
-    return 1;
+    if (m < 4) {
+        if (m >= 0)
+            return 1;
+    }
+    return 0;
 }
 #endif
 
@@ -99,18 +98,18 @@ extern "C" int func_0012C758(pl00 *self)
 }
 #endif
 
-// DRAFT: GAME 0x12BAB8 - 5 words: original range test is slti+beqz then bltz sharing one 'return 0'
+// DRAFT: GAME 0x12BAB8 - 5 words: original range test is slti+beqz then bltz sharing one 'return 0'; tried early-return pair (6), nested m<4/m>=0 (5, kept), single-nest (11), m<4&&m>=0 (folds to sltiu)
 #ifdef NONMATCHING
 extern "C" int CkSubScreen__4pl00(char *self)
 {
     if (*(unsigned char *)(self + 0x2F4))
         return 0;
     int m = *(unsigned char *)(self + 0x2F5);
-    if (m >= 4)
-        return 0;
-    if (m < 0)
-        return 0;
-    return 1;
+    if (m < 4) {
+        if (m >= 0)
+            return 1;
+    }
+    return 0;
 }
 #endif
 

@@ -147,7 +147,7 @@ extern "C" void sceVu0DivVector(float *, float *, float);
 extern "C" void func_0030A570(int *, float *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2FDDA8 (4 words off: the -1 constant load is hoisted above the lw instead of after it)
+// DRAFT: GAME 0x2FDDA8 (4 words off: the -1 constant load is hoisted above the lw instead of after it; tried early returns, r=-1 temp, ternary forms, no change)
 extern "C" int func_002FDDA8(float *m, int *out)
 {
     float v[4] __attribute__((aligned(16)));

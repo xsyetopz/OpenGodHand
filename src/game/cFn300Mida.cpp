@@ -22,7 +22,7 @@ extern "C" void func_00305358(unsigned *self, unsigned *d)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3182D8
-// 4 words differ: lui registers for the last two stores (D_00754C50 / objbaseArray) come out swapped
+// 2 words differ: final two stores swapped (orig stores D_00754C50 via v1 first); a D_00754C50 pointer temp fixed the lui order (4 -> 2); store-order permutations did not help
 extern "C" void func_003182D8(void *p, int f)
 {
     if (f == 0xFFFF && p) {
@@ -30,10 +30,9 @@ extern "C" void func_003182D8(void *p, int f)
         func_002A9528(D_00754C20);
         objArray = 0;
         func_002C53A8(scrArray);
-        int *u = &objbaseArray;
         int *t = (int *)D_00754C50;
+        objbaseArray = 0;
         *t = 0;
-        *u = 0;
     }
 }
 #endif

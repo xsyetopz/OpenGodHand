@@ -32,6 +32,7 @@ extern "C" void SetOffsetPosX__12CustomIDWorki(void *, int);
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1D9CA0
 // diff: 2 words, sb 0x3024 / sb 0x3025 store order swapped; source order, uchar r and a temp zero all schedule the same way
+// also tried: swapped stores, uchar temp, p[0]/p[1], halfword store, if/else, int callees
 extern "C" void func_001D9CA0(char *self)
 {
     int v = func_001DCDA8();

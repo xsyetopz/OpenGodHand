@@ -125,7 +125,7 @@ extern "C" void func_001B0078(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1B54E8
-// diff: 6 words; original loads the short test and the odd-bit test into v0 with a likely branch (bnel/lhu in the delay slot), mine uses bnez with lhu into v1
+// diff: 6 words (tried: unsigned f (8), cached ushort t (25), ternary d (29)); original loads the short test and the odd-bit test into v0 with a likely branch (bnel/lhu in the delay slot), mine uses bnez with lhu into v1
 extern "C" void func_001B54E8(char *self)
 {
     long f = *(unsigned *)(self + 0x600);

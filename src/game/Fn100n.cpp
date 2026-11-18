@@ -122,8 +122,7 @@ extern "C" void func_00102938(char *self)
     func_001034E0(self);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x10B780 - 1 word, case 2 stores v1 instead of const-2 register v0; tried st local, goto, (int)/volatile/signed switch operand
+// FUNCTION: GAME 0x10B780
 extern "C" void func_0010B780(char *self)
 {
     *(float *)(self + 0x54C) = 5.0f;
@@ -140,7 +139,7 @@ extern "C" void func_0010B780(char *self)
         moveMotion((cObjBase *)self);
         break;
     case 2:
-        B(0x2F6) = 2;
+        B(0x2F6)++; // ++ reuses the constant held from the case compare
     case 3:
         if (moveMotion((cObjBase *)self))
             B(0x2F6) = 0;
@@ -148,4 +147,3 @@ extern "C" void func_0010B780(char *self)
     }
     *(unsigned short *)(self + 0x3AC) |= 0x404;
 }
-#endif
