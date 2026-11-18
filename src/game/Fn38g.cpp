@@ -455,13 +455,13 @@ extern "C" void func_00377AC0(Fn38Pr *o, unsigned short kind)
             continue;
         switch (kind) {
         case 1:
-            e->m_28 = o->m_68[e->m_1A / 2];
             e->m_26 = o->m_60[e->m_1A / 2];
+            e->m_28 = o->m_68[e->m_1A / 2];
             e->m_06 |= 9;
             break;
         case 2:
-            e->m_06 |= 0xA;
             e->m_2C = o->m_70[e->m_1A % 2];
+            e->m_06 |= 0xA;
             break;
         }
     }

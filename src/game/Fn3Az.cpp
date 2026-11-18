@@ -192,15 +192,59 @@ extern "C" int func_003AE1D0(void *, Uio *);
 // FUNCTION: GAME 0x3A68C8
 extern "C" unsigned func_003A68C8(char *buf, unsigned size, unsigned n, void *fp)
 {
-    unsigned total = size * n;
-    Iov iov;
+    unsigned total = n * size;
     Uio uio;
+    Iov iov;
     iov.m_base = buf;
     iov.m_len = total;
     uio.m_iov = &iov;
     uio.m_cnt = 1;
     uio.m_resid = total;
-    if (func_003AE1D0(fp, &uio))
-        return (total - uio.m_resid) / size;
-    return n;
+    if (!func_003AE1D0(fp, &uio))
+        return n;
+    return (total - uio.m_resid) / size;
+}
+
+// FUNCTION: GAME 0x3AEBC0
+extern "C" int func_003AEBC0(unsigned *x)
+{
+    unsigned y = *x;
+    int k;
+    if (y & 7) {
+        if (y & 1)
+            return 0;
+        if (y & 2) {
+            y >>= 1;
+            *x = y;
+            return 1;
+        }
+        y >>= 2;
+        *x = y;
+        return 2;
+    }
+    k = 0;
+    if (!(y & 0xFFFF)) {
+        k = 16;
+        y >>= 16;
+    }
+    if (!(y & 0xFF)) {
+        k += 8;
+        y >>= 8;
+    }
+    if (!(y & 0xF)) {
+        k += 4;
+        y >>= 4;
+    }
+    if (!(y & 3)) {
+        k += 2;
+        y >>= 2;
+    }
+    if (!(y & 1)) {
+        y >>= 1;
+        k++;
+        if (!y)
+            return 32;
+    }
+    *x = y;
+    return k;
 }

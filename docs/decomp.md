@@ -111,6 +111,11 @@ These source shapes reproduce patterns this compiler emits only one way:
   where `name` is the rodata string extern.
 - Base destructor calls need `extern "C" void _$_7cPlBase(T *);`.
 - Flags tested with `lwu; dsra` need `long f = (unsigned)s->flags; (f >> n) & 1`.
+- `lbu; ...; sw v,0($sp)` followed by a branch on the register comes from
+  passing a widened `unsigned char` member to an inline helper that takes
+  `const int &`: `static inline int IsSet(const int &v) { return v != 0; }`
+  (or `Gt(const int &v, int n)`), called as `IsSet(*(unsigned char *)(p + 0x2B4))`.
+  GCC 2.95 spills the temporary and keeps testing the register.
 - Quadword vector copies (`lqc2 $vf4; sqc2 $vf4`) come from inline asm, as in
   `cObjCopyVec` (`src/game/cObj.h`):
   `__asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,0(%0)" : : "r"(dst), "r"(src) : "memory");`.
