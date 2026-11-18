@@ -10,7 +10,7 @@ extern char Sys[];
     } while (0)
 
 #ifdef NONMATCHING
-// 21-word near-miss: self and clamped value swap a3/a2, and gcc folds 0x2013 onto lo before the shift add
+// 21-word near-miss (best 16 words: temp e8 pointer, but hi/v regs then shift t0->t1; split 0x2013 add via temp b gives 19): self and clamped value swap a3/a2, and gcc folds 0x2013 onto lo before the shift add
 // DRAFT: GAME 0x162B18
 extern "C" void func_00162B18(char *self)
 {

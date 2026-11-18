@@ -4,7 +4,7 @@ extern int D_005E6908;
 extern "C" int func_002BF700(char *);
 extern "C" void func_002BF170(char *);
 // DRAFT: GAME 0x2BF1A0
-// 8 words differ: tail stores and the 0x40000000 or schedule in a different register order (original: flags a0, mask v1, a1=1, v0=1 ret, v1=3; ~16 forms incl. shared one-var, temp flag var, callee return-type changes tried)
+// 8 words differ: tail stores and the 0x40000000 or schedule in a different register order (original: flags a0, mask v1, a1=1, v0=1 ret, v1=3; ~16 forms incl. shared one-var, temp flag var, callee return-type changes, short-store merge, const temps tried)
 extern "C" int openSave__9cSaveLoad10eSavePoint(char *self, int x)
 {
     unsigned *g = D_00747A2C;

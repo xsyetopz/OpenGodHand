@@ -52,15 +52,19 @@ extern "C" void func_001F6AF8(int *self)
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1F8550 - 5 words: return tail layout (original has separate jr after return-1 delay slot); locals y,h,py,top order fixed the f-regs
+// FUNCTION: GAME 0x1F8550
+// two separate early returns give the original duplicated return-0 tail
 extern "C" int func_001F8550(float *c, float *p)
 {
     float y = c[1];
     float h = c[2];
     float py = p[1];
     float top = y + h;
-    if (!(py < y) && !(top < py)) {
+    if (py < y)
+        return 0;
+    if (top < py)
+        return 0;
+    {
         float dx = p[0] - c[4];
         float dz = p[2] - c[5];
         float l = dx * dx + dz * dz;
@@ -70,7 +74,6 @@ extern "C" int func_001F8550(float *c, float *p)
     }
     return 0;
 }
-#endif
 
 extern char Snd[];
 extern "C" void func_002CB340(void *, int);

@@ -105,14 +105,14 @@ extern "C" void func_0026A838(char *s, int i)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x26B9E8 - 4 words: vtable call picks v0 for the vtable and v1 for the entry (target is the reverse)
+// FUNCTION: GAME 0x26B9E8
+// The slot is typed int-returning: that gives the original v1 (vtable) / v0 (slot) allocation; a void slot swaps them.
 #include "game/cVec.h"
 struct VT {
     char p[0x40];
     short off;
     short pad;
-    void (*fn)(char *);
+    int (*fn)(char *);
 };
 extern "C" char *CreateObj__F6eObjIdT0(int, int);
 extern "C" void func_001D0090(char *, char *);
@@ -136,4 +136,3 @@ extern "C" void func_0026B9E8(char *s)
         }
     }
 }
-#endif

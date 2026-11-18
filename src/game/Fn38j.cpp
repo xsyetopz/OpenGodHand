@@ -113,7 +113,7 @@ extern Fn38In D_0076CF20[];
 extern Fn38Ou D_0076A9C0[];
 
 // DRAFT: GAME 0x37CE20
-// diff: 33 words; lui order of the two table bases and bnel delay-slot fill differ (original puts else-path lbu in the delay slot, ours the i-- ; while-loop form did not change it)
+// diff: 33 words; swapping s/o decl order gives 35; lui order of the two table bases and bnel delay-slot fill differ (original puts else-path lbu in the delay slot, ours the i-- ; while-loop form did not change it)
 extern "C" void func_0037CE20(void)
 {
     Fn38Ou *o = D_0076A9C0;

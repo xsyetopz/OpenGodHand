@@ -19,15 +19,15 @@ extern "C" int *func_002A4F30(char *, int);
 extern "C" void func_0031A650(void *, int, int, int);
 extern char D_00754C80[];
 
-// DRAFT: GAME 0x2A5930 - 5 words differ: original keeps the new node pointer in t0 instead of a1
+// DRAFT: GAME 0x2A5930 - 5 words differ: original keeps the new node pointer in t0 instead of a1; int/unsigned callee types, store order, arg temps tried
 #ifdef NONMATCHING
 extern "C" void func_002A5930(char *self)
 {
     int *p = func_002A4F30(self, 0x10);
     if (p) {
+        *(unsigned long *)p = 0x70000000;
         p[2] = 0x11000000;
         p[3] = 0;
-        *(unsigned long *)p = 0x70000000;
         char *b = self + 0x28000;
         func_0031A650(D_00754C80, *(int *)(b + 0x2060), *(int *)(b + 0x2064), *(int *)(b + 0x2050));
     }

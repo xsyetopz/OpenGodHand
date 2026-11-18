@@ -3,7 +3,7 @@ extern "C" void func_002011B0(void *);
 struct DvdSlot;
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2017A8 - 28 words off: self/b saved-register swap (s0/s1); original keeps a loop-2 precheck; do-while and e-first variants did not help
+// DRAFT: GAME 0x2017A8 - 28 words off: self/b in swapped saved regs (s0/s1); original loop 2 has no precheck and a bnel/b layout like loop 1; do-while (int and pointer end), end from p, e-first variants did not help
 extern "C" DvdSlot *func_002017A8(void *self_)
 {
     char *self = (char *)self_;

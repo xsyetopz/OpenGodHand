@@ -16,10 +16,10 @@ extern char Sys[];
 #define H(o) (*(short *)(self + (o)))
 #define UH(o) (*(unsigned short *)(self + (o)))
 
-struct VT { char _p[0xA8]; short off; short _q; void (*fn)(char *, int, char *, int, int); };
+struct VT { char _p[0xA8]; short off; short _q; int (*fn)(char *, int, char *, int, int); };
 
-// DRAFT: GAME 0x239240 - (same virtual-call v0/v1 pattern as 0x237078) 6 words differ: the vtable pointer sits in v1 and the slot in v0 in the original; mine swaps them in the m_3AC & 1 virtual call
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x239240
+// The slot is typed int-returning: that gives the original v1 (vtable) / v0 (slot) allocation; a void slot swaps them.
 extern "C" void func_00239240(char *self)
 {
     char *pl = (char *)Getplayer__Fv();
@@ -109,4 +109,3 @@ extern "C" void func_00239240(char *self)
         break;
     }
 }
-#endif

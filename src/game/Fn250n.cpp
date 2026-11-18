@@ -72,11 +72,11 @@ extern "C" void func_0025C5D8(char *self)
 
 extern "C" void func_00281470(void *, int);
 extern "C" void func_00283378(void *, int);
-extern "C" void func_0026F120(void *);
+extern "C" int func_0026F120(void *);
 extern "C" int func_0026F1D8(void *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x25B9F0 - 12 words differ: structure matches; B(0x2F6)++ and the vtable fn pointer use v1 in the original, v0 here
+// FUNCTION: GAME 0x25B9F0
+// The vtable slot is typed int-returning, as func_0026F120 is; void typing shifts v0/v1 allocation (the 0x2F6 increment and the virtual call).
 extern "C" void func_0025B9F0(char *self)
 {
     char *pl = (char *)Getplayer();
@@ -146,10 +146,9 @@ extern "C" void func_0025B9F0(char *self)
         if (*(short *)(self + 0x568)) {
             *(short *)(self + 0x568) = 0;
             char *vt = *(char **)(self + 0x214);
-            ((void (*)(char *, int, char *, int, int)) * (void **)(vt + 0xAC))(self + *(short *)(vt + 0xA8), 0xC8, pl, 0, 0);
+            ((int (*)(char *, int, char *, int, int)) * (void **)(vt + 0xAC))(self + *(short *)(vt + 0xA8), 0xC8, pl, 0, 0);
             if (*(short *)(self + 0x54A) <= 0)
                 *(short *)(self + 0x54A) = 1;
         }
     }
 }
-#endif
