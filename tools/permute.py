@@ -42,13 +42,10 @@ OUT = ROOT / "build/permuter"
 
 
 def top_level_chunks(text: str) -> list[str]:
-    """Split source into top-level declarations, function bodies and preprocessor lines."""
+    """Split preprocessed source into top-level declarations and function bodies."""
     chunks: list[str] = []
     cur, depth = "", 0
     for line in text.splitlines(keepends=True):
-        if depth == 0 and not cur.strip() and line.lstrip().startswith("#"):
-            chunks.append(line)
-            continue
         cur += line
         depth += line.count("{") - line.count("}")
         stripped = line.strip()
@@ -60,24 +57,54 @@ def top_level_chunks(text: str) -> list[str]:
     return chunks
 
 
-def make_base(src: Path, name: str) -> str:
-    """The target function and the declarations before it, as C."""
-    text = re.sub(r"//[^\n]*", "", src.read_text())
+def c_name(unit: str, text: str, addr: int) -> str:
+    """Name the function carries in base.c: the unit name for extern "C" code, else func_<ADDR>.
+
+    A C++ unit (`Turn_dest__FPCffT0f`) is defined in the source under its
+    unmangled name; base.c gets a C name and target.o's symbol is renamed to it.
+    """
+    if re.search(rf"\b{re.escape(unit)}\s*\(", text) or "__" not in unit:
+        return unit
+    return f"func_{addr:08X}"
+
+
+def make_base(src: Path, name: str, addr: int) -> tuple[str, str]:
+    """The target function and the declarations before it as C, and its C name.
+
+    The source goes through the compiler's preprocessor first (project includes,
+    macros, NONMATCHING drafts), since the permuter preprocesses base.c without
+    include paths.
+    """
+    cmd = ["cc", "-E", "-P", "-x", "c++", "-nostdinc", "-DNONMATCHING", f"-I{ROOT / 'src'}", f"-I{ROOT / 'include'}", str(src)]
+    text = subprocess.run(cmd, capture_output=True, text=True, check=True).stdout
     text = re.sub(r'extern\s+"C"\s*', "", text)
+    cname = c_name(name, text, addr)
+    pattern = name if cname == name else name.split("__")[0]
     keep = []
     for chunk in top_level_chunks(text):
-        if re.match(r"\s*#\s*(ifdef\s+NONMATCHING|endif)\b", chunk):
-            continue
-        body = chunk.rstrip().endswith("}") and "{" in chunk and not chunk.lstrip().startswith(("struct", "union", "enum", "typedef"))
-        if body and not re.search(rf"\b{re.escape(name)}\s*\(", chunk):
+        body = chunk.rstrip().endswith("}") and "{" in chunk and not chunk.lstrip().startswith(("struct", "union", "enum", "typedef", "class", "static", "inline"))
+        if body and not re.search(rf"\b{re.escape(pattern)}\s*\(", chunk):
             continue  # another function's body
-        keep.append(chunk)
         if body:
+            keep.append(re.sub(rf"\b{re.escape(pattern)}\s*\(", cname + "(", chunk, count=1))
             break  # declarations after the function are not needed
-    return "".join(keep)
+        keep.append(chunk)
+    return "".join(keep), cname
 
 
-def divnop_tag(addr: int) -> str:
+def divnop_tag(src: Path, addr: int) -> str:
+    """The DIVNOP line for the function: the draft's own tag, else divnop.py's count.
+
+    divnop.py counts every zero word before a div.s, including a nop the
+    compiler emits itself, so the count written under the draft's tag (the
+    nops to insert) wins when present.
+    """
+    mine = False
+    for line in src.read_text().splitlines():
+        if m := configure.ANNOT.match(line) or re.match(r"//\s*DRAFT:\s*GAME\s+0x([0-9A-Fa-f]+)", line):
+            mine = int(m.group(1), 16) == addr
+        if mine and (m := re.search(r"DIVNOP:\s*(\d+(?:\s+\d+)*)", line)):
+            return f"// DIVNOP: {m.group(1)}"
     out = subprocess.run([sys.executable, str(ROOT / "tools/divnop.py"), hex(addr)], capture_output=True, text=True, cwd=ROOT)
     return out.stdout.strip() if out.returncode == 0 else ""
 
@@ -95,16 +122,23 @@ def main() -> int:
     compiler, flags = configure.source_build(args.src)
     pick = f"--compiler {compiler} " if compiler else ""
 
-    (out / "base.c").write_text(make_base(args.src, name))
+    base, cname = make_base(args.src, name, args.addr)
+    (out / "base.c").write_text(base)
 
     asm = ROOT / f"asm/text/{args.addr:08X}.s"
     cmd = [configure.tool("as"), *shlex.split(configure.ASFLAGS), "-o", str(out / "target.o"), str(asm)]
     if subprocess.call(cmd, cwd=ROOT):
         return 1
+    if cname != name:  # C++ unit: the candidate is built under its C name
+        subprocess.check_call([configure.tool("objcopy"), "--redefine-sym", f"{name}={cname}", str(out / "target.o")])
 
     tags = f"// FUNCTION: GAME 0x{args.addr:X}\\n"
-    if tag := divnop_tag(args.addr):
+    if tag := divnop_tag(args.src, args.addr):
         tags += tag + "\\n"
+    rename = cname != name  # C++ unit: build under the unit name so divnop applies, then rename
+    if rename:
+        tags += f"#define {cname} {name}\\n"
+    fix = f'{configure.tool("objcopy")} --redefine-sym {name}={cname} "$work/f.o"\n' if rename else ""
     script = f"""#!/bin/bash
 # usage: compile.sh candidate.c -o out.o
 set -e
@@ -113,11 +147,11 @@ work=$(mktemp -d build/permuter.XXXXXX)
 trap 'rm -rf "$work"' EXIT
 {{ printf '{tags}extern "C" {{\\n'; cat "$1"; printf '\\n}}\\n'; }} > "$work/f.cpp"
 {shlex.quote(sys.executable)} tools/eecc.py {pick}{flags} -c -o "$work/f.o" "$work/f.cpp"
-cp "$work/f.o" "$3"
+{fix}cp "$work/f.o" "$3"
 """
     (out / "compile.sh").write_text(script)
     (out / "settings.toml").write_text(
-        f'func_name = "{name}"\ncompiler_type = "gcc"\nobjdump_command = "{configure.tool("objdump")} -drz -m mips:5900"\n'
+        f'func_name = "{cname}"\ncompiler_type = "gcc"\nobjdump_command = "{configure.tool("objdump")} -drz -m mips:5900"\n'
     )
     print(f"wrote {out}\nrun: .venv/bin/python tools/ext/decomp-permuter/permuter.py -j4 {out.relative_to(ROOT) if out.is_relative_to(ROOT) else out}")
     return 0
