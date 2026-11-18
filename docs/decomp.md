@@ -216,6 +216,11 @@ layout: `_G_off_t` is `long`, `_G_USING_THUNKS` is off (8-byte vtable jump
 entries), and `ios` is a virtual base. Its units carry their mangled names in
 `config/symbols.sndata.txt`; `config/aliases.ld` maps the libio-internal
 callees still in asm and the old `func_` names used by C callers.
+Identical one-call thunks match under any name, so their names are checked
+against the vtable words: the `_vt$7filebuf` slots put `doallocate` at
+0x38EF80 and `overflow`/`underflow`/`sync`/`seekoff` at the next four 0x20
+steps, one slot earlier than the raw .sndata list, and each thunk's `jal`
+target names the matching `_IO_file_*` routine.
 
 Sources for that region are C files in `src/sce/`. A source selects its
 compiler with leading comment lines (within its first four lines), which
