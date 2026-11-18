@@ -169,9 +169,8 @@ extern "C" void roomInit__16cCockLastBossBar(char *self)
     self[0x7C] = 0;
 }
 
-// DRAFT: GAME 0x13ED28 (addu operand order of 4 hoisted bases differs after 4 tries)
-#ifdef NONMATCHING
 extern "C" void func_002AA3D8(void *, int);
+// FUNCTION: GAME 0x13ED28
 extern "C" void func_0013ED28(char *self)
 {
     char *w[3];
@@ -188,17 +187,16 @@ extern "C" void func_0013ED28(char *self)
     float *p1 = (float *)(self + 0x94), *p2 = (float *)(self + 0x90), *p3 = (float *)(self + 0x98), *p4 = (float *)(self + 0x9C);
     unsigned short i;
     for (i = 0; i < 2; i++) {
-        p1[i * 4] = 1.0f;
-        p2[i * 4] = 2.0f;
-        p3[i * 4] = *(float *)(w[i] + 0x74);
-        p4[i * 4] = *(float *)(w[i] + 0x7C);
+        *(float *)((int)p1 + (i << 4)) = 1.0f;
+        *(float *)((int)p2 + (i << 4)) = 2.0f;
+        *(float *)((int)p3 + (i << 4)) = *(float *)(w[i] + 0x74);
+        *(float *)((int)p4 + (i << 4)) = *(float *)(w[i] + 0x7C);
     }
     *(float *)(self + 0xB4) = *(float *)(e + 0x38);
     *(float *)(self + 0xB8) = 256.0f;
     *(int *)(self + 0xB0) = 0;
     self[0xBC] = 0;
 }
-#endif
 
 struct Q4 { float v[4]; } __attribute__((aligned(16)));
 extern "C" void func_002E1468(Q4 *, Q4 *, Q4 *, Q4 *, float, float, float);

@@ -158,17 +158,14 @@ extern "C" void func_0037A818(Fn37M *a, Fn37N *b)
 }
 struct Fn37O { char _0[6]; signed char c6; signed char c7; char _8[6]; unsigned short he; char _10[8]; short h18; short h1a; char _1c[2]; signed char c1e; };
 struct Fn37V { char _0[0x25]; signed char c25; char _26[0x76]; Fn37O e; };
-#ifdef NONMATCHING
 struct Fn37R { char _0[0x18]; short h18; short h1a; };
 extern "C" int func_00377FA0(void);
-// DRAFT: GAME 0x37D760
-// diff: 2 words, original loads h1a before h18
+// FUNCTION: GAME 0x37D760
 extern "C" short func_0037D760(Fn37R *s)
 {
-    short lo;
-    short hi = s->h1a;
     short d;
-    lo = s->h18;
+    short lo = s->h18;
+    short hi = s->h1a;
     short r;
     if (lo == hi) return lo;
     d = hi - lo;
@@ -176,4 +173,3 @@ extern "C" short func_0037D760(Fn37R *s)
     else r = (unsigned)func_00377FA0() % 0x11 * (d / 16);
     return r + lo;
 }
-#endif
