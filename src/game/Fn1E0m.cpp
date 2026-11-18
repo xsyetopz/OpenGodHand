@@ -53,13 +53,14 @@ extern "C" void func_001F6AF8(int *self)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1F8550 - 12 words: f1/f2 allocation of p[1]/c[2] swapped, return-0 tail shared
+// DRAFT: GAME 0x1F8550 - 5 words: return tail layout (original has separate jr after return-1 delay slot); locals y,h,py,top order fixed the f-regs
 extern "C" int func_001F8550(float *c, float *p)
 {
     float y = c[1];
     float h = c[2];
     float py = p[1];
-    if (!(py < y) && !(y + h < py)) {
+    float top = y + h;
+    if (!(py < y) && !(top < py)) {
         float dx = p[0] - c[4];
         float dz = p[2] - c[5];
         float l = dx * dx + dz * dz;

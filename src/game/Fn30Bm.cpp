@@ -2,15 +2,14 @@
 extern unsigned D_00754250[];
 extern int D_003C3D08;
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x30F2B0 (6 words off: t1/t2 swapped; local n and declaration-order swap tried, no change)
+// FUNCTION: GAME 0x30F2B0
 extern "C" void func_0030F2B0(unsigned seed)
 {
     D_00754250[0] = seed;
     D_003C3D08 = 1;
     do {
+        unsigned x = D_00754250[D_003C3D08 - 1];
         int i = D_003C3D08;
-        unsigned x = D_00754250[i - 1];
         x ^= x >> 30;
         int n = i + 1;
         D_003C3D08 = n;
@@ -19,7 +18,6 @@ extern "C" void func_0030F2B0(unsigned seed)
             break;
     } while (1);
 }
-#endif
 
 extern "C" void *getMeshPtr__6cModeli(void *, int);
 extern "C" int getMeshNum__C6cModel(void *);

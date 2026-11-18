@@ -38,14 +38,12 @@ extern "C" void func_0018F5D0(char *self)
 
 extern "C" float fRand1_1__Fv();
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1810A0 - orig branches blez with lhu in v1 and sll v1 test; ours uses blezl/early epilogue (near)
+// FUNCTION: GAME 0x1810A0
 extern "C" void func_001810A0(char *self)
 {
     if (*(short *)(self + 0x600) > 0) {
-        int n = *(unsigned short *)(self + 0x600) - 1;
-        *(short *)(self + 0x600) = n;
-        if ((n << 16) != 0) {
+        *(short *)(self + 0x600) = *(short *)(self + 0x600) - 1;
+        if (*(short *)(self + 0x600) != 0) {
             float v = *(float *)(self + 0x604) + fRand1_1__Fv() * 0.015f;
             (*(float **)(self + 0xF0))[1] = v;
         } else {
@@ -53,7 +51,6 @@ extern "C" void func_001810A0(char *self)
         }
     }
 }
-#endif
 
 // FUNCTION: GAME 0x183848
 extern "C" void *func_00183848(char *self)

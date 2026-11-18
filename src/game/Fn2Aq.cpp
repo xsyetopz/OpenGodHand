@@ -122,7 +122,7 @@ extern "C" void func_002A4ED8(char *self)
 }
 #endif
 
-// DRAFT: GAME 0x2A58D8 - 12 words differ: original branches s==4 and s==6 to separate stores and keeps -1 as lui/ori
+// DRAFT: GAME 0x2A58D8 - 12 words differ (switch, || , ?:, struct forms tried; best is the || form): original branches s==4 and s==6 to separate stores and keeps -1 as lui/ori
 #ifdef NONMATCHING
 extern "C" void func_002A58D8(char *self, unsigned v)
 {
