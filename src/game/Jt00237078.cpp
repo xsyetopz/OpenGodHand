@@ -16,7 +16,8 @@ extern char Sys[];
 #define H(o) (*(short *)(self + (o)))
 #define UH(o) (*(unsigned short *)(self + (o)))
 
-// DRAFT: GAME 0x237078 - 6 words differ: the vtable pointer sits in v1 and the slot in v0 in the original; mine swaps them in the m_3AC & 1 virtual call
+// DRAFT: GAME 0x237078 - 6 words differ (~15 forms tried: struct VE, split fn/vt temps, cast forms, cond forms): the vtable pointer sits in v1 and the slot in v0 in the original; mine swaps them in the m_3AC & 1 virtual call
+#ifdef NONMATCHING
 extern "C" void func_00237078(char *self)
 {
     char *pl = (char *)Getplayer__Fv();
@@ -100,7 +101,7 @@ extern "C" void func_00237078(char *self)
             func_002705D8(self);
         addNullSpeed_Rotation__8cObjBasef(self, 1.0f);
         addNullSpeed__8cObjBasef(self, 1.0f);
-        if ((UH(0x3AC) & 1) != 0) {
+        if (UH(0x3AC) & 1) {
             char *vt;
             vt = *(char **)(self + 0x214);
             ((void (*)(char *, int, int, int, int)) * (void **)(vt + 0xAC))(self + *(short *)(vt + 0xA8), 0x14, 0, 0, 0);
@@ -110,3 +111,4 @@ extern "C" void func_00237078(char *self)
         break;
     }
 }
+#endif

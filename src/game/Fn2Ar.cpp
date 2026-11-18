@@ -103,21 +103,16 @@ extern "C" void setReleaseActiveHeap__5cGamei(char *self)
 
 extern "C" int isClip__C6cModel(void *);
 
-// DRAFT: GAME 0x2A7448 - 1 word differs: second branch compiles to bnel, original bnez with addiu in the delay slot
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2A7448
 extern "C" int isClip__C8cGameObj(char *self)
 {
     long l = *(unsigned *)(self + 0x5A0);
     long a = l & 1;
-    int r = 1;
-    if (!a) {
-        long b = (l >> 1) & 1;
-        if (!b)
-            r = isClip__C6cModel(self) != 0;
-    }
-    return r;
+    if (a) return 1;
+    long b = (l >> 1) & 1;
+    if (!b) return isClip__C6cModel(self) != 0;
+    return 1;
 }
-#endif
 
 // FUNCTION: GAME 0x2A9680
 extern "C" void free__5cHeapPv(void *, int *n)

@@ -96,8 +96,7 @@ extern "C" unsigned char *func_001FE660(void)
     return 0;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1FF0D8 - 1 word: sra instead of dsrl on the 0x8 field
+// FUNCTION: GAME 0x1FF0D8
 extern "C" int func_001FF0D8(char *p)
 {
     if (*(int *)(p + 4) != 0)
@@ -108,7 +107,6 @@ extern "C" int func_001FF0D8(char *p)
         return 0;
     return *(int *)(p + 0x10) != 0;
 }
-#endif
 
 // FUNCTION: GAME 0x1F6E98
 extern "C" int func_001F6E98(void *buf, int n)

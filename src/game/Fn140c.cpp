@@ -63,19 +63,18 @@ extern "C" void func_001450A0(char *self, void *src, short n)
     *(unsigned *)(self + 0x90) |= 0x40000000;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1451E0 - 4 words differ: the -1/-2 tail uses movz with swapped constants (original movn)
+// FUNCTION: GAME 0x1451E0
 extern "C" int func_001451E0(char *p)
 {
     if (*(short *)(p + 0x41E) == 3 && *(short *)(p + 0x420) == 0) {
         int n = *(short *)(p + 0x422) + 1;
         if (n >= *(short *)(p + 0x3B2))
             return *(short *)(p + 0x36C);
-        return *(short *)((p + n * 2) + 0x36C);
+        char *q = p + n * 2;
+        return *(short *)(q + 0x36C);
     }
-    int r = -2;
-    if (*(short *)(p + 0x41E))
-        r = -1;
+    int r = -1;
+    if (!*(short *)(p + 0x41E))
+        r = -2;
     return r;
 }
-#endif

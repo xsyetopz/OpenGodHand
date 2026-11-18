@@ -205,22 +205,19 @@ extern "C" void func_002BA6B0(char *self)
     *(float *)(self + 0xE4) = ((float (*)(char *))(*(void **)(vt + 0x24)))(self + *(short *)(vt + 0x20));
 }
 
-// DRAFT: GAME 0x2B3BE0
-// diff: 14 words, self copied to a2 and -0x801/-0x101 constant scheduling
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2B3BE0
+static inline void SetF14(char *s, unsigned m) { *(unsigned *)(s + 0x14) |= m; }
+static inline void ClrF14(char *s, unsigned m) { *(unsigned *)(s + 0x14) &= ~m; }
 extern "C" int func_002B3BE0(char *self)
 {
-    int f = *(int *)(self + 0x14) | 0x800;
-    *(int *)(self + 0x14) = f;
-    if (f & 0x100) {
-        f &= -0x801;
-        f &= -0x101;
-        *(int *)(self + 0x14) = f;
+    SetF14(self, 0x800);
+    if (*(unsigned *)(self + 0x14) & 0x100) {
+        ClrF14(self, 0x800);
+        ClrF14(self, 0x100);
         return 0;
     }
     return 1;
 }
-#endif
 
 // DRAFT: GAME 0x2B4FE8
 // diff: 9 words, loop exit layout and which pointer is loaded vs returned

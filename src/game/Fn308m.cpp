@@ -2,7 +2,7 @@
 extern "C" void func_00306FC0(char *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x307060 (23 words off: only a1/a2 register roles swapped)
+// DRAFT: GAME 0x307060 (23 words off: only a1/a2 register roles swapped; renaming cur/nx, hoisting nx, and a for-loop form did not change it)
 extern "C" void func_00307060(char *self)
 {
     char *a1 = self + 0x4200;
