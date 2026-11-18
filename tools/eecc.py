@@ -8,7 +8,9 @@ The objects were assembled by SN's ps2eeas 1.8.19.316 (shipped in the
 ee-gcc2.95.2-273a package), not the packaged GNU as: it keeps a `nop` after
 `mtc1` before the FPU reads the moved register, as the game does, while the
 1.9.x builds also pad a load used across a branch, which the game does not.
-For SN packages `-c` therefore runs as `-S` followed by that ps2eeas.
+For SN packages `-c` therefore runs as `-S` followed by that ps2eeas, and
+tools/shortloop.py pads loops shorter than six instructions as the game's
+assembler did.
 SN packages are Windows executables and run under Wine; the SCE Linux packages
 are i386 binaries. On anything but x86 Linux with Wine, both run in the i386
 container built from tools/docker/wine.Dockerfile (Docker or a compatible CLI
@@ -34,6 +36,9 @@ import tarfile
 import urllib.error
 import urllib.request
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import shortloop  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 URL = "https://github.com/decompme/compilers/releases/download/compilers/{}"
@@ -153,9 +158,24 @@ def main() -> int:
         steps = [[*exe, *gargs], [*exe[:-1], str(sn_as), *gsize, "-o", out, asm]]
         if exe[0] != "wine":
             steps[1] = ["wine", str(sn_as), *gsize, "-o", out, asm]
-        script = " && ".join(" ".join(shlex.quote(a) for a in step) for step in steps) + f" && rm -f {shlex.quote(asm)}"
-        cmd = cmd[: len(cmd) - len(exe) - len(gcc_args)] + ["sh", "-c", script]
-    rc = subprocess.call(cmd)
+        prefix = cmd[: len(cmd) - len(exe) - len(gcc_args)]
+        script = " && ".join(" ".join(shlex.quote(a) for a in step) for step in steps)
+        try:
+            rc = subprocess.call([*prefix, "sh", "-c", script])
+            # Loops shorter than the game's assembler allowed get nops before
+            # their branch and are assembled again (see tools/shortloop.py).
+            for _ in range(3):
+                if rc:
+                    break
+                fixes, totals = shortloop.find(Path(out))
+                if not fixes:
+                    break
+                Path(asm).write_text(shortloop.pad(Path(asm).read_text(), fixes, totals))
+                rc = subprocess.call([*prefix, *steps[1]])
+        finally:
+            Path(asm).unlink(missing_ok=True)
+    else:
+        rc = subprocess.call(cmd)
     if rc == 0 and "-o" in argv and argv[argv.index("-o") + 1].endswith(".o"):
         normalize_symtab(Path(argv[argv.index("-o") + 1]))
     return rc
