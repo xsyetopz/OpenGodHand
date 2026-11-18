@@ -74,6 +74,9 @@ def read_sources() -> dict[Path, list[int]]:
         # src/scratch/ (gitignored) holds matching experiments that duplicate real sources.
         if path.relative_to(ROOT).parts[:2] == ("src", "scratch"):
             continue
+        # `_name.cpp` files are local probes; they copy functions of real sources.
+        if path.name.startswith("_"):
+            continue
         addrs = [int(m.group(1), 16) for line in path.read_text().splitlines() if (m := ANNOT.match(line))]
         if addrs:
             found[path.relative_to(ROOT)] = addrs

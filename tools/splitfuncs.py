@@ -28,6 +28,52 @@ ADDR = re.compile(r"^\s+/\* (?:[0-9A-F]+ )?([0-9A-F]{8}) ")
 MARK = re.compile(r"^nonmatching (\S+)(?:, 0x([0-9A-F]+))?$")
 SECTION = re.compile(r"^\.section (\.\w+)(.*)$")
 WIDE = re.compile(r"^\s+/\*[^*]*\*/ \.(?:word|half|short|float|double|dword)\b")
+INSN = re.compile(r"^\s+/\* [0-9A-F]+ ([0-9A-F]{8}) ([0-9A-F]{8}) \*/")
+AUTO = re.compile(r"^func_[0-9A-F]{8}$")
+
+
+def split_fragment(body: list[str]) -> list[list[str]]:
+    """Split dead stack-pop pairs off the start of a function unit.
+
+    The game's text holds unreferenced `addiu $sp,$sp,N; nop` pairs between
+    functions (nothing branches or jumps to them). splat folds them into the
+    following function, so its entry point would sit 8 bytes into the unit and
+    no compiled function could replace it. The pairs become their own
+    `frag_<vram>` unit and the function unit starts at its real entry; an
+    automatic `func_<vram>` name follows the entry, other names are kept.
+    """
+    # Only the function's own instructions count; alignment nops follow endlabel.
+    end = next((i for i, l in enumerate(body) if l.startswith("endlabel ")), len(body))
+    insns = [(i, m) for i, l in enumerate(body[:end]) if (m := INSN.match(l))]
+    words = [int.from_bytes(bytes.fromhex(m.group(2)), "little") for _i, m in insns]
+    n = 0
+    while (n + 2 < len(words) and words[n] >> 16 == 0x27BD and not words[n] & 0x8000
+           and words[n + 1] == 0):
+        n += 2
+    if not n:
+        return [body]
+    cut = {i for i, _m in insns[:n]}
+    vram, entry = int(insns[0][1].group(1), 16), int(insns[n][1].group(1), 16)
+    rest, mark = [l for i, l in enumerate(body) if i not in cut], None
+    for l in rest:
+        if m := MARK.match(l.rstrip("\n")):
+            mark = m
+            break
+    old = mark.group(1)
+    new = f"func_{entry:08X}" if AUTO.match(old) else old
+    frag = f"frag_{vram:08X}"
+    head = [f"nonmatching {frag}, 0x{4 * n:X}\n", "\n", f"glabel {frag}\n"]
+    # Code takes the entry's address as `%lo(func_<vram> + 8)`; the old name
+    # stays defined at the fragment so those expressions keep their value.
+    if new != old:
+        head.append(f"  alabel {old}\n")
+    pairs = head + [body[i] for i in sorted(cut)] + [f"endlabel {frag}\n", "\n"]
+    size = f", 0x{int(mark.group(2), 16) - 4 * n:X}" if mark.group(2) else ""
+    # splat may already mark the entry as an alternative entry of the unit.
+    rest = [l for l in rest if l.split() != ["alabel", new]]
+    rest = [f"nonmatching {new}{size}\n" if MARK.match(l.rstrip("\n"))
+            else re.sub(rf"\b{re.escape(old)}\b", new, l) for l in rest]
+    return [pairs, rest]
 
 
 def unit_starts(lines: list[str]) -> list[int]:
@@ -81,7 +127,7 @@ def main() -> int:
         if bodies and start % 4 and any(WIDE.match(l) for l in body):
             bodies[-1] += body
             continue
-        bodies.append(body)
+        bodies.extend(split_fragment(body))
     vrams = [next(int(m.group(1), 16) for l in b if (m := ADDR.match(l))) for b in bodies]
 
     args.out.mkdir(parents=True, exist_ok=True)
