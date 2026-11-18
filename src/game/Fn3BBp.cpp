@@ -83,3 +83,26 @@ extern "C" Ent8 *func_003BB980(Ent8 *src, Ent8 *end, Ent8 *dst)
     }
     return dst;
 }
+
+#ifdef NONMATCHING
+static inline unsigned rf(const char *s, unsigned len, const char &c, unsigned pos)
+{
+    if (len != 0) {
+        unsigned i = len - 1;
+        if (pos < i)
+            i = pos;
+        i++;
+        while (i-- > 0) {
+            if (s[i] == c)
+                return i;
+        }
+    }
+    return 0xFFFFFFFFu;
+}
+// DRAFT: GAME 0x3BBEC0 (21 words off: exit layout; original returns from the loop straight to the epilogue)
+extern "C" unsigned func_003BBEC0(char **sp, char c, unsigned pos)
+{
+    char *s = *sp;
+    return rf(s, *(int *)(s - 16), c, pos);
+}
+#endif

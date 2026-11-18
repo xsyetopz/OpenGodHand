@@ -51,3 +51,42 @@ extern "C" void func_0031BB80(char *self)
     if (!(*(unsigned *)D_00747A24 & 0x20000000))
         func_00398128(0, 0, self + 0x360);
 }
+
+#ifdef NONMATCHING
+// DRAFT: GAME 0x31B4B8 (20 words off: scheduler hoists the 0x6A/0x7A byte stores to the front of the sb run)
+extern "C" void func_0031B4B8(void *, unsigned long *p)
+{
+    const unsigned long m = 0xF00807FF00000UL;
+    unsigned long a = p[8] & m;
+    unsigned long b = p[7] & m;
+    unsigned long c = p[5] & m;
+    unsigned long d = p[6] & m;
+    unsigned long e = p[3] & m;
+    unsigned char *q = (unsigned char *)p;
+    p[8] = a;
+    p[7] = b;
+    p[0] = e;
+    p[5] = c;
+    p[6] = d;
+    q[0x7A] = 0;
+    q[0x6A] = 0x80;
+    q[0x79] = 0;
+    q[0x78] = 0;
+    q[0x77] = 0;
+    q[0x76] = 0;
+    q[0x75] = 0;
+    q[0x74] = 0;
+    q[0x72] = 0;
+    q[0x71] = 0;
+    q[0x73] = 0;
+    q[0x70] = 0;
+    q[0x6D] = 0;
+    q[0x6C] = 0;
+    q[0x6E] = 0;
+    q[0x6F] = 0;
+    q[0x69] = 0x80;
+    q[0x68] = 0x80;
+    q[0x7B] = 0;
+    q[0x6B] = 0x80;
+}
+#endif

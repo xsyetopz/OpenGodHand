@@ -518,3 +518,97 @@ extern "C" void func_0011B900(char *self)
 }
 #endif
 
+
+extern "C" {
+void func_0010A438(void *);
+void SetHeatMode__8cHeatSysUc(void *, int);
+float capVu0MagnitudeSqXZ__FPCfT0(const float *, const float *);
+}
+// FUNCTION: GAME 0x114120
+extern "C" void func_00114120(char *self)
+{
+    *(float *)(self + 0x54C) = 15.0f;
+    switch (B(0x2F6)) {
+    case 0: {
+        *(short *)(self + 0x5E0) = 0;
+        *(short *)(self + 0x5E2) = 0;
+        func_00124E58(self);
+        char *t = *(char **)(self + 0x304);
+        int a = *(int *)(t + 0x10) + (int)t;
+        int b = *(int *)(t + 0x14) + (int)t;
+        func_0010A408(self, 5, 0x17, 0x2A, 0, 10);
+        func_0010A420(self, 5, 0x17, 0x2A, 0, 10);
+        B(0x1684) = 1;
+        func_002A8578(self, a, b, 3, 0.0f, 0, 0);
+        func_0012B928(self);
+        func_0012AC28(self);
+        B(0x2F6)++;
+    }
+    case 1:
+        if (moveMotion((cObjBase *)self)) {
+            B(0x2F4) = 0; B(0x2F5) = 0; B(0x2F6) = 0; B(0x2F7) = 0;
+        }
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+    }
+    if ((*(unsigned short *)(self + 0x3AC) & 1) && !*(unsigned char *)(g_HeatSys + 0x10)) {
+        SetHeatMode__8cHeatSysUc(g_HeatSys, 1);
+        *(int *)(self + 0x15F4) = (*(int *)(self + 0x15F4) | 0x10) & ~0x20;
+        func_0012AC28(self);
+        func_0012B928(self);
+    }
+    func_0010A438(self);
+    if (!func_00123938(self, 1)) {
+        *(unsigned short *)(self + 0x3AC) |= 0x800;
+        *(float *)(self + 0x674) = 0.05f;
+    }
+}
+
+// FUNCTION: GAME 0x114AC0
+extern "C" void func_00114AC0(char *self)
+{
+    switch (B(0x2F6)) {
+    case 0: {
+        char *t = *(char **)(self + 0x304);
+        *(short *)(self + 0x5E0) = 0;
+        *(short *)(self + 0x5E2) = 0;
+        func_002A8578(self, *(int *)(t + 0x48) + (int)t, *(int *)(t + 0x4C) + (int)t, 3, 0.0f, 0, 0);
+        ((cGameObj *)self)->SetTgtTurn(*(cVec *)(self + 0x580), 3.14159274f);
+        *(int *)(self + 0x15B4) = 0;
+        *(float *)(self + 0x1598) = 99999.8984375f;
+        B(0x2F6)++;
+        *(float *)(self + 0x1590) = 99999.8984375f;
+        *(float *)(self + 0x1594) = 99999.8984375f;
+    }
+    case 1: {
+        float *p = (float *)(self + 0x1590);
+        float *q = (float *)(self + 0x490);
+        *(unsigned short *)(self + 0x434) |= 8;
+        moveMotion((cObjBase *)self);
+        float m = capVu0MagnitudeSqXZ__FPCfT0(p, q);
+        float h = *(float *)(self + 0x1588) * 0.5f;
+        if (m < h * h) {
+            if (++*(int *)(self + 0x15B4) >= 2) {
+                B(0x2F4) = 0; B(0x2F5) = 0; B(0x2F6) = 0; B(0x2F7) = 0;
+            }
+        } else {
+            *(int *)(self + 0x15B4) = 0;
+        }
+        if (p != q) {
+            p[0] = q[0]; p[1] = q[1]; p[2] = q[2];
+        }
+        float d = capVu0MagnitudeSqXZ__FPCfT0(*(float **)(self + 0xF0), (float *)(self + 0x580));
+        if (d < 4.0f) {
+            B(0x2F4) = 0; B(0x2F5) = 0; B(0x2F6) = 0; B(0x2F7) = 0;
+        }
+        *(int *)(self + 0x330) = 0;
+        float v = 1.0f;
+        *(int *)(self + 0x334) = 0;
+        if (d > 25.0f) v = 2.0f;
+        *(float *)(self + 0x338) = v;
+        *(float *)(self + 0x338) = 2.0f;
+        ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
+        ((cObjBase *)self)->addNullSpeed(1.0f);
+    }
+    }
+}

@@ -165,7 +165,7 @@ def jump_table(obj: Path, sym: str, vram: int, span: int, raw: bytes, units: lis
             (entries if other == f".text.{sym}" else foreign).add(r["r_offset"])
     # The assembler pads the section to its alignment; zero bytes after the
     # last real byte are not content.
-    used = len(data.rstrip(b"\0")) + 3 & ~3
+    used = min(len(data), len(data.rstrip(b"\0")) + 3 & ~3)
     if not entries or used == 0 or max(entries | foreign) >= used:
         return None
     word = lambda b, i: struct.unpack_from("<I", b, i)[0]

@@ -186,3 +186,52 @@ extern "C" void func_00305A68(char *self)
         func_00305C18(self, r);
     func_00306D18(D_00743250);
 }
+
+extern "C" char *func_00306F88(char *);
+
+// FUNCTION: GAME 0x306D18
+extern "C" void func_00306D18(char *self)
+{
+    float c[4];
+    float *v = (float *)(self + 0x380);
+    for (unsigned i = 0; i < 1000; i++, v += 4) {
+        c[0] = 0.0f;
+        c[1] = 0.0f;
+        c[2] = 0.0f;
+        c[3] = 1.0f;
+        if (v != c) {
+            v[0] = 0.0f;
+            v[2] = c[0];
+            v[1] = 0.0f;
+        }
+    }
+    char *e = self;
+    char *z = self + 0x300;
+    char *vv = self + 0x380;
+    char *t = self + 0x4200;
+    for (e = self; e < z; e += 0x18) {
+        *(int *)e = 0;
+        *(int *)(e + 4) = 0;
+        e[8] = 0;
+        e[9] = 0;
+        *(short *)(e + 10) = 0;
+        *(short *)(e + 0x10) = 0;
+        *(int *)(e + 0xC) = 0;
+        *(short *)(e + 0x12) = 0;
+    }
+    int *w = (int *)z;
+    for (unsigned i = 0; i < 0x20; i++)
+        *w++ = 0;
+    char *r = func_00306F88(self);
+    *(char **)(r + 0xC) = vv;
+    *(short *)(r + 0x10) = 0x3E8;
+    *(int *)(self + 0x4200) = 0;
+    t[8] = 0;
+    t[9] = 0;
+    *(short *)(t + 10) = 0;
+    *(short *)(t + 0x10) = 0;
+    *(int *)(t + 0xC) = 0;
+    *(short *)(t + 0x12) = 0;
+    *(char **)(t + 4) = r;
+    *(char **)t = r;
+}

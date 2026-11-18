@@ -177,3 +177,25 @@ void func_003B5A50(void)
     func_003B59D8();
     __asm__ volatile("");
 }
+
+#ifdef NONMATCHING
+struct E { int used; char pad[0x38]; };
+extern struct E D_003FC7B8[];
+// DRAFT: GAME 0x3B9F60 (original keeps three induction regs i, &t[i].used, &t[i])
+struct E *func_003B9F60(void)
+{
+    struct E *p = D_003FC7B8;
+    int i = 0;
+    if (D_003FC7B8[0].used) {
+        for (;;) {
+            i++;
+            p = &D_003FC7B8[i];
+            if (i > 0)
+                break;
+            if (D_003FC7B8[i].used == 0)
+                break;
+        }
+    }
+    return i != 1 ? p : 0;
+}
+#endif
