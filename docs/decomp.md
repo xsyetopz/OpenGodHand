@@ -119,9 +119,18 @@ These source shapes reproduce patterns this compiler emits only one way:
 
 ## SCE library regions
 
-Most of 0x320000-0x3BBF20 saves registers with `sd` and tail-calls with `j`.
-That code was built by SCE ee-gcc 3.2 (`ee-gcc3.2-030926` or `-040921`, -O2),
-not ProDG 2.95.3; `fncmp.py --compiler ee-gcc3.2-030926` compares against it.
+The SDK and runtime libraries (libsce, libstdc++ such as `endl__FR7ostream`)
+save callee-saved registers with `sd` instead of ProDG's `sq`. They occupy
+0x31C000-0x36FFFF, 0x384000-0x3A3FFF and 0x3B0000 to the end of `.text`; the
+ProDG islands 0x370000-0x383FFF and 0x3A4000-0x3AFFFF are game code.
+
+Most of that library code matches SCE ee-gcc 2.9 (`ee-gcc2.9-991111`; the
+990721 and 991111 variants agree on every function tested) as C at -O2.
+ee-gcc 2.96 and 2.95.x miss it, and ee-gcc 3.2 uses `t6`/`t7` temporaries and
+sibling calls. A few objects near 0x340000 match only ee-gcc 3.2 or 2.96, so
+the compiler is chosen per object file. Leaf functions of 8-20 bytes compile
+identically under every package and do not identify the compiler; framed
+functions do. `syscall` stubs are hand-written and stay in asm.
 
 Sources for that region are C files in `src/sce/`. A source selects its
 compiler with leading comment lines (within its first four lines), which
