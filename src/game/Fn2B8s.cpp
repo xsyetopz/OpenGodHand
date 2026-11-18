@@ -1,11 +1,11 @@
-extern "C" void func_002BB1F0(int);
+extern "C" void func_002BB1F0(char *);
 
 // FUNCTION: GAME 0x2B8AA8
 extern "C" void func_002B8AA8(int *self)
 {
     self[0xD8 / 4] = 0;
     if (((self[0] & 0x203) ^ 3) == 0)
-        func_002BB1F0(self[0x34 / 4]);
+        func_002BB1F0((char *)self[0x34 / 4]);
 }
 
 struct KF { unsigned short a, t; };
@@ -177,17 +177,17 @@ extern "C" char *func_002B48F0(char *self)
     return self;
 }
 
-extern "C" void func_002B46F0(char *, int, int, int);
+extern "C" void func_002B46F0(char *, int, short, void *);
 
 // diff: 9 words, original materializes the -3 mask and zero store in different registers/order
 // DRAFT: GAME 0x2B3460
 #ifdef NONMATCHING
 extern "C" void func_002B3460(char *self)
 {
-    int a3 = 0;
+    void *a3 = 0;
     int a1 = *(int *)(self + 0x20);
     if (*(unsigned char *)(self + 0x70) == 0)
-        a3 = *(int *)(self + 0x18);
+        a3 = *(void **)(self + 0x18);
     func_002B46F0(self, a1, 0, a3);
     unsigned i = 0;
     unsigned short *p = (unsigned short *)(self + 0x24);
@@ -199,3 +199,96 @@ extern "C" void func_002B3460(char *self)
     *(int *)(self + 0x14) = fl;
 }
 #endif
+
+extern "C" void MtxMultiply__FR7cMatrixRC7cMatrixT1(char *, char *, char *);
+
+// FUNCTION: GAME 0x2BB1F0
+extern "C" void func_002BB1F0(char *self)
+{
+    long f = *(unsigned char *)(self + 4);
+    long a = f & 1;
+    if (a == 1 && ((f >> 1) & 1) == a)
+        MtxMultiply__FR7cMatrixRC7cMatrixT1(self + 0x80, *(char **)(self + 8), self + 0x10);
+    char *vt = *(char **)(self + 0x100);
+    ((void (*)(char *))(*(void **)(vt + 0x4C)))(self + *(short *)(vt + 0x48));
+}
+
+extern "C" unsigned func_002BEDD8(char *);
+extern "C" unsigned char *func_002BEF08(char *, unsigned);
+
+// diff: loop is rotated differently (bnel with delay-slot arg setup in original)
+// DRAFT: GAME 0x2BEFE8
+#ifdef NONMATCHING
+extern "C" int setEmDeadFlag__9cRoomSaveUi(char *self, unsigned id)
+{
+    unsigned i = 0;
+    while (i < func_002BEDD8(self)) {
+        unsigned char *e = func_002BEF08(self, i);
+        i++;
+        if (e && e[0x13] == id) {
+            e[0x14] = 1;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+#endif
+
+// diff: 3 words, bnez vs bnel and a0/a1 setup order in the loop
+// DRAFT: GAME 0x2BEF60
+#ifdef NONMATCHING
+extern "C" unsigned char *func_002BEF60(char *self, unsigned id)
+{
+    if (id == 0xFF)
+        return 0;
+    unsigned i = 0;
+    while (i < func_002BEDD8(self)) {
+        unsigned char *e = func_002BEF08(self, i);
+        i++;
+        if (e && e[0x13] == id)
+            return e;
+    }
+    return 0;
+}
+#endif
+
+extern unsigned D_00747A30;
+extern char Snd[];
+extern "C" void SeCall__4cSnd6eSeBlksR4cObjP4cObjP6cPartsUii(char *, int, int, void *, void *, void *, unsigned, int);
+extern "C" void SeCall__4cSnd6eSeBlksssUii(char *, int, int, int, int, int, int);
+
+// FUNCTION: GAME 0x2B46F0
+extern "C" void func_002B46F0(char *, int a1, short a2, void *a3)
+{
+    unsigned long f = D_00747A30;
+    unsigned long b = (f >> 1) & 1;
+    if (b)
+        return;
+    if (a3)
+        SeCall__4cSnd6eSeBlksR4cObjP4cObjP6cPartsUii(Snd, a1, a2, a3, 0, 0, 0, 0);
+    else
+        SeCall__4cSnd6eSeBlksssUii(Snd, a1, a2, -1, -1, 0, 0);
+}
+
+extern char Dvd[], RoomHeap[];
+extern "C" int ReadAlloc__4cDvdPCcPPvR5cHeap6eDvdIdUiUiUi(char *, char *, void **, char *, int, unsigned, unsigned, unsigned);
+extern "C" void func_00201108(char *, int);
+extern "C" int func_002BE6A0(char *);
+extern "C" void free__5cHeapPv(char *, char *);
+
+// FUNCTION: GAME 0x2BE560
+extern "C" unsigned char func_002BE560(char *self, char *name)
+{
+    int r = ReadAlloc__4cDvdPCcPPvR5cHeap6eDvdIdUiUiUi(Dvd, name, (void **)self, RoomHeap, 0, 0, 0, 0);
+    func_00201108(Dvd, r);
+    int ok = func_002BE6A0(self);
+    self[4] = ok;
+    if ((ok & 0xFF) == 0) {
+        char *p = *(char **)self;
+        if (p)
+            free__5cHeapPv(*(char **)(p - 0x20), p);
+        *(char **)self = 0;
+    }
+    return self[4];
+}

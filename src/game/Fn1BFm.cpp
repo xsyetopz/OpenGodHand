@@ -14,36 +14,11 @@ extern "C" int isClip__C8cGameObj(void *);
 extern "C" void ReleaseUnit__21cCollisionSolidManageP8cGameObj(void *, void *);
 extern "C" int checkDamage__7cOmBaseP11cDamageTake(void *, void *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x001BF478
-// diff: 7 words: lui/addiu schedule of vtable ptr and -1; epilogue lq/ld order
-extern "C" void *func_001BF478(char *self)
-{
-    func_001B6E90(self);
-    *(char *)(self + 0x600) = -1;
-    *(const char **)(self + 0x214) = D_004296F0;
-    return self;
-}
-#endif
-
 // FUNCTION: GAME 0x001BFCE8
 extern "C" void func_001BFCE8(void *o)
 {
     SeCall__4cSnd6eSeBlksR4cObjP4cObjP6cPartsUii(Snd, 2, 10, o, 0, 0, 0, 0);
 }
-
-#ifdef NONMATCHING
-// DRAFT: GAME 0x001BE8B0
-// diff: 5 words: lui/addiu schedule of vtable ptr and 0x3E9
-extern "C" void *func_001BE8B0(char *self)
-{
-    func_001B6E90(self);
-    *(int *)(self + 0x604) = 0x3E9;
-    *(const char **)(self + 0x214) = D_00429620;
-    *(int *)(self + 0x600) = 0;
-    return self;
-}
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x001B80B0

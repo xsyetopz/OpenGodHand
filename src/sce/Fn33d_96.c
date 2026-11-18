@@ -63,19 +63,6 @@ void func_0033B010(void)
         func_003325F8();
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x33BE80 (4 words off: original tests the first load in $v1 and schedules ld $ra before the add)
-void func_0033BE80(void)
-{
-    int *s = &D_003E9944;
-    int v;
-    v = *s;
-    if (v == 0)
-        func_0033BDD8();
-    (*s)++;
-}
-#endif
-
 // FUNCTION: GAME 0x33C728
 void func_0033C728(void)
 {

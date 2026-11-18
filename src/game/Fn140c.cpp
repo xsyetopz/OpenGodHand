@@ -31,29 +31,6 @@ extern "C" void func_001451A0(char *self, void *src)
     *(unsigned *)(self + 0x90) |= 0x40000000;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x148200 - 2 words differ: 0x28 and 0x24 float stores swap
-extern "C" void func_00148200(float *p, float a, float b)
-{
-    p[8] = a;
-    p[9] = b;
-    p[15] = 0;
-    p[0] = 1.0f;
-    p[1] = 0;
-    p[2] = 0;
-    p[3] = 0;
-    p[4] = 0;
-    p[5] = 1.0f;
-    p[6] = 0;
-    p[7] = 0;
-    p[11] = 0;
-    p[12] = 0;
-    p[13] = 0;
-    p[14] = 0;
-    p[10] = 1.0f;
-}
-#endif
-
 // FUNCTION: GAME 0x1494F8
 extern "C" void func_001494F8(char *self, void *o)
 {

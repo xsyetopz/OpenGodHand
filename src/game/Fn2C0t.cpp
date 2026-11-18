@@ -59,3 +59,80 @@ extern "C" int func_002CFBC0(char *self)
     func_002CFCB0(self, 4);
     return 1;
 }
+extern "C" void func_002CF310(char *a);
+extern "C" void func_002CFD50(char *a);
+extern "C" int func_002CFA08(char *a);
+extern "C" int func_002CF868(char *a);
+extern "C" int func_002CF888(char *a);
+extern "C" void func_002CFC98(char *a);
+// FUNCTION: GAME 0x2CF760
+extern "C" int func_002CF760(char *self, int a, int b, int c)
+{
+    if (*(int *)self) func_002CF310(self);
+    *(int *)(self + 0x2C) = a;
+    *(int *)(self + 0x3C) = c;
+    *(int *)self = 1;
+    func_002CFD50(self);
+    *(int *)(self + 0x10) = b;
+    func_002CFCB0(self, 0x181);
+    if (func_002CFA08(self)) {
+        if (func_002CF868(self) != 1) return 1;
+        if (func_002CF888(self)) {
+            if (func_002CF8E8(self)) return 1;
+        }
+    }
+    func_002CFC98(self);
+    return 0;
+}
+
+extern "C" int sprintf(char *, const char *, ...);
+extern "C" int FileExist__4cDvdPCc(char *d, char *p);
+extern "C" int ReadAlloc__4cDvdPCcPPvR5cHeap6eDvdIdUiUiUi(char *d, char *p, char *o, int h, int a, int b, int c, int e);
+extern int D_00747A2C;
+extern char D_0044CF68[];
+extern char Dvd[];
+// FUNCTION: GAME 0x2CF600
+extern "C" int func_002CF600(char *self, int a, int b)
+{
+    char buf[0x40];
+    if (*(int *)self) {
+        if (D_00747A2C >= 0) return 0;
+        func_002CF310(self);
+    }
+    *(int *)(self + 0x2C) = a;
+    *(int *)self = 1;
+    *(int *)(self + 0x3C) = 0x7FFFFFFF;
+    func_002CFD50(self);
+    sprintf(buf, D_0044CF68, b);
+    if (FileExist__4cDvdPCc(Dvd, buf)) {
+        int r = ReadAlloc__4cDvdPCcPPvR5cHeap6eDvdIdUiUiUi(Dvd, buf, self + 0x10, *(int *)(self + 8), 0, 0, 0, 0);
+        *(int *)(self + 0x38) = r;
+        if (r && *(int *)(self + 0x10)) goto ok;
+    }
+    func_002CF310(self);
+    return 0;
+ok:
+    func_002CFCB0(self, 1);
+    return 1;
+}
+extern "C" int func_002D0318(char *a);
+extern "C" void func_00200F50(char *d, int a);
+extern "C" int func_002D03D0(char *a, int b);
+extern "C" int func_00323000(int a);
+extern "C" void func_00322F58();
+extern "C" void free__5cHeapPv(int h, int p);
+extern "C" void *memset(void *, int, unsigned);
+extern unsigned char D_0044D070;
+// FUNCTION: GAME 0x2CFF90
+extern "C" void func_002CFF90(char *self)
+{
+    if (!func_002D0318(self)) func_00200F50(Dvd, *(int *)(self + 0x1C));
+    if (func_002D03D0(self, 4) == 1 && !func_002D03D0(self, 8) && func_00323000(*(int *)(self + 0x18)) == 2)
+        func_00322F58();
+    if (*(int *)(self + 0xC)) free__5cHeapPv(*(int *)(self + 8), *(int *)(self + 0xC));
+    if (*(int *)(self + 0x14)) free__5cHeapPv(*(int *)(self + 8), *(int *)(self + 0x14));
+    memset(self, 0, 0x44);
+    *(int *)(self + 0x20) = -1;
+    *(int *)(self + 0x18) = -1;
+    *(unsigned char *)(self + 0x24) = D_0044D070;
+}

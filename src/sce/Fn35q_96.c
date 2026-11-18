@@ -1,6 +1,7 @@
 // COMPILER: ee-gcc2.96
 extern int func_0035D110(), func_00360000(), func_0035A1C8(), func_0035D2E0(), func_0035D430(), func_0035D3A8(), func_0035E9E8();
 extern unsigned char *func_0035E0F0();
+extern int func_0035E9A8(), func_0035E8F8();
 extern void func_0035FD98(int *, int, int);
 extern long func_0031DE10(), func_003B7FE0();
 
@@ -91,5 +92,155 @@ int func_0035E238(int a, unsigned char b, int *o)
     if (func_0035E9E8(b) != 0xC0)
         return 0;
     *o = s[0x1B];
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E2A8
+int func_0035E2A8(int a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    *o = 0;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (func_0035E9E8(b) != 0xC0)
+        return 0;
+    *o = *(int *)(s + 0x1C);
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E318
+int func_0035E318(int a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    *o = -1;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (func_0035E9E8(b) != 0xE0)
+        return 0;
+    *o = s[0x19];
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E4B0
+int func_0035E4B0(int a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    *o = 0;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (func_0035E9E8(b) != 0xE0)
+        return 0;
+    *o = func_0035E8F8(s[0x1F]);
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E520
+int func_0035E520(int a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    *o = -1;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (!func_0035E9A8(b, s))
+        return 0;
+    *o = s[0x21];
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E590
+int func_0035E590(int a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    *o = -1;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (!func_0035E9A8(b, s))
+        return 0;
+    *o = s[0x22];
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E600
+int func_0035E600(int a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    *o = 0;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (!func_0035E9A8(b, s))
+        return 0;
+    *o = s[0x23] & 1;
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E6E8
+int func_0035E6E8(int a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    *o = 0;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (!func_0035E9A8(b, s))
+        return 0;
+    *o = s[0x24];
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E758
+int func_0035E758(int a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    int t;
+    *o = -1;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (!func_0035E9A8(b, s))
+        return 0;
+    t = s[0x25];
+    *o = t;
+    if (t >= 0x40)
+        *o = -1;
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E7E0
+int func_0035E7E0(int a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    int t;
+    *o = -1;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (!func_0035E9A8(b, s))
+        return 0;
+    t = s[0x26];
+    *o = t;
+    if (t >= 0x40)
+        *o = -1;
+    return 1;
+}
+
+// FUNCTION: GAME 0x35E868
+int func_0035E868(int *a, unsigned char b, int *o)
+{
+    unsigned char *s;
+    *o = -1;
+    s = func_0035E0F0(a, b);
+    if (!s)
+        return 0;
+    if (!func_0035E9A8(b, s))
+        return 0;
+    if (a[3] < 0xD2)
+        return 0;
+    *o = s[0x27];
     return 1;
 }

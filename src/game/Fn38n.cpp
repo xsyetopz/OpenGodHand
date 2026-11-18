@@ -75,3 +75,115 @@ extern "C" int func_00387270(short a, short b, short c, int d)
     }
     return func_00387328(a, b, c, d);
 }
+
+struct Fn38O30 {
+    char _p0[0x30];
+    int m_30;
+    int m_34;
+};
+extern "C" int func_00329F98(int);
+extern "C" void func_003298C0(int);
+extern "C" void func_0031C900(int);
+
+// FUNCTION: GAME 0x380D68
+extern "C" void func_00380D68(int, Fn38O30 *o)
+{
+    if (o->m_30 != 0) {
+        if (func_00329F98(o->m_30) == 5) {
+            func_003298C0(o->m_30);
+            o->m_30 = 0;
+            func_0031C900(o->m_34);
+        }
+    }
+}
+
+struct Fn38O20 {
+    char _p0[0x20];
+    int m_20;
+    int m_24;
+};
+extern "C" int func_0032DC58(int);
+extern "C" void func_0032D6F0(int);
+extern "C" void func_0031C900(int);
+
+// FUNCTION: GAME 0x381CE0
+extern "C" void func_00381CE0(int, Fn38O20 *o)
+{
+    if (o->m_20 != 0) {
+        if (func_0032DC58(o->m_20) == 5) {
+            func_0032D6F0(o->m_20);
+            o->m_20 = 0;
+            func_0031C900(o->m_24);
+        }
+    }
+}
+
+struct Fn38P30 {
+    char _p0[0x30];
+    int m_30;
+};
+extern "C" int func_00329F98(int);
+extern "C" void func_0032B300(int, int);
+
+// FUNCTION: GAME 0x380F10
+extern "C" void func_00380F10(int, Fn38P30 *o, unsigned char *p)
+{
+    if (o->m_30 != 0) {
+        int s = func_00329F98(o->m_30);
+        if (s != 0 && s != 5 && s != 6) {
+            *p ^= 1;
+            func_0032B300(o->m_30, *p);
+        }
+    }
+}
+
+struct O30 {
+    char _p0[0x20];
+    int m_20;
+};
+extern "C" int func_0032DC58(int);
+extern "C" void func_0032E040(int, int);
+
+// FUNCTION: GAME 0x381DC0
+extern "C" void func_00381DC0(int, O30 *o, unsigned char *p)
+{
+    if (o->m_20 != 0) {
+        int s = func_0032DC58(o->m_20);
+        if (s != 0 && s != 3 && s != 4) {
+            *p ^= 1;
+            func_0032E040(o->m_20, *p);
+        }
+    }
+}
+
+extern "C" void func_00380E10(char *);
+extern "C" void func_00381D38(char *, char *, char *);
+extern "C" void func_00383438(char *, char *);
+extern "C" void func_00380E88(char *, char *, char *);
+
+// FUNCTION: GAME 0x380DC0
+extern "C" void func_00380DC0(char *o)
+{
+    func_00380E10(o);
+    func_00381D38(o, o + 0x348, o + 0x318);
+    func_00383438(o, o + 0x370);
+    func_00380E88(o, o + 0x484, o + 0x470);
+}
+
+struct Fn38O3 {
+    char _p0[1];
+    unsigned char m_1;
+    char _p2;
+    unsigned char m_3;
+};
+extern "C" int func_00380F80(int, char *, Fn38O3 *);
+
+// FUNCTION: GAME 0x3833B0
+extern "C" void func_003833B0(int a, Fn38O3 *o)
+{
+    if ((o->m_3 ^ 1) & 1) {
+        int r = func_00380F80(a, (char *)o + 0x34, o);
+        if (r)
+            o->m_1 = r;
+    }
+}

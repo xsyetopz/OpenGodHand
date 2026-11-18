@@ -102,3 +102,33 @@ extern "C" void name(char *s, int a, int b) \
 SETD(func_001E3A98, 0x4A4, 0x46C, 0x470)
 // FUNCTION: GAME 0x1E3C08
 SETD(func_001E3C08, 0x4A6, 0x474, 0x478)
+#define TICK(name, fo, o3, o4) \
+extern "C" void name(char *s) \
+{ \
+    unsigned v = *(unsigned short *)(s + fo); \
+    if (v & 0x8000) { \
+        v++; \
+        *(unsigned short *)(s + fo) = v; \
+        if ((v & 0x3FFF) >= 8) { \
+            unsigned short w = (~v & 0x4000) | 0x8000; \
+            *(unsigned short *)(s + fo) = w; \
+            if (w & 0x4000) { \
+                L(0x430, 1); \
+                L(0x47C, 1); \
+                L(o3, 1); \
+                L(o4, 0); \
+            } else { \
+                L(0x430, 0); \
+                L(0x47C, 0); \
+                L(o3, 0); \
+                L(o4, 1); \
+            } \
+        } \
+    } \
+}
+// FUNCTION: GAME 0x1E39D0
+TICK(func_001E39D0, 0x4A2, 0x464, 0x468)
+// FUNCTION: GAME 0x1E3B40
+TICK(func_001E3B40, 0x4A4, 0x46C, 0x470)
+// FUNCTION: GAME 0x1E3CB0
+TICK(func_001E3CB0, 0x4A6, 0x474, 0x478)
