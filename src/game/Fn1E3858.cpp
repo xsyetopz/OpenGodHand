@@ -3,7 +3,7 @@ extern int D_003BE130[];
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1E3858
-// 12 words differ: gcc hoists nor/andi/sltiu above the 0x8000 branch and picks other temps; tried short/int/unsigned v, a inside the if, empty-if vs inverted compare, (int)base+(q<<2)
+// 12 words differ: gcc hoists nor/andi/sltiu above the 0x8000 branch and picks other temps; tried short/int/unsigned v, a inside the if, empty-if vs inverted compare, (int)base+(q<<2), lo local (12), store w before *p=a (12), w inside else (33)
 extern "C" void func_001E3858(char *self) {
     unsigned short *p = (unsigned short *)(self + 0x49C);
     int *q = D_003BE130;

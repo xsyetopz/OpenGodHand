@@ -38,59 +38,75 @@ extern "C" void func_001C28A0(void *);
     }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x19BCA0 - 15 words differ (one-arg callee): tail const-load/store order (orig 1,pp,0xC,7 in v1,a1-a3; 54A not last); 4-arg call decl worse (25), store permutations no effect.
+// DRAFT: GAME 0x19BCA0 - 12 words differ (was 15): hoisted consts in orig load order 1,pp,0xC,7,-1; regs a3/v0/v1/a1/a2 vs orig v1/a1/a2/a3/v0; 54A store lands in delay slot. Tried: const decl reorder (one or m1 first/last), 54A store moved first: no change.
 extern "C" int func_0019BCA0(char *self)
 {
     F19B_HEAD(4.0f, 1.0f, 2.0f)
+    short one = 1;
+    char *pp = self + 0x620;
+    unsigned char c12 = 0xC;
+    int c7 = 7;
+    short m1 = -1;
     *(int *)(self + 0x5E8) = 0;
     *(int *)(self + 0x5E4) = 0;
     *(int *)(self + 0x5F0) = 0;
     *(short *)(self + 0x5F6) = 0;
-    *(short *)(self + 0x54A) = 1;
-    *(char **)(self + 0x608) = self + 0x620;
-    *(unsigned char *)(self + 0x60C) = 0xC;
-    *(int *)(self + 0x5EC) = 7;
-    *(short *)(self + 0x548) = 1;
-    *(short *)(self + 0x5F4) = -1;
+    *(short *)(self + 0x54A) = one;
+    *(char **)(self + 0x608) = pp;
+    *(unsigned char *)(self + 0x60C) = c12;
+    *(int *)(self + 0x5EC) = c7;
+    *(short *)(self + 0x548) = one;
+    *(short *)(self + 0x5F4) = m1;
     func_001C28A0(self);
     return 1;
 }
 
-// DRAFT: GAME 0x1A0208 - 17 words differ: same tail const/store order issue as 0x19BCA0.
+// DRAFT: GAME 0x1A0208 - 16 words differ (was 17): hoisted consts (1,pp,5,0x11,0x2E,-1); regs shifted one vs orig; 54A store lands in delay slot.
 extern "C" int func_001A0208(char *self)
 {
     F19B_HEAD(1.0f, 2.0f, 1.0f)
+    short one = 1;
     char *pp = self + 0x620;
+    unsigned char c5 = 5;
+    int c11 = 0x11;
+    short c2e = 0x2E;
+    short m1 = -1;
     *(int *)(self + 0x5E8) = 0;
     *(int *)(self + 0x5E4) = 0;
     *(int *)(self + 0x5F0) = 0;
-    *(short *)(self + 0x54A) = 1;
+    *(short *)(self + 0x54A) = one;
     *(char **)(self + 0x608) = pp;
-    *(unsigned char *)(self + 0x60C) = 5;
-    *(int *)(self + 0x5EC) = 0x11;
-    *(short *)(self + 0x5F6) = 0x2E;
-    *(short *)(self + 0x548) = 1;
-    *(short *)(self + 0x5F4) = -1;
+    *(unsigned char *)(self + 0x60C) = c5;
+    *(int *)(self + 0x5EC) = c11;
+    *(short *)(self + 0x5F6) = c2e;
+    *(short *)(self + 0x548) = one;
+    *(short *)(self + 0x5F4) = m1;
     func_001C28A0(self);
     return 1;
 }
 
-// DRAFT: GAME 0x1A0968 - 17 words differ: identical code to 0x1A0208.
+// DRAFT: GAME 0x1A0968 - 16 words differ: head matches; tail differs from 0x1A0A18 (pp in v0 vs v1; 0x54A store in delay slot where orig has 0x5F4). Same body as the 0x1A0208 draft, hoisted consts variant.
 extern "C" int func_001A0968(char *self)
 {
     F19B_HEAD(1.0f, 2.0f, 1.0f)
+    short one = 1;
     char *pp = self + 0x620;
+    unsigned char c5 = 5;
+    int c11 = 0x11;
+    short c2e = 0x2E;
+    short m1 = -1;
     *(int *)(self + 0x5E8) = 0;
     *(int *)(self + 0x5E4) = 0;
     *(int *)(self + 0x5F0) = 0;
-    *(short *)(self + 0x54A) = 1;
+    *(short *)(self + 0x54A) = one;
     *(char **)(self + 0x608) = pp;
-    *(unsigned char *)(self + 0x60C) = 5;
-    *(int *)(self + 0x5EC) = 0x11;
-    *(short *)(self + 0x5F6) = 0x2E;
-    *(short *)(self + 0x548) = 1;
-    *(short *)(self + 0x5F4) = -1;
+    *(unsigned char *)(self + 0x60C) = c5;
+    *(int *)(self + 0x5EC) = c11;
+    *(short *)(self + 0x5F6) = c2e;
+    *(short *)(self + 0x548) = one;
+    *(short *)(self + 0x5F4) = m1;
     func_001C28A0(self);
     return 1;
 }
+
 #endif

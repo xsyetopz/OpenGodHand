@@ -1,9 +1,7 @@
 extern "C" void func_001DEF48(char *, int);
 extern "C" void func_001DEFC8(char *, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1DAE18
-// 13 words differ: gcc if-converts the flag test to movz where original branches; tried ternary, early returns, m2c shape, if/else mixes
+// FUNCTION: GAME 0x1DAE18
 extern "C" void func_001DAE18(char *self)
 {
     char *s = self + 0x25B0;
@@ -17,22 +15,24 @@ extern "C" void func_001DAE18(char *self)
         a = 0xD;
     if (b == 0)
         b = 0xD;
-    int v;
     if (a < b) {
-        v = 0x11;
-        if (!*(unsigned char *)(self + 0x3044)) {
-            v = 0x12;
+        if (*(unsigned char *)(self + 0x3044)) {
+            self[0x3025] = 0;
+            self[0x3024] = 0x11;
+        } else {
+            self[0x3025] = 0;
+            self[0x3024] = 0x12;
+        }
+    } else if (b < a) {
+        if (*(unsigned char *)(self + 0x3044)) {
+            self[0x3025] = 0;
+            self[0x3024] = 0x12;
+        } else {
+            self[0x3025] = 0;
+            self[0x3024] = 0x11;
         }
     } else {
-        v = 0x13;
-        if (b < a) {
-            if (*(unsigned char *)(self + 0x3044))
-                v = 0x12;
-            else
-                v = 0x11;
-        }
+        self[0x3025] = 0;
+        self[0x3024] = 0x13;
     }
-    self[0x3025] = 0;
-    self[0x3024] = v;
 }
-#endif

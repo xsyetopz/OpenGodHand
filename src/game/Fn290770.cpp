@@ -18,11 +18,12 @@ extern "C" void func_00290028(void *);
 extern "C" int func_00290988(void *, int);
 
 // DRAFT: GAME 0x290770
-// 15 words: only s1/s2 swap (orig s1=em, s2=self); tried hoisted list ptr, tail-store if order, local copies.
+// 11 words: only s1/s2 move order differs (orig s1=em, s2=self). Tried: early em check (15 words), hoisted g_EmSet temp (35), check after first call (11, adopted), local em copy (11), hoisted list head (59).
 #ifdef NONMATCHING
 extern "C" int ReleaseEm__9cEmManageP7cEmBase(char *self, void *em)
 {
     func_002956F0(&g_EmSet);
+    if (em == 0) return 0;
     for (Fn290770Node *n = *(Fn290770Node **)(self + 0x500); n; n = n->next) {
         if (n->data == em) {
             func_002956A0(&g_EmSet, em);

@@ -32,25 +32,23 @@ extern "C" void func_001EC8A8(char *self)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1F6AF8 - 12 words: second loop keeps shared exit; reg roles v1/a1 swapped; tried n local, while, pointer increment (12-14 words)
+// FUNCTION: GAME 0x1F6AF8
 extern "C" void func_001F6AF8(int *self)
 {
-    int i;
+    int i, j;
     for (i = self[3] + 1; i < 4; i++) {
         if (self[4 + i] != 0) {
             self[3] = i;
             return;
         }
     }
-    for (i = 0; i < self[3]; i++) {
-        if (self[4 + i] != 0) {
-            self[3] = i;
+    for (j = 0; j < self[3]; j++) {
+        if (self[4 + j] != 0) {
+            self[3] = j;
             return;
         }
     }
 }
-#endif
 
 // FUNCTION: GAME 0x1F8550
 // two separate early returns give the original duplicated return-0 tail

@@ -49,16 +49,15 @@ extern "C" void func_001F7820(char *self, int *key)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1FE1E0 - 13 words: p in v1 vs a0, 0xAC00 ori hoisted; tried end/p order, for loop, inline bound
+// DRAFT: GAME 0x1FE1E0 - 13 words: p in v1 vs a0, 0xAC00 ori hoisted; tried end/p order, for loop, inline bound, end+0x6C00 (wrong const, 12 words, reverted)
 extern "C" unsigned char *func_001FE1E0(unsigned char *self)
 {
-    unsigned char *end = self + 0x3C00;
     unsigned char *p = self;
     do {
         if (p[0x4A] == 0)
             return p;
         p += 0x60;
-    } while (p < end);
+    } while (p < self + 0x3C00);
     return self + 0xAC00;
 }
 #endif

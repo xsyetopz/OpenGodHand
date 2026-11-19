@@ -11,7 +11,7 @@ struct Obj1DC {
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x001DC4C0
-// 12 words: orig keeps i+1 (t1) live across the outer loop with the i<4 test and a copy of base (t5->t4); tried do-while with j/i=j (30), i++<4 (14)
+// 11 words: outer bound i<4 matches orig; remaining diffs are base in t4 vs t5, mask/const regs, addu order; tried do-while with j/i=j (30), i++<4 (14), separate arr copy of base (11), int cnt (34), hoisted ~4 mask (12)
 extern "C" int func_001DC4C0(char *self)
 {
     unsigned short x[5], y[5];
@@ -19,7 +19,7 @@ extern "C" int func_001DC4C0(char *self)
     if (y[0] == 4 || y[1] == 4) {
         Obj1DC **base = (Obj1DC **)(self + 0x3004);
         int i;
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < 4; i++) {
             Obj1DC **p = base;
             int n = 4;
             unsigned short cnt;
