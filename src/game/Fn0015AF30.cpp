@@ -11,7 +11,7 @@ struct Vec4 {
 };
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x18EF58 - 11 words differ: prologue stores of b.y/b.z/a.y/a.z in the wrong order, 0x610 copy register choice, 0x624/0x628 tail order. Tried Vec4 array locals (13), named locals with pointers (11), prologue reorders (22, 26), both tail swaps (26).
+// DRAFT: GAME 0x18EF58 - 11 words differ: prologue stores of b.y/b.z/a.y/a.z in the wrong order, 0x610 copy register choice, 0x624/0x628 tail order. Tried Vec4 array locals (13), named locals with pointers (11), prologue reorders (22, 26), both tail swaps (26), store permutations with ptr/q copy and tmp tail (13, 14, 18, 22, 24, 25).
 extern "C" int func_0018EF58(char *self)
 {
     Vec4 a, b, c, d;
