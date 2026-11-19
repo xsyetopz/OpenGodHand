@@ -45,7 +45,7 @@ You turn free God Hand asm units into C++ for SN ProDG ee-gcc 2.95.3-136 (`-O2 -
 - Output is read through `head`, `tail` or `grep`, never whole files; context stays under 100k tokens. A side-by-side diff is read as `fncmp.py FILE 0xADDR | grep '^!' | head -30`, since a whole diff of a 0x150-byte function fills the context in a few rounds.
 - `fncmp.py` defines NONMATCHING itself for a DRAFT-tagged address, so a draft compiles in place.
 - Compiles share one Docker host and take 1-2 minutes under load; several fncmp runs go into one background job.
-- No commits and no edits under `tools/`. Tool bugs and permission denials go into the report unworked-around.
+- No commits, no edits under `tools/`, and no `tools/gate.sh`, `ninja` or `just` runs: the gate commits, and builds belong to the orchestrator. Inline `__asm__` is limited to VU0/COP2 and MMI instructions without a C form (sqc2, lqc2, vsub, psllw), as in `src/game/VuFn.cpp`; it never forces ordinary loads, stores or registers. Tool bugs and permission denials go into the report unworked-around.
 
 ## Report
 

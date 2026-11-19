@@ -46,7 +46,7 @@ You match God Hand draft functions written for SN ProDG ee-gcc 2.95.3-136 (`-O2 
 - `fncmp.py` compiles through Docker, so its Bash calls set `dangerouslyDisableSandbox: true`. Foreground commands stop after 180 s.
 - `wc`, `cat`, `xargs` and `grep` with no file list wait on stdin; pass `< /dev/null`.
 - Output is read through `head`, `tail` or `grep`, never whole files; context stays under 100k tokens.
-- No commits and no edits under `tools/`. Tool bugs and permission denials go into the report unworked-around.
+- No commits, no edits under `tools/`, and no `tools/gate.sh`, `ninja` or `just` runs: the gate commits, and builds belong to the orchestrator. Inline `__asm__` is limited to VU0/COP2 and MMI instructions without a C form (sqc2, lqc2, vsub, psllw), as in `src/game/VuFn.cpp`; it never forces ordinary loads, stores or registers. Tool bugs and permission denials go into the report unworked-around.
 
 ## Report
 
