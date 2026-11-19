@@ -4,6 +4,10 @@ extern "C" char *Getplayer__Fv(void);
 extern "C" int EntryEm__9cEmManageP11SET_EM_DATAiP7cEmBase(char *self, char *data, int a2, char *a3);
 float capVu0Atan2__Fff(float, float);
 extern char g_EmManage[];
+extern "C" char *func_002BA300(void *, int);
+extern "C" void func_002B8A70(char *, int);
+extern "C" void func_002BB160(char *, int, int, char *);
+extern int D_0044BB20;
 
 #define ZQ(p, o) __asm__ volatile("sqc2 $vf0," #o "(%0)" : : "r"(p) : "memory")
 
@@ -100,10 +104,9 @@ extern "C" int func_002951B0(char *a0, char *a1)
 }
 #endif
 
-// DRAFT: GAME 0x2A8608
-#ifdef NONMATCHING
 extern "C" void *SetEffect__F12eEffDataType6eEffIdP4cObjP12tagEFF_PARAMiT2(int, int, char *, void *, int, unsigned);
 // a5 == 0: self is cObj and the last arg. a5 != 0: a5 is cObj and self is the last arg.
+// FUNCTION: GAME 0x2A8608
 extern "C" int func_002A8608(char *self, int a1, int a2, int a3, int a4, int a5)
 {
     char sp[0x80] __attribute__((aligned(16)));
@@ -146,6 +149,36 @@ extern "C" int func_002A8608(char *self, int a1, int a2, int a3, int a4, int a5)
             f[0x40 / 4] = *(float *)(self + 0x114);
         r = (int)SetEffect__F12eEffDataType6eEffIdP4cObjP12tagEFF_PARAMiT2(a1, a2, (char *)a5, sp, a3, (unsigned)self);
     }
+    return r;
+}
+
+// DRAFT: GAME 0x2BA020
+#ifdef NONMATCHING
+// 3 words: D_0044BB20 address temp is $v0 vs original $v1 (lui/addiu/sw at 0xA8-0xB0). Tried: vt local merge (11), typed fn-pointer locals (3, kept), unsigned temp (3), hoisted 4 (8), int* cast store (3, $v0 still).
+extern "C" char *func_002BA020(char *self, int a1, int a2, int a3, char *a4, int a5)
+{
+    char *r = func_002BA300(self, 4);
+    if (r == 0)
+        return 0;
+    if (((*(unsigned int *)r & 0x201) ^ 1) != 0) {
+        int vt = *(int *)(self + 0x18);
+        ((void (*)(char *, char *))(*(int *)(vt + 0x34)))(self + *(short *)(vt + 0x30), r);
+        return 0;
+    }
+    func_002B8A70(r, a1);
+    char *s0 = r + 0xE0;
+    func_002BB160(s0, a2, a3, a4);
+    *(int *)(s0 + 0x100) = (int)&D_0044BB20;
+    ZQ(r, 0x1F0);
+    ZQ(r, 0x200);
+    *(int *)(r + 0xE0) = 4;
+    int vt2 = *(int *)(s0 + 0x100);
+    void (*fn1)(char *, int) = (void (*)(char *, int))(*(int *)(vt2 + 0x3C));
+    fn1(s0 + *(short *)(vt2 + 0x38), a5);
+    int vt3 = *(int *)(s0 + 0x100);
+    void (*fn2)(char *) = (void (*)(char *))(*(int *)(vt3 + 0x54));
+    fn2(s0 + *(short *)(vt3 + 0x50));
+    *(char **)(r + 0x34) = s0;
     return r;
 }
 #endif

@@ -75,7 +75,7 @@ extern "C" void func_0025B5A8(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x249960
-// diff: 2 words; g_HeatSys flag lbu lands in v0 instead of v1; tried flag temp, !x, char cast, array index, per-case tails, no h, unsigned char* h, unsigned int address (no change)
+// diff: 2 words; g_HeatSys flag lbu lands in v0 instead of v1; tried flag temp, !x, char cast, array index, per-case tails, no h, unsigned char* h, unsigned int address (no change); per-arm g_HeatSys lookup with shared tail removed (17 words, 356 vs 336 bytes), block-local pointer per arm (17 words)
 extern "C" void func_00249960(char *self)
 {
     capVu0MagnitudeSqXZ__FPCfT0(*(const float **)((char *)Getplayer() + 0xF0), D_005850B0);

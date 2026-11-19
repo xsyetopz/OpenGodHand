@@ -9,9 +9,7 @@ extern "C" int func_002A4B88(void *, unsigned short);
 extern "C" int func_002A4BA0(void *, unsigned short);
 extern void *Font;
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2B0A58
-// 16 differing words: the compiler keeps r in $f3 and the temporaries in $f2, the reverse of the original. Tried 8 variants (early returns, shared r, load order, tail form, declaration order); none dropped below 16.
+// FUNCTION: GAME 0x2B0A58
 extern "C" float func_002B0A58(char *self, unsigned short *p, float *f)
 {
     unsigned short t = *p;
@@ -33,21 +31,21 @@ extern "C" float func_002B0A58(char *self, unsigned short *p, float *f)
         }
     } else {
         int flag;
+        float k;
         if (func_002B12A0(p) != 0) {
-            r = func_002B12D8() * (*f * *(float *)(self + 0x40) * *(float *)(self + 0x48));
+            r = func_002B12D8() * (*f * *(float *)(self + 0x40) * (k = *(float *)(self + 0x48)));
             flag = *(int *)self & 1;
         } else {
-            r = (float)func_002A4B88(Font, *p) * (*f * *(float *)(self + 0x40) * *(float *)(self + 0x48));
+            r = (float)func_002A4B88(Font, *p) * (*f * *(float *)(self + 0x40) * (k = *(float *)(self + 0x48)));
             flag = *(int *)self & 1;
         }
         if (flag != 0)
-            r += (*(float *)(self + 0x38) + 12.0f) * *(float *)(self + 0x48);
+            r += (*(float *)(self + 0x38) + 12.0f) * k;
     }
     return r;
 }
 
-// DRAFT: GAME 0x2B0BE0
-// 16 differing words: same shape as 0x2B0A58 with func_002A4BA0 in the else branch; the same register-allocation mismatch.
+// FUNCTION: GAME 0x2B0BE0
 extern "C" float func_002B0BE0(char *self, unsigned short *p, float *f)
 {
     unsigned short t = *p;
@@ -69,16 +67,16 @@ extern "C" float func_002B0BE0(char *self, unsigned short *p, float *f)
         }
     } else {
         int flag;
+        float k;
         if (func_002B12A0(p) != 0) {
-            r = func_002B12D8() * (*f * *(float *)(self + 0x40) * *(float *)(self + 0x48));
+            r = func_002B12D8() * (*f * *(float *)(self + 0x40) * (k = *(float *)(self + 0x48)));
             flag = *(int *)self & 1;
         } else {
-            r = (float)func_002A4BA0(Font, *p) * (*f * *(float *)(self + 0x40) * *(float *)(self + 0x48));
+            r = (float)func_002A4BA0(Font, *p) * (*f * *(float *)(self + 0x40) * (k = *(float *)(self + 0x48)));
             flag = *(int *)self & 1;
         }
         if (flag != 0)
-            r += (*(float *)(self + 0x38) + 12.0f) * *(float *)(self + 0x48);
+            r += (*(float *)(self + 0x38) + 12.0f) * k;
     }
     return r;
 }
-#endif

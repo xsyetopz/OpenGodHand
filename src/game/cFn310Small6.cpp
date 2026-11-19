@@ -127,7 +127,7 @@ extern "C" void func_0031A538(int *src)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x31A650 (2 words differ: a1/a3 arg moves swapped; tried ?:, hoisted slot load, non-variadic callee decl, local copy of c (23 words), duplicated call tails (26 words))
+// DRAFT: GAME 0x31A650 (2 words differ: a1/a3 arg moves swapped, gcc emits daddu a1 before a3; tried ?:, hoisted slot load, non-variadic callee decl, local copy of c (23 words), duplicated call tails (26 words), c==0 form (2), if/else c=b (2), unsigned/long locals (23/24), int aa=a (2), arg casts (2), int bb=b (2), c=(c==0)?b:c (23), idx>=10 early return (24), int result temp (21), return 0 tail (18); no change in arg-move order)
 extern "C" int func_0031A650(char *self, int idx, int a, int b, int c)
 {
     if (idx < 10) {
