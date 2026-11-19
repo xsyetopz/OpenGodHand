@@ -5,7 +5,7 @@ struct Pair8 {
 };
 extern "C" int func_0015FD68(void *p);
 // DRAFT: GAME 0x15FCB8
-// diff: 10 words; original branches bltz to the return-0 tail and stores through two copies of the entry pointer (a0 and v1); compiled uses bgez/b.
+// diff: 10 words best; original bltz to a return-0 tail after the success arm, entry ptr copied a0->v1; tried: i>=0 if/else flip (10), early return i<0 (13), declaration/copy variants (12-14).
 #ifdef NONMATCHING
 extern "C" int func_0015FCB8(Pair8 *self, int a, int b)
 {
@@ -205,7 +205,7 @@ extern "C" void *func_001FE218(void *mgr, void *self, int kind);
 extern "C" void func_001FDC00(void *e, void *at, V4f *a, V4f *b, float s, float t);
 extern "C" void func_001C28A0(void *self);
 // DRAFT: GAME 0x16FD68
-// diff: 8-10 words; calls/vectors/branch match, only the tail halfword/byte store order and v0/v1 choice for 0x620/6 differ (scheduler).
+// diff: 10 words best; calls/vectors/branch match, tail store order and v0/v1 for 0x620/6 differ (scheduler). tried: all 24 declaration orders of p/six/one/m1 (all 10), store order follows source.
 #ifdef NONMATCHING
 extern "C" int func_0016FD68(char *self)
 {

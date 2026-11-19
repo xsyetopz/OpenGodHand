@@ -215,7 +215,7 @@ float Turn_dest_dir(float, float, float);
 extern "C" void sceVu0ApplyMatrix(float *, float *, float *);
 
 // DRAFT: GAME 0x249770
-// diff: 6 words (lui/lw/addiu order vs rel ctor sdc2 before first lqc2; a2 copy vs sw zero near sceVu0ApplyMatrix); tried pp/bb hoists, res store orders, r alias
+// diff: 6 words. (A) lui/lw/addiu order for $s1 and the rel zero-init sdc2 position; (B) the a2 copy (daddu $a2,$a0,$zero) must precede the jal to sceVu0ApplyMatrix after sw $zero,0x40($sp). Tried 9 orders: base and constant pp 6 words; rel before pp, no pp hoist, pp at top, pp before res 9 words; rel before tmp 14; rel at top and no pp hoist with rel at top 71. Also tried r alias and res store orders.
 extern "C" void func_00249770(VObj *self, float ang)
 {
     cMatrix m;

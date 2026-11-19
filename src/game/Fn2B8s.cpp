@@ -176,7 +176,7 @@ extern "C" char *func_002B48F0(char *self)
 
 extern "C" void func_002B46F0(char *, int, short, void *);
 
-// diff: 9 words, original materializes -3 in a0 and a real zero reg v1 (sh v1) where ours stores $zero; mask/zero temps, short/int z, store order, hoisting tried
+// diff: 9 words, original materializes -3 in a0 and a real zero reg v1 (sh v1) where ours stores $zero; mask/zero temps, short/int z, store order, hoisting tried; an empty asm("+r"(z)) barrier with the 0x28 store after fl matches but is not allowed
 // DRAFT: GAME 0x2B3460
 #ifdef NONMATCHING
 extern "C" void func_002B3460(char *self)

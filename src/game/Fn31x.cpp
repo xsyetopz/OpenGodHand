@@ -142,8 +142,7 @@ extern "C" void func_0031CB80(short *pts, int c, unsigned z)
     Draw_Poly_sc((const float(*)[3])v, func_0031CA58(c));
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x31C7E0 (10 words differ: second vtable load should be a2 and scheduled before the V4 setup; tried separate vt2 local, fn-ptr local, V4 store orders, v decl before calls)
+// FUNCTION: GAME 0x31C7E0
 struct V4 { float x, y, z, w; };
 struct VE { short d; short i; void (*f)(char *, const void *); };
 void setPlayerPos(const cVec &pos, float f)
@@ -152,12 +151,13 @@ void setPlayerPos(const cVec &pos, float f)
     VE *vt = *(VE **)(p + 0x214);
     vt[14].f(p + vt[14].d, &pos);
     VE *vt2 = *(VE **)(p + 0x214);
+    char *a = p + vt2[15].d;
     V4 v;
     v.x = 0.0f;
     v.y = f;
     v.z = 0.0f;
     v.w = 1.0f;
-    vt2[15].f(p + vt2[15].d, &v);
+    vt2[15].f(a, &v);
     *(float *)(p + 0x30) = pos.x;
     *(float *)(p + 0x34) = pos.y;
     *(float *)(p + 0x38) = pos.z;
@@ -165,4 +165,3 @@ void setPlayerPos(const cVec &pos, float f)
     if (q)
         *(unsigned *)(q + 0x2F0) |= 1;
 }
-#endif

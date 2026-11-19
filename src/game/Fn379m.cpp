@@ -40,11 +40,11 @@ extern "C" int func_00375BF0(void);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x37A668
-// diff: 12 words; original keeps a0 = this+0x12C and loads 7(a0), ours folds to lb 0x133(s0); tried member/free inline, &ref; asm("+r") on register-$4 pointer gives 2 words (sd/daddu order) but is a hack
+// diff: 12 words; original keeps a0 = this+0x12C and loads 7(a0), ours folds to lb 0x133(s0); tried member/free inline, &ref, volatile char* (14), (char*)p+0x12C (12); asm("+r") gives 2 words but is a hack
 extern "C" void func_0037A668(Fn379A *p)
 {
-    Fn379S *q = (Fn379S *)p->m_12C;
-    if (q->low())
+    char *q = p->m_12C;
+    if ((signed char)q[7] < 0x29)
         p->m_C = func_00375BF0();
 }
 #endif
@@ -162,7 +162,7 @@ extern "C" void func_00373B20(Fn379G *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x373B68
-// diff: 1 word (2 probes: int r=1 ternary, r=1 then r=p->m_10 both no help); the original has a dead `addiu v1, zero, 1` before the lw Tried: int callee, r locals, ternary, volatile.
+// diff: 1 word; the original has a dead `addiu v1, zero, 1` before the lw. Tried: int callee, r locals (int r=1 ternary, r=1 then r=p->m_10), volatile; `!= 1` gives 5 words, `== 0` gives 7, nested == 1, int func_00373B20 callee and early return are no better.
 extern "C" int func_00373B68(Fn379G *p)
 {
     if (!func_00373A50(p))

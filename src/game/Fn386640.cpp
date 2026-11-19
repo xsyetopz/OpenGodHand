@@ -1,7 +1,7 @@
 extern char D_0045D008;
 
 // DRAFT: GAME 0x00386640
-// 14 differing words: loop reg alloc (0x2F in a3 vs t0, acc copy via v0, extra lui a3); tried char n counter, hoisted k, t copy
+// 14 differing words: loop reg alloc (0x2F in a3 vs t0, acc copy via v0, extra lui a3); tried char n counter, hoisted k, t copy, direct acc += without t (14), unsigned acc (14)
 #ifdef NONMATCHING
 extern "C" int func_00386640(char **pp) {
     int r = -1;

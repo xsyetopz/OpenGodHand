@@ -33,8 +33,7 @@ extern "C" void func_00110E98(char *self)
     if (func_00123938(self, 1)) func_00124E58(self);
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x111010 - 10 words: base t lands in t2 with loads v0/v1 (offset-pair-in-branch regalloc idiom)
+// FUNCTION: GAME 0x111010
 extern "C" void func_00111010(char *self)
 {
     *(float *)(self + 0x54C) = 3.0f;
@@ -43,16 +42,15 @@ extern "C" void func_00111010(char *self)
         *(short *)(self + 0x5E0) = 0;
         *(short *)(self + 0x5E2) = 0;
         func_00124E58(self);
-        char *t;
         int a, b;
         if (B(0x2F7)) {
-            t = *(char **)(self + 0x304);
+            char *t = *(char **)(self + 0x304);
             a = *(int *)(t + 0x4BC) + (int)t;
             b = *(int *)(t + 0x4C0) + (int)t;
             func_0010A408(self, 0x32, 0x26, 0x1D, 0, 0x123);
             func_0010A420(self, 0x32, 0x26, 0x1D, 0, 0x123);
         } else {
-            t = *(char **)(self + 0x304);
+            char *t = *(char **)(self + 0x304);
             a = *(int *)(t + 0x494) + (int)t;
             b = *(int *)(t + 0x498) + (int)t;
             func_0010A408(self, 0x32, 0x25, 0x1D, 0, 0x123);
@@ -77,7 +75,6 @@ extern "C" void func_00111010(char *self)
     if (*(unsigned short *)(self + 0x3AC) & 0x100) SetSpeedRate__9cEmManagef(g_EmManage, 0.05f);
     if (func_00123938(self, 1)) clearMotionCam__4pl00UiUi(self, 1, 0);
 }
-#endif
 
 // FUNCTION: GAME 0x113F68
 extern "C" void func_00113F68(char *self)

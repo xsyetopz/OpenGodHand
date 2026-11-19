@@ -28,9 +28,7 @@ struct Obj {
 
 extern "C" float fRand1_1__Fv();
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1C8BE0
-// 7 words differ: v0/v1 swapped between &v630 and d->p; tried s decl before d (35), inline d->p (43), q decl order, compare order
+// FUNCTION: GAME 0x1C8BE0
 extern "C" void SetThrow__8cOmThrowRC4cVec(Obj *self, const V3 *v)
 {
     V3 *t = &self->v610;
@@ -50,10 +48,10 @@ extern "C" void SetThrow__8cOmThrowRC4cVec(Obj *self, const V3 *v)
     else
         d = 0;
     V3 *q;
-    V3 *s = &self->v630;
     if (d) {
+        V3 *s = &self->v630;
         q = d->p;
-        if (s != q) {
+        if (q != s) {
             q->x = self->v630.x;
             q->y = s->y;
             q->z = s->z;
@@ -64,4 +62,3 @@ extern "C" void SetThrow__8cOmThrowRC4cVec(Obj *self, const V3 *v)
         self->b640 = 0;
     }
 }
-#endif

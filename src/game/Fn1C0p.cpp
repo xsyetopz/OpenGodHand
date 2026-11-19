@@ -130,7 +130,7 @@ extern "C" void func_001CB990(char *self)
     }
 }
 
-// DRAFT: GAME 0x1DBE18 (9 words: original keeps count-up slti loop and lwu flag test; gcc reverses the counter to bgez; tried (unsigned long)&1UL cast, long i, pointer/do-while forms)
+// DRAFT: GAME 0x1DBE18 (9 words: original keeps count-up slti loop and lwu flag test; gcc reverses the counter to bgez; tried (unsigned long)&1UL cast (32), long i, pointer/do-while forms, != 52 bound (9), empty barrier on counter (34), separate flag/address induction pointers (25))
 #ifdef NONMATCHING
 extern "C" void func_001DBE18(char *self, int *out)
 {

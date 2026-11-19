@@ -22,7 +22,7 @@ extern "C" void StartAction__7cEmWrap(EmW *);
         break;
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1F0A28 - 14 words differ: sb D_00586AA5/sb w.id order swapped in each of 7 cases; tried swapped source order (28 words, li/lui swap), global ptr temp, char temps, EmW init, volatile
+// DRAFT: GAME 0x1F0A28 - 14 words differ: sb D_00586AA5/sb w.id order swapped in each of 7 cases; tried swapped source order (28, li/lui swap), global ptr temp, char temps, EmW init, volatile, per-case local EmW (100), cast store *(unsigned char*)&D_00586AA5 (14), cast+swapped (28)
 extern "C" void func_001F0A28(char *self)
 {
     EmW w;
