@@ -68,7 +68,7 @@ extern "C" void func_002AB2A0(int a0, char *self)
 }
 #endif
 
-// DRAFT: GAME 0x2ABC30 - 23 words (184 bytes); h/w load order and ok-flag form differ; &= -0x2001 flag, shared n dropped, do-while loop (34 to 23)
+// DRAFT: GAME 0x2ABC30 - 23 words (184 bytes); target branches on xori of ok and keeps lw 0x2C in the delay slot, draft uses beqz $v1 with addiu in the slot; tried flag local with shared store (33), ok==0 inverted (33), SqF temp (33), load-modify-store sum (33), q=v pre-increment (34), !ok with direct stores (31), ok=(w>=2)&&(h>=2) with !ok (31); 8 attempts reached
 #ifdef NONMATCHING
 extern "C" void func_002ABC30(void *unused, char *self)
 {

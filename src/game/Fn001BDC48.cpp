@@ -42,7 +42,7 @@ extern "C" void setCloseFix__8cOmDoor2(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1F7D48
-// 20 differing words: constants load late and the sign test uses $v0/$v1 instead of mfc1 $t0 + slt on the integer bits. Variants t1-t9 all stayed at 20.
+// 20 differing words: constants load late and the sign test uses $v0/$v1 instead of mfc1 $t0 + slt on the integer bits. Variants t1-t9 and a1, b1-b8 (float temp, hoisted constants, late -2, mov.s return copy) all stayed at 20 or rose to 22; 8-attempt limit reached.
 extern "C" float Adjust_theta__Ff(float x)
 {
     int n = (int)(x * 0.31830987f) + (*(int *)&x > 0);
