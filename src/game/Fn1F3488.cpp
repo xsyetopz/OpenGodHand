@@ -8,7 +8,7 @@ extern "C" void SetOffsetPosX__12CustomIDWorki(void *, int);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1F3488
-// 3 words differ: case 3 emits daddu a0 before lui a1 (beq vs beql); tried hoisted constant local, p set once, if/else split
+// 3 words differ: case 3 emits daddu a0 before lui a1 (beq vs beql); tried hoisted constant local, p set once, if/else split, swapped case 3 NoDisp/ChildNoDisp calls (5 words)
 extern "C" void func_001F3488(char *self, unsigned a)
 {
     int s = a & 0xFFFF;

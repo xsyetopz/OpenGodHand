@@ -8,7 +8,7 @@ extern "C" void func_00274FE8(void *);
 extern "C" void func_00262750(void *, int);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x25C5D8 - 3 words differ: the constant 2 in the 0x2F4/0x2F5 store block lands in v0, original uses v1
+// DRAFT: GAME 0x25C5D8 - 3 words differ: the constant 2 in the 0x2F4/0x2F5 store block lands in v0, original uses v1; tried split/reversed stores, block-scoped and hoisted constant, (unsigned char)2 cast (all 3 or worse)
 extern "C" void func_0025C5D8(char *self)
 {
     char *pl = (char *)Getplayer();

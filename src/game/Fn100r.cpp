@@ -18,7 +18,7 @@ struct JtVr {
     int (*fn)(void *);
 };
 
-// DRAFT: GAME 0x114E28 (5 words: addu s1/s0 vs addiu a2,0x29 / daddu a3,self scheduling around SeCall)
+// DRAFT: GAME 0x114E28 (5 words: addu s1/s0 vs addiu a2,0x29 / daddu a3,self scheduling around SeCall; same shape as 0x114CB8, whose 8 source-order variants gave no gain)
 #ifdef NONMATCHING
 extern "C" void func_00114E28(char *self)
 {

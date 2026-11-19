@@ -16,7 +16,7 @@ struct Trk159 {
 extern "C" float Ang_mult_late__Ffff(float a, float b, float t);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x159200
+// DRAFT: GAME 0x159200 (5 words: f1/f2 swap of base/scale vs y; tried x/y decl+assign order, switch (worse), shared-tail, f14/f13/f12 decl orders x operand orders (5-7), ys/ry statement order (5))
 // 5 words: only f1/f2 swap (base/scale vs y); tried x/y decl+assign order, switch (worse), shared-tail forms
 extern "C" float func_00159200(Hdr159 *h, Ctl159 *c, float t)
 {

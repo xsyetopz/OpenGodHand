@@ -39,7 +39,7 @@ extern "C" int func_002CB198() {
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x002D5918
-// 8 words: const-reg allocation and sw 0x34 hoisted; local/struct/order variants tried
+// 8 words: const-reg allocation and sw 0x34 hoisted; local/struct/order variants tried; sw 0x34 moved before 0x2C (11 words), fn/two decl swap (8), g/two/fn decl order (13)
 extern "C" void func_002D5918(char *p) {
     int a = *(int *)(p + 0x10);
     int b = *(int *)(p + 8);
