@@ -3,7 +3,7 @@ extern "C" void free__5cHeapPv(char *, void *);
 extern char RoomHeap[];
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x002D73E0 -- 2 words differ: lui s4 (RoomHeap) and li s1,7 swapped in prologue; tried decl order, hoisted heap ptr
+// DRAFT: GAME 0x002D73E0 -- 2 words differ: lui s4 (RoomHeap) and li s1,7 swapped in prologue; tried decl order, hoisted heap ptr, V1-V4 (for-scoped, heap local, p-before-q, for+heap), V5 sep counter (19), V6 store after loop (14), V8 p top (32), V9 i first (2, same as baseline)
 
 extern "C" void func_002D73E0(char *self)
 {

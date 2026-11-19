@@ -3,7 +3,7 @@ extern "C" void func_002011B0(void *);
 struct DvdSlot;
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2017A8 - 28 words off: self/b in swapped saved regs (s0/s1); original loop 2 has no precheck and a bnel/b layout like loop 1; do-while (int and pointer end), end from p, e-first variants did not help; also re-derived e=self+4 for loop 2, for-scoped end pointer (28 words, 160 vs 152 B)
+// DRAFT: GAME 0x2017A8 - 28 words off: self/b in swapped saved regs (s0/s1); store order reversed; loop 2 keeps a top-tested precheck (160 vs 152 B). Tried: do-while int/pointer end, end from p, e-first, for-scoped end, self/b reg forms (REG_both, REG_forever), B_from_self, LOOP2_forever and DO_p_then_test/DO_cond_comma (33 words, 144 B but wrong), PTR_end (28)
 extern "C" DvdSlot *func_002017A8(void *self_)
 {
     char *self = (char *)self_;

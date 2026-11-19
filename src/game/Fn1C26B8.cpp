@@ -4,7 +4,7 @@ extern "C" float Turn_dest__FPCffT0f(const float *, float, const float *, float)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1C26B8
-// diff: 3 words, fabs branch is bc1t+neg first vs orig bc1f with mov.s in delay slot; tried ternary, else, !(t>=0), 0>t, a=-a (all 23+ or this)
+// diff: 3 words, fabs branch is bc1t+neg first vs orig bc1f with mov.s in delay slot then neg.s; tried a=t;if(t<0)a=-t (23), a=-a (23), in-place t abs (23), !(t>=0) guard (23), neg flag first (20); 5 attempts
 extern "C" int func_001C26B8(char *self)
 {
     char *pl = (char *)Getplayer__Fv();

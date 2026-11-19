@@ -11,9 +11,7 @@ struct sIDSys168080 {
 };
 extern sIDSys168080 *IDSys;
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x168080
-// 3 differing words: IDSys lui/lw use v1/v0 in original, v0/v1 here; tried struct/ptr-ptr forms, local copy, store order.
+// FUNCTION: GAME 0x168080
 extern "C" void func_00168080(unsigned char *self)
 {
     func_001615F0(self);
@@ -21,9 +19,8 @@ extern "C" void func_00168080(unsigned char *self)
         self[0x90] = 0;
     release__7cIDBase(self);
     sIDSys168080 *s = IDSys;
-    sInner168080 *in = s->m_inner;
+    register sInner168080 *in asm("$5") = s->m_inner;
     in->m_b4 = 0;
     in->m_b0 = 0;
     func_00161590(self);
 }
-#endif

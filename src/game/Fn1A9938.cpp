@@ -10,7 +10,7 @@ extern "C" void func_001B6F38(void *self, int flag);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1A9938
-// 3 words differ: hoisted lui s3 (g_CollScr) lands after li s2 instead of before addiu s0; tried for/do-while, hoisted cs local, p/i order
+// 3 words differ: hoisted lui s3 (g_CollScr) lands after li s2 instead of before addiu s0; tried cs local (6), void**p loop (4), p/cs/i order (5), char* cast (6), p+=4 reorder (4), i at top (23), p at top (35), inline *(void**)p (3); 8 attempts
 extern "C" void func_001A9938(char *self, int flag)
 {
     *(const void **)(self + 0x214) = D_00427CF0;

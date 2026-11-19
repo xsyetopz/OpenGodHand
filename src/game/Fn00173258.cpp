@@ -59,8 +59,8 @@ extern "C" int func_00193550(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x173258
-// 10 differing words: timer test is andi (original sll/beqz); *s1 and 1.0 register order swapped.
-// Tried: int timer with (short) test (77 words), p[2] hoisted (kept).
+// 6 differing words: timer test is andi (original sll/beqz at 0x173288); float store order at 0x173300/0x173378 differs.
+// Tried: int/short timer forms (75-77 words or 336/344 bytes), (short)/(int)(t<<16) casts (still andi, 6), branch A/B store orders brute-forced (A=(0,3,2,1), B=(0,1,3,2) best, kept), p[2] hoisted (kept).
 extern "C" void func_00173258(char *self)
 {
     if (*(short *)(self + 0xDA0) > 0) {
@@ -77,9 +77,9 @@ extern "C" void func_00173258(char *self)
             float p2z = p[2];
             float buf[4];
             buf[0] = *s1;
-            buf[1] = f20;
-            buf[2] = p2z;
             buf[3] = 1.0f;
+            buf[2] = p2z;
+            buf[1] = f20;
             ((void (*)(void *, float *))(*(void **)(s2 + 4)))(s0, buf);
             return;
         }
@@ -93,8 +93,8 @@ extern "C" void func_00173258(char *self)
         float buf2[4];
         buf2[0] = *s1b;
         buf2[1] = *(float *)(self + 0xDA4);
-        buf2[2] = p2z;
         buf2[3] = 1.0f;
+        buf2[2] = p2z;
         ((void (*)(void *, float *))(*(void **)(s2b + 4)))(s0b, buf2);
     }
 }
@@ -102,8 +102,10 @@ extern "C" void func_00173258(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1AEF40
-// 17 differing words: timer test is andi (original sll/beqz); branch A s1/s2 registers reversed; branch B load order.
-// Tried: int timer with (t << 16) test (78 words), rnd/term reorder (17), split s1 declaration (17), p[1] hoist in branch B (19).
+// 15 differing words: timer test is andi (original sll/beqz at 0x1AEF70/0x1AEF74); branch A s1/s2 registers still reversed.
+// Tried: int timer with (t << 16) test (78 words), rnd/term reorder (17), split s1 declaration (17), p[1] hoist in branch B (19),
+// branch A store orders (24 perms, best 1023 = 15, applied), branch B store orders (24 perms, best 0123/1023 = 15, draft kept),
+// swapped s1/s2 getter call order (71 words, 340 bytes).
 extern "C" void func_001AEF40(char *self)
 {
     if (*(short *)(self + 0x986) > 0) {
@@ -119,10 +121,10 @@ extern "C" void func_001AEF40(char *self)
             float rnd = fRand1_1__Fv();
             float term = rnd * 0.034906585f;
             float buf[4];
-            buf[0] = s2[0];
             buf[1] = s1[1];
-            buf[3] = 1.0f;
+            buf[0] = s2[0];
             buf[2] = *(float *)(self + 0x988) + term;
+            buf[3] = 1.0f;
             ((void (*)(void *, float *))(*(void **)(s3 + 4)))(s0, buf);
             return;
         }

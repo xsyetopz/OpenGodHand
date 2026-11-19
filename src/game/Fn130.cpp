@@ -80,7 +80,7 @@ void cCollisionScroll::SetCollEnable(const char *name, bool on)
 
 extern unsigned D_00747A84;
 
-// DRAFT: GAME 0x13F558 - 19 words: original keeps one slot pointer (self + n*4) in a0/a1 copies for the 0x35C and 0xA8 stores after a mult; mine recomputes the address
+// DRAFT: GAME 0x13F558 - 16 words, 108 vs 116 bytes: original keeps the slot pointer in v0 and copies it to a0 (0xA8 store) and a1 (0x35C store); mine emits no copies. Tried: separate pointer locals (q=p, s1/s2/s3 copies), int slot arithmetic (21 words), n*0x50 hoisted temp, unsigned off = n<<2, store orders 0x250/0x35C/0xA8 and 0x250/0xA8/0x35C.
 #ifdef NONMATCHING
 extern "C" void func_0013F558(char *self, char *obj)
 {
@@ -92,7 +92,7 @@ extern "C" void func_0013F558(char *self, char *obj)
     if (n < 5) {
         int *p = (int *)(self + n * 4);
         p[0x250 / 4] = (int)obj;
-        p[0x35C / 4] = (int)(self + n * 0x50 + 0xC0);
+        p[0x35C / 4] = (int)(self + (n * 0x50 + 0xC0));
         p[0xA8 / 4] = 0;
         *(unsigned char *)(self + 0x358) = *(unsigned char *)(self + 0x358) + 1;
     }
@@ -102,8 +102,7 @@ extern "C" void trans__7cIDBase(void *self);
 extern char *CoreSave;
 #endif
 
-// DRAFT: GAME 0x133330 - 4 words: only t3=0 init placement differs (orig after t1/lui, mine before beqz); addu operands fixed via off + (int)m_ent and (x<<4) + (int)m_tbl + 0xD; decl orders and hoisted mask no change
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x133330
 class cCollisionScroll2 {
 public:
     void SetLayerCollEnable(unsigned char layer, bool on) __asm__("SetLayerCollEnable__16cCollisionScrollUcb");
@@ -123,9 +122,8 @@ void cCollisionScroll2::SetLayerCollEnable(unsigned char layer, bool on)
     if (!m_h)
         return;
     unsigned i = 0;
-    unsigned off = 0;
-    for (; i < m_h->count; i++, off += 0x14) {
-        char *e = (char *)(off + (int)m_ent);
+    for (; i < m_h->count; i++) {
+        char *e = (char *)(i * 0x14 + (int)m_ent);
         if (*(unsigned char *)((*(unsigned short *)(e + 0xC) << 4) + (int)m_tbl + 0xD) == layer) {
             if (on)
                 *(unsigned *)(e + 0x10) &= ~2u;
@@ -134,4 +132,3 @@ void cCollisionScroll2::SetLayerCollEnable(unsigned char layer, bool on)
         }
     }
 }
-#endif
