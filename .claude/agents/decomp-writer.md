@@ -42,7 +42,9 @@ You turn free God Hand asm units into C++ for SN ProDG ee-gcc 2.95.3-136 (`-O2 -
 
 - `fncmp.py` compiles through Docker, so its Bash calls set `dangerouslyDisableSandbox: true`. Foreground commands stop after 180 s.
 - `wc`, `cat`, `xargs` and `grep` with no file list wait on stdin; pass `< /dev/null`.
-- Output is read through `head`, `tail` or `grep`, never whole files; context stays under 100k tokens.
+- Output is read through `head`, `tail` or `grep`, never whole files; context stays under 100k tokens. A side-by-side diff is read as `fncmp.py FILE 0xADDR | grep '^!' | head -30`, since a whole diff of a 0x150-byte function fills the context in a few rounds.
+- `fncmp.py` defines NONMATCHING itself for a DRAFT-tagged address, so a draft compiles in place.
+- Compiles share one Docker host and take 1-2 minutes under load; several fncmp runs go into one background job.
 - No commits and no edits under `tools/`. Tool bugs and permission denials go into the report unworked-around.
 
 ## Report
