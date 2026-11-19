@@ -18,7 +18,7 @@ extern "C" void func_001CA1F8(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1C2328
-// diff: 14 words; orig has beql on the flag, shared return 0 up front and a nop after the first slti; tried nested ifs, r accumulator, unsigned range subtract, early-return chain (best, applied)
+// diff: 14 words; orig has beql on the flag, shared return 0 up front and a nop after the first slti; tried nested ifs, r accumulator, unsigned range subtract, early-return chain (best, applied), flag/value-select layouts a1-a7 (16-18 words), v loaded before flag (a8, 16)
 extern "C" int func_001C2328(char *self)
 {
     if (*(unsigned char *)(self + 0x2F4))
@@ -68,30 +68,33 @@ extern "C" void func_001CD7A8(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1C3C58
-// diff: 22 differing words (92 vs 96 bytes)
+// diff: 17 differing words (88 vs 96 bytes); orig has beql v1,v0 at 0x1C3C74 (taken on magic match, delay lw v0,4(a1)) and two nops at 0x1C3C88; tried early null return, unsigned nested if/else (best, applied), ternary value select, if(a) wrapper, f/g variants
 extern "C" int func_001C3C58(int *out, int *a)
 {
-    if (a) {
-        out[0] = (int)a;
-        if (a[0] == 0x534D4F) {
-            if (a[1] != 0) {
-                out[1] = a[2] < 2 ? (int)(a + 3) : (int)(a + 4);
-                return 1;
-            }
+    if (!a) return 0;
+    out[0] = (int)a;
+    if (a[0] == 0x534D4F) {
+        if (a[1] != 0) {
+            if ((unsigned)a[2] < 2)
+                out[1] = (int)(a + 3);
+            else
+                out[1] = (int)(a + 4);
+            return 1;
         }
-        out[0] = 0;
     }
+    out[0] = 0;
     return 0;
 }
 #endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1DBEB0
-// diff: 16 differing words; orig keeps self copy in a3 for both pointers, const 9 loaded in loop; tried char* pointer, self copy, for loops
+// diff: 14 differing words; orig keeps self copy in a3 for both pointers, const 9 hoisted to t0 here but loaded in loop in orig, counter in a3 vs a2; tried char* pointer, self copy (c1, best, applied), for loops, != 0 counts (c5, 16), store reorder (c6, 27)
 extern "C" void func_001DBEB0(char *self)
 {
+    char *s = self;
     int i = 0x33;
-    int *p = (int *)(self + 0x2E68);
+    int *p = (int *)(s + 0x2E68);
     do {
         char *o = *(char **)(p - 1);
         *(unsigned *)(o + 0x250) |= 2;
@@ -99,12 +102,12 @@ extern "C" void func_001DBEB0(char *self)
         *(int *)(*(char **)(p - 1) + 0x104) = 0;
         p += 2;
     } while (--i >= 0);
-    int *q = (int *)(self + 0x3014);
-    i = 4;
+    int *q = (int *)(s + 0x3014);
+    int j = 4;
     do {
         *q = 0;
         q--;
-    } while (--i >= 0);
+    } while (--j >= 0);
 }
 #endif
 

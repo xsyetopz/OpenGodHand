@@ -7,14 +7,14 @@ struct cOmSub {
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1C7D50
-// 13 words differ: compiler schedules ori/sb after the float stores; tried reorder, temps, bitfield, byte temp
+// 12 words differ: orig has lbu/ori/sb first, compiler puts it between the 0x150 and 0x148 stores; 12 = b3 RMW last (kept). Tried reorder, temps, bitfield, byte temp, volatile byte/float ptrs, RMW after first store (13), hoisted float locals (12 or 13)
 void cOmSub::setVibration(unsigned int a, unsigned int b, float c, float d, float e) {
-    b3 |= 8;
     v140 = (float)(int)a;
     v150 = e;
     v144 = (float)(int)b;
     v148 = c;
     v14C = d;
+    b3 |= 8;
 }
 #endif
 

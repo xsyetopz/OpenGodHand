@@ -9,7 +9,7 @@ extern "C" int getGold__9cCoreSave(void *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1D7450
-// 14 words differ in tail only: orig lwu;dsra 3;andi;bnez branch, mine lw;sra+xori+movn. Tried (long)unsigned cast, long local, unsigned long->long, struct unsigned field (all lw/dsll32 or sra)
+// 10 words differ in tail only: orig lwu;dsra 3;andi;bnez branch. A long local with v=1 then v=2 gives 10; (long)unsigned cast inline with v=2 default, unsigned long->long and a struct unsigned field give 14 (lw/dsll32 or sra)
 extern "C" void func_001D7450(char *self)
 {
     *(int *)(self + 0x3034) = 0;
@@ -27,9 +27,10 @@ extern "C" void func_001D7450(char *self)
     func_001DD648(self, 6, 3);
     func_001DD648(self, 7, 2);
     func_001DEE60(self + 0x25B0, 0x11, 0);
-    unsigned char v = 2;
-    if (!((long)*(unsigned *)(self + 0x3020) >> 3 & 1))
-        v = 1;
+    long f = *(unsigned *)(self + 0x3020);
+    unsigned char v = 1;
+    if ((f >> 3) & 1)
+        v = 2;
     *(char *)(self + 0x3025) = 0;
     *(char *)(self + 0x3024) = v;
     *(int *)(self + 0x3020) = 0;

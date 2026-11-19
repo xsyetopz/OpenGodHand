@@ -39,7 +39,7 @@ extern "C" void func_001DFD90(char *self)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1DF7D0 - 13 words: gotos give the branch layout; orig copies f to v1, const in a1, movn a1,v0,v1; mine movz v0,v1,a1 (tried r/f reuse, ternary, !=0)
+// DRAFT: GAME 0x1DF7D0 - 13 words: gotos give the branch layout; orig copies f to v1, const in a1, movn a1,v0,v1; mine movz v0,v1,a1 (tried r/f reuse, ternary, !=0, unsigned copy, copy declared first, if(!c) goto skip-join)
 extern "C" void func_001DF7D0(char *self, int f)
 {
     int x = D_00747A0C;

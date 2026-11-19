@@ -54,7 +54,7 @@ static inline void F1ATail(char *self, int a, int b, int c)
 #define F1A_TAIL(A, B, C) F1ATail(self, A, B, C);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1A06F0 - 13 words differ with one-arg callee (was 29): tail reg naming (orig t0=1,v1=pp,a1-a3=6/0x11/0x2E,v0=-1); tried store permutations, hoisted locals, inline tail fn, char/short callee arg types.
+// DRAFT: GAME 0x1A06F0 - 13 words differ with one-arg callee (was 29): tail reg naming (orig t0=1,v1=pp,a1-a3=6/0x11/0x2E,v0=-1); tried store permutations, hoisted locals, inline tail fn, char/short callee arg types, 548 store before 54A (17), hoisted pp (13), hoisted -1 temp (17), volatile tail stores (27).
 extern "C" int func_001A06F0(char *self)
 {
     F1A_HEAD(1.2f, 1.5f, 1.2f)
@@ -62,7 +62,7 @@ extern "C" int func_001A06F0(char *self)
     return 1;
 }
 
-// DRAFT: GAME 0x1A0BD8 - identical to 0x1A06F0 (same 13 words differ).
+// DRAFT: GAME 0x1A0BD8 - identical to 0x1A06F0 (same 13 words differ; same variants tried).
 extern "C" int func_001A0BD8(char *self)
 {
     F1A_HEAD(1.2f, 1.5f, 1.2f)

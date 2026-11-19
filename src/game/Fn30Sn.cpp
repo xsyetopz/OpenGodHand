@@ -5,8 +5,9 @@
 extern "C" int *func_00307840(register int *p) { *p = 0; return p; }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x307878 (11 words off: original has mask&word operand order plus andi 0xFF/daddu before the shared exit; tried operand swap, unsigned char casts/locals, int local: 11-24 words)
+// DRAFT: GAME 0x307878 (9 words off, best: local t with (unsigned char)(t != 0) spills t to stack, frame 0x20 vs 0x10; original has lw into a2, and into v0, andi 0xFF after sltu with no spill; tried: operand swap 18w, unsigned char return 11w, int cast 11w, ?: return 11w)
 extern "C" unsigned char func_00307878(register unsigned *a, register unsigned i) {
-    return (a[i >> 5] & (0x80000000u >> (i & 0x1F))) != 0;
+    unsigned t = a[i >> 5] & (0x80000000u >> (i & 0x1F));
+    return (unsigned char)(t != 0);
 }
 #endif
