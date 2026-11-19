@@ -4,7 +4,7 @@ struct P { char pad[0xF0]; V *pos; };
 struct A { char pad[0xF0]; V *pos; char pad2[0x470]; int state; };
 #ifdef NONMATCHING
 // DRAFT: GAME 0x00270D00
-// DRAFT: float regs swapped (f0/f1/f2 allocation); tried abs via ternary, copy-then-neg, goto form, return forms
+// DRAFT: 7 words differ, float regs swapped (f0/f1/f2 allocation); tried abs via ternary, copy-then-neg, goto form, return forms, d=py-ay vs split locals (7), reversed operands a-p with d>0 (10)
 extern "C" int func_00270D00(A *a) {
     P *pl = (P *)Getplayer__Fv();
     int s = a->state;

@@ -126,7 +126,7 @@ extern "C" void free__5cHeapPv(void *, int *n)
     }
 }
 
-// DRAFT: GAME 0x2A4BA0 - 16 words differ: original copies self to a2 and c (v0) to v1 (one extra move, 84 vs 80 bytes); tried unsigned short v, inline helper, struct, if-nest, repeated exprs
+// DRAFT: GAME 0x2A4BA0 - 16 words differ: original copies self to a2 and c (v0) to v1 (one extra move, 84 vs 80 bytes); tried unsigned short v, inline helper, struct, if-nest, repeated exprs, shifted c offset 16, unsigned mask v 21
 #ifdef NONMATCHING
 extern "C" int func_002A4BA0(char *self, int idx)
 {
@@ -265,7 +265,7 @@ extern "C" int func_002AF380(unsigned short n)
 
 extern char D_0044AF70[];
 
-// DRAFT: GAME 0x2ACCF8 - 12 words: gcc merges the two self+id*8 adds, original keeps two (v1 temp, s2+=s0 after call 2); tried id<<3 forms, int casts, self+=, p[1]
+// DRAFT: GAME 0x2ACCF8 - 12 words: gcc merges the two self+id*8 adds, original keeps two (v1 temp, s2+=s0 after call 2); tried id<<3 forms, int casts, self+=, p[1], word index 15, id*8 15, hoisted unsigned off 22, self+= before store 2 12
 #ifdef NONMATCHING
 extern "C" void setIDData__10cIDManager7eIdDataPUi(char *self, int id, unsigned *data)
 {

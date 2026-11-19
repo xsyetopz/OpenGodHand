@@ -4,7 +4,7 @@ extern "C" void func_002CB340(void *, int);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1FF3A0
-// 4 words differ: lui Snd/li -1/addiu s0/s2 setup order in loop prologue; tried decl order, hoisted Snd local
+// 4 words differ: lui Snd/li -1/addiu s0/s2 setup order in loop prologue; tried hoisted Snd local and 30 declaration orders of the 3-4 locals (best 5 words, rest 6-9)
 extern "C" void func_001FF3A0(char *self)
 {
     *(int *)(self + 4) = 0;

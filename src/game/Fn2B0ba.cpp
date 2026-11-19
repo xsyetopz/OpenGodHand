@@ -235,7 +235,7 @@ extern "C" void func_002B0480(int *self, float *out)
     ((int *)out)[2] = 0;
 }
 
-// near-miss: 7 differing words, same size; original keeps the count in $v1 and the mask in $a0, mine reuses $a2/$v1
+// near-miss: 7 differing words, same size; original keeps the count in $v1 and the mask in $a0, mine reuses $a2/$v1; hoisted mask, unsigned count, separate cursor, for-loop forms all stay at 7
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2C3000
 extern "C" void func_002C3000(int a, unsigned *p, int n)

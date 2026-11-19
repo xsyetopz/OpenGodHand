@@ -167,20 +167,16 @@ extern "C" unsigned char func_002A4C00(void *, unsigned);
 extern "C" void func_002B3460(void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2B33D8 - 25 words; int fi=*(int*) then unsigned long f=fi fixes lw, but the dsrl/andi truth tests still get dsll32/dsra32 sign-extends and xori on v&1 (156 B vs 132); tried ||-chain, nested ifs, f&2/f&4, b1/b2 locals, unsigned/int/uchar v (best 22-25 words)
+// DRAFT: GAME 0x2B33D8 - 22 words; flat `if (a != 0 && b == 0 && c == 0)` form drops the nested ifs (25 words) but the dsrl/andi truth tests still get dsll32/dsra32 sign-extends and xori on v&1 (156 B vs 132); tried ||-chain, nested ifs, f&2/f&4, b1/b2 locals, unsigned/int/uchar v, `&&` without comparisons (25 words)
 extern "C" void func_002B33D8(char *self)
 {
     if (*(int *)(self + 0x1C)) {
         unsigned char v = func_002A4C00(Font, **(unsigned short **)(self + 0x8C));
         int fi = *(int *)(self + 0x14);
         unsigned long f = fi;
-        if ((f >> 1) & 1) {
-            if (!((f >> 2) & 1)) {
-                if (!(v & 1)) {
-                    func_002B3460(self);
-                    return;
-                }
-            }
+        if (((f >> 1) & 1) != 0 && ((f >> 2) & 1) == 0 && (v & 1) == 0) {
+            func_002B3460(self);
+            return;
         }
         *(unsigned *)(self + 0x14) |= 2;
     }

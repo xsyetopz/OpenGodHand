@@ -2,7 +2,7 @@
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2C2870
-// 7 words: original types in v1, table base in v0, fn in v0; ours uses v0/a2/v1. Tried entry ptr, cast arithmetic, hoisted base, early return, 2D array.
+// 7 words: original loads m_type into v1 and the table base into v0, then reuses v0 for fn; ours loads the base into a2 and fn into v1. Tried entry ptr, cast arithmetic, hoisted base, early return, 2D array, temp index, direct member call, unsigned char index, int index cast.
 void cSceAtManager::AtExecute(cSceAtUnit *unit)
 {
     if (unit != 0) {
@@ -12,7 +12,7 @@ void cSceAtManager::AtExecute(cSceAtUnit *unit)
 }
 
 // DRAFT: GAME 0x2C28B0
-// 7 words: same register allocation difference as AtExecute(unit).
+// 7 words: same register allocation difference as AtExecute(unit). Tried unsigned char index (7) and int index cast (7).
 void cSceAtManager::AtExecute(unsigned short id)
 {
     cSceAtUnit *unit = getUnit(id);

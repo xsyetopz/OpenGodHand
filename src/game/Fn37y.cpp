@@ -93,12 +93,11 @@ void func_003794D0(void *);
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x37B768
-// diff: 5 words (only the temp register: a1 in original, v0 in ours; int/pointer/char* arithmetic forms give 10); address temp lands in v0 not a1 (idx*32+0x16C kept apart via empty asm barrier; without it gcc folds 0x16C into sh, 10 words)
+// DRAFT: GAME 0x37B768 - 8 words; gcc folds 0x16C into the sh offset; an empty asm("+r"(off)) barrier after the add matches but is not allowed
 extern "C" void func_0037B768(char *o)
 {
-    int off = o[0x27] * 32 + 0x16C;
-    __asm__("" : "+r"(off));
+    register int off asm("$5") = o[0x27];
+    off = off * 32 + 0x16C;
     char *q = o + off;
     *(short *)q = 0;
     func_003749D8(o[0x27]);

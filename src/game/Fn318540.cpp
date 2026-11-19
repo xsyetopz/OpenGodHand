@@ -1,6 +1,4 @@
-#ifdef NONMATCHING
-// DRAFT: GAME 0x318540
-// 5 differing words: scheduler hoists the 0x4D0 store to 2nd slot (orig last), byte stores shift; tried 4 source store orders and char*/struct forms.
+// FUNCTION: GAME 0x318540
 struct W {
     char pad0[0x250];
     unsigned f250;
@@ -12,13 +10,12 @@ struct W {
 };
 extern "C" int func_00318540(W *p)
 {
-    p->g0 = 0;
     p->b[0] = 0;
-    p->f250 |= 0x80000;
     p->b[1] = 0;
     p->b[2] = 0;
     p->b[3] = 0;
+    p->f250 |= 0x80000;
+    p->g0 = 0;
     p->g1 = 0;
     return 1;
 }
-#endif

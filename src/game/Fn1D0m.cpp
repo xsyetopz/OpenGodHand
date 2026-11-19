@@ -94,7 +94,7 @@ public:
     void SetFall();
 };
 
-// DRAFT: GAME 0x1C8CB8 - 7 words differ: original has sink sw in beqz delay slot after 0x644 store, ours puts 0x644 sw in delay and sink after join; sink-before, if/else, ternary variants tried
+// DRAFT: GAME 0x1C8CB8 - 2 words differ: 0x1C8CEC/0x1C8CF4 sw $zero,0x644 and sw $v1,0(sp) swapped in beqz delay slot; sink/0x644 order, if/else, ternary, r-flag variants tried (11 and 34 words)
 void cOmThrow::SetFall()
 {
     char *self = (char *)this;
@@ -107,9 +107,9 @@ void cOmThrow::SetFall()
     *(char *)(self + 0x2F7) = 0;
     *(int *)(self + 0x610) = 0;
     *(int *)(self + 0x618) = 0;
+    sink = b;
     *(int *)(self + 0x644) = 0;
     char *w = b ? **(char ***)(self + 0x278) : 0;
-    sink = b;
     if (w) {
         cVec *d = *(cVec **)(w + 0xD0);
         *d = *(cVec *)(self + 0x630);
