@@ -14,12 +14,12 @@ struct Vec4 {
 };
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2D9F28 - draft: plain C; uninitialized store is dropped, asm has sw $v1 first
+// DRAFT: GAME 0x2D9F28 - 9 words: volatile stores keep sw $v1 but after lui/addiu sp; original has sw $v1 before prologue, then nop. Tried: plain (14), volatile both (9), volatile first only (14), int-cast volatile (9), volatile ptr alias (14), t moved first (14), comma/if forms (14)
 extern "C" void func_002D9F28(void **p, int flag)
 {
     void *u;
-    *p = u;
-    *p = (void *)&D_0044D3C0;
+    *(void *volatile *)p = u;
+    *(void *volatile *)p = (void *)&D_0044D3C0;
     int t = flag & 1;
     if (t != 0)
         func_0030F5A0(p, t);

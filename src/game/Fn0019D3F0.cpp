@@ -20,7 +20,7 @@ extern "C" void SetColorAnimNormal__12CustomIDWorkG3COLT1Us(char *, int, int, un
 extern "C" void SetColorAnimSin__12CustomIDWorkG3COLT1Us(char *, int, int, unsigned short);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x0019D3F0 16 differing words: stack-vector store order, $s1/$s2 swap, constant reg assignment; variants: cVec copy, sh order, sb/sw order, decl swap, V4 pointer pattern (45), c.x assignment (24).
+// DRAFT: GAME 0x0019D3F0 16 differing words: stack-vector store order, $s1/$s2 swap, constant reg assignment; variants: cVec copy, sh order, sb/sw order, decl swap, V4 pointer pattern (45), c.x assignment (24), c before b with d at top (76), b = a copy (66), b before a (22), folded c.x to -0.75f (60).
 extern "C" int func_0019D3F0(char *self)
 {
     func_001B6FB8(self);
@@ -43,7 +43,7 @@ extern "C" int func_0019D3F0(char *self)
     return 1;
 }
 
-// DRAFT: GAME 0x001BD780 8 differing words: constant 1 register ($v1 original, $v0 compiled); hoisted constant temp variant gave no gain.
+// DRAFT: GAME 0x001BD780 8 differing words: constant 1 register ($v1 original, $v0 compiled); hoisted constant temp no gain; block-1 orders ABCD/BACD/BADC/ABDC 8, DABC 10; int one hoisted into block-1 stores 75; (int) switch cast 8.
 extern "C" void func_001BD780(char *self)
 {
     switch (*(unsigned char *)(self + 0x2F5)) {
