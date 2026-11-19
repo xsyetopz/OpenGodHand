@@ -7,7 +7,7 @@ extern "C" void addNullSpeed__8cObjBasef(void *, float);
 extern "C" int func_00291010(void *, float *, float, float, float, void *, int, int);
 extern char g_EmManage[];
 
-// DRAFT: GAME 0x2412A8 - 4 words off: orig does the 2nd `or` (0x20000) before swc1 0x54C; ours stores 3.0f first
+// DRAFT: GAME 0x2412A8 - 94 words barrier-free (4 with an empty asm barrier, which is forbidden). Open: no load-delay nop after `lwc1 $f12,0x118` before `div.s` in the case-1 tail (0x241390; orig has nop); the missing word shifts later b/beq targets (0x2412DC 0x83 vs 0x82). Tried: barrier removal (95), store-first (94), hoisted const c (95), volatile divisor load (94, no nop)
 extern "C" void func_002412A8(char *self)
 {
     char *t;
@@ -20,10 +20,10 @@ extern "C" void func_002412A8(char *self)
     case 1:
     {
         unsigned f = *(unsigned *)(self + 0x16D0);
-        f |= 0x10000;
-        __asm__("" : "+r"(f));
         *(float *)(self + 0x54C) = 3.0f;
-        *(unsigned *)(self + 0x16D0) = f | 0x20000;
+        f |= 0x10000;
+        f |= 0x20000;
+        *(unsigned *)(self + 0x16D0) = f;
     }
         if (moveMotion__FP8cObjBase(self))
             *(unsigned char *)(self + 0x2F6) += 1;
@@ -38,10 +38,10 @@ extern "C" void func_002412A8(char *self)
     case 3:
     {
         unsigned f = *(unsigned *)(self + 0x16D0);
-        f |= 0x10000;
-        __asm__("" : "+r"(f));
         *(float *)(self + 0x54C) = 3.0f;
-        *(unsigned *)(self + 0x16D0) = f | 0x20000;
+        f |= 0x10000;
+        f |= 0x20000;
+        *(unsigned *)(self + 0x16D0) = f;
     }
         moveMotion__FP8cObjBase(self);
         addNullSpeed_Rotation__8cObjBasef(self, 1.0f);

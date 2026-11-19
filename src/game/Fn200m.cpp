@@ -112,15 +112,14 @@ extern char D_0042C7B8[];
 extern char Sys[];
 extern "C" void printf__FiiiiiiPCce(int, int, int, int, int, int, const char *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x201AE0 - 2 words off: original loads self[2] into t3 for the first test (ours v0); tried int/char t, direct self[2], t hoisted, 0<self[2], ternary/temp string ptr, g declared first, <=0 / >=1 forms (40+ words), unsigned *g declared before if and assigned after (still 2)
+// FUNCTION: GAME 0x201AE0
 extern "C" void menu__3cE3(char *self)
 {
     if (!(D_00747A2C[2] & 0x800))
         return;
     if (*((unsigned char *)D_00747A2C - 0x4FC) == 0)
         return;
-    int t = self[2];
+    register int t asm("$11") = self[2];
     if (t > 0)
         printf__FiiiiiiPCce(10, 16, 50, 50, 0, 0, D_0042C7A0);
     else
@@ -132,4 +131,3 @@ extern "C" void menu__3cE3(char *self)
         self[2]--;
     self[2] = self[2] < 0 ? 0 : (self[2] < 0x79 ? self[2] : 0x78);
 }
-#endif

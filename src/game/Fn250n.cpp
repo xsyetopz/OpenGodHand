@@ -7,8 +7,7 @@ extern "C" void func_0025FE30(void *, int, int);
 extern "C" void func_00274FE8(void *);
 extern "C" void func_00262750(void *, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x25C5D8 - 3 words differ: the constant 2 in the 0x2F4/0x2F5 store block lands in v0, original uses v1; tried split/reversed stores, block-scoped and hoisted constant, (unsigned char)2 cast (all 3 or worse)
+// FUNCTION: GAME 0x25C5D8
 extern "C" void func_0025C5D8(char *self)
 {
     char *pl = (char *)Getplayer();
@@ -55,7 +54,11 @@ extern "C" void func_0025C5D8(char *self)
                 }
                 func_0025FE30(self, 0x1000000, 0);
                 B(0x2F6) = 0;
-                B(0x2F5) = B(0x2F4) = 2;
+                {
+                    register unsigned k asm("$3") = 2;
+                    B(0x2F4) = k;
+                    B(0x2F5) = k;
+                }
                 B(0x2F7) = 0;
             } else {
                 func_00274FE8(self);
@@ -68,7 +71,6 @@ extern "C" void func_0025C5D8(char *self)
     if (*(unsigned short *)(self + 0x3AC) & 1)
         func_00262750(self, 0);
 }
-#endif
 
 extern "C" void func_00281470(void *, int);
 extern "C" void func_00283378(void *, int);

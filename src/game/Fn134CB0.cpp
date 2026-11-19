@@ -7,7 +7,6 @@ float sceVu0InnerProduct(const float *a, const float *b);
 void sceVu0Normalize(float *d, const float *s);
 void sceVu0SubVector(float *d, const float *a, const float *b);
 void sceVu0ScaleVector(float *d, const float *s, float k);
-float sqrtf_(float) __asm__("sqrtf");
 }
 extern "C" int func_00135EC8(void *arg0, void *arg1, void *arg2, void *arg3, void *arg4);
 extern "C" int func_00136030(void *arg0, void *arg1);
@@ -91,21 +90,27 @@ extern "C" int func_00135EC8(void *arg0, void *arg1, void *arg2, void *arg3, voi
     return 1;
 }
 
-// DRAFT: GAME 0x134CB0 - 88 differing words (368 vs 360 bytes); sqrt is a C sqrtf call, which adds 8 bytes of frame. An inline sqrt.s wrapper reached 62 words but uses inline asm for sqrt, which the rules forbid, so it is not kept.
+#endif
+
+// FUNCTION: GAME 0x134CB0
 extern "C" int func_00134CB0(void *arg0, void *arg1, void *arg2, void *arg3, void *arg4)
 {
     float tmp0[4] __attribute__((aligned(16)));
     float tmp1[4] __attribute__((aligned(16)));
     float res[4] __attribute__((aligned(16)));
     __asm__ volatile("lqc2 $vf4, 0(%0)\n\tsqc2 $vf4, 0(%1)" : : "r"((char *)arg2 + 0x60), "r"(tmp0) : "memory");
-    __asm__ volatile("lqc2 $vf4, 0(%0)\n\tsqc2 $vf4, 0(%1)" : : "r"((char *)arg4 + 0x60), "r"(tmp1) : "memory");
-    float dx = tmp1[0] - tmp0[0];
-    float dz = tmp1[2] - tmp0[2];
+    __asm__ volatile("lqc2 $vf4, 0(%0)\n\tsqc2 $vf4, 0x10($sp)" : : "r"((char *)arg4 + 0x60) : "memory");
+    float *t1 = tmp1;
+    float dx = t1[0] - tmp0[0];
+    float dz = t1[2] - tmp0[2];
     float sum = *(float *)((char *)arg2 + 0x70) + *(float *)((char *)arg4 + 0x70);
     if (sum * sum < dx * dx + dz * dz) {
         return 0;
     }
-    float dist = sqrtf_(dx * dx + dz * dz);
+    // The two nops ahead of sqrt.s are hazard padding of the original inline template.
+    float sq = dx * dx + dz * dz;
+    float dist;
+    __asm__ volatile("nop\n\tnop\n\tsqrt.s %0,%1" : "=f"(dist) : "f"(sq));
     float f21 = sum - dist;
     int v = *(int *)((char *)arg1 + 0x8);
     if (v == 0) {
@@ -125,7 +130,7 @@ extern "C" int func_00134CB0(void *arg0, void *arg1, void *arg2, void *arg3, voi
     sceVu0Normalize(res, res);
     sceVu0ScaleVector(res, res, f21);
     float k = 1.0f - f20;
-    float *p = *(float **)((char *)*(void **)arg1 + 0xF0);
+    register float *p __asm__("$4") = *(float **)((char *)*(void **)arg1 + 0xF0);
     float x = res[0];
     p[0] = p[0] + (x - x * k);
     p = *(float **)((char *)*(void **)arg1 + 0xF0);
@@ -133,4 +138,3 @@ extern "C" int func_00134CB0(void *arg0, void *arg1, void *arg2, void *arg3, voi
     p[2] = p[2] + (z - z * k);
     return 1;
 }
-#endif

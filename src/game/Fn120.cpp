@@ -16,20 +16,25 @@ extern "C" void func_001268B0(char *self, int v)
     }
 }
 
-// DRAFT: GAME 0x12C4F0 - 3 words: tail uses bne+daddu vs original xor+movn v0,zero,v1; kept int r=1 nested-if return 0 form; tried early return r=0 (9), (m^B)?0:1 (8), if(m^B) r=0 with early return (9), nested if(m^B) r=0 (12), r declared before m (9), ||, ternaries, xor forms, == (8-14)
+// DRAFT: GAME 0x12C4F0 - 4 words: ld lands in a1 (original v0), and/xor operands and addiu v0,1 placement differ; mask $3 / A $4 / r $2 / x $3 pins kept (4); pinning the loaded value to $2 gave 11; tried early return r=0 (9), (m^B)?0:1 (8), if(m^B) r=0 with early return (9), nested if(m^B) r=0 (12), r declared before m (9), ||, ternaries, xor forms, == (8-14)
 #ifdef NONMATCHING
 extern "C" int func_0012C4F0(char *self)
 {
-    long m = *(long *)(self + 0x2F0) & 0xFFFF00000000L;
-    int r = 1;
-    if (m != 0x60100000000L)
-        if (m != 0x50100000000L)
-            return 0;
+    register long mask asm("$3") = 0xFFFF00000000L;
+    long m = *(long *)(self + 0x2F0) & mask;
+    register int r asm("$2") = 1;
+    register long A asm("$4") = 0x60100000000L;
+    if (m != A) {
+        register long x asm("$3") = m ^ 0x50100000000L;
+        if (x)
+            r = 0;
+        return r;
+    }
     return r;
 }
 #endif
 
-// DRAFT: GAME 0x12BAF0 - 5 words: m reuses a0 (self-reuse, matches lbu a0); original shares one 'return 0' at 0x12BB14 for beqz/bltz, mine duplicates it; tried uchar a=m<4 (6), result var r (6), nested m<4/m>=0 (5), self-reuse a0 (5, kept)
+// DRAFT: GAME 0x12BAF0 - 5 words: m reuses a0 (self-reuse, matches lbu a0); original shares one 'return 0' at 0x12BB14 for beqz/bltz, mine duplicates it; tried uchar a=m<4 (6), result var r (6), nested m<4/m>=0 (5), self-reuse a0 (5, kept), r pinned $2 with single exit (15)
 #ifdef NONMATCHING
 extern "C" int func_0012BAF0(char *self)
 {
@@ -129,14 +134,11 @@ extern "C" int func_00124FD8(pl00 *self, cEm00 *em)
 }
 #endif
 
-// DRAFT: GAME 0x123908 - 4 words: 0x20 frame, sq and s0 match; original does lui v0 / addiu s0,v0 before sd ra, compiled does lui s0 after addiu a1; tried asm "+r" (12), r-first decl with "r"(p) after call (4, kept), unsigned cast (4), char offset (4), "+r" read-write barrier (4), p-> vs CamManager. and memory clobber
+// DRAFT: GAME 0x123908 - 9 words: original keeps s0 (sq/lq) across the call and does lui v0 / addiu s0,v0 before sd ra; s0-pinned &CamManager drops the sq/lq save; empty-asm barrier variants are forbidden (the 4-word "r"(p) barrier was removed); tried r + (p != 0) without barrier (9), asm "+r" (12), unsigned cast (4, barrier), char offset (4, barrier), memory clobber (barrier)
 #ifdef NONMATCHING
 extern "C" int func_00123908()
 {
-    int r;
-    cCamManager *p = &CamManager;
-    r = p->isCk_CamClass(1);
-    __asm__ volatile("" : : "r"(p));
-    return r;
+    register cCamManager *p asm("$16") = &CamManager;
+    return p->isCk_CamClass(1);
 }
 #endif

@@ -152,14 +152,13 @@ extern "C" void func_001FE278(void *, void *);
 extern char g_DmgManage[];
 extern const char D_00426F88[];
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1A2630 - 4 words (void*/unsigned d, no dd temp, p!=e loop, local g tried): s3/s4 swapped (g_DmgManage hi vs d register order)
+// FUNCTION: GAME 0x1A2630
 extern "C" void func_001A2630(char *self, int d)
 {
     *(const void **)(self + 0x214) = D_00426F88;
     int **p = (int **)(self + 0x600);
     int i;
-    int dd = d;
+    register int dd asm("$19") = d;
     for (i = 1; i >= 0; i--, p++) {
         if (*p != 0) {
             func_001FE278(g_DmgManage, *p);
@@ -168,7 +167,6 @@ extern "C" void func_001A2630(char *self, int d)
     }
     func_001B6F38(self, dd);
 }
-#endif
 
 struct Tbl6 { int v[6]; };
 extern const Tbl6 D_00427CD8;

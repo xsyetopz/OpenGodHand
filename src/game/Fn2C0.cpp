@@ -145,22 +145,22 @@ extern "C" void func_002B8D88(S2B8D *self, int mode, int a, int b)
     }
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2C0D18 - 4 words: s1/s4 hold trg/act swapped; const stores in 34,39,54,36 order and 35,3A,38,3B order are best of all 24 permutations; int/unsigned params no help
+// FUNCTION: GAME 0x2C0D18
 extern "C" void AtInit__10cSceAtUnit9eSceAt_id12eAreaHitType12eAreaTrgType8eActType(
     char *self, int id, int hit, int trg, int act)
 {
+    register int tr asm("$17") = trg;
+    register int ac asm("$20") = act;
     memset(self, 0, 0x9C);
     self[0x35] = id;
-    self[0x3A] = act;
+    self[0x3B] = tr;
     self[0x38] = hit;
-    self[0x3B] = trg;
+    self[0x3A] = ac;
     self[0x34] = 3;
     self[0x39] = 8;
     self[0x54] = 0x31;
     *(unsigned short *)(self + 0x36) = 0xFFFF;
 }
-#endif
 
 extern "C" void *Font;
 extern "C" unsigned char func_002A4C00(void *, unsigned);
