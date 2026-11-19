@@ -8,18 +8,16 @@ extern "C" int getGold__9cCoreSave(void *);
 extern "C" void Move__7PokerId(char *);
 extern "C" void Trans__7PokerId(char *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1D7378
-// 2 words differ: s0/s3 swapped (base ptr vs loop ptr); tried separate q copy, declaration order, do-while, inline expr (worse)
+// FUNCTION: GAME 0x1D7378
 extern "C" void Main__5Poker(char *self)
 {
-    int i = 4;
     int *base = (int *)(self + 0x3004);
-    int *p = base;
+    int i = 4;
     int k = *(unsigned char *)(self + 0x3024) * 8;
     short *s = (short *)(k + (int)D_003BE000);
     void (*f)(char *) = *(void (**)(char *))((int)D_003BE000 + k + 4);
     f(self + *s);
+    int *p = base;
     do {
         if (*p) func_001D6E20(*p);
         i--;
@@ -36,4 +34,3 @@ extern "C" void Main__5Poker(char *self)
     Move__7PokerId(self);
     Trans__7PokerId(self);
 }
-#endif

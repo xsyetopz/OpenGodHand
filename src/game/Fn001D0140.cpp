@@ -33,7 +33,7 @@ static inline void reset(char *self, float *pos, int v, int a)
 }
 
 // DRAFT: GAME 0x1D0140
-// 2 words differ: spill sw a0,0(sp) lands before sw 0x630 instead of in beqz delay slot; tried volatile spill at 3 positions, (sp = n) in the ternary (worse).
+// 2 words differ: spill sw a0,0(sp) lands before sw 0x630 instead of in beqz delay slot; tried volatile spill at 3 positions, (sp = n) in the ternary (worse), explicit if instead of ternary with spill after 0x630 (13 words).
 extern "C" void func_001D0140(char *self, float *pos, int a) { reset(self, pos, 0x11, a); }
 
 // DRAFT: GAME 0x1D0240
