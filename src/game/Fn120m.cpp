@@ -1,7 +1,7 @@
 // Misc units in 0x120000-0x140000 over raw offsets.
 #include "game/cVec.h"
 
-// DRAFT: GAME 0x138CA8 - 7 words: loop end pointer/temp register allocation (e in a0, x/y in v0/v1 vs target e=v0, x=v1, y=a0)
+// DRAFT: GAME 0x138CA8 - 7 words: end register v0 in target, a0 compiled; temp allocation x/y differs. tried: end local, inline end, load-before-store, int counter, source-based end, f&8 reorder, end hoist (40/37), unsigned end (7, tie)
 #ifdef NONMATCHING
 extern "C" void func_00138CA8(void *self, char *dst, char *src, unsigned char f)
 {
@@ -122,7 +122,7 @@ extern "C" void _$_12CustomIDWork(void *, int);
 extern "C" void func_0030F5A0(void *);
 extern const char D_0041DCC8[];
 
-// DRAFT: GAME 0x13DE90 - 19 words: target has self in s1, first in v0->s2; ours swaps s1/s2 and lui s3/s4 order (tried for(;;) break form, p/first decl order, me alias)
+// DRAFT: GAME 0x13DE90 - 16 words: target has self in s1, first in v0->s2; ours swaps s1/s2 and lui s3/s4 order. do-while loop is best (19 -> 16); tried for(;;) break form (19), char* first/p (19), unsigned first (19), store hoisted above if (34), p declared before first (16, tie), while form (16, tie), --p in call (16, tie), no null check (36)
 #ifdef NONMATCHING
 extern "C" void func_0013DE90(char *self, unsigned f)
 {
@@ -131,13 +131,10 @@ extern "C" void func_0013DE90(char *self, unsigned f)
     if (first) {
         W *p = (W *)(self + 0x38C);
         if (first != p) {
-            p--;
-            for (;;) {
-                _$_12CustomIDWork(p, 0);
-                if (first == p)
-                    break;
+            do {
                 p--;
-            }
+                _$_12CustomIDWork(p, 0);
+            } while (first != p);
         }
     }
     *(const void **)(self + 0x80) = D_0041DCC8;

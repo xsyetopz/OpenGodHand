@@ -1,22 +1,23 @@
 // Small helpers from 0x260000-0x280000.
 
-// DRAFT: GAME 0x27DC50 - original compare chain is 1,0,2,3 (27 words; if/else chain 1,0,2,3 gave 23)
+// DRAFT: GAME 0x27DC50 - 23 words, 72 vs 104 B (size differs): if/else chain in 1,0,2,3 order with duplicated zero tail; switch 27 words; shared b=0 tail 24 words, 72 B
 #ifdef NONMATCHING
 extern "C" void func_0027DC50(char *self, int k)
 {
     int b;
-    switch (k) {
-    case 1:
+    if (k == 1) {
         b = 2;
-        break;
-    case 2:
+    } else if (k == 0) {
+        self[0x2F7] = 0;
+        self[0x2F5] = 8;
+        self[0x2F4] = 0;
+        self[0x2F6] = 0;
+        return;
+    } else if (k == 2) {
         b = 4;
-        break;
-    case 3:
+    } else if (k == 3) {
         b = 6;
-        break;
-    case 0:
-    default:
+    } else {
         self[0x2F7] = 0;
         self[0x2F5] = 8;
         self[0x2F4] = 0;
@@ -24,9 +25,6 @@ extern "C" void func_0027DC50(char *self, int k)
         return;
     }
     self[0x2F5] = 8;
-    self[0x2F6] = b;
-    self[0x2F7] = 0;
-    self[0x2F4] = 0;
 }
 #endif
 
@@ -205,7 +203,7 @@ extern "C" void SetDamageCollRadius__11cDamageUnitif(void *, int, float);
 extern "C" void SetDamageCollActive__11cDamageUnitb(void *, int);
 extern "C" void SetDmgGiveHitVec__11cDamageGiveRC4cVec(void *, void *);
 
-// DRAFT: GAME 0x262980 - 11 words: 0x49 emitted inside each arm (orig: before beq), tail sh scheduled after ld ra, lui a1 order; tried hoisted k/c locals, store swap, ZeroVec temp
+// DRAFT: GAME 0x262980 - 11 words: 0x49 emitted inside each arm (orig: before beq), tail sh scheduled after ld ra, lui a1 order; tried hoisted k/c locals, store swap, ZeroVec temp, hoisted r/d split (29 words)
 #ifdef NONMATCHING
 extern "C" void func_00262980(char *self)
 {

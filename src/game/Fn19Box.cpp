@@ -39,6 +39,7 @@ extern "C" int NAME(char *self) \
         pd->w = 1.0f; \
         func_001FD9D8(t, self + 0x80, &c, &d, &b); \
     } \
+    char k = (K); \
     void *p = self + 0x620; \
     *(int *)(self + 0x5E8) = 0; \
     *(int *)(self + 0x5E4) = 0; \
@@ -46,7 +47,7 @@ extern "C" int NAME(char *self) \
     *(short *)(self + 0x5F6) = 0; \
     *(short *)(self + 0x54A) = 1; \
     *(void **)(self + 0x608) = p; \
-    *(char *)(self + 0x60C) = (K); \
+    *(char *)(self + 0x60C) = k; \
     *(int *)(self + 0x5EC) = 7; \
     *(short *)(self + 0x548) = 1; \
     *(short *)(self + 0x5F4) = -1; \
@@ -55,14 +56,14 @@ extern "C" int NAME(char *self) \
 }
 
 // DRAFT: GAME 0x1932D8
-// 12 words differ (was 25 with a 4-arg callee; the original passes only a0): tail temps/reg naming, same as 0x19E7A8.
+// 11 words differ: constants land in rotated registers (1,4,7,-1) and sh 54A sits in the jal delay slot. Tried: void *p hoisted (74), short one=1 (74), seven/neg locals (12), char k for the 60C store (11, kept).
 FN19_BOX(func_001932D8, 0.8f, 1.7f, 0.8f, 4)
 
 // DRAFT: GAME 0x19BF10
-// same tail mismatch as 0x1932D8.
+// 11 words differ, same tail as 0x1932D8.
 FN19_BOX(func_0019BF10, 1.4f, 2.2f, 1.4f, 8)
 
 // DRAFT: GAME 0x19E530
-// same tail mismatch as 0x1932D8.
+// 11 words differ, same tail as 0x1932D8.
 FN19_BOX(func_0019E530, 3.4f, 1.0f, 2.0f, 10)
 #endif

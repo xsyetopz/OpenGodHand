@@ -9,7 +9,7 @@ extern "C" void *func_001FD9D8(void *, void *, void *, void *, void *);
 extern "C" void func_001C28A0(void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1A3B80 - same tail const-load/store-order problem as 0x1A06F0 (12 words differ with one-arg callee).
+// DRAFT: GAME 0x1A3B80 - 11 words differ, same tail as 0x1932D8 (char k for the 60C store applied; constants in rotated registers, sh 54A in jal delay slot).
 extern "C" int func_001A3B80(char *self)
 {
     func_001B6FB8(self);
@@ -39,6 +39,7 @@ extern "C" int func_001A3B80(char *self)
         pd->w = 1.0f;
         func_001FD9D8(t, self + 0x80, &c, &d, &b);
     }
+    char k = 0x14;
     void *p = self + 0x620;
     *(int *)(self + 0x5E8) = 0;
     *(int *)(self + 0x5E4) = 0;
@@ -46,7 +47,7 @@ extern "C" int func_001A3B80(char *self)
     *(short *)(self + 0x5F6) = 0;
     *(short *)(self + 0x54A) = 1;
     *(void **)(self + 0x608) = p;
-    *(char *)(self + 0x60C) = 0x14;
+    *(char *)(self + 0x60C) = k;
     *(int *)(self + 0x5EC) = 7;
     *(short *)(self + 0x548) = 1;
     *(short *)(self + 0x5F4) = -1;

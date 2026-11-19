@@ -1,6 +1,5 @@
 // Flag-bit query on the word at +0x50; sole switch of 0x2C0ED0.
-// DRAFT: GAME 0x2C0ED0 - 7 words off: case 3 sign via slti and case 5 bgez/lui order; per-case local unsigned k and if-form sign test help; (int)v<0 in an expression gives srl
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2C0ED0
 extern "C" int func_002C0ED0(char *self, unsigned id)
 {
     unsigned *p = (unsigned *)(self + 0x50);
@@ -30,10 +29,7 @@ extern "C" int func_002C0ED0(char *self, unsigned id)
         return (*p & k) != 0;
     }
     case 5: {
-        unsigned v = *p;
-        if ((int)v >= 0)
-            return 0;
-        return (v & 0x8000000) != 0;
+        return ((int)*p < 0) && (*p & 0x8000000) != 0;
     }
     case 6: {
         unsigned k = 0x4000000;
@@ -46,4 +42,3 @@ extern "C" int func_002C0ED0(char *self, unsigned id)
     }
     return 0;
 }
-#endif

@@ -11,7 +11,8 @@ The report comes from `tools/bin/objdiff-cli report generate` (see
 tools/objdiff_config.py); a function counts as matched when objdiff reports a
 fuzzy match of 100%. Only the Game category counts: SDK, CRI middleware and
 libc/runtime groups are library code (tools/objdiff_config.py) and appear only
-as a function count on stdout. Output is the self-contained build/progress.svg:
+as a function count on stdout. Dead `frag_<VRAM>` fragments are no
+decompilation target and are left out of every count. Output is the self-contained build/progress.svg:
 one labelled rectangle per game group sized by code bytes, and one cell per
 function (green matched, grey not) in address order. The game percentage is
 printed by code bytes and by function count.
@@ -89,7 +90,11 @@ def load(report: Path) -> list[dict]:
                 f.get("fuzzy_match_percent", 0.0) >= 100.0,
             )
             for f in u.get("functions", [])
+            # Dead `frag_<VRAM>` fragments (docs/decomp.md) stay asm; no source decompiles them.
+            if not f["name"].startswith("frag_")
         ]
+        if not fns:
+            continue
         groups.append({"name": u["name"], "cat": names.get(cats[0], cats[0]), "fns": fns, "size": sum(f[1] for f in fns)})
     return groups
 

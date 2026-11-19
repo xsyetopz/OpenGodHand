@@ -5,7 +5,7 @@ struct Elem {
 };
 static inline int Less(const float &a, const float &b) { return a < b; }
 
-// DRAFT: GAME 0x2A9098 - 11 words differ: the compare result and q swap v0/v1 (size matches, 100 B); tried for/goto/q-- loops, bool Less, p[-1], temp copies (11 or worse)
+// DRAFT: GAME 0x2A9098 - 11 words differ: the compare result and q swap v0/v1 (size matches, 100 B); tried for/goto/q-- loops, bool Less, p[-1], temp copies, direct key.key<q->key (19 words, 88 B), Less as !(a>=b) (10 words, 104 B), Less as b>a (13 words), hoisted float k (25 words, 104 B)
 #ifdef NONMATCHING
 extern "C" void func_002A9098(Elem *p, Elem key)
 {

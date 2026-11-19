@@ -134,7 +134,7 @@ extern "C" int AddDamageCollCylinder__11cDamageUnitRC7cMatrixRC4cVecT2ff(void *,
     }
 
 // DRAFT: GAME 0x170050
-// Diff: 11 words in the tail: original materializes 1, &0x620, 8, -1 in that order (mine a2=1,v0=-1,v1=8); store-order permutations tried (11-13)
+// Diff: 12 words (best) in the tail: original materializes 1, &0x620, 8, -1 in that order (mine a1=1,v0=0x620); tried 8 variants (store orders, decl orders, unsigned, hoisted base/-1): 12-13 words
 FN170_INIT(func_00170050)
 
 // DRAFT: GAME 0x170338

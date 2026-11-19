@@ -9,7 +9,7 @@ static inline char *getMesh(char *o, int i)
 }
 
 // DRAFT: GAME 0x1C6B68
-// 7 words differ (lbu/lw via t0 not a1, spill sw order, lw 0x40 sched); tried: volatile spill/reload, inline getMesh, m=obj placement.
+// 7 words differ (lbu/lw via t0 not a1, spill sw order, lw 0x40 sched); tried: volatile spill/reload, inline getMesh, m=obj placement, addu operand order (7, tie), nonvolatile s (9), int n (48), flipped ternary (7, tie), tern (42), s-first (7, tie), addu+s (7, tie), addu flip (7, tie).
 extern "C" void initMove3_y__6cOmSubP4cObjiRC4cVecfff(char *self, char *obj, int idx, void *vec, float, float, float)
 {
     if (obj) {

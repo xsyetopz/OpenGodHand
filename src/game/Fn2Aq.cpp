@@ -41,7 +41,7 @@ extern "C" int func_002A9860(OffTab *self, int off)
     return self->m_14 - self->m_4;
 }
 
-// DRAFT: GAME 0x2ABD30 - 11 words differ: original computes slti+andi before the branch; ours folds it; tried uchar/bool temps, inline bool/uchar fn, early return, int flag temp (11-15)
+// DRAFT: GAME 0x2ABD30 - 11 words differ: original computes slti+andi before the branch; ours folds it; tried uchar/bool temps, inline bool/uchar fn, early return, int flag temp (11-15; best 11)
 #ifdef NONMATCHING
 extern "C" void func_002ABD30(int, char *o)
 {
@@ -49,7 +49,7 @@ extern "C" void func_002ABD30(int, char *o)
     short n = *(short *)(c + 0x214);
     *(short *)(o + 0xA6) = 0;
     if (c[0x5F] == 0) {
-        if ((unsigned char)(n < 2))
+        if (((unsigned char)(n < 2)) & 0xFF)
             *(int *)(o + 0x2C) |= 0x800;
         else
             *(int *)(o + 0x2C) &= ~0x800;

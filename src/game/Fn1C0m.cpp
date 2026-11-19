@@ -115,7 +115,7 @@ struct Obj1C23 {
 };
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1C2378 - 7 words: n spill is sb/andi instead of sw/slt on the loaded byte
+// DRAFT: GAME 0x1C2378 - 7 words: n spill is sb/andi instead of sw/slt on the loaded byte; target shares epilogue via beqz, ours duplicates. tried: int n (34), goto shared exit (34), int+goto (34), if-assign e (34), tbl local (35), tgt local (33), unsigned n (34), direct m->n compare (33)
 extern "C" void func_001C2378(Obj1C23 *self)
 {
     Mdl1C23 *m = self->m;
