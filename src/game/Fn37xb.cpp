@@ -2,22 +2,18 @@
 #include "game/Fn37x.h"
 extern "C" void func_003733C8(Fn37Obj *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x373938
-// diff: 12 words; branch layout differs (original bnel with 0x20 load in the likely delay slot)
+// FUNCTION: GAME 0x373938
 extern "C" float func_00373938(Fn37Obj *o, int i)
 {
     float r;
-    if (func_00373A50(o)) {
-        if (func_00373B20(o) == 1)
-            r = ((float *)o)[0x2C / 4 + i];
-        else
-            r = ((float *)o)[8];
-    } else
+    if (!func_00373A50(o))
         r = 0.0f;
+    else if (func_00373B20(o) == 1)
+        r = *(float *)((char *)o + (i << 2) + 0x2C);
+    else
+        r = ((float *)o)[8];
     return r;
 }
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x373298

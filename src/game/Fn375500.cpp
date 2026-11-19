@@ -17,7 +17,7 @@ void func_003B7590(unsigned long, unsigned *, unsigned *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x375500
-// 7 words: lui/addiu for D_0076A9C0/B1C0 scheduled after lw s2 via v0 in original; tried struct/array/char* locals, non-volatile
+// 7 words: both lui/addiu address pairs use v0 in original (first pair after lw s2); ours uses a0 and hoists the first pair above dsll32. Tried struct/array/char* locals, non-volatile, pa local after c0 (7), pa local before t0 (63), pointer-arithmetic end arg (7)
 extern "C" void func_00375500()
 {
     unsigned buf[2];

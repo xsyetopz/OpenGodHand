@@ -171,7 +171,7 @@ static inline int slotAt2(char *p, int i)
     return 0;
 }
 
-// DRAFT: GAME 0x2F53A8 (20 words: Lt(const int&) spill fixed 1st call; 2nd call needs andi 0xFF on slt + lbu/spill before bltz + 0x2B0 loaded before 0x114; tried uchar-returning Lt2, n local+&n, inline r)
+// DRAFT: GAME 0x2F53A8 (20 words: Lt(const int&) spill fixed 1st call; 2nd call needs andi 0xFF on slt + lbu/spill before bltz + 0x2B0 loaded before 0x114; tried uchar-returning Lt2, n local+&n, inline r, 0x114/0x2B0 split locals, slotAt2 param order swap: all no gain)
 extern "C" int func_002F53A8(char *self)
 {
     char *h = *(char **)(self + 0x110);
@@ -190,7 +190,7 @@ extern "C" int func_002F53A8(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2FEBE8
-// diff: 7 words; reg alloc only (original cur in v0, const 1 in v1; ours cur in v1); tried cur as int/ushort local, reordered branches, hoisted b
+// diff: 7 words; reg alloc only (original cur in v0, const 1 in v1; ours cur in v1); tried cur as int/ushort local, reordered branches, hoisted b, five variants in earlier turns: none below 7
 extern "C" void func_002FEBE8(char *self, unsigned short a, int mode)
 {
     unsigned short *p = (unsigned short *)(self + 0x22C);
@@ -230,7 +230,7 @@ struct ObjVec { int pad; char **b; char **e; };
 extern ObjVec *objArray;
 
 // DRAFT: GAME 0x2FA470
-// diff: ~10 words; original keeps the range test in a3 (slti/bnez/daddu pattern) and reloads objArray via t1; ours uses movn or a different phi (3 probes).
+// diff: 22 words; original keeps the range test in a3 (slti/bnez/daddu) and the 0xFFFF7FFF mask in t0, reloads objArray via t1; ours keeps the mask in a3. Tried: movn/phi probes, inline range test (29 words, size 112).
 extern "C" void func_002FA470(int on)
 {
     for (char **i = objArray->b; i != objArray->e; i++) {

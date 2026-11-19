@@ -15,9 +15,7 @@ struct Fn31BObj {
     unsigned char m_360, m_361;
 };
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x31BC98
-// 9 differing words: m_3/m_6 loads swap v1/a0 and sb m_0 hoists before div; tried store order, local q, <<4, *16 split.
+// FUNCTION: GAME 0x31BC98
 extern "C" void func_0031BC98(Fn31BObj *o, int i)
 {
     Fn31BSlot *s = &o->s[i];
@@ -26,9 +24,10 @@ extern "C" void func_0031BC98(Fn31BObj *o, int i)
     unsigned char f = s->m_0;
     if (f & 4) {
         s->m_1 = s->m_2;
+        int q = ((s->m_2 - s->m_3) << 4) / s->m_6;
         s->m_0 = f & 3;
         s->m_C = 0;
-        s->m_A = ((s->m_2 - s->m_3) << 4) / s->m_6;
+        s->m_A = q;
     }
     if (s->m_0 & 2) {
         short c = s->m_C;
@@ -41,4 +40,3 @@ extern "C" void func_0031BC98(Fn31BObj *o, int i)
     if (s->m_A != 0)
         s->m_C = (unsigned short)s->m_C + (unsigned short)s->m_A;
 }
-#endif

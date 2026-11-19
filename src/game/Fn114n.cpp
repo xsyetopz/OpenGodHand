@@ -43,7 +43,7 @@ extern "C" void func_00114120(char *self)
 
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x114460 - 8 words differ: case 0 table-offset loads use v1/a0 temps then addu into a1/a2 in the original
+// DRAFT: GAME 0x114460 - 7 words differ: t lands in a2 not v0; tried t/r decl order, a/b locals (8), inline sums (8), int t (7), x/y sums per branch (7), irand() inline (40)
 
 extern "C" void func_00114460(char *self)
 {
@@ -51,15 +51,14 @@ extern "C" void func_00114460(char *self)
     case 0: {
         *(short *)(self + 0x5E0) = 0;
         *(short *)(self + 0x5E2) = 0;
-        int a, b;
         unsigned r = irand() & 1;
         char *t = *(char **)(self + 0x304);
+        int x, y;
         if (r) {
-            a = *(int *)(t + 0x230); b = *(int *)(t + 0x234);
+            x = (int)t + *(int *)(t + 0x230); y = (int)t + *(int *)(t + 0x234);
         } else {
-            a = *(int *)(t + 0x8A0); b = *(int *)(t + 0x8A4);
+            x = (int)t + *(int *)(t + 0x8A0); y = (int)t + *(int *)(t + 0x8A4);
         }
-        int x = a + (int)t, y = b + (int)t;
         func_002A8578(self, x, y, 3, 0.0f, 0, 0);
         *(short *)(self + 0x568) = 1;
         B(0x2F6)++;
@@ -139,7 +138,7 @@ extern "C" void func_00114AC0(char *self)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1156D8 - 9 words: case 2 vec copy has d/src in swapped v0/v1; tried decl order d/src, d!=src vs src!=d, inline exprs, temps (none)
+// DRAFT: GAME 0x1156D8 - 9 words: case 2 vec copy has d/src in swapped v0/v1 (orig d=v1, src=v0); tried decl order d/src and src/d, d!=src vs src!=d, inline src, char* d, temps (all 9)
 extern "C" void func_001156D8(char *self)
 {
     *(float *)(self + 0x54C) = 5.0f;

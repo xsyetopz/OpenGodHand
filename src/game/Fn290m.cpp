@@ -43,7 +43,7 @@ extern "C" void func_00297540(char *self)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x295380
-// diff: cvt.w.s targets f2/f1 where the original reuses f0 (6 words)
+// diff: cvt.w.s targets f2/f1 where the original reuses f0 (6 words); tried float/short/int temps (24 words), reversed operand order (6), const float k (6), reversed store order (10)
 extern "C" void updateSetDataPos__11cEmSetParamUiRC4cVec(void *, unsigned idx, float *v)
 {
     short *p = func_002BEF60(g_RoomSave, idx);

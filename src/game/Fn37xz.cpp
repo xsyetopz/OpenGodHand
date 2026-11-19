@@ -165,7 +165,7 @@ extern int D_0076A7AC;
 extern void (*const D_003F2810[])(int);
 
 // DRAFT: GAME 0x37D298
-// diff: 8 words, idx/table reg order (a1/v1/v0); tried int/unsigned idx temp, fnptr temp, ptr-to-table temp, non-const table, int-arith index (none)
+// diff: 8 words, idx/table reg order (a1/v1/v0); tried int/unsigned idx temp, fnptr temp, ptr-to-table temp, non-const table, int-arith index, raw byte-offset, int-array cast, int temp with pointer cast, pointer temp with t + idx (all 8)
 extern "C" void func_0037D298(char a)
 {
     D_003F2810[D_0076A7AC](a);

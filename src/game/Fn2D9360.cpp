@@ -9,7 +9,7 @@ struct Own {
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2D9360
-// 9 words differ: t0/a3 swap (n vs result) and t kept in a2 with first-element peel; tried decl order, union pun, loop forms
+// 9 words differ: n in t0 vs a3 for result, peel base v1 vs a2, peel load 0(v1) vs 0x14(a2); tried 5 stmt orders (RNI/RIN/NRI/NIR/IRN all 9), decl order, union pun, t->v14 peel (22), explicit n!=0 peel (32)
 extern "C" float func_002D9360(Own *self, int id) {
     Tbl *t = self->t;
     char *e;

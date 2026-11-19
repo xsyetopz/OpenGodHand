@@ -31,9 +31,10 @@ static inline void reset(char *self, int v)
 }
 
 // DRAFT: GAME 0x1D0340
-// 11 words differ (spill sw position, mesh/tail store order); variants: volatile spill positions, if/else, typed struct.
+// 11 words differ: target puts the volatile n spill in beqz's delay slot after the 0x600/0x630 stores; tried volatile spill before/after 0x600, all m-block stores volatile, if(n) form (21-26 words).
 extern "C" void func_001D0340(char *self) { reset(self, 0x14); }
 
 // DRAFT: GAME 0x1D0408
+// 11 words differ, same body as 0x1D0340 (only the 0x15 constant differs); no variant tried separately.
 extern "C" void func_001D0408(char *self) { reset(self, 0x15); }
 #endif

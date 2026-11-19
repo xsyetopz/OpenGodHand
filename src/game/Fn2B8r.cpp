@@ -41,6 +41,7 @@ extern "C" void func_002B0208(char *);
 extern "C" void func_002B0420(char *);
 
 // DRAFT: GAME 0x2B0028
+// diff: 6 words, a1 vs a2 for the 0x9400 constant and the lw/lhu/andi chain; tried case orders ACB (9 words) and BAC (23), typed unsigned short * local (6), and earlier forms
 // diff: 6 words, register choice for the lw/lhu/andi chain (v0/v1 vs a2); switch layout matches, ~12 forms tried; callee int/void combos and typed locals (int/long/unsigned) no effect
 // (temps, struct members, extra unused param, if-chain); original uses a2 for 0x9400, i.e. a1 held by another pseudo
 #ifdef NONMATCHING

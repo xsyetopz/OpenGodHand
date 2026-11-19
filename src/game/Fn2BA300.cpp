@@ -25,6 +25,7 @@ struct Fn2BA300 {
 };
 
 // DRAFT: GAME 0x2BA300
+// diff: 6 words, branch form and delay slots on the found/insert paths (orig beql to epilogue with daddu in slot; ours bnel, b with daddu before it); tried 6 loop/return forms (do-while, while, early break, store order, head store moved), best 6 words
 // 6 words: list-search loop layout (found-return is bnel+b, orig beql delay-slot v0=s0); tried do-while, for, break+flag, store order.
 #ifdef NONMATCHING
 extern "C" Fn2BA300Item *func_002BA300(Fn2BA300 *self, int arg)

@@ -45,7 +45,7 @@ extern char Dvd[];
 extern unsigned D_00747A30;
 extern char D_0044A920[], D_0044A940[], D_0044A958[];
 
-// DRAFT: GAME 0x297378 - 8 words differ: else branch stores m_10 after sprintf in original, here before; storing after in both branches makes gcc merge the sprintf calls (31 words); tried common-tail store (7 words, sw/lui order), *(int*) store, int r = sprintf, extra m_C stores, comma-expr store in sprintf arg (8), swapped branches (31), fmt local (22), z temp (31); orig also orders lui/lw a3/addiu a0/daddu a1 differently before ReadAlloc
+// DRAFT: GAME 0x297378 - best 7 words (common-tail m_10 store, v1 form); 8 words as written; both-arm store 31 words (gcc merges sprintf tails), empty barrier per arm 26 words; tried *(int*) store, int r = sprintf, extra m_C stores, comma-expr store in sprintf arg (8), swapped branches (31), fmt local (22), z temp (31); join load order (lui v0/lui a0/daddu a1/lw a3) still differs
 #ifdef NONMATCHING
 extern "C" void func_00297378(RdSlot *self)
 {
