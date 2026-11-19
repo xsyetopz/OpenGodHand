@@ -80,7 +80,7 @@ void func_002ABCE8(char *a, char *o)
 }
 #endif
 #ifdef NONMATCHING
-// 2 words differ: original loads the two floats via a0 instead of the v0 copy; tried float temps, int*/float* views, hoisted diff, callee int/char decl, char* alias for diff, (int)self cast for diff, int-indexed diff (no change)
+// 2 words differ: original loads the two floats via a0 instead of the v0 copy; tried float temps, int*/float* views, hoisted diff, callee int/char decl, char* alias for diff, (int)self cast for diff, int-indexed diff (no change); batch: void *self, int self, char-array indexing, floatidx, void-int callee decl (each 2 words)
 // DRAFT: GAME 0x2AFC08
 void func_002AFC08(char *self, int t0)
 {

@@ -58,7 +58,7 @@ block_13:
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2CAA00
-// 26 differing words: and-chain register assignment and second list-walk tail differ. Variants ve, vf, vg, vh gave no gain.
+// 26 differing words (best): the 0x800000/0xFFDFFFFF/0xFFEFFFFF masks get different registers (original a2/v0/a1, compiled v0/a1/a2), the and-chain schedules the EF pair in the opposite order, the original keeps a daddu copy of s0 before sra. Tried: ve, vf, vg, vh, loop-local t, all 24 orders of hoisted mask constants (28 each), mask statements reordered (26 -> 26), a/b declared in swapped order (29).
 extern "C" void func_002CAA00(char *self)
 {
     int i = 0;

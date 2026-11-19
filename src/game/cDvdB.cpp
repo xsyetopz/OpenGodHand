@@ -60,7 +60,7 @@ extern "C" unsigned char func_00201960(DvdCnt2 *s)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x200F50 - 2 words differ: s1/s4 setup order (addiu s1,self,4 and addiu s4,self,0x1108 swapped); 5 forms of end/q/p order tried; also direct end compare, p/q swap, p-only, for loop, p hoisted to top (2 words); q before id test (27 words), q before end in else (3), p above id test (14)
+// DRAFT: GAME 0x200F50 - 2 words differ: s1/s4 setup order (addiu s1,self,4 and addiu s4,self,0x1108 swapped); 5 forms of end/q/p order tried; also direct end compare, p/q swap, p-only, for loop, p hoisted to top (2 words); q before id test (27 words), q before end in else (3), p above id test (14); batch 2: end/q/p permutations in else (2-14 words), end as char* (3); batch 3: &m_slot/char*/(int)self end spellings (14 words), endself with q,p (2), q hoisted to self (2)
 extern "C" int func_00200F50(DvdMgr *self, int id)
 {
     int r = 0;
