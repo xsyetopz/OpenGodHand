@@ -22,7 +22,7 @@ extern "C" void func_00305358(unsigned *self, unsigned *d)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3182D8
-// 2 words differ: final two stores swapped (orig stores D_00754C50 via v1 first); a D_00754C50 pointer temp fixed the lui order (4 -> 2); store-order permutations did not help
+// 2 words differ: final two stores swapped (orig stores D_00754C50 via v1 first); a D_00754C50 pointer temp fixed the lui order (4 -> 2); store-order permutations did not help; t at block top, *t before objbaseArray, &objbaseArray pointer all still 2 words
 extern "C" void func_003182D8(void *p, int f)
 {
     if (f == 0xFFFF && p) {

@@ -6,10 +6,10 @@ extern char g_DmgManage[];
 extern "C" void func_001B6FB8(void *);
 extern "C" void *CreateDamageTake__13cDamageManageP8cGameObj8DMG_KIND(void *, void *, int);
 extern "C" void *func_001FD9D8(void *, void *, void *, void *, void *);
-extern "C" void func_001C28A0(void *, void *, int, int);
+extern "C" void func_001C28A0(void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1A3B80 - same tail const-load/store-order problem as 0x1A06F0 (not compared in detail).
+// DRAFT: GAME 0x1A3B80 - same tail const-load/store-order problem as 0x1A06F0 (12 words differ with one-arg callee).
 extern "C" int func_001A3B80(char *self)
 {
     func_001B6FB8(self);
@@ -50,7 +50,7 @@ extern "C" int func_001A3B80(char *self)
     *(int *)(self + 0x5EC) = 7;
     *(short *)(self + 0x548) = 1;
     *(short *)(self + 0x5F4) = -1;
-    func_001C28A0(self, p, 0x14, 7);
+    func_001C28A0(self);
     return 1;
 }
 #endif

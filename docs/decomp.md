@@ -159,6 +159,13 @@ These source shapes reproduce patterns this compiler emits only one way:
 - `slti; andi 0xFF; beqz` comes from `static inline unsigned char Lt2(int v) { return v < 2; }`
   tested as `if (Lt2(n) & 1)` (matched 0x2ABD78). `sltiu; xori; beqz` comes from
   `int c = h >= 2; if (c)`.
+- A sign test returning `slti` comes from `if (x < 0) return 1; return 0;`, where
+  `return x < 0;` emits `srl 31` (0x2C0ED0 case 0).
+- `volatile` belongs in source when the original shows its effect: a store or load whose value
+  is never used (`volatile int d = n;` keeps a dead `sw n,0(sp)`), or a hardware register
+  such as the 0x10000800 timer. A `volatile` that only reshuffles scheduling is a guess;
+  remove it when a plain form matches.
+- `movn` instead of `movz` comes from `int c = x != 0; int m = 0; if (c) m = 2;` (0x281D10).
 - `movz`/`movn` operand order follows `unsigned char v = A; if (!cond) v = B;`; a ternary
   emits the opposite order.
 - Switch arms that end in the same call cross-jump into one shared tail only when each arm

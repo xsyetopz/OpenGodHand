@@ -6,7 +6,7 @@ extern char g_DmgManage[];
 extern "C" void func_001B6FB8(void *);
 extern "C" void *CreateDamageTake__13cDamageManageP8cGameObj8DMG_KIND(void *, void *, int);
 extern "C" void *func_001FD9D8(void *, void *, void *, void *, void *);
-extern "C" void func_001C28A0(void *, void *, int, int);
+extern "C" void func_001C28A0(void *);
 
 #ifdef NONMATCHING
 #define FN19_BOX(NAME, X, Y, Z, K) \
@@ -50,12 +50,12 @@ extern "C" int NAME(char *self) \
     *(int *)(self + 0x5EC) = 7; \
     *(short *)(self + 0x548) = 1; \
     *(short *)(self + 0x5F4) = -1; \
-    func_001C28A0(self, p, (K), 7); \
+    func_001C28A0(self); \
     return 1; \
 }
 
 // DRAFT: GAME 0x1932D8
-// 25 words differ: tail constants/arg regs (t-regs instead of a1-a3/v0/v1); tried locals, inline helper.
+// 12 words differ (was 25 with a 4-arg callee; the original passes only a0): tail temps/reg naming, same as 0x19E7A8.
 FN19_BOX(func_001932D8, 0.8f, 1.7f, 0.8f, 4)
 
 // DRAFT: GAME 0x19BF10

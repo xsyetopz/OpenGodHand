@@ -177,17 +177,13 @@ void cSnd::DieDemoStart()
 }
 
 #ifdef NONMATCHING
-// 0x2CB418 near-miss (200 vs 208 bytes): original keeps param id in $s0 and a
-// copy in $s3 (set before the call, movn after); compiled merges them and uses
-// slti/movz, different saved-register assignment.
-// DRAFT: GAME 0x2CB418
+// DRAFT: GAME 0x2CB418 - 23 words differ (same size): saved regs (orig s0=id,s1=this,s2=i,s3=want,s4=1) and movn vs movz; tried want=id+if/int c=t>0 (merges, 45), ?: form (best), i declared first/last
 int cSnd::EmSeCheck(eObjId id)
 {
-    int want = id;
     int t = func_002CB3A8(this, id);
-    if (t > 0)
-        want = t;
-    for (unsigned i = 0; i < 12; i++) {
+    int want = (t > 0) ? t : (int)id;
+    unsigned i = 0;
+    for (; i < 12; i++) {
         if (GetSeData(D_0044CE48[i])->IsAlive()
             && GetSeData(D_0044CE48[i])->m_unk3C == want
             && func_002CFC88(GetSeData(D_0044CE48[i])) != 1)

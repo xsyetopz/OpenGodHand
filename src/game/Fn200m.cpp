@@ -113,7 +113,7 @@ extern char Sys[];
 extern "C" void printf__FiiiiiiPCce(int, int, int, int, int, int, const char *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x201AE0 - ~25 words: original keeps self[2] in t3 at the first test and shares the clamp store via v1; ours uses v0 and a split clamp
+// DRAFT: GAME 0x201AE0 - 2 words off: original loads self[2] into t3 for the first test (ours v0); tried int/char t, direct self[2], t hoisted, 0<self[2], ternary/temp string ptr, g declared first, <=0 / >=1 forms (40+ words), unsigned *g declared before if and assigned after (still 2)
 extern "C" void menu__3cE3(char *self)
 {
     if (!(D_00747A2C[2] & 0x800))
@@ -125,19 +125,11 @@ extern "C" void menu__3cE3(char *self)
         printf__FiiiiiiPCce(10, 16, 50, 50, 0, 0, D_0042C7A0);
     else
         printf__FiiiiiiPCce(10, 16, 50, 50, 0, 0, D_0042C7B8);
-    if (*(unsigned *)(Sys + 0x98) & 0x2000)
+    unsigned *g = (unsigned *)Sys;
+    if (g[0x26] & 0x2000)
         self[2]++;
-    if (*(unsigned *)(Sys + 0x98) & 0x8000)
+    if (g[0x26] & 0x8000)
         self[2]--;
-    int v = self[2];
-    unsigned char r;
-    if (v < 0)
-        r = 0;
-    else {
-        r = self[2];
-        if (v >= 0x79)
-            r = 0x78;
-    }
-    self[2] = r;
+    self[2] = self[2] < 0 ? 0 : (self[2] < 0x79 ? self[2] : 0x78);
 }
 #endif

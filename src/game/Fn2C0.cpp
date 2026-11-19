@@ -132,23 +132,18 @@ extern "C" int func_002C9AD0(char *self, int idx)
     return getSkill__9cCoreSave8PL_SKILL(&CoreSave, (self + idx)[0x14]) == 1;
 }
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2B8D88 - prologue/reg copies of a,b differ (140 vs 136 bytes)
-extern "C" void func_002B8D88(char *self, int mode, int a, int b)
+struct S2B8D { char _p[0x1C]; int f[8]; };
+// FUNCTION: GAME 0x2B8D88
+extern "C" void func_002B8D88(S2B8D *self, int mode, int a, int b)
 {
-    int x = a;
-    int y = b;
     if (mode == 1) {
-        int *p = (int *)(self + 0x1C);
-        p[x] |= 1 << y;
-        p[y] |= 1 << x;
+        self->f[a] |= 1 << b;
+        self->f[b] |= 1 << a;
     } else {
-        int *p = (int *)(self + 0x1C);
-        p[x] &= ~(1 << y);
-        p[y] |= ~(1 << x);
+        self->f[a] &= ~(1 << b);
+        self->f[b] |= ~(1 << a);
     }
 }
-#endif
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2C0D18 - 4 words: s1/s4 hold trg/act swapped; const stores in 34,39,54,36 order and 35,3A,38,3B order are best of all 24 permutations; int/unsigned params no help

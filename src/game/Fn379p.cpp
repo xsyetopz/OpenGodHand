@@ -149,7 +149,7 @@ extern "C" void func_0037BF10(Fn379X *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x37BE98
-// diff: 2 words; the original keeps `nop` in the first beqz delay slot, ours fills it with the arg move
+// diff: 2 words; the original keeps `nop` in the first beqz delay slot and the arg move in the jal slot, ours fills the beqz slot; tried int flag local (no change)
 extern "C" void func_0037BE98(void)
 {
     Fn379X *e = D_0076B9C0;

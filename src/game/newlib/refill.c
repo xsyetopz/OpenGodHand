@@ -10,12 +10,12 @@ int func_003A6A88(FILE *);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3A6AA8
-// diff: original has a load-delay nop in CHECK_INIT (this whole unit unmeasured against asm)
+// diff: 3 words (360 vs 360 bytes): `_data &&` null check gives the CHECK_INIT nop but adds a beqz on _data (same as fflush/ungetc/fileno); tried r local (85), no check (80)
 int func_003A6AA8(FILE *fp)
 {
     if (!fp->_data)
         fp->_data = _impure_ptr;
-    if (!fp->_data->__sdidinit)
+    if (fp->_data && !fp->_data->__sdidinit)
         __sinit_(fp->_data);
     fp->_r = 0;
     if (fp->_flags & __SEOF)

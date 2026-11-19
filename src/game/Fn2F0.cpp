@@ -155,17 +155,23 @@ extern "C" int func_002F9D30(char *self)
 }
 
 #ifdef NONMATCHING
+static inline int Lt(const int &v, int i) { return i < v; }
 static inline int slotAt(char *p, int i)
 {
-    int n = *(unsigned char *)(p + 0x2B4);
-    int *pn = &n;
-    (void)pn;
-    if (i >= 0 && i < n)
+    if (i >= 0 && Lt(*(unsigned char *)(p + 0x2B4), i))
         return (*(int **)(p + 0x278))[i];
     return 0;
 }
 
-// DRAFT: GAME 0x2F53A8 (~27 words off: reg alloc / spill order)
+static inline int Lt2(const int &v, int i) { unsigned char ok = i < v; return ok; }
+static inline int slotAt2(char *p, int i)
+{
+    if (i >= 0 && Lt2(*(unsigned char *)(p + 0x2B4), i))
+        return (*(int **)(p + 0x278))[i];
+    return 0;
+}
+
+// DRAFT: GAME 0x2F53A8 (20 words: Lt(const int&) spill fixed 1st call; 2nd call needs andi 0xFF on slt + lbu/spill before bltz + 0x2B0 loaded before 0x114; tried uchar-returning Lt2, n local+&n, inline r)
 extern "C" int func_002F53A8(char *self)
 {
     char *h = *(char **)(self + 0x110);
@@ -173,9 +179,12 @@ extern "C" int func_002F53A8(char *self)
     *(int *)(self + 0x2B0) = *(signed char *)(h + 0x18C);
     if (!p)
         return 0;
-    if (!slotAt(p, *(signed char *)(h + 0xBE)))
+    int i = *(signed char *)(h + 0xBE);
+    if (i < 0)
         return 0;
-    return slotAt(*(char **)(self + 0x114), *(int *)(self + 0x2B0)) != 0;
+    if (!slotAt(p, i))
+        return 0;
+    return slotAt2(*(char **)(self + 0x114), *(int *)(self + 0x2B0)) != 0;
 }
 #endif
 

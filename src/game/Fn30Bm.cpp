@@ -44,45 +44,39 @@ extern "C" void func_00319CC0(void *self, unsigned a)
 extern "C" void func_00317FF0(int *, int *, int *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x3129D0 (37 words off: *self reload and register roles differ)
+// DRAFT: GAME 0x3129D0 (5 words off: gcc CSEs the second *self load (orig reloads, uses v1 and loads 0xC before 4 in the capacity); inline szQ/cpQ helpers, else-first store block, early return 0 tried; reload variants, e/b temps, /4 worse)
+static inline unsigned szQ(int *v) { return v ? (v[2] - v[1]) >> 2 : 0; }
+static inline int cpQ(int *v) { return v ? ((int)v[3] - (int)v[1]) >> 2 : 0; }
 extern "C" int *func_003129D0(int **self, int val)
 {
-    int *v = *self;
-    unsigned n = 0;
-    if (v)
-        n = v[2] - v[1] >> 2;
-    v = *self;
-    unsigned m = 0;
-    if (v)
-        m = v[3] - v[1] >> 2;
-    if (n < m) {
-        v = *self;
+    unsigned n = szQ(*self);
+    unsigned m = cpQ(*self);
+    if (n >= m)
+        return 0;
+    {
+        int *v = *self;
         int *cur = (int *)v[2];
-        if (cur == (int *)v[3]) {
-            func_00317FF0(v, cur, &val);
-        } else {
+        if (cur != (int *)v[3]) {
             if (cur)
                 *cur = val;
             v[2] += 4;
+        } else {
+            func_00317FF0(v, cur, &val);
         }
         return (int *)((*self)[2] - 4);
     }
-    return 0;
 }
 #endif
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x31B410 (about 19 words off: gcc schedules the byte-store run and load registers differently)
+// FUNCTION: GAME 0x31B410
 extern "C" void func_0031B410(int unused, unsigned char *p)
 {
     unsigned long m = 0x000F00807FF00000UL;
     *(unsigned long *)(p + 0x40) &= m;
     *(unsigned long *)(p + 0x38) &= m;
+    *(unsigned long *)(p + 0x00) = *(unsigned long *)(p + 0x18) & m;
     *(unsigned long *)(p + 0x28) &= m;
     *(unsigned long *)(p + 0x30) &= m;
-    *(unsigned long *)(p + 0x00) = *(unsigned long *)(p + 0x18) & m;
-    p[0x6B] = 0x80;
-    p[0x7B] = 0;
     p[0x68] = 0x80;
     p[0x69] = 0x80;
     p[0x6A] = 0x80;
@@ -101,8 +95,9 @@ extern "C" void func_0031B410(int unused, unsigned char *p)
     p[0x78] = 0;
     p[0x79] = 0;
     p[0x7A] = 0;
+    p[0x6B] = 0x80;
+    p[0x7B] = 0;
 }
-#endif
 
 extern "C" float func_002DA940(float, float);
 

@@ -194,7 +194,7 @@ extern "C" void executeTask__11cNowLoading(void *);
 extern "C" void startReleaseObj__6cEvent(void *);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x297038 - 47 words differ: flag tests give beqz+nop where the original has bnel; case layout differs
+// DRAFT: GAME 0x297038 - 47 words differ: flag tests give beqz+nop where the original has bnel (call block first, switch via bnel target); tried goto/early-return/!b||!(fl&0x100)/nested-if/else forms (47-55)
 extern "C" void func_00297038(char *self)
 {
     int fl = *(int *)(self + 8);

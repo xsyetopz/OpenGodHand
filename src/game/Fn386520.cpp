@@ -12,7 +12,7 @@ struct Fn386Str {
 };
 extern "C" void free(void *);
 extern "C" int *func_003BB058(int *);
-extern "C" int strlen(const char *);
+extern "C" unsigned int strlen(const char *);
 extern "C" void func_003BB178(Fn386Str *, int, int, const char *, int);
 extern int *D_003C4030[];
 extern char D_0045D018[];

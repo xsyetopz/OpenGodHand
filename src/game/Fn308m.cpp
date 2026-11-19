@@ -93,7 +93,7 @@ extern "C" void func_0030A3B0(float *, float *);
 extern char D_00747A2C[];
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x30B090 (about 30 words off: original keeps one base reg and reloads flags; gcc splits base/offset and reuses the flag load)
+// DRAFT: GAME 0x30B090 (39 words off: original reloads b[-2] after the c[0x5A0] store (gcc reuses the load and emits a3=a1-0x8000/0x7FF8 split); tried char* W(off) macro, fp alias, fl temp, c hoisted first, int*/char*-derived c: 39-42)
 extern "C" void func_0030B090(void)
 {
     unsigned *b = (unsigned *)D_00747A2C;

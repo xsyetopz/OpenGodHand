@@ -4,7 +4,7 @@ extern char CoreSave[];
 extern "C" int getComboMax__9cCoreSaveUi(void *, unsigned);
 
 #ifdef NONMATCHING
-// 36-word near-miss: original duplicates the lhu 0x5E2 / constant compare per case (212 B vs 176 B)
+// 36-word near-miss: original duplicates the lhu 0x5E2 / constant compare per case (212 B vs 176 B); tried per-case lhu+goto shared compare, k=0 case, r=0/r=1 and ternary/if tails (best 36-37): tail always xori, original keeps slt+beqz and v in v1 not a1
 // DRAFT: GAME 0x12C000
 extern "C" int func_0012C000(char *self, unsigned idx)
 {

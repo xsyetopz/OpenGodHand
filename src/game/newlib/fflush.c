@@ -7,7 +7,7 @@ void __sinit_(struct _reent *) __asm__("func_003A61F0");
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x3A6020
-// diff: original has a load-delay nop in CHECK_INIT
+// 3 words differ: compiled keeps beqz on fp->_data after the _impure_ptr store; original has no branch, a nop before lw 0x38(a0). Tried: no null check (48), fp&&, _data!=0 (3), _REENT, check order swapped (31)
 int func_003A6020(FILE *fp)
 {
     unsigned char *p;
@@ -17,7 +17,7 @@ int func_003A6020(FILE *fp)
         return _fwalk_(_impure_ptr, func_003A6020);
     if (!fp->_data)
         fp->_data = _impure_ptr;
-    if (!fp->_data->__sdidinit)
+    if (fp->_data && !fp->_data->__sdidinit)
         __sinit_(fp->_data);
     t = fp->_flags;
     if ((t & __SWR) == 0)

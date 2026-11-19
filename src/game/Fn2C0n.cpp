@@ -86,7 +86,7 @@ struct Pt2C {
 };
 
 // DRAFT: GAME 0x2C0B38
-// diff: 31 words, float register allocation and tail branch layout of the quad containment test
+// diff: 27 words, float register allocation only (branch layout now matches); tried temp declaration orders, all-|| and all-separate-if forms
 #ifdef NONMATCHING
 int func_002C0B38(Quad2C *q, Pt2C *p)
 {
@@ -101,9 +101,7 @@ int func_002C0B38(Quad2C *q, Pt2C *p)
     float e1z = q->z1 - q->z0;
     float e3x = q->x3 - q->x0;
     float e3z = q->z3 - q->z0;
-    if (e1z * px < e1x * pz)
-        return 0;
-    if (e3x * pz < e3z * px)
+    if (e1z * px < e1x * pz || e3x * pz < e3z * px)
         return 0;
     float dz = q->z2 - q->z0;
     float dx = q->x2 - q->x0;
@@ -113,9 +111,9 @@ int func_002C0B38(Quad2C *q, Pt2C *p)
     e1z = e1z - dz;
     e3x = e3x - dx;
     e3z = e3z - dz;
-    if (e1x * pz < e1z * px)
+    if (e1x * pz < e1z * px || e3z * px < e3x * pz)
         return 0;
-    return !(e3z * px < e3x * pz);
+    return 1;
 }
 #endif
 

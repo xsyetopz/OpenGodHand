@@ -5,7 +5,7 @@ extern "C" void SetMoveOffsetPosX__12CustomIDWorkiiUs(char *, int, int, unsigned
 extern "C" void SetColorAnimNormal__12CustomIDWorkG3COLT1Us(char *, COL, COL, unsigned short);
 extern "C" void func_001D51B8(char *, int, int);
 
-// DRAFT: GAME 0x1D6460 (38 words differ: constant/register allocation of the COL mask sequence in case 4)
+// DRAFT: GAME 0x1D6460 (38 words off: case 4 mask regs; orig keeps c2 chain in a1 with no final |0x80000000 (7 ops vs 8) and ours is 1 insn longer; tried struct COL, unsigned COL, interleaved c1/c2, dropping the c2 final or (worse, 79), c1/c2 order)
 #ifdef NONMATCHING
 extern "C" void func_001D6460(char *self, unsigned short id, COL c1, COL c2)
 {

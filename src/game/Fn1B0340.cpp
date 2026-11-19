@@ -11,8 +11,7 @@ extern "C" void AddDamageCollSphere__11cDamageUnitRC7cMatrixRC4cVecf(void *, cha
 extern "C" void CreateUnit__21cCollisionSolidManageP8cGameObjQ225cCollisionSolidManageUnit9ePRIORITYf(void *, char *, int, float);
 extern "C" void CreateSphere__21cCollisionSolidManageP8cGameObjRC7cMatrixRC4cVecf(void *, char *, char *, const Vq &, float);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1B0340
+// FUNCTION: GAME 0x1B0340
 extern "C" int func_001B0340(char *self)
 {
     func_001B6FB8(self);
@@ -31,4 +30,3 @@ extern "C" int func_001B0340(char *self)
     *(unsigned *)(self + 0x5B8) |= 8;
     return 1;
 }
-#endif

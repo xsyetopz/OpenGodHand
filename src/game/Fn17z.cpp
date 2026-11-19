@@ -199,26 +199,23 @@ extern "C" void func_00187FE8(cFnZ *self)
 
 extern "C" void func_001C7E30(cFnZ *self);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x18F488
-// diff: 344 vs 328 bytes (16 bytes extra, likely duplicated epilogue/bit-test layout)
+// FUNCTION: GAME 0x18F488
 extern "C" void func_0018F488(cFnZ *self)
 {
     if (func_001B76B0(self)) {
         long f = (unsigned)*(int *)((char *)self + 0x5B0);
-        int hit = (f >> 2) & 1;
+        long hit = (f >> 2) & 1;
         if (!hit) {
             cFnZTab4 t = *(const cFnZTab4 *)D_00423E10;
             (self->*t.p[self->type])();
             f = (unsigned)*(int *)((char *)self + 0x5B0);
             hit = (f >> 1) & 1;
-        }
-        if (hit) {
-            func_001C7E30(self);
-        } else {
-            func_002A87E8(self, 0);
+            if (!hit) {
+                func_002A87E8(self, 0);
+            }
             func_001B76D8(self);
+        } else {
+            func_001C7E30(self);
         }
     }
 }
-#endif

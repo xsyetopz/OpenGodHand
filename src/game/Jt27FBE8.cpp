@@ -2,7 +2,7 @@
 extern "C" void func_002A8578(void *, int, int, int, float, int, int);
 extern "C" int moveMotion__FP8cObjBase(void *);
 
-// DRAFT: GAME 0x27FBE8 - 36 words differ (280 vs 280 B): original has a1=0 in the jump delay slot and a different arg-setup schedule in cases 0/2/4
+// DRAFT: GAME 0x27FBE8 - 36 words differ (280 vs 280 B): original has a1=0 in the jump delay slot and a different arg-setup schedule in cases 0/2/4; tried (cObjBase*,float,int x5) and float-last signatures, int z=0 passed for zero args: still 36
 #ifdef NONMATCHING
 extern "C" void func_0027FBE8(char *self)
 {

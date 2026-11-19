@@ -75,7 +75,7 @@ extern "C" void func_002C2EB8(void *unused, char *u)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2CCB58 - Snd base lands in a1 not a3 and sltiu result skips the daddu temp (34 words, 136 vs 160 bytes)
+// DRAFT: GAME 0x2CCB58 - Snd base lands in a1 not a3 and sltiu result skips the daddu temp (34 words, 136 vs 160 bytes); tried snd/a1 declaration swap, inline self[0x24], if(r), int one=1: original holds const 1 in a1 (r=a1 copy, movz) where we emit sltu
 extern "C" int func_002CCB58(int *self)
 {
     self[0x30] = self[0x2F];

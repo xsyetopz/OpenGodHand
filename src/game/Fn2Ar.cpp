@@ -178,28 +178,19 @@ extern "C" char *getIDWork__7cIDBasei(int *self, int id)
 }
 #endif
 
-// DRAFT: GAME 0x2AC538 - 34 words differ: gcc peels the i=1 and i=2 iterations of the search loop that the original keeps rolled
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2AC538
 extern "C" int func_002AC538(int, int key, int n, char *tbl)
 {
     key = (short)key;
-    int i = 1;
     if (!n) return -1;
     if (*(short *)(tbl + 8) >= key) return -1;
-    if (i < n) {
-        if (*(short *)(tbl + 0x14) >= key) {
-            i = 0;
-        } else {
-            i++;
-            while (i < n) {
-                if (*(short *)(tbl + i * 12 + 8) >= key) { i--; break; }
-                i++;
-            }
-        }
+    int i = 1;
+    while (i < n) {
+        if (*(short *)(tbl + i * 12 + 8) >= key) { i--; break; }
+        i++;
     }
     return i;
 }
-#endif
 
 extern "C" void *memset(void *, int, unsigned);
 extern "C" void func_002ACCD8(char *);

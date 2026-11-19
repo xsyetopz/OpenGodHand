@@ -53,7 +53,7 @@ extern "C" void func_0031BB80(char *self)
 }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x31B4B8 (20 words off: scheduler hoists the 0x6A/0x7A byte stores to the front of the sb run)
+// DRAFT: GAME 0x31B4B8 (16 words off: source in original sb order; scheduler still hoists the 0x6A sb ahead of the sd stores and a0/a3 load regs swap; moving 6A/7A around tried)
 extern "C" void func_0031B4B8(void *, unsigned long *p)
 {
     const unsigned long m = 0xF00807FF00000UL;
@@ -68,25 +68,25 @@ extern "C" void func_0031B4B8(void *, unsigned long *p)
     p[0] = e;
     p[5] = c;
     p[6] = d;
+    q[0x6B] = 0x80;
+    q[0x7B] = 0;
+    q[0x68] = 0x80;
+    q[0x69] = 0x80;
+    q[0x6F] = 0;
+    q[0x6E] = 0;
+    q[0x6C] = 0;
+    q[0x6D] = 0;
+    q[0x70] = 0;
+    q[0x73] = 0;
+    q[0x71] = 0;
+    q[0x72] = 0;
+    q[0x74] = 0;
+    q[0x75] = 0;
+    q[0x76] = 0;
+    q[0x77] = 0;
+    q[0x78] = 0;
+    q[0x79] = 0;
     q[0x7A] = 0;
     q[0x6A] = 0x80;
-    q[0x79] = 0;
-    q[0x78] = 0;
-    q[0x77] = 0;
-    q[0x76] = 0;
-    q[0x75] = 0;
-    q[0x74] = 0;
-    q[0x72] = 0;
-    q[0x71] = 0;
-    q[0x73] = 0;
-    q[0x70] = 0;
-    q[0x6D] = 0;
-    q[0x6C] = 0;
-    q[0x6E] = 0;
-    q[0x6F] = 0;
-    q[0x69] = 0x80;
-    q[0x68] = 0x80;
-    q[0x7B] = 0;
-    q[0x6B] = 0x80;
 }
 #endif

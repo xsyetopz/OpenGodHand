@@ -3,12 +3,10 @@ extern int D_00747A84[];
 
 static inline bool used(char *b, int o) { return *(int *)(b + o) != 0; }
 
-
 extern char *Message;
 extern "C" int func_002AEDC0(char *, unsigned char);
 extern "C" int func_002B2638(char *);
 extern "C" void func_002B4768(void *, int *, int *);
-
 
 extern char Snd[];
 extern char D_0044B1E0[];
@@ -16,12 +14,10 @@ extern "C" int SearchData__FPUiPCcUi(void *, const char *, unsigned);
 extern "C" void func_002CB7E8(char *, int);
 extern "C" int func_002CB6E0(char *, int);
 
-
 extern "C" char *getMessageAddr__C8cMessageUs(char *, unsigned short);
 extern "C" int getCodeSize__11cMessCommonUs(unsigned short);
 extern "C" int func_002A4B20(void *, unsigned short);
 extern void *Font;
-
 
 extern "C" void sceSifInitRpc(int);
 extern "C" int func_00399008(int);
@@ -196,7 +192,7 @@ extern "C" int func_002B2588(char *self)
 
 
 // DRAFT: GAME 0x2B2E80
-// 25 words differ: the original has a dead lw 0x18 before the 0xFFFF store and a different delay-slot fill (3 variants)
+// 25 words differ: the original has a dead lw 0x18 before the 0xFFFF store and a different delay-slot fill (7 variants; without volatile, empty-if, unused local and reordered tail loads all stay 25 words)
 extern "C" void func_002B2E80(char *self)
 {
     int s1;
@@ -220,24 +216,32 @@ extern "C" void func_002B2E80(char *self)
 
 
 // DRAFT: GAME 0x2B1090
-// message loop layout differs and extra saved regs s2-s4 appear (2 variants)
+// 17 words: body unconditional (no inner if); f2/f3 swap on (float)w, bnel vs bne loop tail; tried for(;;)+break, goto-check tail, temps t/k/a
 extern "C" float func_002B1090(float *self, unsigned short no, float *p)
 {
     unsigned short *s0 = (unsigned short *)getMessageAddr__C8cMessageUs(Message, no);
     float sum = 0.0f;
-    while (!(*s0 >> 15) || (*s0 & 0xFF00) != 0x8000) {
-        if (!(*s0 >> 15)) {
-            int w = func_002A4B20(Font, *s0);
-            sum += (float)w * (*p * self[0x3C / 4] * self[0x44 / 4]) + self[0x2C / 4] * self[0x44 / 4];
-        }
+    float t, k, a;
+    unsigned c;
+    goto chk;
+    for (;;) {
+        t = (float)func_002A4B20(Font, *s0);
+        k = *p * self[0x3C / 4] * self[0x44 / 4];
+        a = self[0x2C / 4] * self[0x44 / 4];
+        sum += t * k + a;
         s0 += getCodeSize__11cMessCommonUs(*s0);
+    chk:
+        c = *s0;
+        if ((c >> 15) && (c & 0xFF00) == 0x8000)
+            break;
     }
     return sum - self[0x2C / 4] * self[0x44 / 4];
 }
 
 
-// DRAFT: GAME 0x2BE0F0
-// original tests Sys+0x578 with xori/bnez, ours uses bne against a hoisted 1 (3 variants)
+#endif
+
+// FUNCTION: GAME 0x2BE0F0
 extern "C" void func_002BE0F0(char *self)
 {
     func_002BE458(self);
@@ -248,7 +252,8 @@ extern "C" void func_002BE0F0(char *self)
     func_00397128(1);
     func_0030ABD8();
     func_00395058();
-    if (*(unsigned *)(Sys + 0x578) == 1)
+    char *sy = Sys;
+    if ((*(unsigned *)(sy + 0x578) ^ 1) == 0)
         func_003951F8(0, 1, 3, 0);
     else
         func_003951F8(0, 1, 2, 0);
@@ -261,6 +266,7 @@ extern "C" void func_002BE0F0(char *self)
     func_002BE4E8(self);
 }
 
+#ifdef NONMATCHING
 
 // DRAFT: GAME 0x2BB2D8
 // flag test uses dsra in the original; ours uses srl, register assignment differs (3 variants)

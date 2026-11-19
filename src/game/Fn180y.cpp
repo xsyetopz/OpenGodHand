@@ -239,7 +239,7 @@ extern "C" int func_00183650(char *self)
 }
 
 // DRAFT: GAME 0x195D08
-// diff: 39 words; float constants load in a different order (2.4f first) and the tail constants take other registers
+// diff: 39 words; float constants load in a different order (2.4f first) and the tail constants take other registers; tried hoisted x/y/z floats, zyx, b-before-a (37, best), b copied from a, c-first, w-first, no pointers
 extern "C" int func_00195D08(char *self)
 {
     func_001B6FB8(self);

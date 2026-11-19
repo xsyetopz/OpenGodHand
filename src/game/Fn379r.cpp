@@ -105,7 +105,7 @@ struct Fn379H2 {
 extern "C" Fn379H2 *func_0037D170(void);
 #ifdef NONMATCHING
 // DRAFT: GAME 0x375050
-// 2 words differ: sw m_4 and sb m_D swapped (D scheduled before 4); early return + `int one = 1;` after it fixed a1; tried one as short/char/unsigned and other D positions (12+ words).
+// 2 words differ: sw m_4 and sb m_D swapped (D scheduled before 4); early return + `int one = 1;` after it fixed a1; tried one as short/char/unsigned and other D positions (12+ words); scanned D and m_4 at all 14 positions (best 2 words); also m_C/m_D as char[2], m_4 as void*/unsigned/unsigned* store, `int r=0; return r` (all 2), if/else return (26), D from m_0 (26).
 extern "C" int func_00375050(int a, short b)
 {
     Fn379H2 *e = func_0037D170();

@@ -18,8 +18,7 @@ extern "C" void func_001483C8(void *, int);
 extern "C" void func_002A9790(void *);
 extern "C" void free__5cHeapPv(void *, void *);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x14B918 - ~30 words differ: original keeps self in a0 until the lh and loads D_00754C80 after it; ours moves self to a2 and hoists the lui
+// FUNCTION: GAME 0x14B918
 extern "C" void func_0014B918(char *self, char *o)
 {
     int f = D_007476B0 & 1;
@@ -33,7 +32,6 @@ extern "C" void func_0014B918(char *self, char *o)
         func_0031A650(D_00754C80, s, h, o + f * 0xB0, o + f * 0xB0 + 0xA0);
     }
 }
-#endif
 
 // FUNCTION: GAME 0x14BDB0
 extern "C" void func_0014BDB0(char *self, char *o)

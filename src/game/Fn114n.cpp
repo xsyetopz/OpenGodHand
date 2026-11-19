@@ -89,7 +89,7 @@ extern "C" void func_00114460(char *self)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x114AC0 - 42 words (460 vs 500 B): case0 store order; original keeps &self[0x1590]/&self[0x490] in s0/s1 (compare + copy), self in s2
+// DRAFT: GAME 0x114AC0 - 30 words (fixed 6.25f const, dropped dup 0x338 store); case0 store order; p/q locals (top or case1) put self in s0 not s2 = worse (69-90); original keeps &self[0x1590]/&self[0x490] in s0/s1 (compare + copy), self in s2
 extern "C" void func_00114AC0(char *self)
 {
     switch (B(0x2F6)) {
@@ -129,9 +129,8 @@ extern "C" void func_00114AC0(char *self)
         *(int *)(self + 0x330) = 0;
         float v = 1.0f;
         *(int *)(self + 0x334) = 0;
-        if (d > 25.0f) v = 2.0f;
+        if (d > 6.25f) v = 2.0f;
         *(float *)(self + 0x338) = v;
-        *(float *)(self + 0x338) = 2.0f;
         ((cObjBase *)self)->addNullSpeed_Rotation(1.0f);
         ((cObjBase *)self)->addNullSpeed(1.0f);
     }

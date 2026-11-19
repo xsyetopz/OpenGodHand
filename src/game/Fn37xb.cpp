@@ -21,29 +21,27 @@ extern "C" float func_00373938(Fn37Obj *o, int i)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x373298
-// diff: 73 words; entry pointer lands in v1 not a0, 4C load not hoisted above the type test, t0 spilled to s2
+// diff: 9 words (300 vs 300 bytes); original reloads o->m_70 (lw v0,0x70) after the m_5C store, mine reuses e in a0. Tried: `type<2 && 4C&0x10` merged test with ~0x10u (fixed 73), all 120 store orders of the five entry stores (best 58,54,78,5C,70 = 9; 70-first orders 61+)
 extern "C" int func_00373298(Fn37Sel *o, int idx)
 {
     Fn37Ent *e = o->m_6C + idx;
     int r, t;
-    o->m_70 = e;
     o->m_58 = e->m_0A;
-    o->m_78 = idx;
     o->m_54 = e->m_0B & 3;
+    o->m_78 = idx;
     o->m_5C = e->m_11;
+    o->m_70 = e;
     r = 0;
     if (o->m_70->m_10) {
         r = o->m_7C;
         if (func_00373B20((Fn37Obj *)o) == 1) {
             r = func_00374508(o, o->m_74, o->m_70);
         } else {
-            if (((o->m_70->m_0B >> 2) & 3) < 2) {
-                if (o->m_4C & 0x10) {
-                    t = 1;
-                } else {
-                    o->m_4C &= ~0x10;
-                    t = 0;
-                }
+            if (((o->m_70->m_0B >> 2) & 3) < 2 && (o->m_4C & 0x10)) {
+                t = 1;
+            } else {
+                o->m_4C &= ~0x10u;
+                t = 0;
             }
             r = func_00373F38(o, o->m_74, o->m_70, r, t);
         }

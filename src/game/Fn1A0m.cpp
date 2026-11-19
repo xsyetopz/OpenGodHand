@@ -37,7 +37,7 @@ struct sD1 {
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1A8200
-// diff: 33 words, float reg order/store order of t,u and beq distance
+// diff: 33 words, orig reloads t.v from stack (lwc1) for the m_610 copy, ours forwards regs; tried store orders (u.w first, u zeros earlier, s stores earlier) and u/t decl order: 33-43
 extern "C" int func_001A8200(sD1 *s)
 {
     func_001B6FB8(s);

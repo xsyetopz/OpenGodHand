@@ -94,7 +94,7 @@ extern float func_001F7EB0(void *, void *);
 struct HoObj { char _p[0xF0]; void *m_F0; char _q[0x200]; unsigned char m_2F4, m_2F5; char _r[8]; unsigned short m_2FE; };
 struct HoNode { int _0; HoNode *m_4; HoObj *m_8; };
 struct HoList { char _p[0x500]; HoNode *m_500; };
-// DRAFT: GAME 0x2919F8 - 38 words differ: range check 0x2A0..0x2FF folds to addiu/sltiu; original keeps slti pair + andi
+// DRAFT: GAME 0x2919F8 - 38 words differ: range check 0x2A0..0x2FF folds to addiu/sltiu; original keeps slti pair + andi (a1 = u>=0x2A0 ? u<0x300 : 0 as uchar, branchy); tried uchar in=&&, if-assign (movn), int w, > / <= forms: 36 best
 #ifdef NONMATCHING
 extern "C" int func_002919F8(HoList *self, void *p, float r)
 {

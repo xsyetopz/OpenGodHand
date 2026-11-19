@@ -63,7 +63,8 @@ class cNode { public: void setLocalTranslation(const cVec &); };
 extern "C" void func_002FBE50(void *);
 extern "C" void func_002FBED0(void *);
 
-// DRAFT: GAME 0x2F9DC8 (40 words off: ok-char slt/andi, spill slot, stack layout)
+static inline unsigned char okLt(const int &n, int i) { unsigned char ok = 0; ok = i < n; return ok; }
+// DRAFT: GAME 0x2F9DC8 (37 words: andi 0xFF after slt missing, lbu n before bltz, tail is func_002B6288(self,&v) w/ v.w store in delay slot; tried uchar ok local, n+&n, okLt(const int&) inline)
 extern "C" void func_002F9DC8(char *self)
 {
     char *p = *(char **)(self + 0x114);
@@ -71,15 +72,9 @@ extern "C" void func_002F9DC8(char *self)
         func_002FBE50(self);
         return;
     }
-    unsigned n = *(unsigned char *)(p + 0x2B4);
-    unsigned *pn = &n;
-    (void)pn;
     int i = *(int *)(self + 0x2B4);
     int slot = 0;
-    unsigned char ok = 0;
-    if (i >= 0)
-        ok = i < (int)n;
-    if (ok)
+    if (i >= 0 && okLt(*(unsigned char *)(p + 0x2B4), i))
         slot = (*(int **)(p + 0x278))[i];
     if (!slot) {
         func_002FBE50(self);

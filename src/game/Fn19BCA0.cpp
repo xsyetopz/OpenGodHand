@@ -38,7 +38,7 @@ extern "C" void func_001C28A0(void *);
     }
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x19BCA0 - 15 words differ: tail const-load/store order (orig 1,pp,0xC,7 in v1,a1-a3; 54A not last); 4-arg call decl worse (25), store permutations no effect.
+// DRAFT: GAME 0x19BCA0 - 15 words differ (one-arg callee): tail const-load/store order (orig 1,pp,0xC,7 in v1,a1-a3; 54A not last); 4-arg call decl worse (25), store permutations no effect.
 extern "C" int func_0019BCA0(char *self)
 {
     F19B_HEAD(4.0f, 1.0f, 2.0f)

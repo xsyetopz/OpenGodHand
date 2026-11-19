@@ -24,8 +24,9 @@ void func_00380280(Fn37EA *);
 void func_00380638(Fn37EA *);
 }
 
-// DRAFT: GAME 0x37E368
 #ifdef NONMATCHING
+// DRAFT: GAME 0x37E368
+// saved form 61 words (284 vs 288 B); a lost 9-word variant used && early exit, return 1, b0 before b2, plain switch(a->b2). Original loads the switch byte in the bnel delay slot and copies it to a2, ours loads it into v1; tried int/unsigned/uchar temps, nested if, b2-before-b0 (63), (uchar*) casts, else-form (44 but wrong shape); all keep sltiu on the CSE'd first lbu, so no daddu a2 (61 recounted).
 extern "C" int func_0037E368(Fn37EA *a, Fn37EB *b)
 {
     if ((b->w34 & 0x40) && a->b2 == 1) {

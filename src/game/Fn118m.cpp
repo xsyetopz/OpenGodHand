@@ -168,7 +168,7 @@ extern "C" void func_0011B3E8(char *self)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x11B900 - same irand()&3 offset selection as 0x11AAA0 (v1/a0 temps in original); tail untested beyond that
+// DRAFT: GAME 0x11B900 - same irand()&3 offset selection as 0x11AAA0 (v1/a0 temps in original); 102 words differ; original has explicit case 3 and a/b in v1/a0 with t in v0; tried case 3 explicit without default (134, spills a/b to s-regs), cases 1/2/3 + default=0x148 body (115)
 extern "C" void func_0011B900(char *self)
 {
     switch (B(0x2F6)) {

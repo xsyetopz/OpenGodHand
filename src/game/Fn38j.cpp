@@ -48,20 +48,18 @@ extern "C" void func_0037FB70(unsigned char *o)
     }
 }
 
-#ifdef NONMATCHING
 struct Fn38Mo { char _p0[7]; signed char m_07; char _p08[0x0E]; short m_16[3]; short m_1C[3]; char _p22[3]; };
 extern "C" void SdeIssTblGet(int, int, void *);
 extern "C" void func_00386DE0(int, int, void *);
 extern "C" void func_00375AB0(int, int, void *);
 
-// DRAFT: GAME 0x37A1F0
-// diff: 37 words; original copies p into v1 and loads a in the beq delay slots (ours emits nops)
+// FUNCTION: GAME 0x37A1F0
 extern "C" void func_0037A1F0(char *o)
 {
-    int k = o[7];
-    char *p = o + k * 2;
-    int b = *(short *)(p + 0x1C);
-    int a = *(short *)(p + 0x16);
+    Fn38Mo *m = (Fn38Mo *)o;
+    int k = m->m_07;
+    int a = m->m_16[k];
+    int b = m->m_1C[k];
     switch (k) {
     case 0:
         SdeIssTblGet(a, b, o + 0x9C);
@@ -73,9 +71,8 @@ extern "C" void func_0037A1F0(char *o)
         func_00375AB0(a, b, o + 0x12C);
         break;
     }
-    o[0x25] = o[o[7] + 0x22];
+    o[0x25] = *(char *)((int)o + o[7] + 0x22);
 }
-#endif
 
 struct Fn38Pa { char _p0[0x27]; unsigned char m_27; unsigned char m_28; char _p29[0xB]; unsigned m_34; unsigned m_38; };
 extern "C" void func_0037B720(Fn38Pa *);
@@ -113,7 +110,7 @@ extern Fn38In D_0076CF20[];
 extern Fn38Ou D_0076A9C0[];
 
 // DRAFT: GAME 0x37CE20
-// diff: 33 words; swapping s/o decl order gives 35; lui order of the two table bases and bnel delay-slot fill differ (original puts else-path lbu in the delay slot, ours the i-- ; while-loop form did not change it)
+// diff: 33 words (best); original keeps i-- at loop bottom with else-path lbu in bnel delay slot, ours hoists i-- into the bnez slot and swaps lui order; tried s/o decl swap (35), comma increment, do-while, while, != 0 and swapped branches (36), goto, continue (41), scoped/moved i decl
 extern "C" void func_0037CE20(void)
 {
     Fn38Ou *o = D_0076A9C0;

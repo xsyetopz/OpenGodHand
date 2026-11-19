@@ -6,7 +6,7 @@ extern char g_DmgManage[];
 extern "C" void func_001B6FB8(void *);
 extern "C" void *CreateDamageTake__13cDamageManageP8cGameObj8DMG_KIND(void *, void *, int);
 extern "C" void *func_001FD9D8(void *, void *, void *, void *, void *);
-extern "C" void func_001C28A0(void *, char, int, short);
+extern "C" void func_001C28A0(void *);
 
 #define F1A_HEAD(X, Y, Z) \
     func_001B6FB8(self); \
@@ -49,12 +49,12 @@ static inline void F1ATail(char *self, int a, int b, int c)
     *(short *)(self + 0x5F6) = c;
     *(short *)(self + 0x548) = 1;
     *(short *)(self + 0x5F4) = -1;
-    func_001C28A0(self, a, b, c);
+    func_001C28A0(self);
 }
 #define F1A_TAIL(A, B, C) F1ATail(self, A, B, C);
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1A06F0 - 29 words differ: head matches; tail loads 6/0x11/0x2E twice (store regs vs arg regs a1-a3), orig reuses a1-a3 for stores; tried store permutations, hoisted locals, inline tail fn, char/short callee arg types.
+// DRAFT: GAME 0x1A06F0 - 13 words differ with one-arg callee (was 29): tail reg naming (orig t0=1,v1=pp,a1-a3=6/0x11/0x2E,v0=-1); tried store permutations, hoisted locals, inline tail fn, char/short callee arg types.
 extern "C" int func_001A06F0(char *self)
 {
     F1A_HEAD(1.2f, 1.5f, 1.2f)
@@ -62,7 +62,7 @@ extern "C" int func_001A06F0(char *self)
     return 1;
 }
 
-// DRAFT: GAME 0x1A0BD8 - identical to 0x1A06F0 (same 29 words differ).
+// DRAFT: GAME 0x1A0BD8 - identical to 0x1A06F0 (same 13 words differ).
 extern "C" int func_001A0BD8(char *self)
 {
     F1A_HEAD(1.2f, 1.5f, 1.2f)

@@ -127,7 +127,7 @@ class cObj;
 class cVec;
 extern void SetEffectPos(eEffDataType, eEffId, cObj *, const cVec &, float, int);
 
-// DRAFT: GAME 0x10BD28 - 4<n compiles to sltiu not slt with preloaded 4; sw of n ordering (~12 words)
+// DRAFT: GAME 0x10BD28 - original has a dead `sw n,0(sp)` (volatile local keeps it) and slt vs preloaded 4 where ours emits sltiu 5; without volatile: int d[1] drops the store (54), ternary, n>4 / 4<n, int n
 #ifdef NONMATCHING
 extern "C" void SetCannonDamage__4pl00(char *self)
 {

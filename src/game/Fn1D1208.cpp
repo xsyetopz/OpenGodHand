@@ -11,9 +11,11 @@ struct Ent {
     void (*fn)(char *);
 };
 extern Ent D_003BDF58[];
+struct Fp1 {
+    void (*fn)(char *);
+};
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1D1208
+// FUNCTION: GAME 0x1D1208
 extern "C" void Main__9BlackJack(char *self)
 {
     int i;
@@ -21,8 +23,9 @@ extern "C" void Main__9BlackJack(char *self)
     int *a = (int *)(self + 0x17D4);
     int *b;
     int k = *(int *)(self + 0x1804);
-    short o = ((short *)D_003BDF58)[k * 4];
-    D_003BDF58[k].fn(self + o);
+    int o = k << 3;
+    short s = *(short *)(o + (int)D_003BDF58);
+    ((Fp1 *)((int)D_003BDF58 + o + 4))->fn(self + s);
     for (i = 4, p = a; i >= 0; p++) {
         int v = *p;
         i--;
@@ -48,4 +51,3 @@ extern "C" void Main__9BlackJack(char *self)
     Move__11BlackJackId(self);
     Trans__11BlackJackId(self);
 }
-#endif
