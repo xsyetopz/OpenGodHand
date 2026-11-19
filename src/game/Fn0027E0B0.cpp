@@ -169,7 +169,7 @@ extern "C" void func_0028E858(char *arg0) {
 }
 #endif
 
-// DRAFT: GAME 0x299A28
+// DRAFT: GAME 0x299A28 - 33 words differ, 376 vs 376 bytes: the original saves arg1 into s1 at entry and runs the first loop with the index in a0 and the count in a3; the draft swaps those two registers (lui/addiu and loop-counter order also differ). Tried: by-value arg, shl arg (69-78 words), srcptr/down loop forms (50-52), cnt/idx/ptr loop variants, mid/top slot forms (best: or, cnt, idx, mid), declaration order swap, early arg1 local (no change).
 #ifdef NONMATCHING
 extern "C" void func_002998D8(void *self, int tag, long b);
 extern "C" void func_00299868(void *self, long a, long b);
@@ -179,7 +179,8 @@ extern unsigned char D_003BD758[];
 
 extern "C" void func_00299A28(char *arg0, unsigned long long arg1, unsigned int *arg2) {
     int i;
-    for (i = 0; i < 0x100; i++) {
+    int n = 0x100;
+    for (i = 0; n != 0; i++, n--) {
         D_004A6980[i] = arg2[D_003BD758[i]];
     }
     func_002998D8(arg0, 0, 0xE);

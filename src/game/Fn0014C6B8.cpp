@@ -97,7 +97,7 @@ extern "C" int func_00188DE0(char *self)
 #endif
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x18EAF8 - 25 words differ, 312 vs 300 bytes: original sets v1=1 first and computes self+0x620 straight into a1 (kept for the call); draft computes it into t2 and copies late. Tried by-value Vec4 arg, int one hoist, short m1, inline self+0x620, hoisted six/seven, volatile on 54A/608 (28 words, reverted), named p local with short one (both decl orders).
+// DRAFT: GAME 0x18EAF8 - 25 words differ, 312 vs 300 bytes: original sets v1=1 first and computes self+0x620 straight into a1 (kept for the call); draft computes it into t2 and copies late. Tried by-value Vec4 arg, int one hoist, short m1, inline self+0x620, hoisted six/seven, volatile on 54A/608 (28 words, reverted), named p local with short one (both decl orders); 384-variant scratch batch (store orders, decl position, int/short, literal/hoisted/expr offset) best stays 25.
 extern "C" int func_0018EAF8(char *self)
 {
     func_001B6FB8(self);
