@@ -5,7 +5,7 @@ extern "C" void start__9classFADEUiUiUiUiUiUi(char *, unsigned, unsigned, unsign
 extern "C" void taskExec__9cScenarioRFv_vi(char *, void (*)(), int);
 extern "C" void kill__9cTaskWork(char *);
 extern "C" void func_002C4EF0();
-// DRAFT: GAME 0x2C4E18 - 1 word differs: bit-4 test is sra, original dsrl; tried unsigned long/long f, (long) casts, u=f copies, %2 (all 40+ words or same)
+// DRAFT: GAME 0x2C4E18 - 1 word differs: bit-4 test is sra, original dsrl; tried unsigned long/long f, (long) casts, u=f copies (scoped, after load, global), %2, 1UL mask, != 0 (40+ words or same 1 word)
 #ifdef NONMATCHING
 extern "C" int func_002C4E18(char *self)
 {

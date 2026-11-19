@@ -11,9 +11,7 @@ extern "C" void func_00375A78(short);
 extern "C" void func_003B5A50(int);
 extern "C" void func_002CFE48(char *, int);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x2CF310
-// 2 differing words: first free call delay-slot (lw a0 in beqz slot vs jal slot); tried temp, && merge, int/void return, store order fixed
+// FUNCTION: GAME 0x2CF310
 extern "C" void func_002CF310(char *self)
 {
     func_002CBE68(Snd, *(int *)(self + 0x2C), 0);
@@ -23,7 +21,8 @@ extern "C" void func_002CF310(char *self)
     if (*(int *)(self + 0x10)) {
         if (!func_002CFD38(self, 0x100)) {
             void *q = *(void **)(self + 0x10);
-            if (q) free__5cHeapPv(*(void **)(self + 8), q);
+            void *h = *(void **)(self + 8);
+            if (q) free__5cHeapPv(h, q);
         }
         func_00375A78(*(short *)(self + 0x2C));
     }
@@ -34,4 +33,3 @@ extern "C" void func_002CF310(char *self)
     *(int *)(self + 0x28) = -1;
     *(int *)(self + 0x3C) = -1;
 }
-#endif

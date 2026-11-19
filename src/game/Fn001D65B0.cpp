@@ -5,8 +5,7 @@ extern "C" void SetMoveOffsetPosX__12CustomIDWorkiiUs(char *, int, int, unsigned
 extern "C" void SetColorAnimNormal__12CustomIDWorkG3COLT1Us(char *, COL, COL, unsigned short);
 extern "C" void func_001D51B8(char *, int, int);
 
-// DRAFT: GAME 0x1D65B0 (2 words differ in case 4 mask schedule; 9 variants tried)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x1D65B0
 extern "C" void func_001D65B0(char *self, unsigned short id, COL c1, COL c2)
 {
     switch (id) {
@@ -29,12 +28,12 @@ extern "C" void func_001D65B0(char *self, unsigned short id, COL c1, COL c2)
         break;
     case 4:
         {
-            COL m2 = c2 & (int)0xFF00FFFF;
             COL m1 = c1 & (int)0xFF00FFFF;
-            m1 |= 0x800000;
-            m1 &= 0xFFFF00FF;
+            COL m2 = c2 & (int)0xFF00FFFF;
             m2 |= 0x800000;
+            m1 |= 0x800000;
             m2 &= 0xFFFF00FF;
+            m1 &= 0xFFFF00FF;
             m1 = ((m1 | 0x8000) & -0x100 | 0x80) & 0x00FFFFFF | (int)0x80000000;
             m2 = ((m2 | 0x8000) & -0x100 | 0x80) & 0x00FFFFFF;
             SetColorAnimNormal__12CustomIDWorkG3COLT1Us(self + 0xB08, m2, m1, 8);
@@ -44,10 +43,8 @@ extern "C" void func_001D65B0(char *self, unsigned short id, COL c1, COL c2)
         break;
     }
 }
-#endif
 
-// DRAFT: GAME 0x1D6700 (2 words differ in case 4 mask schedule, as 0x1D65B0)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x1D6700
 extern "C" void func_001D6700(char *self, unsigned short id, COL c1, COL c2)
 {
     switch (id) {
@@ -70,12 +67,12 @@ extern "C" void func_001D6700(char *self, unsigned short id, COL c1, COL c2)
         break;
     case 4:
         {
-            COL m2 = c2 & (int)0xFF00FFFF;
             COL m1 = c1 & (int)0xFF00FFFF;
-            m1 |= 0x800000;
-            m1 &= 0xFFFF00FF;
+            COL m2 = c2 & (int)0xFF00FFFF;
             m2 |= 0x800000;
+            m1 |= 0x800000;
             m2 &= 0xFFFF00FF;
+            m1 &= 0xFFFF00FF;
             m1 = ((m1 | 0x8000) & -0x100 | 0x80) & 0x00FFFFFF | (int)0x80000000;
             m2 = ((m2 | 0x8000) & -0x100 | 0x80) & 0x00FFFFFF;
             SetColorAnimNormal__12CustomIDWorkG3COLT1Us(self + 0xB84, m2, m1, 8);
@@ -85,10 +82,8 @@ extern "C" void func_001D6700(char *self, unsigned short id, COL c1, COL c2)
         break;
     }
 }
-#endif
 
-// DRAFT: GAME 0x1D6850 (2 words differ in case 4 mask schedule, as 0x1D65B0)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x1D6850
 extern "C" void func_001D6850(char *self, unsigned short id, COL c1, COL c2)
 {
     switch (id) {
@@ -111,12 +106,12 @@ extern "C" void func_001D6850(char *self, unsigned short id, COL c1, COL c2)
         break;
     case 4:
         {
-            COL m2 = c2 & (int)0xFF00FFFF;
             COL m1 = c1 & (int)0xFF00FFFF;
-            m1 |= 0x800000;
-            m1 &= 0xFFFF00FF;
+            COL m2 = c2 & (int)0xFF00FFFF;
             m2 |= 0x800000;
+            m1 |= 0x800000;
             m2 &= 0xFFFF00FF;
+            m1 &= 0xFFFF00FF;
             m1 = ((m1 | 0x8000) & -0x100 | 0x80) & 0x00FFFFFF | (int)0x80000000;
             m2 = ((m2 | 0x8000) & -0x100 | 0x80) & 0x00FFFFFF;
             SetColorAnimNormal__12CustomIDWorkG3COLT1Us(self + 0xC00, m2, m1, 8);
@@ -126,4 +121,3 @@ extern "C" void func_001D6850(char *self, unsigned short id, COL c1, COL c2)
         break;
     }
 }
-#endif

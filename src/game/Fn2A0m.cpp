@@ -67,14 +67,17 @@ struct HE2A {
 };
 
 // DRAFT: GAME 0x2A8A08
-// diff: 1 word, addu operand order for &h[parent] (a3=t0+v0 vs v0+t0); tried &h[parent], h+parent, (char*)h+parent*8 forms: all 1 word off; (int)h + (parent<<3), int hb local, (char*) forms also 1 word off
+// diff: 1 word, addu operand order for &h[parent] (a3=t0+v0 vs v0+t0); tried &h[parent], h+parent, (char*)h+parent*8, (int)h+(parent<<3), int hb local, (char*) forms, break-based loop (current), for(;;) with lim check: all 1 word off; direct h[parent] in condition: 9 words; inline negated compare: 38 words
 #ifdef NONMATCHING
 void func_002A8A08(HE2A *h, int i, int lim, HE2A item)
 {
     int parent = (i - 1) / 2;
     int c;
     HE2A *pp;
-    while (lim < i && (pp = &h[parent], c = (pp->m_4 < item.m_4), c)) {
+    while (lim < i) {
+        pp = &h[parent];
+        c = (pp->m_4 < item.m_4);
+        if (!c) break;
         h[i] = *pp;
         i = parent;
         parent = (i - 1) / 2;
@@ -107,7 +110,7 @@ public:
 };
 
 // DRAFT: GAME 0x2A4CB0
-// diff: 21 words, slot pointer lives in a0 with a v0 copy and this stays in v1 in the original
+// diff: 21 words (0x2A4D38-0x2A4D84), original copies this to v1 in a delay slot and keeps the slot in a0 with a v0 copy; tried cFont *me = this local and char*-base slot address: both 21 words off
 #ifdef NONMATCHING
 void cFont::setTextureAddr(eFontKind kind, unsigned *a, unsigned *b)
 {

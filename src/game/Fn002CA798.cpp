@@ -13,7 +13,7 @@ extern char D_0044CE30[];
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2CA798
-// 2 differing words: a2=0 / a0=v0 order before func_002D0128 call; tried temp, arg types int/unsigned/long/void*/float
+// 2 differing words: a2=0 / a0=v0 order before func_002D0128 call; 8 variants (a2 zero last/both, void/int casts, tmp then zero, ptr then int, int return, unsigned) all 2 words
 extern "C" void func_002CA798(void *snd)
 {
     func_002CF310(GetSeData__4cSndi(snd, 0));

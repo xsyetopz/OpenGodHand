@@ -7,7 +7,7 @@ extern "C" void addNullSpeed__8cObjBasef(void *, float);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1ABA20
-// 1 word off: case 2 store uses v1 not v0 (tried =2, =3-1, self[]=2, int copy of switch var)
+// 1 word off: case 2 store uses v1 (switch reg) not v0 (const 2); tried =2, =3-1, self[]=2, int/unsigned copies, local unsigned char k=2, duplicated case-3 tail, default: break, asm barrier on copy: 1 word or worse
 extern "C" void func_001ABA20(char *self)
 {
     if (*(int *)(self + 0x9D4))

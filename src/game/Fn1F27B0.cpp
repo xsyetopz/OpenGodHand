@@ -8,7 +8,7 @@ extern "C" void func_001F3488(void *, int);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1F27B0
-// 2 words differ: restartAnim delay slot (orig fills with addiu s0,0x980; mine with a0 move); tried reorder of m, temp copy t (worse, 7)
+// 2 words differ: orig has daddu a0,s0 before jal restartAnim and addiu s0,s3,0x980 in its delay slot; mine has jal first and the a0 move in the delay slot. Variants (all 7 or 2 words): m reorder, temp copy t, b=a copy before a=0x980 (b_old_first, b_old_first_m, c_assign_then_call_saved, e_copy_early), f_m_first, g_m_after_call
 extern "C" void func_001F27B0(char *self)
 {
     char *a = self + 0x10;
