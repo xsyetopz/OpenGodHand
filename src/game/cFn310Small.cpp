@@ -83,7 +83,7 @@ extern "C" void func_0031DA28()
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x31D098
-// diff: register allocation (seed in a1 vs v0, constants in different regs)
+// 8 differing words: a1 used for loaded value; tried hoisted add constant, unsigned cast, several expression forms, trailing v=0
 extern "C" void func_0031D098(int *seed)
 {
     int v = *seed;

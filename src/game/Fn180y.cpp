@@ -54,7 +54,7 @@ extern "C" int func_00182958(char *self)
 }
 
 // DRAFT: GAME 0x1A8980
-// diff: 10 words; same zero-register range test as 0x182958 (bltz/movz instead of slt/bnez)
+// diff: 10 words; same zero-register range test as 0x182958 (bltz/movz instead of slt/bnez); tried v1 drop &n ref (53), v2 loop restructure (50), v3 hoisted zero folds to bltz (10), v4 flag-form helper (46)
 extern "C" int func_001A8980(char *self)
 {
     func_001B6FB8(self);
@@ -145,7 +145,7 @@ extern "C" void func_001BF7D8(char *self)
     }
 
 // DRAFT: GAME 0x191B98
-// diff: 12 words (local-decl permutations 11-12, plain constants 15); the 0x54A store is scheduled last and the tail constants take other registers (raw casts and ordered locals tried)
+// diff: 12 words; original v1=1,a1=pp,a2=6,a3=7,v0=-1 vs ours a3=1,v0=pp,v1=6,a1=7,a2=-1; tried local-decl perms (11-12), reversed decl order (12), mid-block m1=-1 local (12)
 extern "C" int func_00191B98(char *self)
 {
     FN180_HEAD(4.3358001708984375f, 0.9010000228881836f, 0.17759999632835388f)
@@ -168,7 +168,7 @@ extern "C" int func_00191B98(char *self)
 }
 
 // DRAFT: GAME 0x187838
-// diff: 12 words; hoisted k1/pp/eight/s11/s89 locals fixed constants (15->12); 54A store lands last (delay slot) and -1 loads early; 11 random store perms and moving 54A did not help
+// diff: 12 words; -1 loads early vs original after the 5E4 store; tried 11 store perms, 54A moved up after 5F0 (12), named -1 local m1 (16)
 extern "C" int func_00187838(char *self)
 {
     FN180_HEAD(2.0f, 2.0f, 1.60000002f)
@@ -192,7 +192,7 @@ extern "C" int func_00187838(char *self)
 }
 
 // DRAFT: GAME 0x182690
-// diff: 11 words; tail constants take other regs and 0x54A store lands last; tried named temps (k1,pp,eight,seven,m1) in all 24 orders of the first four, best 11
+// diff: 11 words; tail constants take other regs, 0x54A store lands last; tried named temps (k1,pp,eight,seven,m1) in 24 orders of the first four (best 11), m1-first, k1/pp-second, pp-first (12 each)
 extern "C" int func_00182690(char *self)
 {
     FN180_HEAD(3.240000009536743f, 1.0f, 1.0f)

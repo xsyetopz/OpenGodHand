@@ -6,7 +6,7 @@ extern int getCodeSize__11cMessCommonUs(unsigned short);
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x2B0700
-// 9 differing words: s3/s4 swapped (n vs mx regs); tried for(;;), goto form, z hoist
+// 9 differing words: s3/s4 swapped (n vs mx regs); tried for(;;), goto form, z hoist, nn copy, m alias, register; 8 attempts
 extern "C" unsigned short *func_002B0700(char *self, unsigned short *s, int n, float *out, float *mx)
 {
     *out = 0.0f;

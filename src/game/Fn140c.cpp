@@ -10,15 +10,16 @@ void func_002A9800(void *, void *);
 extern char CoreSave[];
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x1415E8 - 7-9 words differ: gcc rotates the loop into bgezl and orders the sb stores 75 then 76; tried do-while, for, pointer-increment, hoisted one
+// DRAFT: GAME 0x1415E8 - 5 differing words: loop shape (bgezl with lw in delay slot vs bgez with nop entry); tried store swap, hoisted one, do-while, for-i--, while, i > -1
 extern "C" void func_001415E8(char *p, int a)
 {
     char **q = (char **)(p + 0x22F4);
+    int one = 1;
     for (int i = 0x10; i >= 0; i--, q += 3) {
         char *o = *q;
         if (o) {
+            o[0x75] = one;
             o[0x76] = a;
-            o[0x75] = 1;
         }
     }
 }

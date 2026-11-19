@@ -2,7 +2,7 @@
 extern char D_0061B644;
 
 #ifdef NONMATCHING
-// DRAFT: GAME 0x2E9BA0 (11 words off: f0/f1 swapped in every float temp, original 0.01 const in f1; tried operand order, const temps, hoisting u, a-temp)
+// DRAFT: GAME 0x2E9BA0 (11 words off: f0/f1 swapped in every float temp, original 0.01 const in f1; tried operand order, const temps, hoisting u (13), a-temp, 0x2B0 store before 0x2B4 (still 11))
 extern "C" int func_002E9BA0(char *self)
 {
     *(unsigned *)(self + 0x11C) &= 0xFEFFFFFF;
@@ -29,19 +29,20 @@ extern int D_00747A34;
 extern char D_00580D40[], D_0044E030[], D_0044E040[];
 extern "C" void func_001FFD00(char *, char *);
 
-// DRAFT: GAME 0x2E1348 (23 words off: original shares the lq/epilogue in branch delay slots; 3 probes)
+// DRAFT: GAME 0x2E1348 (21 words off, 148 vs 144 bytes: best is b[8] stored after the call; the compiled code is one word longer at the call blocks. Tried: local base pointer, store orders, b[8] before/after call, swapped arms (23))
 extern "C" void func_002E1348()
 {
-    D_0061B280[9] = 8;
-    *(short *)(D_0061B280 + 0xA) = 0;
-    D_0061B280[8] = 8;
+    char *b = D_0061B280;
+    b[9] = 8;
+    *(short *)(b + 0xA) = 0;
     void *p = _MemoryAlloc(0x1000, 0x40, D_00754200);
+    b[8] = 8;
     int f = D_00747A34;
-    *(void **)(D_0061B280 + 0x14) = p;
-    if (f & 0x4000)
-        func_001FFD00(D_00580D40, D_0044E040);
-    else
+    *(void **)(b + 0x14) = p;
+    if (!(f & 0x4000))
         func_001FFD00(D_00580D40, D_0044E030);
+    else
+        func_001FFD00(D_00580D40, D_0044E040);
 }
 #endif
 
