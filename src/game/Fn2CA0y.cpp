@@ -13,8 +13,7 @@ extern "C" void func_002CD780(char *);
 extern "C" void func_0032D250();
 extern "C" void func_00324AC8();
 extern "C" void func_00325818();
-// DRAFT: GAME 0x2CA040 (4 words differ; all 6 orders of the B0/30/A8 stores, an `one` temp and a self copy stay at 4-5: order of the first stores, the a0 setup and the s0=1 constant)
-#ifdef NONMATCHING
+// FUNCTION: GAME 0x2CA040
 extern "C" void func_002CA040(char *self)
 {
     N1 *p = *(N1 **)(self + 0x1C);
@@ -31,10 +30,8 @@ extern "C" void func_002CA040(char *self)
             func_002CCB10(q);
             q = q->next;
         } while (q != 0);
-        *(int *)(self + 0xAC) = 0;
-    } else {
-        *(int *)(self + 0xAC) = 0;
     }
+    *(int *)(self + 0xAC) = 0;
     *(int *)(self + 0xB0) = 0;
     *(int *)(self + 0x30) = 0;
     *(int *)(self + 0xA8) = 0;
@@ -52,4 +49,3 @@ extern "C" void func_002CA040(char *self)
     func_00324AC8();
     func_00325818();
 }
-#endif

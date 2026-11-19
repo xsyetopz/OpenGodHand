@@ -207,7 +207,7 @@ extern "C" int NAME(char *self) \
     b.z = (Z); \
     pb->w = 1.0f; \
     c.x = 0; \
-    c.y = b.y * -0.5f; \
+    c.y = a.y * -0.5f; \
     c.z = 0; \
     pc->w = 1.0f; \
     void *t = CreateDamageTake__13cDamageManageP8cGameObj8DMG_KIND(g_DmgManage, self, 2); \
@@ -227,8 +227,5 @@ extern "C" int NAME(char *self) \
 }
 
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x19C1B0
-// diff: 4 words, store order of b.y/a.y (0x4/0x14) differs; a/b store source-order permutations (yxz/yzx/xyz) give 3-7 words
+// FUNCTION: GAME 0x19C1B0
 FN170_BOX(func_0019C1B0, 0.839999974f, 1.35599995f, 0.839999974f)
-#endif

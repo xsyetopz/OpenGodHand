@@ -114,7 +114,7 @@ extern "C" void func_001BD1A0(ObjH *a0)
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x138648
-// diff: 6 words (v200 temp, m180/v200 locals, byte-offset casts all stay 6); 2nd ApplyMatrix: original sets a2 first, ours a1/a0 then a2 in the jal slot; ApplyMatrix arg setup order and the &d pointer / ctor scheduling differ
+// diff: 6 words; 2nd ApplyMatrix: original sets a2 first, ours a1/a0 then a2 in the jal slot. Tried: v200 temp, m180/v200 locals (v2 hoisted; m hoisted), byte-offset casts, all stay 6; &d pointer / ctor scheduling not varied
 extern "C" void func_0030A8C8(void *, float *, float *, float *);
 struct ObjJ { char p0[0x140]; float m140[4]; char p1[0x180-0x150]; float m180[16]; char pm[0x200-0x1C0]; float v200[4]; float v210[3]; char p2[0x240-0x21C]; float v240[3]; };
 extern "C" void func_00138648(ObjJ *self)
@@ -234,7 +234,7 @@ struct LenPosLineReslt;
 float LengthPositionToGivenLine(const cVec &, const cVec &, const cVec &, LenPosLineReslt *);
 extern "C" void func_00147C60(void *, float *);
 // DRAFT: GAME 0x2BBCE0
-// diff: 4 words; original computes &t (s0) before &c (s2); here the two addiu are swapped Tried: tp local before/after cp, tp passed to ApplyMatrix, declaration reorders, memory clobber.
+// diff: 2 words; gcc emits addiu s2 (c) before addiu s0 (t), original does s0 first. Tried: t.v as asm input before cp (best, 2 words), cp-only asm (4), 3-word and 8-word/11-word variants with t declared first or cp removed (worse), tp local before/after cp, memory clobber.
 extern "C" int func_002BBCE0(void *a0, float *m, const float *p, float r)
 {
     cVec z;
@@ -243,7 +243,7 @@ extern "C" int func_002BBCE0(void *a0, float *m, const float *p, float r)
     Sv16 t;
     func_00147C60(&z, m);
     float *cp = c.v;
-    __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)t.v) : "r"(cp));
+    __asm__ volatile("lqc2 $vf4,0(%2)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)t.v) : "r"(t.v), "r"(cp));
     sceVu0ApplyMatrix(t.v, m, t.v);
     __asm__ volatile("lqc2 $vf4,0(%1)\n\tsqc2 $vf4,%0" : "=m"(*(Qv *)u.v) : "r"(t.v));
     c.v[0] = u.v[0]; c.v[1] = u.v[1]; c.v[2] = u.v[2];

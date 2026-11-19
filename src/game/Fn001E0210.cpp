@@ -28,7 +28,7 @@ extern F0210 D_003BE0B0[];
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1E0210
-// 5 words differ: table entry address computed once (addu a1/v1 pair + lh/lw order in original), same as 0x1E4D48; tried char*/int-cast operand order for second address.
+// 5 words differ: gcc CSEs the two table-entry address computations into one register; original keeps addu a1 (lh and arg) and v1 (lw of fn), then jalr v0. Tried a/e declaration order over a0-a2 and e0-e4, char*/int-cast forms, separate fn-pointer variant: all 5 words.
 extern "C" void func_001E0210(char *self)
 {
     int i = *(int *)(self + 4);

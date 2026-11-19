@@ -25,7 +25,7 @@ extern F082E D_003BE140[];
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x1E4D48
-// 5 words differ: table entry address computed once (addu a1/v1 pair in original); tried &D[i], int-cast adds, short* + (i<<2), 2-arg fn(self+off, e).
+// 5 words differ: gcc CSEs the two table-entry address computations into one register; original keeps addu a1 (lh and arg) and v1 (lw of fn), then jalr v0. Tried &D[i], int-cast adds, short* + (i<<2), 2-arg fn(self+off, e), a/e declaration order over a0-a2 and e0-e4, separate fn-pointer variant: all 5 words.
 extern "C" void func_001E4D48(char *self)
 {
     int i = *(int *)(self + 4);

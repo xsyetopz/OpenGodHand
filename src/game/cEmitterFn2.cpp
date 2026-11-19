@@ -37,7 +37,7 @@ extern "C" void func_00305B90()
 
 #ifdef NONMATCHING
 // DRAFT: GAME 0x307118
-// 2 words differ with inline isFill(): loaded value lands in v1 instead of a0 (plain form: 8 words)
+// diff: 8 words (original branches with delay-slot load; ours xor/sltiu); if-return, ternary, k-temp, v-copy forms tried (none fix); inline isFill form gives 2 words, v1 not a0
 extern "C" int func_00307118(unsigned int *p)
 {
     if (*p == 0xCDCDCDCD)

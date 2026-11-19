@@ -4,16 +4,17 @@
 extern "C" void KillEffect__FPC4cObji13eEspEraseMode(void *, int, int);
 extern "C" void func_001B6FB8(void *self);
 
-#ifdef NONMATCHING
-// DRAFT: GAME 0x1B8030
-// diff: Slice 14: 25 range-test forms (&&, bool/char/short temps, ?:, if/else, goto, switch ranges, inline helper, -O1) give movn, sltiu or two separate branches; none gives slti/xori joined through a1+andi.
-// original branches on v<0x3C0 with a0 temp (bnez + daddu a0,v0); compiled uses beqz and returns in v0 directly
+// FUNCTION: GAME 0x1B8030
 extern "C" unsigned long func_001B8030(char *self)
 {
     int v = *(unsigned short *)(self + 0x2FE);
-    return v < 0x3C0 ? 0 : v < 0x400;
+    unsigned long r = 0;
+    if (v >= 0x3C0) {
+        int t = v < 0x400;
+        r = t;
+    }
+    return r;
 }
-#endif
 
 // FUNCTION: GAME 0x1B7EA8
 extern "C" void func_001B7EA8(char *self, float *src)

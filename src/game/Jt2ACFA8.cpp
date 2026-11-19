@@ -7,7 +7,7 @@ extern signed char D_00747A0C;
 extern char Dvd[];
 extern "C" int FileExist__4cDvdPCc(void *, const char *);
 
-// DRAFT: GAME 0x2ACFA8 - 4 words differ: sb of buf[0] before the sd ra save, and -1 held in v1 instead of v0
+// DRAFT: GAME 0x2ACFA8 - 4 words differ: sb of buf[0] before the sd ra save, and -1 held in v1 instead of v0 (tried: sb/memset orders, buf[0] after full memset (86 words), n-copy forms; best stays 4)
 #ifdef NONMATCHING
 extern "C" int getLocalFileName__10cIDManagerPcT1Sc(void *self, char *out, char *name, signed char lang)
 {
